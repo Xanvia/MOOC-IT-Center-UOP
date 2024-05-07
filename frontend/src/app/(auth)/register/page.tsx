@@ -3,7 +3,7 @@ import React from "react";
 const Register: React.FC = () => {
   return (
     <div className="shadow-md overflow-hidden h-full flex flex-row">
-      <div className="relative basis-7/12">
+      <div className="relative basis-5/12">
         s
         <img
           src="path/to/your/image.jpg" // Replace with your image path
@@ -21,7 +21,7 @@ const Register: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-primary text-white px-6 py-8 basis-5/12">
+      <div className="bg-primary text-white px-6 py-8 basis-7/12">
         <h1 className="text-2xl font-bold mb-4">Register</h1>
         <span>Sign up and embark on your journey to knowledge today.</span>
         <form>
