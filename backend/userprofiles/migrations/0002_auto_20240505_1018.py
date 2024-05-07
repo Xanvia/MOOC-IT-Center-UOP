@@ -2,14 +2,17 @@
 
 from django.db import migrations
 from django.core.management import call_command
-
+from django.db import transaction
 
 def load_initial_data(apps, schema_editor):
-    call_command(
-        "loaddata",
-        "country.json",
-        app_label="userprofiles",
-    )
+    try:
+            call_command(
+                "loaddata",
+                "country.json",
+                app_label="userprofiles",
+            )
+    except Exception as e:
+        pass
 
 
 def unload_initial_data(apps, schema_editor):

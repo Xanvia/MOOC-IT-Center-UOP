@@ -13,7 +13,7 @@ def load_initial_data(apps, schema_editor):
 
 
 def unload_initial_data(apps, schema_editor):
-    InsitutionModel = apps.get_model("userprofiles", "Insitution")
+    InsitutionModel = apps.get_model("userprofiles", "Institution")
     InsitutionModel.objects.all().delete()
 
 
