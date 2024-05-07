@@ -38,6 +38,7 @@ class UserProfile(models.Model):
     user_type = models.ForeignKey(UserType, on_delete=models.PROTECT)
     authentication_type = models.ForeignKey(AuthenticationType, on_delete=models.PROTECT)
     interests = models.ManyToManyField(Interest)
+    mobile_number = models.CharField(max_length=15)
 
 
     def __str__(self):
