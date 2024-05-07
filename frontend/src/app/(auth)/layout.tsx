@@ -8,7 +8,13 @@ export const metadata: Metadata = {
   title: "Register",
 };
 
-export default function RootLayout({
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "MOOC",
+};
+
+export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
