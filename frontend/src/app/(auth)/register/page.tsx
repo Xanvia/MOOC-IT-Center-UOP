@@ -25,33 +25,16 @@ const Register: React.FC = () => {
         <h1 className="text-2xl font-bold mb-4">Register</h1>
         <span>Sign up and embark on your journey to knowledge today.</span>
         <form>
-          <input
-            type="email"
-            placeholder="Email"
-            className="block w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          />
+          <input type="email" placeholder="Email" />
           <br />
           <br />
-          <input
-            type="password"
-            placeholder="Password"
-            className="block w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          />
+          <input type="password" placeholder="Password" />
           <br />
           <br />
-          <input
-            type="confirm password"
-            placeholder="Confirm Password"
-            className="block w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          />
+          <input type="confirm password" placeholder="Confirm Password" />
           <br />
           <br />
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            NEXT
-          </button>
+          <button type="submit">NEXT</button>
           <br />
           <span className="text-blue-500 hover:text-blue-700">
             Already have an account? <u>Login</u>
