@@ -30,7 +30,7 @@ export default function Register() {
         <div
           id="authentication-modal"
           aria-hidden="true"
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center  "
+          className="fixed inset-0 flex items-center justify-center h-full w-full bg-black bg-opacity-50"
         >
           <div className="flex relative bg-white rounded-lg shadow-2xl w-3/4 h-5/6">
             <button
