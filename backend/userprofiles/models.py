@@ -6,11 +6,13 @@ from django.contrib.auth.models import User
 class Country(models.Model):
     label = models.CharField(max_length=100, unique=True)
     country_code = models.CharField(max_length=5)
+
     class Meta:
         verbose_name_plural = "Countries"
 
     def __str__(self):
         return self.label
+
 
 class Interest(models.Model):
     label = models.CharField(max_length=100, unique=True)
@@ -18,48 +20,63 @@ class Interest(models.Model):
     def __str__(self):
         return self.label
 
+
 class UserType(models.Model):
     label = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.label
-    
+
+
 class AuthenticationType(models.Model):
     label = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.label
-    
+
+
 class UserProfile(models.Model):
+    GENDER_CHOICES = [
+        ("M", "Male"),
+        ("F", "Female"),
+        ("O", "Other"),
+    ]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.CharField(max_length=100, blank=True, null=True)
     country = models.ForeignKey(Country, on_delete=models.PROTECT, blank=False)
     description = models.TextField(max_length=1000)
     birth_date = models.DateField()
     user_type = models.ForeignKey(UserType, on_delete=models.PROTECT)
-    authentication_type = models.ForeignKey(AuthenticationType, on_delete=models.PROTECT)
+    authentication_type = models.ForeignKey(
+        AuthenticationType, on_delete=models.PROTECT
+    )
     interests = models.ManyToManyField(Interest)
     mobile_number = models.CharField(max_length=15)
-
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default="O")
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
-    
+
 
 class Degree(models.Model):
     label = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.label
-    
+
+
 class Institution(models.Model):
     label = models.CharField(max_length=100, unique=True)
     profile_picture = models.CharField(max_length=100, blank=True, null=True)
-    country = models.ForeignKey(Country, on_delete=models.PROTECT, blank=True,null=True)
+    country = models.ForeignKey(
+        Country, on_delete=models.PROTECT, blank=True, null=True
+    )
 
     def __str__(self):
         return self.label
-    
+
+
 class Education(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     institution = models.ForeignKey(Institution, on_delete=models.PROTECT)
@@ -71,7 +88,7 @@ class Education(models.Model):
 
     def __str__(self):
         return f"{self.user_profile.user.username}'s Education"
-    
+
 
 class WorkExperience(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
