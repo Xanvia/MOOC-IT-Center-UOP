@@ -1,6 +1,8 @@
-"use client"
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import ProfileButton from "./ProfileButton";
+import Link from "next/link";
+import PrimaryButton from "../Buttons/PrimaryButton";
 
 const Navbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -27,7 +29,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="bg-gray-800">
+    <nav className="bg-primary_test">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -73,42 +75,30 @@ const Navbar = () => {
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex flex-shrink-0 items-center">
-              <img
-                className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                alt="Your Company"
-              />
+              <h1 className="text-white text-2xl font-bold">MOOC</h1>
             </div>
-            <div className="hidden sm:ml-6 sm:block">
+            <div className="hidden py-10 pl-20 sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                <a
-                  href="#"
-                  className="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"
-                  aria-current="page"
-                >
-                  Dashboard
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                >
-                  Team
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                >
-                  Projects
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                >
-                  Calendar
-                </a>
+                <Link href="/" className="text-white hover:text-gray-300">
+                  HOME
+                </Link>
+                <Link href="/" className="text-white  hover:text-gray-300">
+                  ABOUT US
+                </Link>
+                <Link href="/" className="text-white  hover:text-gray-300">
+                  CONTACTS
+                </Link>
+                <Link href="/" className="text-white  hover:text-gray-300">
+                  FAQ
+                </Link>
               </div>
             </div>
           </div>
+          <div className="flex items-center gap-10 mt-2 pr-20 justify-center">
+            <PrimaryButton text="Login" />
+            <PrimaryButton text="Register" />
+          </div>
+
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <button
               type="button"
@@ -133,10 +123,10 @@ const Navbar = () => {
             </button>
 
             <ProfileButton
-          isProfileMenuOpen={isProfileMenuOpen}
-          toggleProfileMenu={toggleProfileMenu}
-          profileMenuRef={profileMenuRef}
-        />
+              isProfileMenuOpen={isProfileMenuOpen}
+              toggleProfileMenu={toggleProfileMenu}
+              profileMenuRef={profileMenuRef}
+            />
           </div>
         </div>
       </div>
