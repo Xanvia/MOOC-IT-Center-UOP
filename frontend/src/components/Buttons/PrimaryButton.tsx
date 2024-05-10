@@ -1,11 +1,13 @@
 // PrimaryButton.tsx
 import React from "react";
 
+
 interface PrimaryButtonProps {
   text: string;
+  onClick: () => void; // Add this line
 }
 
-const PrimaryButton: React.FC<PrimaryButtonProps> = ({ text }) => {
+const PrimaryButton: React.FC<PrimaryButtonProps> = ({ text, onClick }) => { 
   return (
     <button
       type="button"

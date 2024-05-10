@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ProfileButton from "./ProfileButton";
 import Link from "next/link";
+import Register from "../Register/Register";
 import PrimaryButton from "../Buttons/PrimaryButton";
 import SecondaryButton from "../Buttons/SecondaryButton";
 
