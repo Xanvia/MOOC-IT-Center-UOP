@@ -22,13 +22,6 @@ const config: Config = {
         background: "#fff",
       },
     },
-    colors: {
-      primary: "#2563EB",
-      secondary: "#2563EB",
-      text: "#333",
-      background: "#fff",
-      accent: "#FCD980",
-    },
   },
   plugins: [],
 };
