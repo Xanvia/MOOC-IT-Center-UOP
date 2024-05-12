@@ -1,12 +1,8 @@
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
-from typing import Any
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
-from rest_framework_simplejwt.tokens import AccessToken
 
 
 class UserRegisterViewTest(APITestCase):
@@ -42,6 +38,9 @@ class UserRegisterViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         created_user = User.objects.get(email=self.data["email"])
         self.assertEqual(created_user.email, self.data["email"])
+
+        group = Group.objects.get(name="student")
+        self.assertTrue(created_user.groups.filter(name=group.name).exists())
 
     def test_create_user_wrong_email_format(self):
         self.data["email"] = "testgmail.com"
