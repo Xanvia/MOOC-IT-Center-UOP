@@ -10,6 +10,7 @@ class UserRegistrationApiView(generics.CreateAPIView):
 
     def post(self, request):
         response = super().post(request)
+        
         response.data = {
             "status": "success",
             "message": "User registered successfully",

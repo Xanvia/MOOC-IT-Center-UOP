@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User, Group
+from rest_framework_simplejwt.tokens import AccessToken
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -34,5 +35,14 @@ class UserSerializer(serializers.ModelSerializer):
         # add user to group
         group = Group.objects.get(name=user_type)
         group.user_set.add(user)
-        
+
         return user
+    
+    def to_representation(self, instance):
+        return {
+            "user_id": instance.id,
+            "access_token": str(AccessToken.for_user(instance)),
+        }
+
+        
+    
