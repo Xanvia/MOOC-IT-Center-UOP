@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -20,3 +20,19 @@ class UserSerializer(serializers.ModelSerializer):
         if usertype not in ["student", "teacher"]:
             raise serializers.ValidationError({"user_type": "User type must be student or teacher"})
         return attrs
+    
+    def create(self, validated_data):
+        user_type = validated_data.pop("user_type")
+        password = validated_data.pop("password")
+        self.fields.pop("user_type")
+
+        #create user
+        user = super().create(validated_data)
+        user.set_password(password)
+        user.save()
+
+        # add user to group
+        group = Group.objects.get(name=user_type)
+        group.user_set.add(user)
+        
+        return user
