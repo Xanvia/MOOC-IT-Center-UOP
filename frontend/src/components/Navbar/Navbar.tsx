@@ -13,16 +13,16 @@ const Navbar = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   };
 
-  useEffect(() => {
-    const handleDocumentClick = (event: MouseEvent) => {
-      if (
-        profileMenuRef.current &&
-        (profileMenuRef.current as HTMLElement).contains(event.target as Node)
-      ) {
-        setIsProfileMenuOpen(false);
-      }
-    };
+  const handleDocumentClick = (event: MouseEvent) => {
+    if (
+      profileMenuRef.current &&
+      !(profileMenuRef.current as HTMLElement).contains(event.target as Node)
+    ) {
+      setIsProfileMenuOpen(false);
+    }
+  };
 
+  useEffect(() => {
     document.addEventListener("mousedown", handleDocumentClick);
     return () => {
       document.removeEventListener("mousedown", handleDocumentClick);
@@ -103,7 +103,7 @@ const Navbar = () => {
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <button
               type="button"
-              className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+              className="relative rounded-full bg-primary p-1 text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary_test"
             >
               <span className="absolute -inset-1.5"></span>
               <span className="sr-only">View notifications</span>
