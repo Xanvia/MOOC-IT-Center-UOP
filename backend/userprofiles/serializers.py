@@ -1,11 +1,22 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
+
 class UserSerializer(serializers.ModelSerializer):
     firstname = serializers.CharField(source="first_name", required=True)
     lastname = serializers.CharField(source="last_name", required=True)
+    user_type = serializers.CharField(required=True)
 
     class Meta:
         model = User
-        fields = ["firstname","lastname","email","password","username"]
+        fields = ["firstname", "lastname", "email", "password", "username","user_type"]
 
+    def validate(self, attrs):
+        email = attrs.get("email", "")
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError({"email": "Email already exists"})
+        
+        usertype = attrs.get("user_type", "")
+        if usertype not in ["student", "teacher"]:
+            raise serializers.ValidationError({"user_type": "User type must be student or teacher"})
+        return attrs
