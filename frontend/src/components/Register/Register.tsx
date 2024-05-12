@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
+import Dropdown from '../DropDown/DropDown';
 
 export default function Register() {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,8 +40,9 @@ export default function Register() {
               </div>
             </div>
             <div className="relative bg-white rounded-r-lg basis-8/12">
-              <div className="bg-white text-black px-6 py-8 basis-8/12">
+              <div className="bg-white text-blue-950 px-6 py-8 basis-8/12">
                 <h1 className="ps-10 py-4 text-2xl font-bold mb-4">Fill Your Details</h1>
+                <Dropdown />
                 <br/>
                 <div className=" px-8">
                 <center>
@@ -118,7 +120,7 @@ export default function Register() {
                     <button className="bg-primary_test align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-9 rounded-lg bg-accent text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
                       type="button">Continue with Google</button>
                     <br />
-                    <span className="text-blue-930 hover:text-white-700">
+                    <span className="text-blue-950 hover:text-white-700">
                       <br />
                       Already have an account? <u>Login</u>
                     </span>
