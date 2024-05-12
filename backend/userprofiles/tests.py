@@ -67,3 +67,8 @@ class UserRegisterViewTest(APITestCase):
             any(message in response.data["message"] for message in messages)
         )
 
+    def test_cannot_be_added_to_admin_group(self):
+        self.data["user_type"] = "admin"
+        response = self.post_request(self.data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data["message"], ["User type must be student or teacher"])
