@@ -95,7 +95,7 @@ const Navbar = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-10 mt-2 pr-20 justify-center">
+          <div className="flex items-center gap-5 mt-2 pr-20 justify-center">
             <SecondaryButton text="Login" />
             <PrimaryButton text="Register" />
           </div>
