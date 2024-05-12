@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import ProfileButton from "./ProfileButton";
 import Link from "next/link";
 import PrimaryButton from "../Buttons/PrimaryButton";
+import SecondaryButton from "../Buttons/SecondaryButton";
 
 const Navbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -29,7 +30,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="bg-primary_test">
+    <nav className="bg-primary">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -95,7 +96,7 @@ const Navbar = () => {
             </div>
           </div>
           <div className="flex items-center gap-10 mt-2 pr-20 justify-center">
-            <PrimaryButton text="Login" />
+            <SecondaryButton text="Login" />
             <PrimaryButton text="Register" />
           </div>
 
