@@ -22,19 +22,19 @@ const DropDown = () => {
   });
 
   return (
-    <div className="flex justify-center pt-5" ref={dropdownRef}>
-      <h3 className="pt-1 text-xl text-primary">I am a &nbsp;</h3>
+    <div className="flex justify-center pt-2 lg:pt-5" ref={dropdownRef}>
+      <h3 className="pt-1  text-xl text-primary font-medium">I am a &nbsp;</h3>
       <div>
         <div className="relative">
           <button
             type="button"
-            className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+            className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-primary shadow-sm ring-1 ring-inset ring-primary focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
             aria-haspopup="listbox"
             aria-expanded="true"
             aria-labelledby="listbox-label"
             onClick={() => setIsOpen(!isOpen)}
           >
-            <span className="flex items-center">
+            <span className="flex items-center text-primary">
               <span className="ml-3 block truncate">{selectedOption}</span>
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
@@ -70,8 +70,8 @@ const DropDown = () => {
                   setIsOpen(false);
                 }}
               >
-                <div className="flex items-center">
-                  <span className="font-normal ml-3 block truncate">
+                <div className="flex items-center text-primary">
+                  <span className="font-normal  ml-3 block truncate">
                     Teacher
                   </span>
                 </div>
