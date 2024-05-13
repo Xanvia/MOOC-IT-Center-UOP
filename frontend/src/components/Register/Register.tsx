@@ -2,6 +2,9 @@
 import React, { useState } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
 import Dropdown from "../DropDown/DropDown";
+import SolidButton from "../Buttons/SolidButton";
+import GoogleIcon from "@/icons/GoogleIcon";
+import SvgButton from "../Buttons/SvgButton";
 
 export default function Register() {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +32,7 @@ export default function Register() {
         >
           <div className="flex rounded-lg shadow-2xl w-4/6 h-4/5">
             <div className="relative basis-4/12">
-              <div className="bg-primary text-white px-6 py-4 rounded-lg absolute inset-0 flex pt-60 px-10 ">
+              <div className="bg-primary text-white px-6 py-4 rounded-l-lg absolute inset-0 flex pt-60 px-10 ">
                 <div className="">
                   <h1 className="text-6xl font-bold mb-4">MOOC</h1>
                   <span className="font-sans text-2xl ">
@@ -39,7 +42,7 @@ export default function Register() {
               </div>
             </div>
             <div className="relative bg-white rounded-r-lg basis-8/12">
-              <div className="relative bg-white text-blue-950 py-8 basis-8/12 p-10">
+              <div className="relative bg-white text-blue-950 py-8 basis-8/12 p-10 pt-10">
                 <h1 className="ps-5 py-4 text-3xl font-bold mb-4">
                   Take the First Step!
                 </h1>
@@ -118,22 +121,19 @@ export default function Register() {
                       </div>
                       <br />
                       <div className="pt-6">
-                        <button
-                          className="bg-primary_test align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-16 rounded-lg bg-accent text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
-                          type="button"
-                        >
-                          R E G I S T E R
-                        </button>
+                        <SolidButton
+                          text="R &nbsp; &nbsp; E &nbsp; &nbsp; G &nbsp; &nbsp; I &nbsp; &nbsp; S &nbsp; &nbsp; T &nbsp; &nbsp; E &nbsp; &nbsp; R"
+                          onClick={() => {}}
+                        />
                         <br />
                         <div className="text-gray-500 peer-focus:text-gray-500 py-1">
                           <p> -or- </p>
                         </div>
-                        <button
-                          className="bg-primary_test align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-9 rounded-lg bg-accent text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
-                          type="button"
-                        >
-                          Continue with Google
-                        </button>
+                        <SvgButton
+                          text="Continue with google"
+                          onClick={() => {}}
+                          svg={<GoogleIcon />}
+                        />
                         <br />
                         <span className="text-blue-950 hover:text-white-700">
                           <br />

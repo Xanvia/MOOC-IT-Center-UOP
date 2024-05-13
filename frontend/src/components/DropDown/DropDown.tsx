@@ -22,7 +22,7 @@ const DropDown = () => {
   });
 
   return (
-    <div className="flex justify-center" ref={dropdownRef}>
+    <div className="flex justify-center pt-5" ref={dropdownRef}>
       <h3 className="pt-1 text-xl text-primary">I am a &nbsp;</h3>
       <div>
         <div className="relative">
