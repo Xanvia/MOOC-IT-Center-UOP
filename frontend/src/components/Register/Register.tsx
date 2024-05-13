@@ -27,7 +27,7 @@ export default function Register() {
           aria-hidden="true"
           className="fixed inset-0 flex items-center justify-center h-full w-full bg-black bg-opacity-50"
         >
-          <div className="flex rounded-lg shadow-2xl w-3/4 h-5/6">
+          <div className="flex rounded-lg shadow-2xl w-4/6 h-4/5">
             <div className="relative basis-4/12">
               <div className="bg-primary text-white px-6 py-4 rounded-lg absolute inset-0 flex pt-60 px-10 ">
                 <div className="">
@@ -39,17 +39,17 @@ export default function Register() {
               </div>
             </div>
             <div className="relative bg-white rounded-r-lg basis-8/12">
-              <div className="bg-white text-blue-950 px-6 py-8 basis-8/12">
-                <h1 className="ps-10 py-4 text-2xl font-bold mb-4">
-                  Fill Your Details
+              <div className="relative bg-white text-blue-950 py-8 basis-8/12 p-10">
+                <h1 className="ps-5 py-4 text-3xl font-bold mb-4">
+                  Take the First Step!
                 </h1>
                 <Dropdown />
                 <br />
-                <div className=" px-8">
+                <div className="">
                   <center>
                     <form>
-                      <div className="grid grid-cols-2 gap-8">
-                        <div className="w-72">
+                      <div className="px-10 pt-10 grid grid-cols-2 gap-8">
+                        <div className="w-80">
                           <div className="relative w-full min-w-[200px] h-10">
                             <input
                               className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
@@ -60,7 +60,7 @@ export default function Register() {
                             </label>
                           </div>
                         </div>
-                        <div className="w-72">
+                        <div className="w-80">
                           <div className="relative w-full min-w-[200px] h-10">
                             <input
                               className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
@@ -71,7 +71,7 @@ export default function Register() {
                             </label>
                           </div>
                         </div>
-                        <div className="w-72">
+                        <div className="w-80">
                           <div className="relative w-full min-w-[200px] h-10">
                             <input
                               className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
@@ -82,7 +82,7 @@ export default function Register() {
                             </label>
                           </div>
                         </div>
-                        <div className="w-72">
+                        <div className="w-80">
                           <div className="relative w-full min-w-[200px] h-10">
                             <input
                               className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
@@ -93,7 +93,7 @@ export default function Register() {
                             </label>
                           </div>
                         </div>
-                        <div className="w-72">
+                        <div className="w-80">
                           <div className="relative w-full min-w-[200px] h-10">
                             <input
                               className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
@@ -104,7 +104,7 @@ export default function Register() {
                             </label>
                           </div>
                         </div>
-                        <div className="w-72">
+                        <div className="w-80">
                           <div className="relative w-full min-w-[200px] h-10">
                             <input
                               className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
