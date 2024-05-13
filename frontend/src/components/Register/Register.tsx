@@ -27,13 +27,12 @@ export default function Register() {
           aria-hidden="true"
           className="fixed inset-0 flex items-center justify-center h-full w-full bg-black bg-opacity-50"
         >
-          <div className="flex bg-primary_test rounded-lg shadow-2xl w-3/4 h-5/6">
+          <div className="flex rounded-lg shadow-2xl w-3/4 h-5/6">
             <div className="relative basis-4/12">
-              <div className="bg-primary_test text-white px-6 py-4 rounded-lg absolute inset-0 flex items-center justify-center ">
-                <div className="pt-1">
-                  <h1 className="text-5xl font-bold mb-4">MOOC</h1>
-                  <span className="font-sans ">
-                    {" "}
+              <div className="bg-primary text-white px-6 py-4 rounded-lg absolute inset-0 flex pt-60 px-10 ">
+                <div className="">
+                  <h1 className="text-6xl font-bold mb-4">MOOC</h1>
+                  <span className="font-sans text-2xl ">
                     {`"Empower your journey. Learn, grow, succeed with us."`}
                   </span>
                 </div>
