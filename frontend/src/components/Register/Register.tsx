@@ -30,19 +30,19 @@ export default function Register() {
           aria-hidden="true"
           className="fixed inset-0 flex items-center justify-center h-full w-full bg-black bg-opacity-50"
         >
-          <div className="flex md:rounded-lg md:shadow-2xl md:w-4/6 md:h-4/5 h-full w-full">
+          <div className="flex md:rounded-lg md:shadow-2xl md:w-[1000px] xl:w-[1200px] md:h-[700px] h-full w-full">
             <div className="hidden md:flex relative basis-4/12">
               <div className="bg-primary text-white px-10 py-4 rounded-l-lg absolute inset-0 flex pt-60 px-10 ">
                 <div className="">
                   <h1 className="text-4xl lg:text-6xl font-bold mb-4">MOOC</h1>
-                  <span className="font-sans text-base xl:text-2xl ">
+                  <span className="font-sans text-base xl:text-xl ">
                     {`"Empower your journey. Learn, grow, succeed with us."`}
                   </span>
                 </div>
               </div>
             </div>
             <div className="relative w-full h-11/12 bg-white md:rounded-r-lg md:basis-8/12 pt-10 pl-12 pr-10">
-              <h1 className="ps-5 py-1 lg:py-4 text-3xl text-primary font-bold mb-4">
+              <h1 className="ps-5 py-1 lg:py-4 text-2xl text-primary font-bold mb-4">
                 Take the First Step!
               </h1>
               <Dropdown />
