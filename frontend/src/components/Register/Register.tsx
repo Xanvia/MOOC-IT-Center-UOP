@@ -9,6 +9,14 @@ import SvgButton from "../Buttons/SvgButton";
 export default function Register() {
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+  };
+
+  const handleInsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsOpen(false);
+  };
+
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -29,8 +37,12 @@ export default function Register() {
           id="authentication-modal"
           aria-hidden="true"
           className="fixed inset-0 flex items-center justify-center h-full w-full bg-black bg-opacity-50"
+          onMouseDown={handleInsideClick}
         >
-          <div className="flex md:rounded-lg md:shadow-2xl md:w-[1000px] xl:w-[1200px] md:h-[700px] h-full w-full">
+          <div
+            onMouseDown={handleOutsideClick}
+            className="flex md:rounded-lg md:shadow-2xl md:w-[1000px] xl:w-[1200px] md:h-[700px] h-full w-full"
+          >
             <div className="hidden md:flex relative basis-4/12">
               <div className="bg-primary text-white px-10 py-4 rounded-l-lg absolute inset-0 flex pt-60 px-10 ">
                 <div className="">
