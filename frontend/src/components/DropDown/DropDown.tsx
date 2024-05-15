@@ -22,8 +22,8 @@ const DropDown = () => {
   });
 
   return (
-    <div className="flex justify-center pt-2 lg:pt-5" ref={dropdownRef}>
-      <h3 className="pt-1  text-xl text-primary font-medium">I am a &nbsp;</h3>
+    <div className="flex justify-center pt-2 lg:pt-5 2xl:pt-1" ref={dropdownRef}>
+      <h3 className="pt-1  text-xl 2xl:text-lg text-primary font-medium">I am a &nbsp;</h3>
       <div>
         <div className="relative">
           <button
