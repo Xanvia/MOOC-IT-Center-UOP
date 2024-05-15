@@ -36,12 +36,12 @@ export default function Register() {
         <div
           id="authentication-modal"
           aria-hidden="true"
-          className="fixed inset-0 flex items-center justify-center h-full w-full bg-black bg-opacity-50"
+          className="fixed z-10 inset-0 flex items-center justify-center h-full w-full bg-black bg-opacity-50"
           onMouseDown={handleInsideClick}
         >
           <div
             onMouseDown={handleOutsideClick}
-            className="flex md:rounded-lg md:shadow-2xl md:w-[1000px] xl:w-[1200px] md:h-[700px] h-full w-full"
+            className="flex md:rounded-lg md:shadow-2xl md:w-[1000px] xl:w-[1150px] md:h-[700px] h-full w-full"
           >
             <div className="hidden md:flex relative basis-4/12">
               <div className="bg-primary text-white px-10 py-4 rounded-l-lg absolute inset-0 flex pt-60 px-10 ">
@@ -61,7 +61,7 @@ export default function Register() {
               <br />
               <center>
                 <form>
-                  <div className="md:px-5 lg:px-10 md:pt-10 grid grid-cols-1 lg:grid-cols-2  gap-6 md:gap-2 xl:gap-8">
+                  <div className="md:px-5 lg:px-10 md:pt-6 grid grid-cols-1 lg:grid-cols-2  gap-6 md:gap-2 xl:gap-8">
                     <div className="w-80 md:w-auto mx-auto md:mx-0">
                       <div className="relative w-full min-w-[200px] h-10">
                         <input
@@ -130,7 +130,7 @@ export default function Register() {
                     </div>
                   </div>
                   <br />
-                  <div className="lg:pt-8">
+                  <div className="lg:pt-6">
                     <SolidButton text="R E G I S T E R" onClick={() => {}} />
                     <br />
                     <div className="text-gray-500 peer-focus:text-gray-500 py-2">
