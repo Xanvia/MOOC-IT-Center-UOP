@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import GoogleButton from "./GoogleButton";
+import SecondaryButton from "../Buttons/SecondaryButton";
 
 export default function Login() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,8 +20,7 @@ export default function Login() {
 
   return (
     <>
-      <body className="grid h-screen w-full place-items-center bg-[#f5f5f5]">
-        <div className="max-w-[350px] w-full shadow-[0_10px_10px_rgba(0,0,0,0.15)] px-[30px] py-[25px] rounded-[5px] bg-[#fff]">
+      {/* <div className="max-w-[350px] w-full shadow-[0_10px_10px_rgba(0,0,0,0.15)] px-[30px] py-[25px] rounded-[5px] bg-[#fff]">
           <form action="#">
             <div className="text-3xl font-bold text-[#072569] text-center mt-5 mb-2.5 mx-0">
               Welcome Back!
@@ -72,16 +72,9 @@ export default function Login() {
               Register
             </a>
           </div>
-        </div>
-      </body>
+        </div> */}
 
-      <button
-        onClick={toggleModal}
-        className="block text-white bg-button_yellow hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center  dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        type="button"
-      >
-        LogIn
-      </button>
+        <SecondaryButton onClick={toggleModal} text="Login" />
 
       {isOpen && (
         <div

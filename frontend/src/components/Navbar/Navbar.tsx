@@ -5,6 +5,7 @@ import Link from "next/link";
 import PrimaryButton from "../Buttons/PrimaryButton";
 import SecondaryButton from "../Buttons/SecondaryButton";
 import Register from "../Register/Register";
+import Login from "../Login/Login";
 
 const Navbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -135,8 +136,8 @@ const Navbar = () => {
               </div>
             ) : (
               <>
-                <SecondaryButton text="Login" />
-                <Register/>
+                <Login />
+                <Register />
               </>
             )}
           </div>
@@ -204,4 +205,6 @@ const Navbar = () => {
       )}
     </nav>
   );
-}
+};
+
+export default Navbar;
