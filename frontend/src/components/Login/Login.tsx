@@ -40,7 +40,7 @@ export default function Login() {
         >
           <div
             onMouseDown={handleOutsideClick}
-            className="relative bg-white rounded-lg shadow-2xl w-[450px] h-[720px] px-16 pt-4"
+            className="relative h-full w-full bg-white rounded-lg shadow-2xl sm:w-[450px] sm:h-[720px] px-16 pt-4"
           >
             <button
               type="button"
@@ -70,7 +70,7 @@ export default function Login() {
             </div>
 
             <form action="#">
-              <div className="pt-20 grid grid-cols-1 gap-8">
+              <div className="pt-16 grid grid-cols-1 gap-8">
                 <div className="w-80 md:w-auto mx-auto md:mx-0">
                   <div className="relative w-full min-w-[200px] h-10">
                     <input
@@ -96,10 +96,10 @@ export default function Login() {
               </div>
             </form>
 
-            <div className="pt-16 px-8">
+            <div className="pt-16 sm:px-8 flex flex-col items-center justify-center">
               <SolidButton text="R E G I S T E R" onClick={() => {}} />
               <br />
-              <div className="text-gray-500 peer-focus:text-gray-500 py-2 px-28">
+              <div className="text-gray-500 peer-focus:text-gray-500 py-2 px-28 text-center">
                 <p> -or- </p>
               </div>
               <SvgButton
@@ -108,8 +108,7 @@ export default function Login() {
                 svg={<GoogleIcon />}
               />
               <br />
-              <div className="text-blue-950 pt-16">
-                <br />
+              <div className="text-blue-950 pt-16 text-center">
                 Already have an account? <u>Login</u>
               </div>
             </div>
