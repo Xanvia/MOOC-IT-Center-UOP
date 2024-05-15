@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import GoogleButton from "./GoogleButton";
+import "@fortawesome/fontawesome-free/css/all.css";
 
 export default function Login() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,6 +20,38 @@ export default function Login() {
 
   return (
     <>
+
+      <body className="grid h-screen w-full place-items-center bg-[#f5f5f5]"> 
+          <div className="max-w-[350px] w-full shadow-[0_10px_10px_rgba(0,0,0,0.15)] px-[30px] py-[25px] rounded-[5px] bg-[#fff]">
+            <form action="#"><div className="text-3xl font-bold text-[#072569] text-center mt-5 mb-2.5 mx-0">Welcome Back!</div>
+              
+              <div className="w-full h-[35px] mt-[25px]">
+                <input className="h-full w-full text-xs border pl-[15px] rounded-[5px] border-solid border-[#072569]" 
+                type="text" placeholder="Enter Your Email" required/>
+              </div>
+              
+              <div className="w-full h-[35px] mt-[25px]">
+                <input className="h-full w-full text-xs border pl-[15px] rounded-[5px] border-solid border-[#072569]" 
+                type="password" placeholder="Enter Your Password" required/>
+              </div>
+              
+              <div className="w-full h-[35px] mt-[25px] ">
+                <input className="h-full w-full text-[15px] text-white cursor-pointer transition-all duration-[0.3s] ease-[ease] rounded-[5px] hover:tracking-[1px] bg-[#072569] hover:bg-[#2563eb]" 
+                type="submit" value="Login"/>
+              </div>
+
+            </form>
+            <div className="google">
+              <a className="block w-full h-[35px] text-xs no-underline text-center text-white leading-[35px] mt-5 mb-[15px] mx-0 pl-5 rounded-[5px] bg-[#072569] " href="#"><i className="fa-brands fa-google text-xs pr-3"></i>Login with Google</a>
+            </div>
+            <div className="text-xs justify-center flex mt-[25px] mb-5 mx-0">
+              <div className="text-[#072569] no-underline pl-0 pr-[5px] py-0">Dont have an account?</div>
+              <a className="text-[#072569] font-bold no-underline pl-[5px] pr-0 py-0" href="#">Register</a>
+            </div>
+          </div>
+      </body>
+      
+      
       <button
         onClick={toggleModal}
         className="block text-white bg-button_yellow hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center  dark:hover:bg-blue-700 dark:focus:ring-blue-800"
