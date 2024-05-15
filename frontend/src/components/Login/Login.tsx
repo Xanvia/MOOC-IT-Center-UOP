@@ -1,14 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import GoogleButton from "./GoogleButton";
 import SecondaryButton from "../Buttons/SecondaryButton";
+import SolidButton from "../Buttons/SolidButton";
+import SvgButton from "../Buttons/SvgButton";
+import GoogleIcon from "@/icons/GoogleIcon";
 
 export default function Login() {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    
   };
 
   const handleInsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -22,7 +23,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   const handleSubmit = () => {
-    // Here you can add your logic for handling the login
     console.log("Email:", email);
     console.log("Password:", password);
   };
@@ -65,58 +65,53 @@ export default function Login() {
               </svg>
               <span className="sr-only">Close modal</span>
             </button>
-            <div className="text-3xl font-bold text-[#072569] text-center mt-5 mb-2.5 mx-0">
+            <div className="text-3xl font-bold text-[#072569] text-center mt-10 mb-2.5 mx-0">
               Welcome Back!
             </div>
 
             <form action="#">
-              <div>
-                <div className="w-full h-[35px] mt-[25px]">
-                  <input
-                    className="h-full w-full text-xs border pl-[15px] rounded-[5px] border-solid border-[#072569]"
-                    type="text"
-                    placeholder="Enter Your Email"
-                    required
-                  />
+              <div className="pt-20 grid grid-cols-1 gap-8">
+                <div className="w-80 md:w-auto mx-auto md:mx-0">
+                  <div className="relative w-full min-w-[200px] h-10">
+                    <input
+                      className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2  focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-primary focus:border-gray-900"
+                      placeholder=" "
+                    />
+                    <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-primary leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-500 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
+                      Email
+                    </label>
+                  </div>
                 </div>
-
-                <div className="w-full h-[35px] mt-[25px]">
-                  <input
-                    className="h-full w-full text-xs border pl-[15px] rounded-[5px] border-solid border-[#072569]"
-                    type="password"
-                    placeholder="Enter Your Password"
-                    required
-                  />
-                </div>
-
-                <div className="w-full h-[35px] mt-[25px] ">
-                  <input
-                    className="h-full w-full text-[15px] text-white cursor-pointer transition-all duration-[0.3s] ease-[ease] rounded-[5px] hover:tracking-[1px] bg-[#072569] hover:bg-[#2563eb]"
-                    type="submit"
-                    value="Login"
-                  />
+                <div className="w-80 md:w-auto mx-auto md:mx-0">
+                  <div className="relative w-full min-w-[200px] h-10">
+                    <input
+                      className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2  focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-primary focus:border-gray-900"
+                      placeholder=" "
+                    />
+                    <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-primary leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-500 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
+                      Password
+                    </label>
+                  </div>
                 </div>
               </div>
             </form>
-            <div className="google">
-              <a
-                className="block w-full h-[35px] text-xs no-underline text-center text-white leading-[35px] mt-5 mb-[15px] mx-0 pl-5 rounded-[5px] bg-[#072569] "
-                href="#"
-              >
-                <i className="fa-brands fa-google text-xs pr-3"></i>Login with
-                Google
-              </a>
-            </div>
-            <div className="text-xs justify-center flex mt-[25px] mb-5 mx-0">
-              <div className="text-[#072569] no-underline pl-0 pr-[5px] py-0">
-                Dont have an account?
+
+            <div className="pt-16 px-8">
+              <SolidButton text="R E G I S T E R" onClick={() => {}} />
+              <br />
+              <div className="text-gray-500 peer-focus:text-gray-500 py-2 px-28">
+                <p> -or- </p>
               </div>
-              <a
-                className="text-[#072569] font-bold no-underline pl-[5px] pr-0 py-0"
-                href="#"
-              >
-                Register
-              </a>
+              <SvgButton
+                text="Continue with google"
+                onClick={() => {}}
+                svg={<GoogleIcon />}
+              />
+              <br />
+              <div className="text-blue-950 pt-16">
+                <br />
+                Already have an account? <u>Login</u>
+              </div>
             </div>
           </div>
         </div>
