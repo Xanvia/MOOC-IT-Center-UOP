@@ -27,7 +27,7 @@
   {
     "model": "userprofiles.country",
     "pk": 6,
-    "fields": { "label": "Antigua and Barbuda", "country_code": "+1-268" }
+    "fields": { "label": "Antigua", "country_code": "+1268" }
   },
   {
     "model": "userprofiles.country",
@@ -57,7 +57,7 @@
   {
     "model": "userprofiles.country",
     "pk": 12,
-    "fields": { "label": "Bahamas", "country_code": "+1-242" }
+    "fields": { "label": "Bahamas", "country_code": "+1242" }
   },
   {
     "model": "userprofiles.country",
@@ -72,7 +72,7 @@
   {
     "model": "userprofiles.country",
     "pk": 15,
-    "fields": { "label": "Barbados", "country_code": "+1-246" }
+    "fields": { "label": "Barbados", "country_code": "+1246" }
   },
   {
     "model": "userprofiles.country",
@@ -232,14 +232,14 @@
   {
     "model": "userprofiles.country",
     "pk": 47,
-    "fields": { "label": "Dominica", "country_code": "+1-767" }
+    "fields": { "label": "Dominica", "country_code": "+1767" }
   },
   {
     "model": "userprofiles.country",
     "pk": 48,
     "fields": {
       "label": "Dominican Republic",
-      "country_code": "+1-809, +1-829, +1-849"
+      "country_code": "+1809"
     }
   },
   {
@@ -335,7 +335,7 @@
   {
     "model": "userprofiles.country",
     "pk": 67,
-    "fields": { "label": "Grenada", "country_code": "+1-473" }
+    "fields": { "label": "Grenada", "country_code": "+1473" }
   },
   {
     "model": "userprofiles.country",
@@ -415,7 +415,7 @@
   {
     "model": "userprofiles.country",
     "pk": 83,
-    "fields": { "label": "Jamaica", "country_code": "+1-876" }
+    "fields": { "label": "Jamaica", "country_code": "+1876" }
   },
   {
     "model": "userprofiles.country",
@@ -730,19 +730,19 @@
   {
     "model": "userprofiles.country",
     "pk": 146,
-    "fields": { "label": "Saint Kitts and Nevis", "country_code": "+1-869" }
+    "fields": { "label": "Saint Kitts and Nevis", "country_code": "+1869" }
   },
   {
     "model": "userprofiles.country",
     "pk": 147,
-    "fields": { "label": "Saint Lucia", "country_code": "+1-758" }
+    "fields": { "label": "Saint Lucia", "country_code": "+1758" }
   },
   {
     "model": "userprofiles.country",
     "pk": 148,
     "fields": {
       "label": "Saint Vincent and the Grenadines",
-      "country_code": "+1-784"
+      "country_code": "+1784"
     }
   },
   {
@@ -888,7 +888,7 @@
   {
     "model": "userprofiles.country",
     "pk": 177,
-    "fields": { "label": "Trinidad and Tobago", "country_code": "+1-868" }
+    "fields": { "label": "Trinidad and Tobago", "country_code": "+1868" }
   },
   {
     "model": "userprofiles.country",
