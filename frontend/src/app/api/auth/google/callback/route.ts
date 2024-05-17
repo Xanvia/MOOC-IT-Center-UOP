@@ -14,5 +14,17 @@ export async function GET(request: NextRequest) {
 
   const { data } = response;
 
-  return NextResponse.json("message: 'success'");
+  return new NextResponse(
+    `<html>
+       <body>
+         <script>
+           window.opener.postMessage('auth-success', '*');
+           window.close();
+         </script>
+       </body>
+     </html>`,
+    {
+      headers: { "Content-Type": "text/html" },
+    }
+  );
 }
