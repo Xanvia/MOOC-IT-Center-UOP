@@ -4,6 +4,7 @@ import SecondaryButton from "../Buttons/SecondaryButton";
 import SolidButton from "../Buttons/SolidButton";
 import SvgButton from "../Buttons/SvgButton";
 import GoogleIcon from "@/icons/GoogleIcon";
+import { openGoogleLoginPage } from "@/utils/GoogleAuth";
 
 export default function Login() {
   const [isOpen, setIsOpen] = useState(false);
@@ -104,7 +105,7 @@ export default function Login() {
               </div>
               <SvgButton
                 text="Continue with google"
-                onClick={() => {}}
+                onClick={openGoogleLoginPage}
                 svg={<GoogleIcon />}
               />
               <br />
