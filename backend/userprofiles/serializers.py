@@ -3,7 +3,6 @@ from django.contrib.auth.models import  User, Group
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
 from .models import UserProfile
-from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -47,27 +46,19 @@ class UserSerializer(serializers.ModelSerializer):
             "access_token": str(AccessToken.for_user(instance)),
         }
 
-class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(source="user", required=True)
-    password = serializers.CharField(write_only=True)
+class UserLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
 
-    def validate(self, data):
-        username = data.get('username')
-        password = data.get('password')
+    def validate(self, attrs):
+        email = attrs["email"]
+        try:
+            user = User.objects.get(email=email)
+            attrs["username"] = user.username
+        except User.DoesNotExist:
+            attrs["username"] = None
+        return attrs
 
-        if username and password:
-            user = authenticate(username=username, password=password)
-            if user is None:
-                raise serializers.ValidationError('Invalid login credentials')
-
-            refresh = RefreshToken.for_user(user)
-
-            return {
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-            }
-        else:
-            raise serializers.ValidationError('Must include "username" and "password"') 
     
     
 class UserProfileSerializer(serializers.ModelSerializer):
