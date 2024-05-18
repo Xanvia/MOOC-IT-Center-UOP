@@ -56,7 +56,7 @@ class GoogleAuthSerializer(serializers.Serializer):
     user_type = serializers.CharField(required=True)
     email = serializers.EmailField(required=True)
     username = serializers.CharField(required=True)
-    user_profile = UserProfileSerializer()
+    profile_picture = serializers.CharField(required=False)
 
     def validate(self, attrs):
         email = attrs.get("email", "")
@@ -70,7 +70,7 @@ class GoogleAuthSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         user_type = validated_data.pop("user_type")
-        profile_data = validated_data.pop('user_profile')
+        profile_picture = validated_data.pop("profile_picture", None)
         self.fields.pop("user_type")
 
         # check if user exists
@@ -82,7 +82,7 @@ class GoogleAuthSerializer(serializers.Serializer):
             group.user_set.add(user)
 
             # create user profile
-            UserProfile.objects.create(user=user, **profile_data)
+            UserProfile.objects.create(user=user, profile_picture=profile_picture)
 
         return user
 

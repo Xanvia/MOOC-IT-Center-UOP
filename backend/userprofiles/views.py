@@ -1,8 +1,8 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer,GoogleAuthSerializer
-from .utils import get_access_token, get_user_info
+from .serializers import UserSerializer, GoogleAuthSerializer
+from .utils import google_authenticate
 
 
 class UserRegistrationApiView(generics.CreateAPIView):
@@ -21,20 +21,22 @@ class UserRegistrationApiView(generics.CreateAPIView):
 
 
 class GoogleAuthView(generics.CreateAPIView):
+    serializer_class = GoogleAuthSerializer
+    permission_classes = [permissions.AllowAny]
+
     def post(self, request):
-        code = request.data.get('code')
-        redirect_uri = request.data.get('redirect_uri')
+        code = request.data.get("code")
+        redirect_uri = request.data.get("redirect_uri")
 
-        access_token = get_access_token(code, redirect_uri)
-        user_info = get_user_info(access_token)
+        user = google_authenticate(code, redirect_uri)
 
-        # Add user info to request data
-        request.data.update(user_info)
+        request.data.update(user)
 
-        response = super.create(request)
+        response = super().create(request)
 
         response.data = {
             "status": "success",
             "message": "User authenticated successfully",
             "data": response.data,
         }
+        return Response(response.data, status=status.HTTP_200_OK)
