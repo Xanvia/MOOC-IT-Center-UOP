@@ -42,4 +42,3 @@ class GoogleAuthView(generics.CreateAPIView):
         return Response(response.data, status=status.HTTP_200_OK)
 
 
-#hjkl
