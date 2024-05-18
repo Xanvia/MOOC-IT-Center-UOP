@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 const DropDown = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("Student");
+  const [selectedOption, setSelectedOption] = useState("Choose");
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -23,7 +23,9 @@ const DropDown = () => {
 
   return (
     <div className="flex justify-center pt-2 lg:pt-2" ref={dropdownRef}>
-      <h3 className="pt-1  text-xl text-primary font-medium">I am a &nbsp;</h3>
+      <h3 className="pt-1  text-xl text-primary font-medium">
+        I am a<sup className="text-red-500">*</sup> &nbsp;
+      </h3>
       <div>
         <div className="relative">
           <button
