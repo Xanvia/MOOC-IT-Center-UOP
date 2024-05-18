@@ -1,0 +1,234 @@
+import clsx from "clsx";
+
+export const ModalClassesBG = clsx(
+  "fixed",
+  "inset-0",
+  "flex",
+  "items-center",
+  "justify-center",
+  "h-full",
+  "w-full",
+  "bg-black",
+  "bg-opacity-50",
+  "z-10"
+);
+
+export const RegisterModalClasses = clsx(
+  "flex",
+  "md:rounded-lg",
+  "md:shadow-2xl",
+  "md:w-[1000px]",
+  "md:h-[700px]",
+  "xl:w-[1150px]",
+  "h-full",
+  "w-full"
+);
+
+export const LoginModalClasses = clsx(
+  "relative",
+  "h-full",
+  "w-full",
+  "bg-white",
+  "rounded-lg",
+  "shadow-2xl",
+  "sm:w-[450px]",
+  "sm:h-[720px]",
+  "px-16",
+  "pt-4"
+);
+
+export const InputOuterDiv = clsx("w-80", "md:w-auto", "mx-auto", "md:mx-0");
+
+export const InputInnerDiv = clsx(
+  "relative",
+  "w-full",
+  "min-w-[200px]",
+  "h-10"
+);
+
+export const InputFieldClasses = clsx(
+  "peer",
+  "w-full",
+  "h-full",
+  "bg-transparent",
+  "text-blue-gray-700",
+  "font-sans",
+  "font-normal",
+  "outline",
+  "outline-0",
+  "focus:outline-0",
+  "disabled:bg-blue-gray-50",
+  "disabled:border-0",
+  "transition-all",
+  "placeholder-shown:border",
+  "placeholder-shown:border-blue-gray-200",
+  "placeholder-shown:border-t-blue-gray-200",
+  "border",
+  "focus:border-2",
+  "focus:border-t-transparent",
+  "text-sm",
+  "px-3",
+  "py-2.5",
+  "rounded-[7px]",
+  "border-primary",
+  "focus:border-gray-900"
+);
+
+const LabelbaseClasses = clsx(
+  "flex",
+  "w-full",
+  "h-full",
+  "select-none",
+  "pointer-events-none",
+  "absolute",
+  "left-0",
+  "font-normal",
+  "!overflow-visible",
+  "truncate",
+  "peer-placeholder-shown:text-primary",
+  "leading-tight",
+  "peer-focus:leading-tight",
+  "peer-disabled:text-transparent",
+  "peer-disabled:peer-placeholder-shown:text-blue-gray-500",
+  "transition-all",
+  "-top-1.5",
+  "peer-placeholder-shown:text-sm",
+  "text-[11px]",
+  "peer-focus:text-[11px]",
+  "peer-placeholder-shown:leading-[3.75]",
+  "text-gray-500",
+  "peer-focus:text-gray-500"
+);
+
+const LabelbeforeClasses = clsx(
+  "before:content[' ']",
+  "before:block",
+  "before:box-border",
+  "before:w-2.5",
+  "before:h-1.5",
+  "before:mt-[6.5px]",
+  "before:mr-1",
+  "peer-placeholder-shown:before:border-transparent",
+  "before:rounded-tl-md",
+  "before:border-t",
+  "peer-focus:before:border-t-2",
+  "before:border-l",
+  "peer-focus:before:border-l-2",
+  "before:pointer-events-none",
+  "before:transition-all",
+  "peer-disabled:before:border-transparent",
+  "before:border-blue-gray-200",
+  "peer-focus:before:!border-gray-900"
+);
+
+const LabelafterClasses = clsx(
+  "after:content[' ']",
+  "after:block",
+  "after:flex-grow",
+  "after:box-border",
+  "after:w-2.5",
+  "after:h-1.5",
+  "after:mt-[6.5px]",
+  "after:ml-1",
+  "peer-placeholder-shown:after:border-transparent",
+  "after:rounded-tr-md",
+  "after:border-t",
+  "peer-focus:after:border-t-2",
+  "after:border-r",
+  "peer-focus:after:border-r-2",
+  "after:pointer-events-none",
+  "after:transition-all",
+  "peer-disabled:after:border-transparent",
+  "after:border-blue-gray-200",
+  "peer-focus:after:!border-gray-900"
+);
+
+export const InputLabel = clsx(
+  LabelbaseClasses,
+  LabelbeforeClasses,
+  LabelafterClasses
+);
+
+export const RegisterBlueDiv = clsx(
+  "bg-primary",
+  "text-white",
+  "px-10",
+  "py-4",
+  "rounded-l-lg",
+  " absolute",
+  "inset-0",
+  "flex",
+  "pt-60",
+  "px-10"
+);
+
+export const RegisterWhiteDiv = clsx(
+  "relative w-full h-11/12 bg-white md:rounded-r-lg md:basis-8/12 pt-10 pl-12 pr-10"
+);
+
+export const MobileMenuClasses = clsx(
+  "relative",
+  "inline-flex",
+  "items-center",
+  "justify-center",
+  "rounded-md",
+  "p-2",
+  "text-white",
+  "hover:bg-gray-700",
+  "hover:text-white",
+  "focus:outline-none",
+  "focus:ring-2",
+  "focus:ring-inset",
+  "focus:ring-white"
+);
+
+export const NavLinkContainer = clsx(
+  "flex",
+  "flex-1",
+  "items-center",
+  "justify-center",
+  "sm:items-stretch",
+  "md:justify-start"
+);
+
+export const NavLink = clsx("text-white", "hover:text-gray-300");
+
+export const NotificationButtonMobileClasses = clsx(
+  "relative",
+  "rounded-full",
+  "bg-primary",
+  "p-1",
+  "text-white",
+  "hover:text-white",
+  "focus:outline-none",
+  "focus:ring-2",
+  "focus:ring-white",
+  "focus:ring-offset-2",
+  "focus:ring-offset-primary_test"
+);
+
+export const NotificationButtonClasses = clsx(
+  "relative",
+  "rounded-full",
+  "bg-primary",
+  "p-1",
+  "text-white",
+  "hover:text-white",
+  "focus:outline-none",
+  "focus:ring-2",
+  "focus:ring-white",
+  "focus:ring-offset-2",
+  "focus:ring-offset-primary_test"
+);
+
+export const MobileLinkClasses = clsx(
+  "text-gray-300",
+  "hover:bg-gray-700",
+  "hover:text-white",
+  "block",
+  "rounded-md",
+  "px-3",
+  "py-2",
+  "text-base",
+  "font-medium"
+);

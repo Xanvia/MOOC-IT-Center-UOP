@@ -2,10 +2,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import ProfileButton from "./ProfileButton";
 import Link from "next/link";
-import PrimaryButton from "../Buttons/PrimaryButton";
-import SecondaryButton from "../Buttons/SecondaryButton";
 import Register from "../Register/Register";
 import Login from "../Login/Login";
+import {
+  MobileLinkClasses,
+  MobileMenuClasses,
+  NavLink,
+  NavLinkContainer,
+  NotificationButtonClasses,
+  NotificationButtonMobileClasses,
+} from "../components.styles";
 
 const Navbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -43,7 +49,7 @@ const Navbar = () => {
           <div className="absolute inset-y-0 left-0 flex items-center md:hidden">
             <button
               type="button"
-              className="relative inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className={MobileMenuClasses}
               aria-controls="mobile-menu"
               aria-expanded="false"
               onClick={toggleMobileMenu}
@@ -82,22 +88,22 @@ const Navbar = () => {
               </svg>
             </button>
           </div>
-          <div className="flex flex-1 items-center justify-center sm:items-stretch md:justify-start">
+          <div className={NavLinkContainer}>
             <div className="hidden sm:flex flex-shrink-0 items-center">
               <h1 className="text-white text-3xl sm:font-bold">MOOC</h1>
             </div>
             <div className="hidden py-5 md:py-10 lg:pl-20 md:ml-6 md:block lg:text-base text-sm">
               <div className="flex space-x-4">
-                <Link href="/" className="text-white hover:text-gray-300">
+                <Link href="/" className={NavLink}>
                   HOME
                 </Link>
-                <Link href="/" className="text-white  hover:text-gray-300">
+                <Link href="/" className={NavLink}>
                   ABOUT US
                 </Link>
-                <Link href="/" className="text-white  hover:text-gray-300">
+                <Link href="/" className={NavLink}>
                   CONTACTS
                 </Link>
-                <Link href="/" className="text-white  hover:text-gray-300">
+                <Link href="/" className={NavLink}>
                   FAQ
                 </Link>
               </div>
@@ -108,7 +114,7 @@ const Navbar = () => {
               <div className="flex md:hidden absolute inset-y-0 right-0 items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <button
                   type="button"
-                  className="relative rounded-full bg-primary p-1 text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary_test"
+                  className={NotificationButtonMobileClasses}
                 >
                   <span className="absolute -inset-1.5"></span>
                   <span className="sr-only">View notifications</span>
@@ -143,10 +149,7 @@ const Navbar = () => {
           </div>
 
           <div className="hidden absolute inset-y-0 right-0 md:flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <button
-              type="button"
-              className="relative rounded-full bg-primary p-1 text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary_test"
-            >
+            <button type="button" className={NotificationButtonClasses}>
               <span className="absolute -inset-1.5"></span>
               <span className="sr-only">View notifications</span>
               <svg
@@ -176,28 +179,16 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden" id="mobile-menu">
           <div className="space-y-1 px-2 pb-3 pt-2">
-            <a
-              href="#"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-            >
+            <a href="#" className={MobileLinkClasses}>
               HOME
             </a>
-            <a
-              href="#"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-            >
+            <a href="#" className={MobileLinkClasses}>
               ABOUT US
             </a>
-            <a
-              href="#"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-            >
+            <a href="#" className={MobileLinkClasses}>
               CONTACTS
             </a>
-            <a
-              href="#"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-            >
+            <a href="#" className={MobileLinkClasses}>
               FAQ
             </a>
           </div>
