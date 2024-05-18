@@ -28,6 +28,7 @@ class UserLoginViewTest(APITestCase):
             "username": user.username,
             "full_name": f"{user.first_name} {user.last_name}",
             "email": user.email,
+            "profile_picture": None,
         }
         expected_response = {"status": "success", "data": {"user": user_object}}
         self.assertEqual(response.status_code, status.HTTP_200_OK)
