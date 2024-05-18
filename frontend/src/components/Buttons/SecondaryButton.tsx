@@ -1,4 +1,5 @@
 import React from "react";
+import { SecondaryButtonClass } from "../components.styles";
 
 interface ButtonProps {
   text: string;
@@ -7,11 +8,7 @@ interface ButtonProps {
 
 const SecondaryButton: React.FC<ButtonProps> = ({ text, onClick }) => {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="focus:outline-none text-white bg-primary hover:bg-white hover:text-black focus:ring-4 focus:ring-white-300 font-medium rounded-lg text-sm px-6 py-2 me-2 mb-2 dark:focus:ring-white-900 border border-white-800"
-    >
+    <button type="button" onClick={onClick} className={SecondaryButtonClass}>
       {text}
     </button>
   );

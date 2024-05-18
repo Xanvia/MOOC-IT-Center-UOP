@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { CloseButtonClasses } from "../components.styles";
 
 interface CloseButtonProps {
   onClick: () => void;
@@ -15,7 +16,7 @@ export default function CloseButton({ onClick }: CloseButtonProps) {
   return (
     <button
       type="button"
-      className="absolute top-0 right-0 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+      className={CloseButtonClasses}
       data-modal-hide="authentication-modal"
       onClick={onClick}
     >
