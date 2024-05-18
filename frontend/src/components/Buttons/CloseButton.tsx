@@ -1,17 +1,23 @@
 import React, { useState } from "react";
 
-export default function Register() {
+interface CloseButtonProps {
+  onClick: () => void;
+}
+
+export default function CloseButton({ onClick }: CloseButtonProps) {
   const [isOpen, setIsOpen] = useState(true);
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
+    onClick(); // Call the onClick event passed in props
   };
+
   return (
     <button
       type="button"
-      className="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+      className="absolute top-0 right-0 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
       data-modal-hide="authentication-modal"
-      onClick={toggleModal}
+      onClick={onClick}
     >
       <svg
         className="w-3 h-3"

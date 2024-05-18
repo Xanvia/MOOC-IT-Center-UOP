@@ -5,6 +5,7 @@ import SolidButton from "../Buttons/SolidButton";
 import SvgButton from "../Buttons/SvgButton";
 import GoogleIcon from "@/icons/GoogleIcon";
 import { openGoogleLoginPage } from "@/utils/GoogleAuth";
+import CloseButton from "../Buttons/CloseButton";
 
 export default function Login() {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,29 +44,7 @@ export default function Login() {
             onMouseDown={handleOutsideClick}
             className="relative h-full w-full bg-white rounded-lg shadow-2xl sm:w-[450px] sm:h-[720px] px-16 pt-4"
           >
-            <button
-              type="button"
-              className="absolute top-0 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-              data-modal-hide="authentication-modal"
-              onClick={toggleModal}
-            >
-              <svg
-                className="w-3 h-3"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 14 14"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                />
-              </svg>
-              <span className="sr-only">Close modal</span>
-            </button>
+            <CloseButton onClick={toggleModal} />
             <div className="text-3xl font-bold text-[#072569] text-center mt-10 mb-2.5 mx-0">
               Welcome Back!
             </div>
