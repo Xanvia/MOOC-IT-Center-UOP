@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User, Group
+from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
 from .models import UserProfile
 
@@ -11,24 +12,26 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["firstname", "lastname", "email", "password", "username","user_type"]
+        fields = ["firstname", "lastname", "email", "password", "username", "user_type"]
 
     def validate(self, attrs):
         email = attrs.get("email", "")
         if User.objects.filter(email=email).exists():
             raise serializers.ValidationError({"email": "Email already exists"})
-        
+
         usertype = attrs.get("user_type", "")
         if usertype not in ["student", "teacher"]:
-            raise serializers.ValidationError({"user_type": "User type must be student or teacher"})
+            raise serializers.ValidationError(
+                {"user_type": "User type must be student or teacher"}
+            )
         return attrs
-    
+
     def create(self, validated_data):
         user_type = validated_data.pop("user_type")
         password = validated_data.pop("password")
         self.fields.pop("user_type")
 
-        #create user
+        # create user
         user = super().create(validated_data)
         user.set_password(password)
         user.save()
@@ -38,17 +41,33 @@ class UserSerializer(serializers.ModelSerializer):
         group.user_set.add(user)
 
         return user
-    
+
     def to_representation(self, instance):
         return {
             "user_id": instance.id,
             "access_token": str(AccessToken.for_user(instance)),
         }
-    
+
+
+class UserLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, attrs):
+        email = attrs["email"]
+        try:
+            user = User.objects.get(email=email)
+            attrs["username"] = user.username
+        except User.DoesNotExist:
+            attrs["username"] = None
+        return attrs
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = "__all__"
+
 
 class GoogleAuthSerializer(serializers.Serializer):
     firstname = serializers.CharField(source="first_name", required=True)
@@ -62,10 +81,12 @@ class GoogleAuthSerializer(serializers.Serializer):
         email = attrs.get("email", "")
         if User.objects.filter(email=email).exists():
             return attrs
-        
+
         usertype = attrs.get("user_type", "")
         if usertype not in ["student", "teacher"]:
-            raise serializers.ValidationError({"user_type": "User type must be student or teacher"})
+            raise serializers.ValidationError(
+                {"user_type": "User type must be student or teacher"}
+            )
         return attrs
 
     def create(self, validated_data):
@@ -74,7 +95,9 @@ class GoogleAuthSerializer(serializers.Serializer):
         self.fields.pop("user_type")
 
         # check if user exists
-        user, created = User.objects.get_or_create(email=validated_data['email'], defaults=validated_data)
+        user, created = User.objects.get_or_create(
+            email=validated_data["email"], defaults=validated_data
+        )
 
         if created:
             # add user to group
@@ -87,7 +110,18 @@ class GoogleAuthSerializer(serializers.Serializer):
         return user
 
     def to_representation(self, instance):
+        user = instance
+        user_profile = instance.userprofile
+        # user_profile = UserProfile.objects.filter(user=user).first()
         return {
-            "user_id": instance.id,
-            "access_token": str(AccessToken.for_user(instance)),
+            "access_token": str(AccessToken.for_user(user)),
+            "user": {
+                "user_id": user.id,
+                "username": user.username,
+                "full_name": f"{user.first_name} {user.last_name}",
+                "email": user.email,
+                "profile_picture": (
+                    user_profile.profile_picture if user_profile else None
+                ),
+            },
         }
