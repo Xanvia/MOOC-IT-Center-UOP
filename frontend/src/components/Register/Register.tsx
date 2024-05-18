@@ -5,6 +5,7 @@ import Dropdown from "../DropDown/DropDown";
 import SolidButton from "../Buttons/SolidButton";
 import GoogleIcon from "@/icons/GoogleIcon";
 import SvgButton from "../Buttons/SvgButton";
+import { openGoogleLoginPage } from "@/utils/GoogleAuth";
 
 export default function Register() {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,6 +29,8 @@ export default function Register() {
     console.log("Email:", email);
     console.log("Password:", password);
   };
+
+  
 
   return (
     <>
@@ -138,7 +141,7 @@ export default function Register() {
                     </div>
                     <SvgButton
                       text="Continue with google"
-                      onClick={() => {}}
+                      onClick={openGoogleLoginPage}
                       svg={<GoogleIcon />}
                     />
                     <br />

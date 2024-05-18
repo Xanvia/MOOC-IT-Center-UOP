@@ -163,3 +163,6 @@ REST_FRAMEWORK = {
     ],
     "EXCEPTION_HANDLER": "mooc.utils.custom_exception_handler",
 }
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")

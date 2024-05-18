@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User, Group
 from rest_framework_simplejwt.tokens import AccessToken
+from .models import UserProfile
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -43,6 +44,50 @@ class UserSerializer(serializers.ModelSerializer):
             "user_id": instance.id,
             "access_token": str(AccessToken.for_user(instance)),
         }
-
-        
     
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = "__all__"
+
+class GoogleAuthSerializer(serializers.Serializer):
+    firstname = serializers.CharField(source="first_name", required=True)
+    lastname = serializers.CharField(source="last_name", required=True)
+    user_type = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
+    username = serializers.CharField(required=True)
+    profile_picture = serializers.CharField(required=False)
+
+    def validate(self, attrs):
+        email = attrs.get("email", "")
+        if User.objects.filter(email=email).exists():
+            return attrs
+        
+        usertype = attrs.get("user_type", "")
+        if usertype not in ["student", "teacher"]:
+            raise serializers.ValidationError({"user_type": "User type must be student or teacher"})
+        return attrs
+
+    def create(self, validated_data):
+        user_type = validated_data.pop("user_type")
+        profile_picture = validated_data.pop("profile_picture", None)
+        self.fields.pop("user_type")
+
+        # check if user exists
+        user, created = User.objects.get_or_create(email=validated_data['email'], defaults=validated_data)
+
+        if created:
+            # add user to group
+            group = Group.objects.get(name=user_type)
+            group.user_set.add(user)
+
+            # create user profile
+            UserProfile.objects.create(user=user, profile_picture=profile_picture)
+
+        return user
+
+    def to_representation(self, instance):
+        return {
+            "user_id": instance.id,
+            "access_token": str(AccessToken.for_user(instance)),
+        }
