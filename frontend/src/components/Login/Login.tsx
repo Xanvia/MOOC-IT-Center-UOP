@@ -88,6 +88,9 @@ export default function Login() {
                 Already have an account? <u>Login</u>
               </div>
             </div>
+            <div className="text-3xl font-bold text-[#072569] text-center mt-10 mb-2.5 mx-0">
+              OpenEd
+            </div>
           </div>
         </div>
       )}

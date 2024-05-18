@@ -90,7 +90,7 @@ const Navbar = () => {
           </div>
           <div className={NavLinkContainer}>
             <div className="hidden sm:flex flex-shrink-0 items-center">
-              <h1 className="text-white text-3xl sm:font-bold">MOOC</h1>
+              <h1 className="text-white text-3xl sm:font-bold">OpenEd</h1>
             </div>
             <div className="hidden py-5 md:py-10 lg:pl-20 md:ml-6 md:block lg:text-base text-sm">
               <div className="flex space-x-4">

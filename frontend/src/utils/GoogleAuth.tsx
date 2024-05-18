@@ -1,6 +1,7 @@
 export const openGoogleLoginPage = () => {
   const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "";
-  const GOOGLE_CLIENT_SECRET = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET ?? "";
+  const GOOGLE_CLIENT_SECRET =
+    process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET ?? "";
   const googleAuthUrl = "https://accounts.google.com/o/oauth2/v2/auth";
 
   const scope = [
@@ -24,7 +25,7 @@ export const openGoogleLoginPage = () => {
     location=no,directories=no,status=no`;
 
   const centeredTop = (window.innerHeight - 300) / 2;
-  const centeredLeft = (window.innerWidth - 700) / 2;
+  const centeredLeft = (window.innerWidth - 1000) / 2;
 
   const authWindow = window.open(
     url,
@@ -34,7 +35,7 @@ export const openGoogleLoginPage = () => {
 
   // Add event listener to handle message from the auth window
   window.addEventListener("message", (event) => {
-    if (event.data === 'auth-success') {
+    if (event.data === "auth-success") {
       // Handle successful authentication (e.g., update UI, fetch user data)
       console.log("Authentication successful!");
     }

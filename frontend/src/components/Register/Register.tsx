@@ -51,7 +51,7 @@ export default function Register() {
             <div className="hidden md:flex relative basis-4/12">
               <div className={RegisterBlueDiv}>
                 <div className="">
-                  <h1 className="text-4xl lg:text-6xl font-bold mb-4">MOOC</h1>
+                  <h1 className="text-4xl lg:text-6xl font-bold mb-4">OpenEd</h1>
                   <span className="font-sans text-base xl:text-xl ">
                     {`"Empower your journey. Learn, grow, succeed with us."`}
                   </span>
