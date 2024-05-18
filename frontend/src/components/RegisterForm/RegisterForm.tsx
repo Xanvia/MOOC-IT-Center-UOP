@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -27,16 +26,16 @@ const initialValues: RegistrationFormValues = {
 };
 
 const validationSchema = Yup.object({
-  firstName: Yup.string().required("First Name is required"),
-  lastName: Yup.string().required("Last Name is required"),
-  username: Yup.string().required("Username is required"),
+  firstName: Yup.string().required("This field is required"),
+  lastName: Yup.string().required("This field is required"),
+  username: Yup.string().required("This field is required"),
   email: Yup.string()
     .email("Invalid email address")
-    .required("Email is required"),
-  password: Yup.string().required("Password is required"),
+    .required("This field is required"),
+  password: Yup.string().required("This field is required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password")], "Passwords must match")
-    .required("Confirm Password is required"),
+    .required("This field is required"),
 });
 
 const RegistrationForm: React.FC = () => {
@@ -66,7 +65,7 @@ const RegistrationForm: React.FC = () => {
               <ErrorMessage
                 name="firstName"
                 component="div"
-                className="text-red-600 text-sm"
+                className="top-0 left-0 text-red-600 text-xs"
               />
             </div>
           </div>
@@ -85,7 +84,7 @@ const RegistrationForm: React.FC = () => {
               <ErrorMessage
                 name="lastName"
                 component="div"
-                className="text-red-600 text-sm"
+                className="text-red-600 text-xs"
               />
             </div>
           </div>
@@ -104,7 +103,7 @@ const RegistrationForm: React.FC = () => {
               <ErrorMessage
                 name="username"
                 component="div"
-                className="text-red-600 text-sm"
+                className="text-red-600 text-xs"
               />
             </div>
           </div>
@@ -123,7 +122,7 @@ const RegistrationForm: React.FC = () => {
               <ErrorMessage
                 name="email"
                 component="div"
-                className="text-red-600 text-sm"
+                className="text-red-600 text-xs"
               />
             </div>
           </div>
@@ -142,7 +141,7 @@ const RegistrationForm: React.FC = () => {
               <ErrorMessage
                 name="password"
                 component="div"
-                className="text-red-600 text-sm"
+                className="text-red-600 text-xs"
               />
             </div>
           </div>
@@ -161,7 +160,7 @@ const RegistrationForm: React.FC = () => {
               <ErrorMessage
                 name="confirmPassword"
                 component="div"
-                className="text-red-600 text-sm"
+                className="text-red-600 text-xs"
               />
             </div>
           </div>
