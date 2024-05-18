@@ -40,3 +40,6 @@ class GoogleAuthView(generics.CreateAPIView):
             "data": response.data,
         }
         return Response(response.data, status=status.HTTP_200_OK)
+
+
+#hjkl
