@@ -28,27 +28,37 @@ class GoogleAuth(generics.CreateAPIView):
         code = request.data.get("code")
         redirect_uri = request.data.get("redirect_uri")
         access_token = get_access_token(code, redirect_uri)
-        
         if not access_token:
-            return Response({"error": "Failed to obtain access token from Google."},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Failed to obtain access token from Google."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        user_info = get_user_info(access_token)        
+        user_info = get_user_info(access_token)
 
         if not user_info.get("email"):
-            return Response({"error": "Failed to obtain user info from Google."},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Failed to obtain user info from Google."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
 
-        request.data["email"] = user_info["email"] 
-        request.data["first_name"] = user_info["given_name"]
-        request.data["last_name"] = user_info["family_name"]
+        request.data["email"] = user_info["email"]
+        request.data["firstname"] = user_info["given_name"]
+        request.data["lastname"] = user_info["family_name"]
         request.data["password"] = ""
         request.data["username"] = user_info["email"]
 
-        response = super().post(request)
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user = serializer.update_or_create(serializer.validated_data)
+        except Exception as e:
+            print(str(e))
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-        response.data = {
+        respObj = {
             "status": "success",
             "message": "User registered successfully",
-            "data": response.data,
+            # "data": serializer.data,
         }
+        return Response(respObj, status=status.HTTP_200_OK)

@@ -44,20 +44,18 @@ class UserProfile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.CharField(max_length=100, blank=True, null=True)
-    country = models.ForeignKey(Country, on_delete=models.PROTECT, blank=False)
-    description = models.TextField(max_length=1000)
-    birth_date = models.DateField()
-    user_type = models.ForeignKey(UserType, on_delete=models.PROTECT)
-    authentication_type = models.ForeignKey(
-        AuthenticationType, on_delete=models.PROTECT
-    )
+    country = models.ForeignKey(Country, on_delete=models.PROTECT, blank=True, null=True)
+    description = models.TextField(max_length=1000,blank=True, null=True)
+    birth_date = models.DateField(blank=True, null=True)
     interests = models.ManyToManyField(Interest)
-    mobile_number = models.CharField(max_length=15)
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default="O")
+    mobile_number = models.CharField(max_length=15, blank=True, null=True)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default="O", blank=True, null=True)
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
 
+    def user_type(self):
+        return self.user.groups.first().name if self.user.groups.exists() else None
 
 class Degree(models.Model):
     label = models.CharField(max_length=100, unique=True)
