@@ -78,7 +78,6 @@ class GoogleAuthView(generics.CreateAPIView):
 
         response.data = {
             "status": "success",
-            "message": "User authenticated successfully",
             "data": response.data,
         }
 
