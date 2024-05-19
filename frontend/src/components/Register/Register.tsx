@@ -67,9 +67,11 @@ export default function Register() {
         console.log(res.data.user);
         Cookies.set("user", JSON.stringify(res.data.data.user));
         setStep(2);
+        alert("Registration Successful");
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response.data);
+        alert(err.response.data.message);
       });
   };
 
@@ -87,9 +89,12 @@ export default function Register() {
           console.log(res.data.user);
           Cookies.set("user", JSON.stringify(res.data.data.user));
           setStep(2);
+          alert("Registration Successful");
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err.response.data);
+          alert(err.response.data.message);
+          
         });
     }
   };

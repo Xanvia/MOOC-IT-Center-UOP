@@ -69,22 +69,6 @@ const DropDown: React.FC<DropDownProps> = ({ setFieldValue }) => {
             >
               <li
                 className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-                id="listbox-option-0"
-                role="option"
-                onClick={() => {
-                  setSelectedOption("Teacher");
-                  setIsOpen(false);
-                  setFieldValue("userRole", "teacher");
-                }}
-              >
-                <div className="flex items-center text-primary">
-                  <span className="font-normal  ml-3 block truncate">
-                    Teacher
-                  </span>
-                </div>
-              </li>
-              <li
-                className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
                 id="listbox-option-1"
                 role="option"
                 onClick={() => {
@@ -96,6 +80,22 @@ const DropDown: React.FC<DropDownProps> = ({ setFieldValue }) => {
                 <div className="flex items-center">
                   <span className="font-normal ml-3 block truncate">
                     Student
+                  </span>
+                </div>
+              </li>
+              <li
+                className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
+                id="listbox-option-0"
+                role="option"
+                onClick={() => {
+                  setSelectedOption("Teacher");
+                  setIsOpen(false);
+                  setFieldValue("userRole", "teacher");
+                }}
+              >
+                <div className="flex items-center text-primary">
+                  <span className="font-normal  ml-3 block truncate">
+                    Teacher
                   </span>
                 </div>
               </li>
