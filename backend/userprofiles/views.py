@@ -15,6 +15,7 @@ class UserRegistrationApiView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
+        print(request.data)
         request.data["auth_mode"] = "password"
         response = super().post(request)
 

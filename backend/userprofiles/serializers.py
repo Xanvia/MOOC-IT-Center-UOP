@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
     lastname = serializers.CharField(source="last_name", required=True)
     user_type = serializers.CharField(required=True)
     password = serializers.CharField(required=False)  
-    profile_picture = serializers.ImageField(required=False)
+    profile_picture = serializers.CharField(required=False)
 
     class Meta:
         model = User
@@ -54,7 +54,6 @@ class UserSerializer(serializers.ModelSerializer):
 
         # create user profile
         UserProfile.objects.create(user=user, profile_picture=profile_picture)
-
         return user
 
     def to_representation(self, instance):

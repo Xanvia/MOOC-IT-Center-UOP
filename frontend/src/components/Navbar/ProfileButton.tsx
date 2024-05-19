@@ -1,7 +1,14 @@
 "use client";
 import React, { RefObject } from "react";
+import Cookies from "js-cookie";
 const DefaultProfileImage = "/images/defaultuser.png";
 
+const user = Cookies.get("user");
+const ProfileImage = user
+  ? JSON.parse(user).profile_picture
+  : DefaultProfileImage;
+
+console.log("ProfileImage:", ProfileImage);
 interface ProfileButtonProps {
   isProfileMenuOpen: boolean;
   toggleProfileMenu: () => void;
@@ -26,11 +33,7 @@ const ProfileButton = ({
         >
           <span className="absolute -inset-1.5"></span>
           <span className="sr-only">Open user menu</span>
-          <img
-            className="h-8 w-8 rounded-full"
-            src={DefaultProfileImage}
-            alt=""
-          />
+          <img className="h-8 w-8 rounded-full" src={ProfileImage} alt="" />
         </button>
       </div>
       {isProfileMenuOpen && (

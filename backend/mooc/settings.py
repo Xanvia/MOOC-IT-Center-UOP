@@ -19,8 +19,8 @@ from datetime import timedelta
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=2),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=2),
     "SIGNING_KEY": SECRET_KEY,
 }
 
