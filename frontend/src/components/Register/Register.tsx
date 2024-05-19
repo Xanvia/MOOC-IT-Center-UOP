@@ -4,12 +4,17 @@ import PrimaryButton from "../Buttons/PrimaryButton";
 import RegisterForm from "../RegisterForm/RegisterForm";
 import { FormikHelpers } from "formik";
 import CloseButton from "../Buttons/CloseButton";
+import axios from "axios";
+import { API_URL } from "@/utils/constants";
 import {
   ModalClassesBG,
   RegisterModalClasses,
   RegisterBlueDiv,
   RegisterWhiteDiv,
 } from "../components.styles";
+import { getGoogleCode } from "@/utils/GoogleAuth";
+import Cookies from "js-cookie";
+import { redirect_uri } from "@/utils/constants";
 
 export interface RegistrationFormValues {
   firstName: string;
@@ -24,6 +29,7 @@ export interface RegistrationFormValues {
 export default function Register() {
   const [isOpen, setIsOpen] = useState(false);
   const [resetForm, setResetForm] = useState<(() => void) | null>(null);
+  const [step, setStep] = useState(1);
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -46,7 +52,48 @@ export default function Register() {
   ) => {
     console.log("Form values:", values);
     setResetForm(() => formikHelpers.resetForm);
+
+    axios
+      .post(`${API_URL}/user/register/`, {
+        firstname: values.firstName,
+        lastname: values.lastName,
+        username: values.username,
+        email: values.email,
+        password: values.password,
+        user_type: values.userRole,
+      })
+      .then((res) => {
+        Cookies.set("token", res.data.data.access_token);
+        console.log(res.data.user);
+        Cookies.set("user", JSON.stringify(res.data.data.user));
+        setStep(2);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
+  const handleGoogleLogin = async (userRole: String) => {
+    const code = await getGoogleCode();
+    if (code !== null) {
+      axios
+        .post(`${API_URL}/user/google-auth/`, {
+          code: code,
+          user_type: userRole,
+          redirect_uri: redirect_uri,
+        })
+        .then((res) => {
+          Cookies.set("token", res.data.data.access_token);
+          console.log(res.data.user);
+          Cookies.set("user", JSON.stringify(res.data.data.user));
+          setStep(2);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
   return (
     <>
       ,<PrimaryButton onClick={toggleModal} text="Register" />
@@ -79,7 +126,10 @@ export default function Register() {
               </h1>
 
               <center>
-              <RegisterForm onSubmit={handleSubmit} />
+                <RegisterForm
+                  onSubmit={handleSubmit}
+                  onGoogleClick={handleGoogleLogin}
+                />
               </center>
 
               <CloseButton onClick={toggleModal} />

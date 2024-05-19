@@ -4,7 +4,7 @@ import SecondaryButton from "../Buttons/SecondaryButton";
 import SolidButton from "../Buttons/SolidButton";
 import SvgButton from "../Buttons/SvgButton";
 import GoogleIcon from "@/icons/GoogleIcon";
-import { openGoogleLoginPage } from "@/utils/GoogleAuth";
+import { getGoogleCode } from "@/utils/GoogleAuth";
 import CloseButton from "../Buttons/CloseButton";
 
 import {
@@ -36,6 +36,10 @@ export default function Login() {
   const handleSubmit = () => {
     console.log("Email:", email);
     console.log("Password:", password);
+  };
+
+  const handleGoogleLogin = () => {
+    const accessCode = getGoogleCode();
   };
 
   return (
@@ -80,7 +84,7 @@ export default function Login() {
               </div>
               <SvgButton
                 text="Continue with google"
-                onClick={openGoogleLoginPage}
+                onClick={handleGoogleLogin}
                 svg={<GoogleIcon />}
                 disabled={false}
               />

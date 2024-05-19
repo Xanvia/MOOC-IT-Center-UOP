@@ -5,7 +5,6 @@ import * as Yup from "yup";
 import SolidButton from "../Buttons/SolidButton";
 import GoogleIcon from "@/icons/GoogleIcon";
 import SvgButton from "../Buttons/SvgButton";
-import { openGoogleLoginPage } from "@/utils/GoogleAuth";
 import DropDown from "../DropDown/DropDown";
 import { RegistrationFormValues } from "../Register/Register";
 import { FormikHelpers } from "formik";
@@ -16,6 +15,8 @@ import {
   InputOuterDiv,
 } from "../components.styles";
 import { on } from "events";
+import { API_URL } from "@/utils/constants";
+import axios from "axios";
 
 const initialValues: RegistrationFormValues = {
   firstName: "",
@@ -45,9 +46,13 @@ interface RegisterFormProps {
     values: RegistrationFormValues,
     formikHelpers: FormikHelpers<RegistrationFormValues>
   ) => void;
+  onGoogleClick: (userRole: string) => void;
 }
 
-const RegistrationForm: React.FC<RegisterFormProps> = ({ onSubmit }) => {
+const RegistrationForm: React.FC<RegisterFormProps> = ({
+  onSubmit,
+  onGoogleClick,
+}) => {
   return (
     <Formik
       initialValues={initialValues}
@@ -162,9 +167,10 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({ onSubmit }) => {
           </div>
           <div className="pt-8">
             <SolidButton
+              type="submit"
               text="R E G I S T E R"
-              onClick={() => {}}
               disabled={!values.userRole}
+              onClick={() => {}}
             />
           </div>
 
@@ -174,7 +180,7 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({ onSubmit }) => {
           </div>
           <SvgButton
             text="Continue with google"
-            onClick={() => openGoogleLoginPage({ userRole: values.userRole })}
+            onClick={() => onGoogleClick(values.userRole)}
             svg={<GoogleIcon />}
             disabled={!values.userRole}
           />

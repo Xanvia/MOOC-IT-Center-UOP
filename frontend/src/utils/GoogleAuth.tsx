@@ -1,55 +1,53 @@
-import { redirect } from "next/dist/server/api-utils";
+export const getGoogleCode = (): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "";
+    const GOOGLE_CLIENT_SECRET =
+      process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET ?? "";
+    const googleAuthUrl = "https://accounts.google.com/o/oauth2/v2/auth";
 
-interface GoogleLoginProps {
-  userRole?: string;
-}
+    const scope = [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile",
+    ].join(" ");
 
-export const openGoogleLoginPage = ({ userRole }: GoogleLoginProps = {}) => {
-  const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "";
-  const GOOGLE_CLIENT_SECRET =
-    process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET ?? "";
-  const googleAuthUrl = "https://accounts.google.com/o/oauth2/v2/auth";
+    const params = new URLSearchParams({
+      response_type: "code",
+      client_id: GOOGLE_CLIENT_ID,
+      secret: GOOGLE_CLIENT_SECRET,
+      redirect_uri: "http://localhost:3000/api/auth/google/callback",
+      prompt: "select_account",
+      access_type: "online",
+      scope,
+    });
 
-  const scope = [
-    "https://www.googleapis.com/auth/userinfo.email",
-    "https://www.googleapis.com/auth/userinfo.profile",
-  ].join(" ");
+    const url = `${googleAuthUrl}?${params}`;
 
-  const redirect_uri = `http://localhost:3000/api/auth/google/callback${
-    userRole ? `/${userRole}` : ""
-  }`;
+    const windowFeatures = `width=1000,height=600,scrollbars=yes,resizable=yes,toolbar=no,menubar=no,
+      location=no,directories=no,status=no`;
 
-  console.log("redirect_uri", redirect_uri);
+    const centeredTop = (window.innerHeight - 300) / 2;
+    const centeredLeft = (window.innerWidth - 1000) / 2;
 
-  const params = new URLSearchParams({
-    response_type: "code",
-    client_id: GOOGLE_CLIENT_ID,
-    secret: GOOGLE_CLIENT_SECRET,
-    redirect_uri: redirect_uri,
-    prompt: "select_account",
-    access_type: "online",
-    scope,
-  });
+    const authWindow = window.open(
+      url,
+      "_blank",
+      `${windowFeatures},top=${centeredTop},left=${centeredLeft}`
+    );
 
-  const url = `${googleAuthUrl}?${params}`;
+    const messageListener = (event: MessageEvent) => {
+      if (event.data.event === "auth-success") {
+        const code = event.data.code;
+        window.removeEventListener("message", messageListener);
+        resolve(code);
+      }
+    };
 
-  const windowFeatures = `width=1000,height=600,scrollbars=yes,resizable=yes,toolbar=no,menubar=no,
-    location=no,directories=no,status=no`;
+    window.addEventListener("message", messageListener);
 
-  const centeredTop = (window.innerHeight - 300) / 2;
-  const centeredLeft = (window.innerWidth - 1000) / 2;
-
-  const authWindow = window.open(
-    url,
-    "_blank",
-    `${windowFeatures},top=${centeredTop},left=${centeredLeft}`
-  );
-
-  // Add event listener to handle message from the auth window
-  window.addEventListener("message", (event) => {
-    if (event.data === "auth-success") {
-      // Handle successful authentication (e.g., update UI, fetch user data)
-      console.log("Authentication successful!");
-    }
+    // Reject the promise after 5 minutes if no message is received
+    setTimeout(() => {
+      window.removeEventListener("message", messageListener);
+      reject(new Error("Timeout waiting for auth-success message"));
+    }, 5 * 60 * 1000); // 5 minutes
   });
 };
