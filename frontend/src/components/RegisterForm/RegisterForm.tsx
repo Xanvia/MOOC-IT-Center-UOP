@@ -7,23 +7,15 @@ import GoogleIcon from "@/icons/GoogleIcon";
 import SvgButton from "../Buttons/SvgButton";
 import { openGoogleLoginPage } from "@/utils/GoogleAuth";
 import DropDown from "../DropDown/DropDown";
-
+import { RegistrationFormValues } from "../Register/Register";
+import { FormikHelpers } from "formik";
 import {
   InputFieldClasses,
   InputLabel,
   InputInnerDiv,
   InputOuterDiv,
 } from "../components.styles";
-
-interface RegistrationFormValues {
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  userRole: string;
-}
+import { on } from "events";
 
 const initialValues: RegistrationFormValues = {
   firstName: "",
@@ -48,16 +40,19 @@ const validationSchema = Yup.object({
     .required("This field is required"),
 });
 
-const RegistrationForm: React.FC = () => {
-  const handleSubmit = (values: RegistrationFormValues) => {
-    console.log("Form values:", values);
-  };
+interface RegisterFormProps {
+  onSubmit: (
+    values: RegistrationFormValues,
+    formikHelpers: FormikHelpers<RegistrationFormValues>
+  ) => void;
+}
+
+const RegistrationForm: React.FC<RegisterFormProps> = ({ onSubmit }) => {
   return (
-    
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
     >
       {({ setFieldValue, values }) => (
         <Form>
