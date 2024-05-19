@@ -1,5 +1,3 @@
-// components/ReactDatePicker.tsx
-
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -13,7 +11,7 @@ const ReactDatePicker: React.FC = () => {
 
   return (
     <div className="relative w-60">
-      <div className="absolute bg-white inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+      <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
         <svg
           className="w-4 h-4 text-primary dark:text-primary"
           aria-hidden="true"
@@ -28,8 +26,9 @@ const ReactDatePicker: React.FC = () => {
         selected={selectedDate}
         onChange={handleDateChange}
         dateFormat="MM/dd/yyyy"
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-primary dark:text-primary dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        className="bg-gray-50 border border-gray-300 text-primary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-primary dark:text-primary dark:focus:ring-blue-500 dark:focus:border-blue-500"
         placeholderText="Date of Birth"
+        
       />
     </div>
   );

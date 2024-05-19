@@ -6,7 +6,11 @@ import DropDownCountry from "../DropDown/DropDownCountry";
 import DropDownGender from "../DropDown/DropDownGender";
 import DatePicker from "../DropDown/DatePicker";
 import RegisterForm from "../RegisterForm/RegisterForm";
+<<<<<<< HEAD
 import { FormikHelpers } from "formik";
+=======
+import RegisterFormTwo from "../RegisterForm/RegisterFormTwo";
+>>>>>>> 8311c0f (new component regformTwo)
 import CloseButton from "../Buttons/CloseButton";
 import axios from "axios";
 import { API_URL, redirect_uri, CALLBACK_URL } from "@/utils/constants";
