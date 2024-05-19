@@ -5,7 +5,7 @@ const DefaultProfileImage = "/images/defaultuser.png";
 
 const user = Cookies.get("user");
 const ProfileImage = user
-  ? JSON.parse(user).profile_picture
+  ? JSON.parse(user).profile_picture + "-no"
   : DefaultProfileImage;
 
 console.log("ProfileImage:", ProfileImage);

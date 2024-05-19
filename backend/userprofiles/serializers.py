@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
     lastname = serializers.CharField(source="last_name", required=True)
     user_type = serializers.CharField(required=True)
     password = serializers.CharField(required=False)  
-    profile_picture = serializers.CharField(required=False)
+    profile_picture = serializers.URLField(required=False)
 
     class Meta:
         model = User
