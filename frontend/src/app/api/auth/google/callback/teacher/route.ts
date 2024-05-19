@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
 
   const HOST = process.env.NEXT_PUBLIC_HOST ?? "http://127.0.0.1:8000";
   const response = await axios.post(`${HOST}/api/user/google-auth/`, {
+    user_type,
     code,
     redirect_uri: "http://localhost:3000/api/auth/google/callback/teacher",
   });

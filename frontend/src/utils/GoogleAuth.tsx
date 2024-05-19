@@ -19,6 +19,8 @@ export const openGoogleLoginPage = ({ userRole }: GoogleLoginProps = {}) => {
     userRole ? `/${userRole}` : ""
   }`;
 
+  console.log("redirect_uri", redirect_uri);
+
   const params = new URLSearchParams({
     response_type: "code",
     client_id: GOOGLE_CLIENT_ID,

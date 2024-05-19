@@ -160,7 +160,7 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({ onSubmit }) => {
               </div>
             </div>
           </div>
-          <div className="lg:pt-8">
+          <div className="pt-8">
             <SolidButton
               text="R E G I S T E R"
               onClick={() => {}}

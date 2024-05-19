@@ -74,7 +74,7 @@ const DropDown: React.FC<DropDownProps> = ({ setFieldValue }) => {
                 onClick={() => {
                   setSelectedOption("Teacher");
                   setIsOpen(false);
-                  setFieldValue("userRole", "Teacher");
+                  setFieldValue("userRole", "teacher");
                 }}
               >
                 <div className="flex items-center text-primary">
@@ -90,7 +90,7 @@ const DropDown: React.FC<DropDownProps> = ({ setFieldValue }) => {
                 onClick={() => {
                   setSelectedOption("Student");
                   setIsOpen(false);
-                  setFieldValue("userRole", "Student");
+                  setFieldValue("userRole", "student");
                 }}
               >
                 <div className="flex items-center">
