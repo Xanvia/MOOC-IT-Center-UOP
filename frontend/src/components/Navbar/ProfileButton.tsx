@@ -1,18 +1,33 @@
 "use client";
-import React, { RefObject } from "react";
-const DefaultProfileImage = "/images/defaultuser.png";
+import React, { RefObject, useEffect, useState } from "react";
+import Link from "next/link";
 
+import Cookies from "js-cookie";
+const DefaultProfileImage = "/images/defaultuser.png";
 interface ProfileButtonProps {
   isProfileMenuOpen: boolean;
   toggleProfileMenu: () => void;
   profileMenuRef: RefObject<HTMLDivElement>;
+  handleSignOut: () => void;
 }
 
 const ProfileButton = ({
   isProfileMenuOpen,
   toggleProfileMenu,
   profileMenuRef,
+  handleSignOut,
 }: ProfileButtonProps) => {
+  const [ProfileImage, setProfileImage] = useState(DefaultProfileImage);
+
+  useEffect(() => {
+    const user = Cookies.get("user");
+    if (user) {
+      const parsedUser = JSON.parse(user);
+      if (parsedUser.profile_picture) {
+        setProfileImage(parsedUser.profile_picture);
+      }
+    }
+  }, []);
   return (
     <div className="relative ml-3">
       <div>
@@ -26,11 +41,7 @@ const ProfileButton = ({
         >
           <span className="absolute -inset-1.5"></span>
           <span className="sr-only">Open user menu</span>
-          <img
-            className="h-8 w-8 rounded-full"
-            src={DefaultProfileImage}
-            alt=""
-          />
+          <img className="h-8 w-8 rounded-full" src={ProfileImage} alt="" />
         </button>
       </div>
       {isProfileMenuOpen && (
@@ -42,33 +53,25 @@ const ProfileButton = ({
           aria-labelledby="user-menu-button"
           tabIndex={-1}
         >
-          <a
-            href="#"
+          <Link
+            href="/profile"
             className="block px-4 py-2 text-sm text-gray-700"
-            role="menuitem"
-            tabIndex={-1}
-            id="user-menu-item-0"
           >
             Your Profile
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            href="/settings"
             className="block px-4 py-2 text-sm text-gray-700"
-            role="menuitem"
-            tabIndex={-1}
-            id="user-menu-item-1"
           >
             Settings
-          </a>
-          <a
+          </Link>
+          <Link
             href="#"
             className="block px-4 py-2 text-sm text-gray-700"
-            role="menuitem"
-            tabIndex={-1}
-            id="user-menu-item-2"
+            onClick={handleSignOut}
           >
             Sign out
-          </a>
+          </Link>
         </div>
       )}
     </div>

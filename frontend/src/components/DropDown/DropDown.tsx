@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const DropDown = () => {
+interface DropDownProps {
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+}
+
+const DropDown: React.FC<DropDownProps> = ({ setFieldValue }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Choose");
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -65,31 +69,33 @@ const DropDown = () => {
             >
               <li
                 className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-                id="listbox-option-0"
-                role="option"
-                onClick={() => {
-                  setSelectedOption("Teacher");
-                  setIsOpen(false);
-                }}
-              >
-                <div className="flex items-center text-primary">
-                  <span className="font-normal  ml-3 block truncate">
-                    Teacher
-                  </span>
-                </div>
-              </li>
-              <li
-                className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
                 id="listbox-option-1"
                 role="option"
                 onClick={() => {
                   setSelectedOption("Student");
                   setIsOpen(false);
+                  setFieldValue("userRole", "student");
                 }}
               >
                 <div className="flex items-center">
                   <span className="font-normal ml-3 block truncate">
                     Student
+                  </span>
+                </div>
+              </li>
+              <li
+                className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
+                id="listbox-option-0"
+                role="option"
+                onClick={() => {
+                  setSelectedOption("Teacher");
+                  setIsOpen(false);
+                  setFieldValue("userRole", "teacher");
+                }}
+              >
+                <div className="flex items-center text-primary">
+                  <span className="font-normal  ml-3 block truncate">
+                    Teacher
                   </span>
                 </div>
               </li>

@@ -43,9 +43,9 @@ class UserProfile(models.Model):
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_picture = models.CharField(max_length=100, blank=True, null=True)
+    profile_picture = models.URLField(max_length=1000, blank=True, null=True)
     country = models.ForeignKey(Country, on_delete=models.PROTECT, blank=True, null=True)
-    description = models.TextField(max_length=1000,blank=True, null=True)
+    description = models.TextField(max_length=2000,blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)
     interests = models.ManyToManyField(Interest)
     mobile_number = models.CharField(max_length=15, blank=True, null=True)

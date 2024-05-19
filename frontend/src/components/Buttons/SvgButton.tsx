@@ -5,11 +5,17 @@ interface ButtonProps {
   text: string;
   onClick: () => void;
   svg?: React.ReactNode;
+  disabled: boolean;
 }
 
-const SvgButton: React.FC<ButtonProps> = ({ text, onClick, svg }) => {
+const SvgButton: React.FC<ButtonProps> = ({ text, onClick, svg, disabled }) => {
   return (
-    <button className={SvgButtonClasses} type="button" onClick={onClick}>
+    <button
+      className={SvgButtonClasses}
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+    >
       <div className="flex pl-2">
         {svg}
         <span className="pt-1 pl-2">{text}</span>

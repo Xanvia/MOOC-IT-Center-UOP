@@ -31,7 +31,7 @@ class UserRegisterViewTest(APITestCase):
         )
 
     def post_request(self, data):
-        return self.client.post(self.url, data)
+        return self.client.post(self.url, data, format="json")
 
     def test_create_user_success(self):
         response = self.post_request(self.data)
@@ -55,17 +55,21 @@ class UserRegisterViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data["message"], ["Email already exists"])
 
-    def test_email_and_password_not_provided(self):
+    def test_email_and_not_provided(self):
         del self.data["email"]
-        del self.data["password"]
         response = self.post_request(self.data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        messages = ["email field is required.", "password field is required."]
-
+        messages = ['Email is required']
         self.assertTrue(
             any(message in response.data["message"] for message in messages)
         )
+
+    def test_password_not_provided(self):
+        del self.data["password"]
+        response = self.post_request(self.data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data["message"], ["Password is required"])
 
     def test_cannot_be_added_to_admin_group(self):
         self.data["user_type"] = "admin"

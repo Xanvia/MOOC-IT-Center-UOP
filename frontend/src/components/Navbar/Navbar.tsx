@@ -4,6 +4,7 @@ import ProfileButton from "./ProfileButton";
 import Link from "next/link";
 import Register from "../Register/Register";
 import Login from "../Login/Login";
+import Cookies from "js-cookie";
 import {
   MobileLinkClasses,
   MobileMenuClasses,
@@ -13,11 +14,15 @@ import {
   NotificationButtonMobileClasses,
 } from "../components.styles";
 
-const Navbar = () => {
+interface NavbarProps {
+  isLoggedIn: boolean;
+  onSignOut: () => void;
+}
+
+const Navbar = ({ isLoggedIn, onSignOut }: NavbarProps) => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const profileMenuRef = useRef(null);
-  const isLoggedIn = false;
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -138,6 +143,7 @@ const Navbar = () => {
                   isProfileMenuOpen={isProfileMenuOpen}
                   toggleProfileMenu={toggleProfileMenu}
                   profileMenuRef={profileMenuRef}
+                  handleSignOut={onSignOut}
                 />
               </div>
             ) : (
@@ -172,6 +178,7 @@ const Navbar = () => {
               isProfileMenuOpen={isProfileMenuOpen}
               toggleProfileMenu={toggleProfileMenu}
               profileMenuRef={profileMenuRef}
+              handleSignOut={onSignOut}
             />
           </div>
         </div>

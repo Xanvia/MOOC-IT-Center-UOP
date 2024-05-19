@@ -32,9 +32,6 @@ def get_user_info(access_token):
         "lastname": userinfo.get("family_name"),
         "email": userinfo.get("email"),
         "username": userinfo.get("email"),
-        "user_profile": {
-           "profile_picture": userinfo.get("picture"),
-        },
+        "profile_picture": userinfo.get("picture"),
     }
-
     return user_info
