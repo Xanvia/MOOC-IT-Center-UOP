@@ -5,7 +5,7 @@ import RegisterForm from "../RegisterForm/RegisterForm";
 import { FormikHelpers } from "formik";
 import CloseButton from "../Buttons/CloseButton";
 import axios from "axios";
-import { API_URL } from "@/utils/constants";
+import { API_URL,redirect_uri } from "@/utils/constants";
 import {
   ModalClassesBG,
   RegisterModalClasses,
@@ -14,7 +14,6 @@ import {
 } from "../components.styles";
 import { getGoogleCode } from "@/utils/GoogleAuth";
 import Cookies from "js-cookie";
-import { redirect_uri } from "@/utils/constants";
 
 export interface RegistrationFormValues {
   firstName: string;
@@ -50,7 +49,7 @@ export default function Register() {
     values: RegistrationFormValues,
     formikHelpers: FormikHelpers<RegistrationFormValues>
   ) => {
-    console.log("Form values:", values);
+    // console.log("Form values:", values);
     setResetForm(() => formikHelpers.resetForm);
 
     axios
