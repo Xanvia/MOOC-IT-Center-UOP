@@ -4,11 +4,12 @@ import { SolidButtonClasses } from "../components.styles";
 interface ButtonProps {
   text: string;
   onClick: () => void;
+  disabled?: boolean;
 }
 
-const SolidButton: React.FC<ButtonProps> = ({ text, onClick }) => {
+const SolidButton: React.FC<ButtonProps> = ({ text, onClick, disabled }) => {
   return (
-    <button className={SolidButtonClasses} type="button">
+    <button className={SolidButtonClasses} disabled={disabled} type="button">
       {text}
     </button>
   );

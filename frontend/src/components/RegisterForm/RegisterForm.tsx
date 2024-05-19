@@ -52,14 +52,14 @@ const RegistrationForm: React.FC = () => {
   const handleSubmit = (values: RegistrationFormValues) => {
     console.log("Form values:", values);
   };
-
   return (
+    
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ setFieldValue , values }) => (
+      {({ setFieldValue, values }) => (
         <Form>
           <DropDown setFieldValue={setFieldValue} />
           <br />
@@ -166,7 +166,11 @@ const RegistrationForm: React.FC = () => {
             </div>
           </div>
           <div className="lg:pt-8">
-            <SolidButton text="R E G I S T E R" onClick={openGoogleLoginPage} />
+            <SolidButton
+              text="R E G I S T E R"
+              onClick={openGoogleLoginPage}
+              disabled={!values.userRole}
+            />
           </div>
 
           <br />
@@ -177,6 +181,7 @@ const RegistrationForm: React.FC = () => {
             text="Continue with google"
             onClick={openGoogleLoginPage}
             svg={<GoogleIcon />}
+            disabled={!values.userRole}
           />
           <br />
           <span className="text-blue-950">
