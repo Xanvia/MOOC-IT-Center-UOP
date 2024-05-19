@@ -6,6 +6,8 @@ import SvgButton from "../Buttons/SvgButton";
 import GoogleIcon from "@/icons/GoogleIcon";
 import { getGoogleCode } from "@/utils/GoogleAuth";
 import CloseButton from "../Buttons/CloseButton";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 import {
   ModalClassesBG,
@@ -15,6 +17,10 @@ import {
   InputInnerDiv,
   InputOuterDiv,
 } from "../components.styles";
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email").required("Email is required"),
+});
 
 export default function Login() {
   const [isOpen, setIsOpen] = useState(false);
@@ -59,40 +65,63 @@ export default function Login() {
               Welcome Back!
             </div>
 
-            <form action="#">
-              <div className="pt-16 grid grid-cols-1 gap-8">
-                <div className={InputOuterDiv}>
-                  <div className={InputInnerDiv}>
-                    <input className={InputFieldClasses} placeholder=" " />
-                    <label className={InputLabel}>Email</label>
+            <Formik
+              initialValues={{ email: "", password: "" }}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
+            >
+              {({ isSubmitting }) => (
+                <Form>
+                  <div className="pt-16 grid grid-cols-1 gap-8">
+                    <div className={InputOuterDiv}>
+                      <div className={InputInnerDiv}>
+                        <Field
+                          type="email"
+                          name="email"
+                          className={InputFieldClasses}
+                          placeholder=" "
+                        />
+                        <ErrorMessage
+                          name="email"
+                          component="div"
+                          className="top-0 left-0 text-red-600 text-xs"
+                        />
+                        <label className={InputLabel}>Email</label>
+                      </div>
+                    </div>
+                    <div className={InputOuterDiv}>
+                      <div className={InputInnerDiv}>
+                        <Field
+                          type="password"
+                          name="password"
+                          className={InputFieldClasses}
+                          placeholder=" "
+                        />
+                        <label className={InputLabel}>Password</label>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className={InputOuterDiv}>
-                  <div className={InputInnerDiv}>
-                    <input className={InputFieldClasses} placeholder=" " />
-                    <label className={InputLabel}>Password</label>
+                  <div className="pt-16 sm:px-8 flex flex-col items-center justify-center">
+                    <SolidButton text="R E G I S T E R" onClick={() => {}} />
+                    <br />
+                    <div className="text-gray-500 peer-focus:text-gray-500 py-2 px-28 text-center">
+                      <p> -or- </p>
+                    </div>
+                    <SvgButton
+                      text="Continue with google"
+                      onClick={handleGoogleLogin}
+                      svg={<GoogleIcon />}
+                      disabled={false}
+                    />
+                    <br />
+                    <div className="text-blue-950 pt-16 text-center">
+                      Already have an account? <u>Login</u>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </form>
+                </Form>
+              )}
+            </Formik>
 
-            <div className="pt-16 sm:px-8 flex flex-col items-center justify-center">
-              <SolidButton text="R E G I S T E R" onClick={() => {}} />
-              <br />
-              <div className="text-gray-500 peer-focus:text-gray-500 py-2 px-28 text-center">
-                <p> -or- </p>
-              </div>
-              <SvgButton
-                text="Continue with google"
-                onClick={handleGoogleLogin}
-                svg={<GoogleIcon />}
-                disabled={false}
-              />
-              <br />
-              <div className="text-blue-950 pt-16 text-center">
-                Already have an account? <u>Login</u>
-              </div>
-            </div>
             <div className="text-3xl font-bold text-[#072569] text-center mt-10 mb-2.5 mx-0">
               OpenEd
             </div>
