@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const DropDownCountry = () => {
+const DropDownGender = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("Country");
+  const [selectedOption, setSelectedOption] = useState("Gender");
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -65,13 +65,13 @@ const DropDownCountry = () => {
                 id="listbox-option-0"
                 role="option"
                 onClick={() => {
-                  setSelectedOption("Sri Lanka");
+                  setSelectedOption("Male");
                   setIsOpen(false);
                 }}
               >
                 <div className="flex items-center text-primary">
                   <span className="font-normal  ml-3 block truncate">
-                    Sri Lanka
+                    Male
                   </span>
                 </div>
               </li>
@@ -80,13 +80,13 @@ const DropDownCountry = () => {
                 id="listbox-option-1"
                 role="option"
                 onClick={() => {
-                  setSelectedOption("India");
+                  setSelectedOption("Female");
                   setIsOpen(false);
                 }}
               >
                 <div className="flex items-center">
                   <span className="font-normal ml-3 block truncate">
-                    India
+                    Female
                   </span>
                 </div>
               </li>
@@ -95,43 +95,13 @@ const DropDownCountry = () => {
                 id="listbox-option-1"
                 role="option"
                 onClick={() => {
-                  setSelectedOption("Thailand");
+                  setSelectedOption("Other");
                   setIsOpen(false);
                 }}
               >
                 <div className="flex items-center">
                   <span className="font-normal ml-3 block truncate">
-                    Thailand
-                  </span>
-                </div>
-              </li>
-              <li
-                className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-                id="listbox-option-1"
-                role="option"
-                onClick={() => {
-                  setSelectedOption("Pakistan");
-                  setIsOpen(false);
-                }}
-              >
-                <div className="flex items-center">
-                  <span className="font-normal ml-3 block truncate">
-                    Pakistan
-                  </span>
-                </div>
-              </li>
-              <li
-                className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-                id="listbox-option-1"
-                role="option"
-                onClick={() => {
-                  setSelectedOption("China");
-                  setIsOpen(false);
-                }}
-              >
-                <div className="flex items-center">
-                  <span className="font-normal ml-3 block truncate">
-                    China
+                    Other
                   </span>
                 </div>
               </li>
@@ -143,4 +113,4 @@ const DropDownCountry = () => {
   );
 };
 
-export default DropDownCountry;
+export default DropDownGender;
