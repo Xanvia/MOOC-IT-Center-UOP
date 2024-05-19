@@ -69,7 +69,9 @@ interface RegistrationFormValues {
             </div>
           </div>
           </div>
-          <SolidButton text="S U B M I T" onClick={() => {}} />
+          <div className="lg:pt-8">
+          <SolidButton text="S U B M I T"  onClick={() => {}} />
+        </div>
 
           </Form>
           </Formik>
