@@ -6,6 +6,7 @@ import SolidButton from "../Buttons/SolidButton";
 import GoogleIcon from "@/icons/GoogleIcon";
 import SvgButton from "../Buttons/SvgButton";
 import { openGoogleLoginPage } from "@/utils/GoogleAuth";
+import DropDown from "../DropDown/DropDown";
 
 import {
   InputFieldClasses,
@@ -21,6 +22,7 @@ interface RegistrationFormValues {
   email: string;
   password: string;
   confirmPassword: string;
+  userRole: string;
 }
 
 const initialValues: RegistrationFormValues = {
@@ -30,6 +32,7 @@ const initialValues: RegistrationFormValues = {
   email: "",
   password: "",
   confirmPassword: "",
+  userRole: "",
 };
 
 const validationSchema = Yup.object({
@@ -56,128 +59,132 @@ const RegistrationForm: React.FC = () => {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      <Form>
-        <div className="md:px-5 lg:px-10 md:pt-5 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-2 xl:gap-8">
-          <div className={InputOuterDiv}>
-            <div className={InputInnerDiv}>
-              <Field
-                name="firstName"
-                type="text"
-                placeholder=" "
-                className={InputFieldClasses}
-              />
-              <label className={InputLabel}>First Name</label>
-              <ErrorMessage
-                name="firstName"
-                component="div"
-                className="top-0 left-0 text-red-600 text-xs"
-              />
-            </div>
-          </div>
-
-          <div className={InputOuterDiv}>
-            <div className={InputInnerDiv}>
-              <Field
-                name="lastName"
-                type="text"
-                placeholder=" "
-                className={InputFieldClasses}
-              />
-              <label className={InputLabel}>Last Name</label>
-              <ErrorMessage
-                name="lastName"
-                component="div"
-                className="text-red-600 text-xs"
-              />
-            </div>
-          </div>
-          <div className={InputOuterDiv}>
-            <div className={InputInnerDiv}>
-              <Field
-                name="username"
-                type="text"
-                placeholder=" "
-                className={InputFieldClasses}
-              />
-              <label className={InputLabel}>Username</label>
-              <ErrorMessage
-                name="username"
-                component="div"
-                className="text-red-600 text-xs"
-              />
-            </div>
-          </div>
-
-          <div className={InputOuterDiv}>
-            <div className={InputInnerDiv}>
-              <Field
-                name="email"
-                type="email"
-                placeholder=" "
-                className={InputFieldClasses}
-              />
-              <label className={InputLabel}>Email Address</label>
-              <ErrorMessage
-                name="email"
-                component="div"
-                className="text-red-600 text-xs"
-              />
-            </div>
-          </div>
-
-          <div className={InputOuterDiv}>
-            <div className={InputInnerDiv}>
-              <Field
-                name="password"
-                type="password"
-                placeholder=" "
-                className={InputFieldClasses}
-              />
-              <label className={InputLabel}>Password</label>
-              <ErrorMessage
-                name="password"
-                component="div"
-                className="text-red-600 text-xs"
-              />
-            </div>
-          </div>
-
-          <div className={InputOuterDiv}>
-            <div className={InputInnerDiv}>
-              <Field
-                name="confirmPassword"
-                type="password"
-                placeholder=" "
-                className={InputFieldClasses}
-              />
-              <label className={InputLabel}>Confirm Password</label>
-              <ErrorMessage
-                name="confirmPassword"
-                component="div"
-                className="text-red-600 text-xs"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="lg:pt-8">
-          <SolidButton text="R E G I S T E R" onClick={openGoogleLoginPage} />
-        </div>
-
-        <br />
-        <div className="text-gray-500 peer-focus:text-gray-500 py-2">
-          <p> -or- </p>
-        </div>
-        <SvgButton
-          text="Continue with google"
-          onClick={openGoogleLoginPage}
-          svg={<GoogleIcon />}
-        />
-        <br />
-        <span className="text-blue-950">
+      {({ setFieldValue , values }) => (
+        <Form>
+          <DropDown setFieldValue={setFieldValue} />
           <br />
-          Already have an account? <u>Login</u>
-        </span>
-      </Form>
+          <div className="md:px-5 lg:px-10 md:pt-5 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-2 xl:gap-8">
+            <div className={InputOuterDiv}>
+              <div className={InputInnerDiv}>
+                <Field
+                  name="firstName"
+                  type="text"
+                  placeholder=" "
+                  className={InputFieldClasses}
+                />
+                <label className={InputLabel}>First Name</label>
+                <ErrorMessage
+                  name="firstName"
+                  component="div"
+                  className="top-0 left-0 text-red-600 text-xs"
+                />
+              </div>
+            </div>
+
+            <div className={InputOuterDiv}>
+              <div className={InputInnerDiv}>
+                <Field
+                  name="lastName"
+                  type="text"
+                  placeholder=" "
+                  className={InputFieldClasses}
+                />
+                <label className={InputLabel}>Last Name</label>
+                <ErrorMessage
+                  name="lastName"
+                  component="div"
+                  className="text-red-600 text-xs"
+                />
+              </div>
+            </div>
+            <div className={InputOuterDiv}>
+              <div className={InputInnerDiv}>
+                <Field
+                  name="username"
+                  type="text"
+                  placeholder=" "
+                  className={InputFieldClasses}
+                />
+                <label className={InputLabel}>Username</label>
+                <ErrorMessage
+                  name="username"
+                  component="div"
+                  className="text-red-600 text-xs"
+                />
+              </div>
+            </div>
+
+            <div className={InputOuterDiv}>
+              <div className={InputInnerDiv}>
+                <Field
+                  name="email"
+                  type="email"
+                  placeholder=" "
+                  className={InputFieldClasses}
+                />
+                <label className={InputLabel}>Email Address</label>
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="text-red-600 text-xs"
+                />
+              </div>
+            </div>
+
+            <div className={InputOuterDiv}>
+              <div className={InputInnerDiv}>
+                <Field
+                  name="password"
+                  type="password"
+                  placeholder=" "
+                  className={InputFieldClasses}
+                />
+                <label className={InputLabel}>Password</label>
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="text-red-600 text-xs"
+                />
+              </div>
+            </div>
+
+            <div className={InputOuterDiv}>
+              <div className={InputInnerDiv}>
+                <Field
+                  name="confirmPassword"
+                  type="password"
+                  placeholder=" "
+                  className={InputFieldClasses}
+                />
+                <label className={InputLabel}>Confirm Password</label>
+                <ErrorMessage
+                  name="confirmPassword"
+                  component="div"
+                  className="text-red-600 text-xs"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="lg:pt-8">
+            <SolidButton text="R E G I S T E R" onClick={openGoogleLoginPage} />
+          </div>
+
+          <br />
+          <div className="text-gray-500 peer-focus:text-gray-500 py-2">
+            <p> -or- </p>
+          </div>
+          <SvgButton
+            text="Continue with google"
+            onClick={openGoogleLoginPage}
+            svg={<GoogleIcon />}
+          />
+          <br />
+          <span className="text-blue-950">
+            <br />
+            Already have an account? <u>Login</u>
+          </span>
+        </Form>
+      )}
     </Formik>
   );
 };

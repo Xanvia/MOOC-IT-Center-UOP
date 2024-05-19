@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const DropDown = () => {
+interface DropDownProps {
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+}
+
+const DropDown: React.FC<DropDownProps> = ({ setFieldValue }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Choose");
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -70,6 +74,7 @@ const DropDown = () => {
                 onClick={() => {
                   setSelectedOption("Teacher");
                   setIsOpen(false);
+                  setFieldValue("userRole", "Teacher");
                 }}
               >
                 <div className="flex items-center text-primary">
@@ -85,6 +90,7 @@ const DropDown = () => {
                 onClick={() => {
                   setSelectedOption("Student");
                   setIsOpen(false);
+                  setFieldValue("userRole", "Student");
                 }}
               >
                 <div className="flex items-center">

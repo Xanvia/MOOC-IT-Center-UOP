@@ -62,8 +62,7 @@ export default function Register() {
               <h1 className="ps-5 py-1 lg:py-4 text-2xl text-primary font-bold mb-4">
                 Take the First Step!
               </h1>
-              <Dropdown />
-              <br />
+              
               <center>
                 <RegisterForm />
               </center>
