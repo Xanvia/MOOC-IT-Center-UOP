@@ -22,7 +22,7 @@ const DropDownGender = () => {
   });
 
   return (
-    <div className="flex px-7 pt-2 lg:pt-2" ref={dropdownRef}>
+    <div className="flex justify-center px-7 pt-2 lg:pt-2" ref={dropdownRef}>
       <div>
         <div className="relative">
           <button
