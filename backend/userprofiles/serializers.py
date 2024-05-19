@@ -9,13 +9,23 @@ class UserSerializer(serializers.ModelSerializer):
     firstname = serializers.CharField(source="first_name", required=True)
     lastname = serializers.CharField(source="last_name", required=True)
     user_type = serializers.CharField(required=True)
+    password = serializers.CharField(required=False)  
+    profile_picture = serializers.ImageField(required=False)
 
     class Meta:
         model = User
-        fields = ["firstname", "lastname", "email", "password", "username", "user_type"]
+        fields = ["firstname", "lastname", "email", "password", "username", "user_type","profile_picture"]
 
     def validate(self, attrs):
-        email = attrs.get("email", "")
+        request = self.context.get("request")
+        auth_mode = request.data.get("auth_mode", None)
+        if auth_mode == "password":
+            if attrs.get("password", None) is None:
+                raise serializers.ValidationError({"password": "Password is required"})
+
+        email = attrs.get("email", None)
+        if email is None:
+            raise serializers.ValidationError({"email": "Email is required"})
         if User.objects.filter(email=email).exists():
             raise serializers.ValidationError({"email": "Email already exists"})
 
@@ -28,24 +38,38 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_type = validated_data.pop("user_type")
-        password = validated_data.pop("password")
+        password = validated_data.pop("password", None)  
+        profile_picture = validated_data.pop("profile_picture", None)
         self.fields.pop("user_type")
 
         # create user
         user = super().create(validated_data)
-        user.set_password(password)
+        if password:  # Set the password, if provided
+            user.set_password(password)
         user.save()
 
         # add user to group
         group = Group.objects.get(name=user_type)
         group.user_set.add(user)
 
+        # create user profile
+        UserProfile.objects.create(user=user, profile_picture=profile_picture)
+
         return user
 
     def to_representation(self, instance):
+        user_profile = instance.userprofile
         return {
-            "user_id": instance.id,
             "access_token": str(AccessToken.for_user(instance)),
+            "user": {
+                "user_id": instance.id,
+                "username": instance.username,
+                "full_name": f"{instance.first_name} {instance.last_name}",
+                "email": instance.email,
+                "profile_picture": (
+                    user_profile.profile_picture if user_profile else None
+                ),
+            },
         }
 
 
@@ -63,65 +87,3 @@ class UserLoginSerializer(serializers.Serializer):
         return attrs
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = "__all__"
-
-
-class GoogleAuthSerializer(serializers.Serializer):
-    firstname = serializers.CharField(source="first_name", required=True)
-    lastname = serializers.CharField(source="last_name", required=True)
-    user_type = serializers.CharField(required=True)
-    email = serializers.EmailField(required=True)
-    username = serializers.CharField(required=True)
-    profile_picture = serializers.CharField(required=False)
-
-    def validate(self, attrs):
-        email = attrs.get("email", "")
-        if User.objects.filter(email=email).exists():
-            return attrs
-
-        usertype = attrs.get("user_type", "")
-        if usertype not in ["student", "teacher"]:
-            raise serializers.ValidationError(
-                {"user_type": "User type must be student or teacher"}
-            )
-        return attrs
-
-    def create(self, validated_data):
-        user_type = validated_data.pop("user_type")
-        profile_picture = validated_data.pop("profile_picture", None)
-        self.fields.pop("user_type")
-
-        # check if user exists
-        user, created = User.objects.get_or_create(
-            email=validated_data["email"], defaults=validated_data
-        )
-
-        if created:
-            # add user to group
-            group = Group.objects.get(name=user_type)
-            group.user_set.add(user)
-
-            # create user profile
-            UserProfile.objects.create(user=user, profile_picture=profile_picture)
-
-        return user
-
-    def to_representation(self, instance):
-        user = instance
-        user_profile = instance.userprofile
-        # user_profile = UserProfile.objects.filter(user=user).first()
-        return {
-            "access_token": str(AccessToken.for_user(user)),
-            "user": {
-                "user_id": user.id,
-                "username": user.username,
-                "full_name": f"{user.first_name} {user.last_name}",
-                "email": user.email,
-                "profile_picture": (
-                    user_profile.profile_picture if user_profile else None
-                ),
-            },
-        }
