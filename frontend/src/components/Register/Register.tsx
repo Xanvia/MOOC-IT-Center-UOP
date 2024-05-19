@@ -1,12 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
-<<<<<<< HEAD
-=======
 import Dropdown from "../DropDown/DropDown";
 import DropDownCountry from "../DropDown/DropDownCountry";
 import DropDownGender from "../DropDown/DropDownGender";
->>>>>>> b78fa24 (new component dropdowngender)
+import DatePicker from "../DropDown/DatePicker";
 import RegisterForm from "../RegisterForm/RegisterForm";
 import { FormikHelpers } from "formik";
 import CloseButton from "../Buttons/CloseButton";
