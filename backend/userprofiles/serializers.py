@@ -52,8 +52,14 @@ class UserSerializer(serializers.ModelSerializer):
         group = Group.objects.get(name=user_type)
         group.user_set.add(user)
 
+        if profile_picture is not None:
+            profile_picture = profile_picture.split('=')[0]
+            print(profile_picture)
+            
+        print(profile_picture)
         # create user profile
         UserProfile.objects.create(user=user, profile_picture=profile_picture)
+
         return user
 
     def to_representation(self, instance):

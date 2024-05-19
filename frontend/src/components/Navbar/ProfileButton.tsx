@@ -1,14 +1,8 @@
 "use client";
-import React, { RefObject } from "react";
+import React, { RefObject, useEffect, useState } from "react";
+
 import Cookies from "js-cookie";
 const DefaultProfileImage = "/images/defaultuser.png";
-
-const user = Cookies.get("user");
-const ProfileImage = user
-  ? JSON.parse(user).profile_picture + "-no"
-  : DefaultProfileImage;
-
-console.log("ProfileImage:", ProfileImage);
 interface ProfileButtonProps {
   isProfileMenuOpen: boolean;
   toggleProfileMenu: () => void;
@@ -20,6 +14,14 @@ const ProfileButton = ({
   toggleProfileMenu,
   profileMenuRef,
 }: ProfileButtonProps) => {
+  const [ProfileImage, setProfileImage] = useState(DefaultProfileImage);
+
+  useEffect(() => {
+    const user = Cookies.get("user");
+    if (user) {
+      setProfileImage(JSON.parse(user).profile_picture);
+    }
+  }, []);
   return (
     <div className="relative ml-3">
       <div>
