@@ -6,6 +6,8 @@ from .utils import google_authenticate
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
 from .models import UserProfile
+from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
 
 
 class UserRegistrationApiView(generics.CreateAPIView):
@@ -23,46 +25,34 @@ class UserRegistrationApiView(generics.CreateAPIView):
         return response
     
 
-class UserLoginApiView(generics.GenericAPIView):
-    serializer_class = UserLoginSerializer
-    permission_classes = [permissions.AllowAny]
+# class UserLoginApiView(generics.GenericAPIView):
+#     serializer_class = UserLoginSerializer
+#     permission_classes = [permissions.AllowAny]
 
-    def post(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user_name = serializer.validated_data["username"]
-        password = serializer.validated_data["password"]
-        user = authenticate(username=user_name, password=password)
-        try:
-            user_profile = UserProfile.objects.get(user=user) if user else None
-        except UserProfile.DoesNotExist:
-            user_profile = None
-        if user:
-            respObj = {
-                "status": "success",
-                "data": {
-                    "access_token": str(AccessToken.for_user(user)),
-                    "user": {
-                        "user_id": user.id,
-                        "username": user.username,
-                        "full_name": f"{user.first_name} {user.last_name}",
-                        "email": user.email,
-                        "profile_picture": user_profile.profile_picture if user_profile else None,
-                    },
-                },
-            }
-            return Response(respObj, status=status.HTTP_200_OK)
-        else:
-            respObj = {
-                "status": "fail",
-                "message": ["Invalid email or password"],
-            }
+#     def post(self, request):
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         user_name = serializer.validated_data["username"]
+#         password = serializer.validated_data["password"]
+#         user = authenticate(username=user_name, password=password)
+#         response_serializer = UserRepresentationSerializer(user)
+#         if user:
+#             respObj = {
+#                 "status": "success",
+#                 "data": response_serializer.data,
+#             }
+#             return Response(respObj, status=status.HTTP_200_OK)
+#         else:
+#             respObj = {
+#                 "status": "fail",
+#                 "message": ["Invalid email or password"],
+#             }
 
-        return Response(respObj, status=status.HTTP_403_FORBIDDEN)
+#         return Response(respObj, status=status.HTTP_403_FORBIDDEN)
 
 
 
-class GoogleAuthView(generics.CreateAPIView):
+class GoogleAuthRegisterView(generics.CreateAPIView):
     serializer_class = GoogleAuthSerializer
     permission_classes = [permissions.AllowAny]
 
@@ -71,7 +61,6 @@ class GoogleAuthView(generics.CreateAPIView):
         redirect_uri = request.data.get("redirect_uri")
 
         user = google_authenticate(code, redirect_uri)
-
         request.data.update(user)
 
         response = super().create(request)
@@ -82,4 +71,35 @@ class GoogleAuthView(generics.CreateAPIView):
         }
 
         return Response(response.data, status=status.HTTP_200_OK)
+    
+# class GoogleAuthLoginView(generics.GenericAPIView):
+#     serializer_class = UserRepresentationSerializer
+#     permission_classes = [permissions.AllowAny]
+
+#     def get_object(self,email):
+#         try:
+#             return User.objects.get(user__email=email)
+#         except UserProfile.DoesNotExist:
+#            raise PermissionDenied
+
+#     def post(self, request):
+#         code = request.data.get("code")
+#         redirect_uri = request.data.get("redirect_uri")
+        
+#         user_data = google_authenticate(code, redirect_uri)
+#         user = self.get_object(user_data.email)
+
+#         # Create a serializer instance with the user instance
+#         serializer = self.get_serializer(user)
+
+#         response = {
+#             "status": "success",
+#             "data": serializer.data,
+#         }
+#         print(serializer.data)
+
+#         return Response(response, status=status.HTTP_200_OK)
+
+
+
 
