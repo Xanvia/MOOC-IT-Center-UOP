@@ -31,6 +31,10 @@ export default function Register() {
   const [resetForm, setResetForm] = useState<(() => void) | null>(null);
   const [step, setStep] = useState(1);
 
+   const handleNextStep = () => {
+    setStep((prevStep) => prevStep + 1);
+  };
+
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
@@ -108,7 +112,7 @@ export default function Register() {
 
   return (
     <>
-      ,<PrimaryButton onClick={toggleModal} text="Register" />
+      <PrimaryButton onClick={toggleModal} text="Register" />
       {isOpen && (
         <div
           id="authentication-modal"
