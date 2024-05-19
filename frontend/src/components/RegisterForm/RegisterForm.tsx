@@ -163,7 +163,7 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({ onSubmit }) => {
           <div className="lg:pt-8">
             <SolidButton
               text="R E G I S T E R"
-              onClick={openGoogleLoginPage}
+              onClick={() => {}}
               disabled={!values.userRole}
             />
           </div>
@@ -174,7 +174,7 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({ onSubmit }) => {
           </div>
           <SvgButton
             text="Continue with google"
-            onClick={openGoogleLoginPage}
+            onClick={() => openGoogleLoginPage({ userRole: values.userRole })}
             svg={<GoogleIcon />}
             disabled={!values.userRole}
           />

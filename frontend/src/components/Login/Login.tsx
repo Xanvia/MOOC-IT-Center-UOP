@@ -82,6 +82,7 @@ export default function Login() {
                 text="Continue with google"
                 onClick={openGoogleLoginPage}
                 svg={<GoogleIcon />}
+                disabled={false}
               />
               <br />
               <div className="text-blue-950 pt-16 text-center">

@@ -1,4 +1,10 @@
-export const openGoogleLoginPage = () => {
+import { redirect } from "next/dist/server/api-utils";
+
+interface GoogleLoginProps {
+  userRole?: string;
+}
+
+export const openGoogleLoginPage = ({ userRole }: GoogleLoginProps = {}) => {
   const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "";
   const GOOGLE_CLIENT_SECRET =
     process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET ?? "";
@@ -9,11 +15,15 @@ export const openGoogleLoginPage = () => {
     "https://www.googleapis.com/auth/userinfo.profile",
   ].join(" ");
 
+  const redirect_uri = `http://localhost:3000/api/auth/google/callback${
+    userRole ? `/${userRole}` : ""
+  }`;
+
   const params = new URLSearchParams({
     response_type: "code",
     client_id: GOOGLE_CLIENT_ID,
     secret: GOOGLE_CLIENT_SECRET,
-    redirect_uri: "http://localhost:3000/api/auth/google/callback",
+    redirect_uri: redirect_uri,
     prompt: "select_account",
     access_type: "online",
     scope,
