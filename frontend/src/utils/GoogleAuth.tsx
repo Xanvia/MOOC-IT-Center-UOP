@@ -13,7 +13,7 @@ export const openGoogleLoginPage = () => {
     response_type: "code",
     client_id: GOOGLE_CLIENT_ID,
     secret: GOOGLE_CLIENT_SECRET,
-    redirect_uri: "http://localhost:3000/api/auth/google/callback",
+    redirect_uri: "http://localhost:3000/api/auth/google/callback?role=student&",
     prompt: "select_account",
     access_type: "online",
     scope,
