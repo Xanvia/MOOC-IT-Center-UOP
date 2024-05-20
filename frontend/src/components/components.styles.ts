@@ -353,3 +353,14 @@ export const CloseButtonClasses = clsx(
   "justify-center",
   "items-center"
 );
+
+export const CourseCardClasses = clsx(
+  "flex",
+  "justify-center",
+  "max-w-[360px]",
+  "h-[360px]",
+  "shadow-[0_5px_10px_rgba(0,0,0,0.1)]",
+  "bg-white",
+  "rounded-[10px]",
+  " mx-8"
+);
