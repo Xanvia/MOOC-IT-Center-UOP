@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 
 const Search: React.FC = () => {
@@ -14,10 +15,13 @@ const Search: React.FC = () => {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <input type="text" value={searchTerm} onChange={handleSearch} />
-                <button type="submit">Search</button>
+        <div className='flex justify-center py-7 px-7 bg-[#fff]'>
+            <form onSubmit={handleSubmit} className='w-1/2 pt-[150px] pb-5 '>
+                <div className="relative">
+                    <input type="text" value={searchTerm} onChange={handleSearch} placeholder='What do you want to learn?' 
+                    className='w-full px-5 py-2 font-1px placeholder-black text-black rounded-lg border-none ring-1 ring-[#072569] focus:ring-[#072569] focus:ring-1' />
+                    <button type="submit" className='text-white text-lg bg-[#072569] hover:bg-[#1146ce] px-3 py-0.25 rounded-lg absolute end-1.5 bottom-1.5'>Search</button>
+                </div>
             </form>
         </div>
     );

@@ -24,9 +24,19 @@ export default function Home() {
     <div>
       <Navbar isLoggedIn={isLoggedIn} onSignOut={handleSignOut} />
       <Search />
-
-      <CourseCard title="Course 1" description="Description 1" />
-      <CourseCard title="Course 2" description="Description 2" />
+    <div className="flex justify-center space-x-1">
+        <div>
+          <image></image>
+          <CourseCard title="Course 1" description="Description 1" />
+        </div>
+        <div>
+          <CourseCard title="Course 2" description="Description 2" />
+        </div>
+        <div>
+          <CourseCard title="Course 3" description="Description 3" />
+        </div>
+    </div>
+      
     </div>
   );
 }
