@@ -5,7 +5,6 @@ import * as Yup from "yup";
 import SolidButton from "../Buttons/SolidButton";
 import DropDownCountry from "../DropDown/DropDownCountry";
 import DropDownGender from "../DropDown/DropDownGender";
-import DatePickerr from "../DropDown/DatePickerr";
 import DatePicker from "../DropDown/DatePicker";
 
 import {
@@ -37,7 +36,8 @@ const RegistrationFormTwo: React.FC = () => {
       <DropDownCountry />
       <DropDownGender />
       <br />
-      <DatePickerr />
+      <DatePicker />
+
       {/* <DatePicker /> */}
       <Formik
         initialValues={initialValues}

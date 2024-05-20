@@ -35,7 +35,7 @@ export interface RegistrationFormValues {
 export default function Register() {
   const [isOpen, setIsOpen] = useState(false);
   const [resetForm, setResetForm] = useState<(() => void) | null>(null);
-  const [step, setStep] = useState("Two");
+  const [step, setStep] = useState("One");
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -61,7 +61,7 @@ export default function Register() {
     if (!values.userRole) {
       toast.warning("Please select user uype");
     } else {
-
+    
     axios
       .post(`${API_URL}/user/register/`, {
         firstname: values.firstName,
