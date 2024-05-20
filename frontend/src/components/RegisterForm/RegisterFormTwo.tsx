@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import SolidButton from "../Buttons/SolidButton";
 import DropDownCountry from "../DropDown/DropDownCountry";
 import DropDownGender from "../DropDown/DropDownGender";
+import DropDownInterests from "../DropDown/DropDownInterests";
 import DatePicker from "../DropDown/DatePicker";
 
 import {
@@ -74,11 +75,14 @@ const RegistrationFormTwo: React.FC = () => {
               </div>
             </div>
           </div>
+          
+          <DropDownInterests />
           <div className="lg:pt-8">
             <SolidButton text="S U B M I T" onClick={() => {}} />
           </div>
         </Form>
       </Formik>
+      
     </>
   );
 };
