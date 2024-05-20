@@ -4,7 +4,7 @@ export const getGoogleCode = (): Promise<string> => {
     const GOOGLE_CLIENT_SECRET =
       process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET ?? "";
     const googleAuthUrl = "https://accounts.google.com/o/oauth2/v2/auth";
-
+    const CALLBACK_URL = process.env.NEXT_PUBLIC_CALLBACK_URL ?? "";
     const scope = [
       "https://www.googleapis.com/auth/userinfo.email",
       "https://www.googleapis.com/auth/userinfo.profile",
@@ -14,7 +14,7 @@ export const getGoogleCode = (): Promise<string> => {
       response_type: "code",
       client_id: GOOGLE_CLIENT_ID,
       secret: GOOGLE_CLIENT_SECRET,
-      redirect_uri: "http://localhost:3000/api/auth/google/callback",
+      redirect_uri: CALLBACK_URL,
       prompt: "select_account",
       access_type: "online",
       scope,
