@@ -3,10 +3,10 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import SolidButton from "../Buttons/SolidButton";
-import DatePicker from "../DropDown/DatePicker";
-import ReactDatePicker from "../DropDown/ReactDatePicker";
 import DropDownCountry from "../DropDown/DropDownCountry";
 import DropDownGender from "../DropDown/DropDownGender";
+import DatePickerr from "../DropDown/DatePickerr";
+import DatePicker from "../DropDown/DatePicker";
 
 import {
   InputFieldClasses,
@@ -37,9 +37,8 @@ const RegistrationFormTwo: React.FC = () => {
       <DropDownCountry />
       <DropDownGender />
       <br />
+      <DatePickerr />
       {/* <DatePicker /> */}
-      <ReactDatePicker/>
-      <br />
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
