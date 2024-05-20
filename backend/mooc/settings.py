@@ -14,7 +14,7 @@ import os
 from pathlib import Path
 from pathlib import Path
 from datetime import timedelta
-
+import dj_database_url
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
@@ -96,14 +96,15 @@ WSGI_APPLICATION = "mooc.wsgi.application"
 
 if os.getenv("DJANGO_ENV") == "production":
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": os.getenv("DB_NAME"),
-            "USER": os.getenv("DB_USER"),
-            "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": os.getenv("DB_HOST", "localhost"),
-            "PORT": os.getenv("DB_PORT", "5432"),
-        }
+        # "default": {
+        #     "ENGINE": "django.db.backends.postgresql_psycopg2",
+        #     "NAME": os.getenv("DB_NAME"),
+        #     "USER": os.getenv("DB_USER"),
+        #     "PASSWORD": os.getenv("DB_PASSWORD"),
+        #     "HOST": os.getenv("DB_HOST", "localhost"),
+        #     "PORT": os.getenv("DB_PORT", "5432"),
+        # }
+        "default": dj_database_url.parse(os.getenv("DATABASE_URL"))
     }
 else:
     DATABASES = {
