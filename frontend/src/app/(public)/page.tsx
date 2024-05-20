@@ -31,7 +31,6 @@ export default function Home() {
       <Search />
       <div className="flex justify-center space-x-1">
         <div>
-          <image></image>
           <CourseCard
             title="Computer Networks "
             description="The learning material on beginner-level website creation."
