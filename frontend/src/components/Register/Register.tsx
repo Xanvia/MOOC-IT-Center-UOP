@@ -6,6 +6,7 @@ import DropDownCountry from "../DropDown/DropDownCountry";
 import DropDownGender from "../DropDown/DropDownGender";
 import DatePicker from "../DropDown/DatePicker";
 import RegisterForm from "../RegisterForm/RegisterForm";
+import RegistrationFormTwo from "../RegisterForm/RegisterFormTwo";
 import { FormikHelpers } from "formik";
 import CloseButton from "../Buttons/CloseButton";
 import axios from "axios";
@@ -20,6 +21,7 @@ import { getGoogleCode } from "@/utils/GoogleAuth";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 
+
 export interface RegistrationFormValues {
   firstName: string;
   lastName: string;
@@ -33,11 +35,7 @@ export interface RegistrationFormValues {
 export default function Register() {
   const [isOpen, setIsOpen] = useState(false);
   const [resetForm, setResetForm] = useState<(() => void) | null>(null);
-  const [step, setStep] = useState(1);
-
-  const handleNextStep = () => {
-    setStep((prevStep) => prevStep + 1);
-  };
+  const [step, setStep] = useState("Two");
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -63,6 +61,32 @@ export default function Register() {
     if (!values.userRole) {
       toast.warning("Please select user uype");
     } else {
+
+    axios
+      .post(`${API_URL}/user/register/`, {
+        firstname: values.firstName,
+        lastname: values.lastName,
+        username: values.username,
+        email: values.email,
+        password: values.password,
+        user_type: values.userRole,
+      })
+      .then((res) => {
+        Cookies.set("token", res.data.data.access_token);
+        console.log(res.data.user);
+        Cookies.set("user", JSON.stringify(res.data.data.user));
+        setStep("Two");
+        alert("Registration Successful");
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+        alert(err.response.data.message);
+      });
+  };
+
+  const handleGoogleLogin = async (userRole: String) => {
+    const code = await getGoogleCode();
+    if (code !== null) {
       axios
         .post(`${API_URL}/user/register/`, {
           firstname: values.firstName,
@@ -116,7 +140,7 @@ export default function Register() {
 
   return (
     <>
-      <PrimaryButton onClick={toggleModal} text="Register" />
+      ,<PrimaryButton onClick={toggleModal} text="Register" />
       {isOpen && (
         <div
           id="authentication-modal"
@@ -141,16 +165,31 @@ export default function Register() {
               </div>
             </div>
             <div className={RegisterWhiteDiv}>
-              <h1 className="ps-5 py-1 lg:py-4 text-2xl text-primary font-bold mb-4">
-                Take the First Step!
-              </h1>
+              {step == "One" && (
+                <>
+                  <h1 className="ps-5 py-1 lg:py-4 text-2xl text-primary font-bold mb-4">
+                    Take the First Step!
+                  </h1>
+                  <center>
+                    <RegisterForm
+                      onSubmit={handleSubmit}
+                      onGoogleClick={handleGoogleLogin}
+                    />
+                  </center>
+                </>
+              )}
+              {step == "Two" && (
+                <>
+                  <h1 className="ps-5 py-1 lg:py-4 text-2xl text-primary font-bold mb-4">
+                    Almost There!
+                  </h1>
+                  <center>
+                    <RegistrationFormTwo />
+                  </center>
 
-              <center>
-                <RegisterForm
-                  onSubmit={handleSubmit}
-                  onGoogleClick={handleGoogleLogin}
-                />
-              </center>
+                  <br />
+                </>
+              )}
 
               <CloseButton onClick={toggleModal} />
             </div>

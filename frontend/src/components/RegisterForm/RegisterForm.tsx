@@ -55,13 +55,11 @@ interface RegisterFormProps {
     formikHelpers: FormikHelpers<RegistrationFormValues>
   ) => void;
   onGoogleClick: (userRole: string) => void;
-  handleNextStep:()=>void;
 }
 
 const RegistrationForm: React.FC<RegisterFormProps> = ({
   onSubmit,
   onGoogleClick,
-  handleNextStep,
 }) => {
   return (
     <Formik
