@@ -14,12 +14,11 @@ import {
   NotificationButtonMobileClasses,
 } from "../components.styles";
 
-interface NavbarProps {
-  isLoggedIn: boolean;
-  onSignOut: () => void;
-}
 
-const Navbar = ({ isLoggedIn, onSignOut }: NavbarProps) => {
+const Navbar = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading,setIsLoading] = useState(true);
+
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const profileMenuRef = useRef(null);
@@ -30,6 +29,16 @@ const Navbar = ({ isLoggedIn, onSignOut }: NavbarProps) => {
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   };
+
+
+  const onSignOut = () => {
+    Cookies.remove("token");
+    Cookies.remove("user");
+    setIsLoggedIn(false);
+    window.location.reload()
+  };
+
+
 
   const handleDocumentClick = (event: MouseEvent) => {
     if (
@@ -46,6 +55,15 @@ const Navbar = ({ isLoggedIn, onSignOut }: NavbarProps) => {
       document.removeEventListener("mousedown", handleDocumentClick);
     };
   }, []);
+
+  useEffect(() => {
+    const user = Cookies.get("user");
+    if (user) {
+      setIsLoggedIn(true);
+    }
+    setIsLoading(false)
+  }, [isLoggedIn]);
+
 
   return (
     <nav className="bg-primary">
@@ -115,7 +133,12 @@ const Navbar = ({ isLoggedIn, onSignOut }: NavbarProps) => {
             </div>
           </div>
           <div className="flex items-center gap-5 mt-2 lg:pr-20 justify-center">
-            {isLoggedIn ? (
+            {!isLoggedIn && !isLoading ? (
+              <>
+                <Login />
+                <Register />
+              </>
+            ) : (
               <div className="flex md:hidden absolute inset-y-0 right-0 items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <button
                   type="button"
@@ -146,11 +169,6 @@ const Navbar = ({ isLoggedIn, onSignOut }: NavbarProps) => {
                   handleSignOut={onSignOut}
                 />
               </div>
-            ) : (
-              <>
-                <Login />
-                <Register />
-              </>
             )}
           </div>
 

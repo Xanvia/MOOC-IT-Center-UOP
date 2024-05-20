@@ -10,24 +10,9 @@ const course2 = "/images/course2.png";
 const course3 = "/images/course3.png";
 
 export default function Home() {
-  const [isLoggedIn, setIsLoggedIn] = useState(!!Cookies.get("token"));
-
-  const handleSignOut = () => {
-    Cookies.remove("token");
-    Cookies.remove("user");
-    setIsLoggedIn(false);
-  };
-
-  useEffect(() => {
-    const user = Cookies.get("user");
-    if (user) {
-      setIsLoggedIn(true);
-    }
-  }, [isLoggedIn]);
-
   return (
     <div>
-      <Navbar isLoggedIn={isLoggedIn} onSignOut={handleSignOut} />
+      <Navbar />
       <Search />
       <div className="flex justify-center space-x-1">
         <div>
