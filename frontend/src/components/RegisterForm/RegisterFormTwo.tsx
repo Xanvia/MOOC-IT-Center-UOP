@@ -75,7 +75,7 @@ const RegistrationFormTwo: React.FC = () => {
               </div>
             </div>
           </div>
-          
+          <br/>
           <DropDownInterests />
           <div className="lg:pt-8">
             <SolidButton text="S U B M I T" onClick={() => {}} />

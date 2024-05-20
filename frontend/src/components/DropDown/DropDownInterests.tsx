@@ -81,7 +81,7 @@ const DropDownInterests = () => {
               >
                 <div className="flex items-center">
                   <span className="font-normal ml-3 block truncate">
-                    Graphic Designing
+                    User Interface
                   </span>
                 </div>
               </li>
@@ -96,7 +96,7 @@ const DropDownInterests = () => {
               >
                 <div className="flex items-center">
                   <span className="font-normal ml-3 block truncate">
-                  User Interface
+                  Graphic Designing
                   </span>
                 </div>
               </li>
