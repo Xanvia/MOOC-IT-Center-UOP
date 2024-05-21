@@ -94,6 +94,12 @@ const RegistrationFormTwo: React.FC = () => {
           </div>
           <br/>
           <DropDownInterests />
+          <div className="grid grid-cols-4 gap-1 px-1 py-2 md:mx-8">
+            <div className = "border rounded-2xl text-primary hover:shadow-md">Statistics</div>
+            <div className = "border rounded-2xl text-primary hover:shadow-md">Electronics</div>
+            <div className = "border rounded-2xl text-primary hover:shadow-md">Cyber Security</div>
+            <div className = "border rounded-2xl text-primary hover:shadow-md">Real Analysis</div>
+          </div>
           <div className="lg:pt-8">
             <SolidButton text="S U B M I T" onClick={() => {}} />
           </div>
