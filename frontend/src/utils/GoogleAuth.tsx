@@ -1,3 +1,5 @@
+import { redirect_uri } from "./constants";
+
 export const getGoogleCode = (): Promise<string> => {
   return new Promise((resolve, reject) => {
     const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "";
@@ -19,7 +21,7 @@ export const getGoogleCode = (): Promise<string> => {
       access_type: "online",
       scope,
     });
-
+    console.log(CALLBACK_URL);
     const url = `${googleAuthUrl}?${params}`;
 
     const windowFeatures = `width=1000,height=600,scrollbars=yes,resizable=yes,toolbar=no,menubar=no,

@@ -10,7 +10,7 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { API_URL, redirect_uri } from "@/utils/constants";
+import { API_URL, CALLBACK_URL, redirect_uri } from "@/utils/constants";
 
 import {
   ModalClassesBG,
@@ -74,7 +74,7 @@ export default function Login() {
       axios
         .post(`${API_URL}/user/google-auth/login/`, {
           code: code,
-          redirect_uri: redirect_uri,
+          redirect_uri: CALLBACK_URL,
         })
         .then((res) => {
           Cookies.set("token", res.data.data.access_token);

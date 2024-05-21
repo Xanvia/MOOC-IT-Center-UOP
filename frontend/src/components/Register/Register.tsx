@@ -5,7 +5,7 @@ import RegisterForm from "../RegisterForm/RegisterForm";
 import { FormikHelpers } from "formik";
 import CloseButton from "../Buttons/CloseButton";
 import axios from "axios";
-import { API_URL,redirect_uri } from "@/utils/constants";
+import { API_URL,redirect_uri ,CALLBACK_URL} from "@/utils/constants";
 import {
   ModalClassesBG,
   RegisterModalClasses,
@@ -81,7 +81,7 @@ export default function Register() {
         .post(`${API_URL}/user/google-auth/`, {
           code: code,
           user_type: userRole,
-          redirect_uri: redirect_uri,
+          redirect_uri: CALLBACK_URL,
         })
         .then((res) => {
           Cookies.set("token", res.data.data.access_token);
