@@ -89,6 +89,7 @@ export default function Register() {
           Cookies.set("user", JSON.stringify(res.data.data.user));
           setStep(2);
           alert("Registration Successful");
+          window.location.reload();
         })
         .catch((err) => {
           console.log(err.response.data);
