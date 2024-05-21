@@ -298,11 +298,7 @@ export const SolidButtonClasses = clsx(
   "shadow-md",
   "shadow-gray-900/10",
   "hover:shadow-lg",
-  "hover:shadow-gray-900/20",
-  "focus:opacity-[0.85]",
-  "focus:shadow-none",
-  "active:opacity-[0.85]",
-  "active:shadow-none"
+  "hover:shadow-gray-900/20"
 );
 
 export const SvgButtonClasses = clsx(
@@ -317,7 +313,6 @@ export const SvgButtonClasses = clsx(
   "text-center",
   "uppercase",
   "transition-all",
-  "disabled:opacity-90",
   "disabled:shadow-none",
   "disabled:pointer-events-none",
   "text-xs",
@@ -363,17 +358,4 @@ export const CourseCardClasses = clsx(
   "bg-white",
   "rounded-[10px]",
   " mx-8"
-);
-
-export const toastdivBG = clsx(
-  "fixed",
-  "z-10",
-  "inset-0",
-  "flex",
-  "h-full",
-  "w-full",
-  "bg-black",
-  "bg-opacity-30",
-  "justify-end",
-  "pr-20"
 );

@@ -14,9 +14,7 @@ import {
   InputInnerDiv,
   InputOuterDiv,
 } from "../components.styles";
-import { on } from "events";
-import { API_URL } from "@/utils/constants";
-import axios from "axios";
+
 
 const initialValues: RegistrationFormValues = {
   firstName: "",
@@ -179,7 +177,6 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
             <SolidButton
               type="submit"
               text="R E G I S T E R"
-              disabled={!values.userRole}
               onClick={() => {}}
             />
           </div>
@@ -192,7 +189,6 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
             text="Continue with google"
             onClick={() => onGoogleClick(values.userRole)}
             svg={<GoogleIcon />}
-            disabled={!values.userRole}
           />
           <br />
           <span className="text-blue-950">

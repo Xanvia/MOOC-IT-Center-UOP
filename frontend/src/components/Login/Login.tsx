@@ -21,6 +21,7 @@ import {
   InputOuterDiv,
 } from "../components.styles";
 import { attachReactRefresh } from "next/dist/build/webpack-config";
+import { toast } from "sonner";
 
 export interface LoginFormValues {
   email: string;
@@ -59,12 +60,12 @@ export default function Login() {
       .then((res) => {
         Cookies.set("token", res.data.data.access_token);
         Cookies.set("user", JSON.stringify(res.data.data.user));
-        alert("Login Successful");
+        toast.success(res.data.message)
         toggleModal();
       })
       .catch((err) => {
-        console.log(err.response.data);
-        alert(err.response.data.message);
+        const errorMessage = err.response?.data.message ?? "Network error";
+        toast.error(errorMessage);
       });
   };
 
@@ -80,13 +81,13 @@ export default function Login() {
           Cookies.set("token", res.data.data.access_token);
           console.log(res.data.user);
           Cookies.set("user", JSON.stringify(res.data.data.user));
-          alert("Login Successful");
+          toast.success(res.data.message)
           window.location.reload();
           toggleModal();
         })
         .catch((err) => {
-          console.log(err.response.data);
-          alert(err.response.data.message);
+          const errorMessage = err.response?.data.message ?? "Network error";
+          toast.error(errorMessage);
         });
     }
   };

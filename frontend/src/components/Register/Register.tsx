@@ -5,7 +5,7 @@ import RegisterForm from "../RegisterForm/RegisterForm";
 import { FormikHelpers } from "formik";
 import CloseButton from "../Buttons/CloseButton";
 import axios from "axios";
-import { API_URL,redirect_uri ,CALLBACK_URL} from "@/utils/constants";
+import { API_URL, redirect_uri, CALLBACK_URL } from "@/utils/constants";
 import {
   ModalClassesBG,
   RegisterModalClasses,
@@ -52,51 +52,57 @@ export default function Register() {
   ) => {
     // console.log("Form values:", values);
     setResetForm(() => formikHelpers.resetForm);
-
-    axios
-      .post(`${API_URL}/user/register/`, {
-        firstname: values.firstName,
-        lastname: values.lastName,
-        username: values.username,
-        email: values.email,
-        password: values.password,
-        user_type: values.userRole,
-      })
-      .then((res) => {
-        Cookies.set("token", res.data.data.access_token);
-        console.log(res.data.user);
-        Cookies.set("user", JSON.stringify(res.data.data.user));
-        setStep(2);
-        alert("Registration Successful");
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-        alert(err.response.data.message);
-      });
-  };
-
-  const handleGoogleLogin = async (userRole: String) => {
-    const code = await getGoogleCode();
-    if (code !== null) {
+    if (!values.userRole) {
+      toast.warning("Please select user uype");
+    } else {
       axios
-        .post(`${API_URL}/user/google-auth/`, {
-          code: code,
-          user_type: userRole,
-          redirect_uri: CALLBACK_URL,
+        .post(`${API_URL}/user/register/`, {
+          firstname: values.firstName,
+          lastname: values.lastName,
+          username: values.username,
+          email: values.email,
+          password: values.password,
+          user_type: values.userRole,
         })
         .then((res) => {
           Cookies.set("token", res.data.data.access_token);
           console.log(res.data.user);
           Cookies.set("user", JSON.stringify(res.data.data.user));
           setStep(2);
-          alert("Registration Successful");
-          window.location.reload();
+          toast.success(res.data.message);
         })
         .catch((err) => {
-          console.log(err.response.data);
-          alert(err.response.data.message);
-          
+          const errorMessage = err.response?.data.message ?? "Network error";
+          toast.error(errorMessage);
         });
+    }
+  };
+
+  const handleGoogleLogin = async (userRole: String) => {
+    if (!userRole) {
+      toast.warning("Please select user type");
+    } else {
+      const code = await getGoogleCode();
+      if (code !== null) {
+        axios
+          .post(`${API_URL}/user/google-auth/`, {
+            code: code,
+            user_type: userRole,
+            redirect_uri: CALLBACK_URL,
+          })
+          .then((res) => {
+            Cookies.set("token", res.data.data.access_token);
+            console.log(res.data.user);
+            Cookies.set("user", JSON.stringify(res.data.data.user));
+            setStep(2);
+            toast.success(res.data.message);
+            window.location.reload();
+          })
+          .catch((err) => {
+            const errorMessage = err.response?.data.message ?? "Network error";
+            toast.error(errorMessage);
+          });
+      }
     }
   };
 
