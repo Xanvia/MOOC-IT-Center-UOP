@@ -14,6 +14,7 @@ import {
 } from "../components.styles";
 import { getGoogleCode } from "@/utils/GoogleAuth";
 import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 export interface RegistrationFormValues {
   firstName: string;

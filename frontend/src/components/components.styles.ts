@@ -364,3 +364,16 @@ export const CourseCardClasses = clsx(
   "rounded-[10px]",
   " mx-8"
 );
+
+export const toastdivBG = clsx(
+  "fixed",
+  "z-10",
+  "inset-0",
+  "flex",
+  "h-full",
+  "w-full",
+  "bg-black",
+  "bg-opacity-30",
+  "justify-end",
+  "pr-20"
+);
