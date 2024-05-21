@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 const DropDownGender = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("Gender");
+  const [selectedOption, setSelectedOption] = useState("Select");
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: MouseEvent) => {

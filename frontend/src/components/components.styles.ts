@@ -63,7 +63,7 @@ export const InputFieldClasses = clsx(
   "placeholder-shown:border",
   "placeholder-shown:border-blue-gray-200",
   "placeholder-shown:border-t-blue-gray-200",
-  
+  "border",
   "focus:border-2",
   "focus:border-t-transparent",
   "text-sm",

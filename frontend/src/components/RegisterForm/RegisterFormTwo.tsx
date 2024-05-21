@@ -15,6 +15,7 @@ import {
   InputOuterDiv,
 } from "../components.styles";
 
+
 interface RegistrationFormValues {
   phonenumber: string;
 }
@@ -34,12 +35,28 @@ const RegistrationFormTwo: React.FC = () => {
 
   return (
     <>
-      <DropDownCountry />
-      <DropDownGender />
+      
+      <div className="flex border items-center">
+                  <span className="font-normal ml-3 block truncate">
+                    Country
+                  </span>
+                  <DropDownCountry />
+                </div>
+      <br/>
+      
+      <div className="flex border items-center">
+                  <span className="font-normal ml-3 block truncate">
+                    Gender
+                  </span>
+                  <DropDownGender />
+                </div>
       <br />
-      <DatePicker />
-
-      {/* <DatePicker /> */}
+      <div className="flex border items-center">
+                  <span className="font-normal ml-3 block truncate">
+                    Date of Birth
+                  </span>
+                  <DatePicker />
+                </div>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
