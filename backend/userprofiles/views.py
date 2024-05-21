@@ -15,7 +15,6 @@ class UserRegistrationApiView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        print(request.data)
         request.data["auth_mode"] = "password"
         response = super().post(request)
 
@@ -25,7 +24,8 @@ class UserRegistrationApiView(generics.CreateAPIView):
             "data": response.data,
         }
         return response
-    
+
+
 class GoogleAuthRegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
@@ -41,11 +41,13 @@ class GoogleAuthRegisterView(generics.CreateAPIView):
 
         response.data = {
             "status": "success",
+            "message": "User registered successfully",
             "data": response.data,
         }
 
         return Response(response.data, status=status.HTTP_200_OK)
-    
+
+
 class UserLoginApiView(generics.GenericAPIView):
     serializer_class = UserLoginSerializer
     permission_classes = [permissions.AllowAny]
@@ -63,6 +65,7 @@ class UserLoginApiView(generics.GenericAPIView):
         if user:
             respObj = {
                 "status": "success",
+                "message": "User Loged In Successfully",
                 "data": {
                     "access_token": str(AccessToken.for_user(user)),
                     "user": {
@@ -70,7 +73,9 @@ class UserLoginApiView(generics.GenericAPIView):
                         "username": user.username,
                         "full_name": f"{user.first_name} {user.last_name}",
                         "email": user.email,
-                        "profile_picture": user_profile.profile_picture if user_profile else None,
+                        "profile_picture": (
+                            user_profile.profile_picture if user_profile else None
+                        ),
                     },
                 },
             }
@@ -82,7 +87,7 @@ class UserLoginApiView(generics.GenericAPIView):
             }
 
         return Response(respObj, status=status.HTTP_403_FORBIDDEN)
-    
+
 
 class GoogleLoginApiView(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
@@ -94,13 +99,14 @@ class GoogleLoginApiView(generics.GenericAPIView):
             user_data = google_authenticate(code, redirect_uri)
         except Exception as e:
             print(e)
-        try: 
+        try:
             user = User.objects.get(email=user_data.get("email"))
         except User.DoesNotExist:
             raise PermissionDenied("User does not exist")
         user_profile = user.userprofile
         respObj = {
             "status": "success",
+            "message": "User Loged In Successfully",
             "data": {
                 "access_token": str(AccessToken.for_user(user)),
                 "user": {
@@ -108,7 +114,9 @@ class GoogleLoginApiView(generics.GenericAPIView):
                     "username": user.username,
                     "full_name": f"{user.first_name} {user.last_name}",
                     "email": user.email,
-                    "profile_picture": user_profile.profile_picture if user_profile else None,
+                    "profile_picture": (
+                        user_profile.profile_picture if user_profile else None
+                    ),
                 },
             },
         }

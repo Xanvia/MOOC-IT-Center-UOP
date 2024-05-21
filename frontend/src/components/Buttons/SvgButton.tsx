@@ -5,7 +5,7 @@ interface ButtonProps {
   text: string;
   onClick: () => void;
   svg?: React.ReactNode;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 const SvgButton: React.FC<ButtonProps> = ({ text, onClick, svg, disabled }) => {

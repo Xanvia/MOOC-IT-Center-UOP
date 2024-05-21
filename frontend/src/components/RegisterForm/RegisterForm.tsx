@@ -14,9 +14,7 @@ import {
   InputInnerDiv,
   InputOuterDiv,
 } from "../components.styles";
-import { on } from "events";
-import { API_URL } from "@/utils/constants";
-import axios from "axios";
+
 
 const initialValues: RegistrationFormValues = {
   firstName: "",
@@ -28,6 +26,16 @@ const initialValues: RegistrationFormValues = {
   userRole: "",
 };
 
+
+const passwordSchema = Yup.string()
+  .required("This field is required")
+  .matches(/[A-Z]/, "Must contain at least one uppercase letter")
+  .matches(/[0-9]/, "Must contain at least one digit")
+  .matches(/[!@#$%^&*(),.?":{}|<>]/, "Must contain at least one special character")
+  .min(8, "Must be at least 8 characters long");
+
+
+
 const validationSchema = Yup.object({
   firstName: Yup.string().required("This field is required"),
   lastName: Yup.string().required("This field is required"),
@@ -35,7 +43,7 @@ const validationSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email address")
     .required("This field is required"),
-  password: Yup.string().required("This field is required"),
+  password:passwordSchema,
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password")], "Passwords must match")
     .required("This field is required"),
@@ -169,7 +177,6 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
             <SolidButton
               type="submit"
               text="R E G I S T E R"
-              disabled={!values.userRole}
               onClick={() => {}}
             />
           </div>
@@ -182,7 +189,6 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
             text="Continue with google"
             onClick={() => onGoogleClick(values.userRole)}
             svg={<GoogleIcon />}
-            disabled={!values.userRole}
           />
           <br />
           <span className="text-blue-950">
