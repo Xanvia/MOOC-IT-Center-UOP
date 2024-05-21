@@ -81,6 +81,7 @@ export default function Login() {
           console.log(res.data.user);
           Cookies.set("user", JSON.stringify(res.data.data.user));
           alert("Login Successful");
+          window.location.reload();
           toggleModal();
         })
         .catch((err) => {
