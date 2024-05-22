@@ -62,9 +62,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         if profile_picture is not None:
             profile_picture = profile_picture.split("=")[0]
-            print(profile_picture)
 
-        print(profile_picture)
         # create user profile
         UserProfile.objects.create(user=user, profile_picture=profile_picture)
 
