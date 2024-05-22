@@ -21,7 +21,6 @@ import { getGoogleCode } from "@/utils/GoogleAuth";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 
-
 export interface RegistrationFormValues {
   firstName: string;
   lastName: string;
@@ -167,7 +166,7 @@ export default function Register() {
             <div className={RegisterWhiteDiv}>
               {step == "One" && (
                 <>
-                  <h1 className="ps-5 py-1 lg:py-4 text-2xl text-primary font-bold mb-4">
+                  <h1 className="ps-5 py-1 lg:py-4 text-3xl text-primary font-bold mb-4">
                     Take the First Step!
                   </h1>
                   <center>
@@ -180,7 +179,7 @@ export default function Register() {
               )}
               {step == "Two" && (
                 <>
-                  <h1 className="ps-5 py-1 lg:py-4 text-2xl text-primary font-bold mb-4">
+                  <h1 className="ps-5 py-1 lg:py-4 text-3xl text-primary font-bold mb-4">
                     Almost There!
                   </h1>
                   <center>
