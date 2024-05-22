@@ -1,11 +1,11 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer, UserLoginSerializer
+from .serializers import UserSerializer, UserLoginSerializer, InterestSerializer
 from .utils import google_authenticate
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
-from .models import UserProfile
+from .models import UserProfile, Interest
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 
@@ -121,3 +121,17 @@ class GoogleLoginApiView(generics.GenericAPIView):
             },
         }
         return Response(respObj, status=status.HTTP_200_OK)
+
+
+class InterestListAPIView(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
+    queryset = Interest.objects.all()
+    serializer_class = InterestSerializer
+    pagination_class = None
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return Response(
+            {"status": "success", "data": {"interests": response.data}},
+            status=status.HTTP_200_OK,
+        )
