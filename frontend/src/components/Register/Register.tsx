@@ -34,7 +34,7 @@ export interface RegistrationFormValues {
 export default function Register() {
   const [isOpen, setIsOpen] = useState(false);
   const [resetForm, setResetForm] = useState<(() => void) | null>(null);
-  const [step, setStep] = useState("One");
+  const [step, setStep] = useState("Two");
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -60,32 +60,6 @@ export default function Register() {
     if (!values.userRole) {
       toast.warning("Please select user uype");
     } else {
-    
-    axios
-      .post(`${API_URL}/user/register/`, {
-        firstname: values.firstName,
-        lastname: values.lastName,
-        username: values.username,
-        email: values.email,
-        password: values.password,
-        user_type: values.userRole,
-      })
-      .then((res) => {
-        Cookies.set("token", res.data.data.access_token);
-        console.log(res.data.user);
-        Cookies.set("user", JSON.stringify(res.data.data.user));
-        setStep("Two");
-        alert("Registration Successful");
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-        alert(err.response.data.message);
-      });
-  };
-
-  const handleGoogleLogin = async (userRole: String) => {
-    const code = await getGoogleCode();
-    if (code !== null) {
       axios
         .post(`${API_URL}/user/register/`, {
           firstname: values.firstName,
@@ -99,7 +73,7 @@ export default function Register() {
           Cookies.set("token", res.data.data.access_token);
           console.log(res.data.user);
           Cookies.set("user", JSON.stringify(res.data.data.user));
-          setStep(2);
+          setStep("Two");
           toast.success(res.data.message);
         })
         .catch((err) => {
@@ -125,7 +99,7 @@ export default function Register() {
             Cookies.set("token", res.data.data.access_token);
             console.log(res.data.user);
             Cookies.set("user", JSON.stringify(res.data.data.user));
-            setStep(2);
+            setStep("Two");
             toast.success(res.data.message);
             window.location.reload();
           })
