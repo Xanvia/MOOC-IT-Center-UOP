@@ -349,13 +349,73 @@ export const CloseButtonClasses = clsx(
   "items-center"
 );
 
-export const CourseCardClasses = clsx(
+export const CourseCardOuterClasses = clsx(
+  "relative",
   "flex",
-  "justify-center",
-  "max-w-[360px]",
-  "h-[360px]",
-  "shadow-[0_5px_10px_rgba(0,0,0,0.1)]",
+  "w-full",
+  "max-w-[20rem]",
+  "lg:max-w-[26rem]",
+  "flex-col",
+  "rounded-xl",
   "bg-white",
-  "rounded-[10px]",
-  " mx-8"
+  "bg-clip-border",
+  "text-gray-700",
+  "shadow-lg",
+);
+
+export const CourseCardImageContainerClsx = clsx(
+  "relative",
+  "lg:mx-1",
+  "mt-1",
+  "overflow-hidden",
+  "text-white",
+  "shadow-lg",
+  "rounded-xl",
+  "bg-blue-gray-500",
+  "bg-clip-border",
+  "shadow-blue-gray-500/40"
+);
+
+
+export const CourseCardImageClsx = clsx(
+  "absolute",
+  "inset-0",
+  "w-full",
+  "h-full",
+  "bg-gradient-to-tr",
+  "from-transparent",
+  "via-transparent",
+  "to-black/60"
+);
+
+export const CourseCardTitleContainerClsx = clsx(
+  "flex",
+  "items-center",
+  "justify-between",
+  "min-h-[80px]",
+  "md:min-h-[75px]",
+  "2xl:min-h-[60px]",
+  "w-full"
+);
+
+export const CourseCardTitle = clsx(
+  "block",
+  "font-sans",
+  "text-[20px]",
+  "antialiased",
+  "font-medium",
+  "leading-snug",
+  "tracking-normal",
+  "text-blue-gray-900"
+);
+export const CourseCardDescription = clsx(
+  "block",
+  "font-sans",
+  "text-base",
+  "antialiased",
+  "text-grey-700",
+  "font-light",
+  "min-h-[80px]",
+  "md:min-h-[72px]",
+  "2xl:min-h-[47px]"
 );

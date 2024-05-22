@@ -7,21 +7,21 @@ interface RatingLabelProps {
 
 const CourseRatingLabel: React.FC<RatingLabelProps> = ({ ratings }) => {
   return (
-    <div className="fixed flex space-x-2 ml-[270px] mt-[200px] h-[30px] w-[70px] bg-[#072569] mb-2.5 p-1 rounded-[25px]">
+    <p className="flex items-center gap-1.5 font-sans text-sm font-normal leading-relaxed text-blue-gray-900 antialiased">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="orange"
-        className="w-5 h-5 ml-[5px]"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="-mt-0.5 h-4 w-4 text-yellow-700"
       >
         <path
-          fillRule="evenodd"
-          d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401Z"
-          clipRule="evenodd"
-        />
+          fill-rule="evenodd"
+          d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
+          clip-rule="evenodd"
+        ></path>
       </svg>
-      <p className="text-white text-sm mt-0.5">{ratings}</p>
-    </div>
+      {ratings}
+    </p>
   );
 };
 
