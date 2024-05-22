@@ -121,3 +121,16 @@ class GoogleLoginApiView(generics.GenericAPIView):
             },
         }
         return Response(respObj, status=status.HTTP_200_OK)
+
+
+class InterestListAPIView(generics.ListAPIView):
+    queryset = Interest.objects.all()
+    serializer_class = InterestSerializer
+    pagination_class = None
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return Response(
+            {"status": "success", "data": {"interests": response.data}},
+            status=status.HTTP_200_OK,
+        )
