@@ -2,19 +2,27 @@ from rest_framework import serializers
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
-from .models import UserProfile
+from .models import UserProfile, Interest
 
 
 class UserSerializer(serializers.ModelSerializer):
     firstname = serializers.CharField(source="first_name", required=True)
     lastname = serializers.CharField(source="last_name", required=True)
     user_type = serializers.CharField(required=True)
-    password = serializers.CharField(required=False)  
+    password = serializers.CharField(required=False)
     profile_picture = serializers.URLField(required=False)
 
     class Meta:
         model = User
-        fields = ["firstname", "lastname", "email", "password", "username", "user_type","profile_picture"]
+        fields = [
+            "firstname",
+            "lastname",
+            "email",
+            "password",
+            "username",
+            "user_type",
+            "profile_picture",
+        ]
 
     def validate(self, attrs):
         request = self.context.get("request")
@@ -38,7 +46,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_type = validated_data.pop("user_type")
-        password = validated_data.pop("password", None)  
+        password = validated_data.pop("password", None)
         profile_picture = validated_data.pop("profile_picture", None)
         self.fields.pop("user_type")
 
@@ -53,9 +61,9 @@ class UserSerializer(serializers.ModelSerializer):
         group.user_set.add(user)
 
         if profile_picture is not None:
-            profile_picture = profile_picture.split('=')[0]
+            profile_picture = profile_picture.split("=")[0]
             print(profile_picture)
-            
+
         print(profile_picture)
         # create user profile
         UserProfile.objects.create(user=user, profile_picture=profile_picture)
@@ -92,3 +100,7 @@ class UserLoginSerializer(serializers.Serializer):
         return attrs
 
 
+class InterestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Interest
+        fields = ["id", "label"]
