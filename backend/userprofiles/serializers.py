@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
-from .models import UserProfile, Interest
+from .models import UserProfile, Interest, Country
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -102,3 +102,10 @@ class InterestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interest
         fields = ["id", "label"]
+
+
+class AddUserInfoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserProfile
+        exclude = ["profile_picture", "description"]
