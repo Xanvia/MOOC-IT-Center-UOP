@@ -16,11 +16,11 @@ class GetInitialDataFromDBTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(interests), len(response_data["interests"]))
 
-    # def test_get_countries(self):
-    #     countries = Country.objects.all()
-    #     url = reverse("countries-list")
+    def test_get_countries(self):
+        countries = Country.objects.all()
+        url = reverse("countries-list")
 
-    #     response = self.client.get(url)
-    #     response_data = response.data["data"]
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(len(countries), len(response_data["countries"]))
+        response = self.client.get(url)
+        response_data = response.data["data"]
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(countries), len(response_data["countries"]))
