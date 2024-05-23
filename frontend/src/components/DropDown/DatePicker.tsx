@@ -27,7 +27,7 @@ const ReactDatePicker: React.FC = () => {
         selected={selectedDate}
         onChange={handleDateChange}
         dateFormat="MM/dd/yyyy"
-        className="bg-gray-50 border border-gray-300 text-primary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-primary dark:text-primary dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        className="bg-gray-50 px-48 xl:px-20 border border-gray-300 text-primary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 py-1.5 xl:p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-primary dark:text-primary dark:focus:ring-blue-500 dark:focus:border-blue-500"
         placeholderText="Select Date"
       />
     </div>

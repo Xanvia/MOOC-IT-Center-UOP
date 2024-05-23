@@ -60,7 +60,7 @@ const RegistrationFormTwo: React.FC = () => {
         onSubmit={handleSubmit}
       >
         <Form>
-          <div className="lg:px-10 md:pt-5 grid grid-cols-2 gap-12">
+          <div className="md:px-5 lg:px-10 md:pt-5 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-2 xl:gap-8">
             <div className={InputOuterDiv}>
               <div className={InputOuterDiv}></div>
               <DropDownCountry addSelection={setCountry} />
