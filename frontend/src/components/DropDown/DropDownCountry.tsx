@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const DropDownCountry = () => {
+interface Props {
+  addSelection: (item: number) => void;
+}
+
+const DropDownCountry = ({ addSelection }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Select");
   const dropdownRef = useRef<HTMLDivElement | null>(null);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { InputOuterDiv } from "../components.styles";
+
 
 const DropDownGender = () => {
   const [isOpen, setIsOpen] = useState(false);

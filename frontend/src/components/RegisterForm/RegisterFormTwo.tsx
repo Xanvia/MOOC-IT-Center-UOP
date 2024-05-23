@@ -7,7 +7,6 @@ import DropDownCountry from "../DropDown/DropDownCountry";
 import DropDownGender from "../DropDown/DropDownGender";
 import DropDownInterests from "../DropDown/DropDownInterests";
 import DatePicker from "../DropDown/DatePicker";
-
 import {
   InputFieldClasses,
   InputLabel,
@@ -15,6 +14,11 @@ import {
   InputOuterDiv,
 } from "../components.styles";
 import InterestLabel from "../DropDown/InterestLabel";
+
+interface Interest {
+  id: number;
+  label: string;
+}
 
 interface RegistrationFormValues {
   phonenumber: string;
@@ -30,19 +34,18 @@ const validationSchema = Yup.object({
 
 const RegistrationFormTwo: React.FC = () => {
   const [countryCode, setCountryCode] = useState("+ 94");
-
-  const [items, setItems] = useState([
-    "Statistics",
-    "Electronics",
-    "Cyber Security",
-    "Real Analysis",
-    "Statistics",
-    "Electronics",
-    "Cyber Security",
-  ]);
+  const [country, setCountry] = useState(0);
+  const [gender, setGender] = useState("");
+  const [interests, setInterests] = useState<Interest[]>([]);
 
   const removeItem = (index: number) => {
-    setItems((prevItems) => prevItems.filter((_, i) => i !== index));
+    setInterests((prevInterests) =>
+      prevInterests.filter((_, i) => i !== index)
+    );
+  };
+
+  const addItem = (newInterest: Interest) => {
+    setInterests((prevInterests) => [...prevInterests, newInterest]);
   };
 
   const handleSubmit = (values: RegistrationFormValues) => {
@@ -60,7 +63,7 @@ const RegistrationFormTwo: React.FC = () => {
           <div className="lg:px-10 md:pt-5 grid grid-cols-2 gap-12">
             <div className={InputOuterDiv}>
               <div className={InputOuterDiv}></div>
-              <DropDownCountry />
+              <DropDownCountry addSelection={setCountry} />
             </div>
             <div className={InputOuterDiv}>
               <div className={InputOuterDiv}></div>
@@ -91,14 +94,14 @@ const RegistrationFormTwo: React.FC = () => {
             </div>
           </div>
           <br />
-          <DropDownInterests />
+          <DropDownInterests addSelection={addItem} />
 
           <div className="flex flex-wrap justify-center gap-4  py-2 md:mx-8 mt-8 mb-2">
-            {items.map((item, index) => (
+            {interests.map((interest) => (
               <InterestLabel
-                key={index}
-                label={item}
-                onRemove={() => removeItem(index)}
+                key={interest.id}
+                label={interest.label}
+                onRemove={() => removeItem(interest.id)}
               />
             ))}
           </div>
