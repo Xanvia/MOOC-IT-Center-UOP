@@ -112,10 +112,12 @@ class AddUserInfoSerializer(serializers.ModelSerializer):
 
 
     def validate(self, attrs):
-        required_fields = ["country", "birth_date", "interests", "gender"]
+        required_fields = ["country", "birth_date", "interests", "gender","mobile_number"]
 
         for field in required_fields:
             if not attrs.get(field):
                 raise serializers.ValidationError({field: f"{field.capitalize()} is required."})
         return super().validate(attrs)
+    
+    
     
