@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
-from .models import UserProfile, Interest
+from .models import UserProfile, Interest, Country
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -102,3 +102,22 @@ class InterestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interest
         fields = ["id", "label"]
+
+
+class AddUserInfoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserProfile
+        exclude = ["profile_picture", "description"]
+
+
+    def validate(self, attrs):
+        required_fields = ["country", "birth_date", "interests", "gender","mobile_number"]
+
+        for field in required_fields:
+            if not attrs.get(field):
+                raise serializers.ValidationError({field: f"{field.capitalize()} is required."})
+        return super().validate(attrs)
+    
+    
+    
