@@ -38,14 +38,28 @@ const RegistrationFormTwo: React.FC = () => {
   const [gender, setGender] = useState("");
   const [interests, setInterests] = useState<Interest[]>([]);
 
-  const removeItem = (index: number) => {
-    setInterests((prevInterests) =>
-      prevInterests.filter((_, i) => i !== index)
-    );
+  const removeItem = (id: number) => {
+    setInterests((prevInterests) => {
+      const index = prevInterests.findIndex((interest) => interest.id === id);
+      if (index !== -1) {
+        return [
+          ...prevInterests.slice(0, index),
+          ...prevInterests.slice(index + 1),
+        ];
+      }
+      return prevInterests;
+    });
   };
 
   const addItem = (newInterest: Interest) => {
-    setInterests((prevInterests) => [...prevInterests, newInterest]);
+    setInterests((prevInterests) => {
+      if (prevInterests.some((interest) => interest.id === newInterest.id)) {
+        // If it does, return the previous interests without adding the new one
+        return prevInterests;
+      } else {
+        return [...prevInterests, newInterest];
+      }
+    });
   };
 
   const handleSubmit = (values: RegistrationFormValues) => {
