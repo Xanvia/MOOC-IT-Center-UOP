@@ -1,7 +1,12 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer, UserLoginSerializer, InterestSerializer
+from .serializers import (
+    UserSerializer,
+    UserLoginSerializer,
+    InterestSerializer,
+    AddUserInfoSerializer,
+)
 from .utils import google_authenticate
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
@@ -124,7 +129,6 @@ class GoogleLoginApiView(generics.GenericAPIView):
 
 
 class InterestListAPIView(generics.ListAPIView):
-    permission_classes = [permissions.AllowAny]
     queryset = Interest.objects.all()
     serializer_class = InterestSerializer
     pagination_class = None
@@ -135,3 +139,22 @@ class InterestListAPIView(generics.ListAPIView):
             {"status": "success", "data": {"interests": response.data}},
             status=status.HTTP_200_OK,
         )
+
+
+class AddUserInfoView(generics.UpdateAPIView):
+    serializer_class = AddUserInfoSerializer
+    queryset = UserProfile.objects.all()
+
+    def get_object(self):
+        user = self.request.user
+        return user.userprofile
+
+    def update(self, request, *args, **kwargs):
+
+        response = super().update(request, *args, partial=True, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "User info added successfully",
+        }
+        return response

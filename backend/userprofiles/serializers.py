@@ -109,3 +109,13 @@ class AddUserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         exclude = ["profile_picture", "description"]
+
+
+    def validate(self, attrs):
+        required_fields = ["country", "birth_date", "interests", "gender"]
+
+        for field in required_fields:
+            if not attrs.get(field):
+                raise serializers.ValidationError({field: f"{field.capitalize()} is required."})
+        return super().validate(attrs)
+    
