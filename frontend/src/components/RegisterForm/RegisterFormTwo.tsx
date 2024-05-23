@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import SolidButton from "../Buttons/SolidButton";
@@ -14,6 +14,7 @@ import {
   InputInnerDiv,
   InputOuterDiv,
 } from "../components.styles";
+import InterestLabel from "../DropDown/InterestLabel";
 
 interface RegistrationFormValues {
   phonenumber: string;
@@ -28,6 +29,22 @@ const validationSchema = Yup.object({
 });
 
 const RegistrationFormTwo: React.FC = () => {
+  const [countryCode, setCountryCode] = useState("+ 94");
+
+  const [items, setItems] = useState([
+    "Statistics",
+    "Electronics",
+    "Cyber Security",
+    "Real Analysis",
+    "Statistics",
+    "Electronics",
+    "Cyber Security",
+  ]);
+
+  const removeItem = (index: number) => {
+    setItems((prevItems) => prevItems.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = (values: RegistrationFormValues) => {
     console.log("Form values:", values);
   };
@@ -61,7 +78,7 @@ const RegistrationFormTwo: React.FC = () => {
                 <Field
                   name="phonenumber"
                   type="text"
-                  placeholder=" "
+                  placeholder={countryCode}
                   className={InputFieldClasses}
                 />
                 <label className={InputLabel}>Phone number</label>
@@ -76,30 +93,16 @@ const RegistrationFormTwo: React.FC = () => {
           <br />
           <DropDownInterests />
 
-          <div className="grid grid-cols-4 gap-3 px-1 py-2 md:mx-8 mt-14 mb-10">
-            <div className="border rounded-2xl text-primary hover:shadow-md">
-              Statistics
-            </div>
-            <div className="border-2 rounded-2xl text-primary hover:shadow-md">
-              Electronics
-            </div>
-            <div className="border-2 rounded-2xl text-primary hover:shadow-md">
-              Cyber Security
-            </div>
-            <div className="border-2 rounded-2xl text-primary hover:shadow-md">
-              Real Analysis
-            </div>
-            <div className="border-2 rounded-2xl text-primary hover:shadow-md">
-              Statistics
-            </div>
-            <div className="border-2 rounded-2xl text-primary hover:shadow-md">
-              Electronics
-            </div>
-            <div className="border-2 rounded-2xl text-primary hover:shadow-md">
-              Cyber Security
-            </div>
+          <div className="flex flex-wrap justify-center gap-4  py-2 md:mx-8 mt-8 mb-2">
+            {items.map((item, index) => (
+              <InterestLabel
+                key={index}
+                label={item}
+                onRemove={() => removeItem(index)}
+              />
+            ))}
           </div>
-          <div className="lg:pt-8">
+          <div className="lg:pt-10">
             <SolidButton text="S U B M I T" onClick={() => {}} />
           </div>
         </Form>

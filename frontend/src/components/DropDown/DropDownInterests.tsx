@@ -27,7 +27,7 @@ const DropDownInterests = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         type="button"
-        className="relative w-80 cursor-default rounded-md bg-white mt-1 py-1.5 pl-3 pr-10 text-left text-primary shadow-sm ring-1 ring-inset ring-primary focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+        className="relative w-80 cursor-default rounded-md bg-white mt-8 py-1.5 pl-3 pr-10 text-left text-primary shadow-sm ring-1 ring-inset ring-primary focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
         aria-haspopup="listbox"
         aria-expanded="true"
         aria-labelledby="listbox-label"
