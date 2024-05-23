@@ -1,12 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
+import { API_URL } from "@/utils/constants";
+
+interface Country {
+  id: number;
+  label: string;
+}
 
 interface Props {
-  addSelection: (item: number) => void;
+  addSelection: (item: Country) => void;
 }
 
 const DropDownCountry = ({ addSelection }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("Select");
+  const [selectedOption, setSelectedOption] = useState("Select your country");
+  const [countries, setCountries] = useState<Country[]>([]);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -20,11 +27,32 @@ const DropDownCountry = ({ addSelection }: Props) => {
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
+    fetchInterests().then((data) => {
+      if (data) {
+        setCountries(data);
+      }
+    });
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  });
+  }, []);
 
+  const fetchInterests = async (): Promise<Country[]> => {
+    try {
+      const response = await fetch(`${API_URL}/countries/`);
+      const data = await response.json();
+      if (data && data.data && Array.isArray(data.data.countries)) {
+        return data.data.countries;
+      } else {
+        console.error("Unexpected response structure:", data);
+        return [];
+      }
+    } catch (error) {
+      console.error("Error fetching interests:", error);
+      return [];
+    }
+  };
   return (
     <div className="relative" ref={dropdownRef}>
       <span className="text-sm font-semibold text-primary pr-52">Country</span>
@@ -55,81 +83,32 @@ const DropDownCountry = ({ addSelection }: Props) => {
         </span>
       </button>
 
-      {isOpen && (
+      {isOpen && countries && Array.isArray(countries) && (
         <ul
-          className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+          className="absolute z-20 mt-1 max-h-56 w-80  overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           tabIndex={-1}
           role="listbox"
           aria-labelledby="listbox-label"
           aria-activedescendant="listbox-option-3"
         >
-          <li
-            className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-            id="listbox-option-0"
-            role="option"
-            onClick={() => {
-              setSelectedOption("Sri Lanka");
-              setIsOpen(false);
-            }}
-          >
-            <div className="flex items-center text-primary  justify-center">
-              <span className="font-normal  ml-3 block truncate">
-                Sri Lanka
-              </span>
-            </div>
-          </li>
-          <li
-            className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-            id="listbox-option-1"
-            role="option"
-            onClick={() => {
-              setSelectedOption("India");
-              setIsOpen(false);
-            }}
-          >
-            <div className="flex items-center justify-center">
-              <span className="font-normal ml-3 block truncate">India</span>
-            </div>
-          </li>
-          <li
-            className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-            id="listbox-option-1"
-            role="option"
-            onClick={() => {
-              setSelectedOption("Thailand");
-              setIsOpen(false);
-            }}
-          >
-            <div className="flex items-center justify-center">
-              <span className="font-normal ml-3 block truncate">Thailand</span>
-            </div>
-          </li>
-          <li
-            className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-            id="listbox-option-1"
-            role="option"
-            onClick={() => {
-              setSelectedOption("Pakistan");
-              setIsOpen(false);
-            }}
-          >
-            <div className="flex items-center justify-center">
-              <span className="font-normal ml-3 block truncate">Pakistan</span>
-            </div>
-          </li>
-          <li
-            className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-            id="listbox-option-1"
-            role="option"
-            onClick={() => {
-              setSelectedOption("China");
-              setIsOpen(false);
-            }}
-          >
-            <div className="flex items-center justify-center">
-              <span className="font-normal ml-3 block truncate">China</span>
-            </div>
-          </li>
+          {countries.map((country) => (
+            <li
+              className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
+              id={`listbox-option-${country.id}`}
+              role="option"
+              onClick={() => {
+                setSelectedOption(country.label);
+                addSelection(country);
+                setIsOpen(false);
+              }}
+            >
+              <div className="flex items-center text-primary  justify-start">
+                <span className="font-normal  ml-3 block truncate">
+                  {country.label}
+                </span>
+              </div>
+            </li>
+          ))}
         </ul>
       )}
     </div>

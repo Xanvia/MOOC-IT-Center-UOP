@@ -2,11 +2,16 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const ReactDatePicker: React.FC = () => {
+interface Props {
+  setDate: (date: Date | null) => void;
+}
+
+const ReactDatePicker = ({ setDate }: Props) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
+    setDate(date);
   };
 
   return (
@@ -26,6 +31,7 @@ const ReactDatePicker: React.FC = () => {
       <DatePicker
         selected={selectedDate}
         onChange={handleDateChange}
+        showYearDropdown
         dateFormat="MM/dd/yyyy"
         className="bg-gray-50 px-48 xl:px-20 border border-gray-300 text-primary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 py-1.5 xl:p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-primary dark:text-primary dark:focus:ring-blue-500 dark:focus:border-blue-500"
         placeholderText="Select Date"

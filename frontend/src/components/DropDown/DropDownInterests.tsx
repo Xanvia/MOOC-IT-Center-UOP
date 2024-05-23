@@ -31,7 +31,6 @@ const DropDownInterests: React.FC<Props> = ({ addSelection }) => {
     document.addEventListener("mousedown", handleClickOutside);
     fetchInterests().then((data) => {
       if (data) {
-        console.log(data);
         setInterests(data);
       }
     });
@@ -104,7 +103,7 @@ const DropDownInterests: React.FC<Props> = ({ addSelection }) => {
                 setIsOpen(false);
               }}
             >
-              <div className="flex items-center text-primary  justify-center">
+              <div className="flex items-center text-primary  justify-start">
                 <span className="font-normal  ml-3 block truncate">
                   {interest.label}
                 </span>
