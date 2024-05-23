@@ -58,7 +58,7 @@ export const InputFieldClasses = clsx(
   "outline-0",
   "focus:outline-0",
   "disabled:bg-blue-gray-50",
-  "disabled:border-0",
+  "disabled:border-t-transparent",
   "transition-all",
   "placeholder-shown:border",
   "placeholder-shown:border-blue-gray-200",
@@ -418,4 +418,18 @@ export const CourseCardDescription = clsx(
   "min-h-[80px]",
   "md:min-h-[72px]",
   "2xl:min-h-[47px]"
+);
+
+export const interestCloseButtonClasses = clsx(
+  "text-gray-400",
+  "bg-transparent",
+  "hover:bg-gray-200",
+  "hover:text-gray-900",
+  "rounded-lg",
+  "text-sm",
+  "w-6",
+  "h-7",
+  "justify-end",
+  "items-center",
+  "ml-3"
 );

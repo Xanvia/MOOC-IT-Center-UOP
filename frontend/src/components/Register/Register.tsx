@@ -1,7 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
+import Dropdown from "../DropDown/DropDown";
+import DropDownCountry from "../DropDown/DropDownCountry";
+import DropDownGender from "../DropDown/DropDownGender";
+import DatePicker from "../DropDown/DatePicker";
 import RegisterForm from "../RegisterForm/RegisterForm";
+import RegistrationFormTwo from "../RegisterForm/RegisterFormTwo";
 import { FormikHelpers } from "formik";
 import CloseButton from "../Buttons/CloseButton";
 import axios from "axios";
@@ -29,7 +34,7 @@ export interface RegistrationFormValues {
 export default function Register() {
   const [isOpen, setIsOpen] = useState(false);
   const [resetForm, setResetForm] = useState<(() => void) | null>(null);
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState("Two");
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -68,7 +73,7 @@ export default function Register() {
           Cookies.set("token", res.data.data.access_token);
           console.log(res.data.user);
           Cookies.set("user", JSON.stringify(res.data.data.user));
-          setStep(2);
+          setStep("Two");
           toast.success(res.data.message);
         })
         .catch((err) => {
@@ -94,7 +99,7 @@ export default function Register() {
             Cookies.set("token", res.data.data.access_token);
             console.log(res.data.user);
             Cookies.set("user", JSON.stringify(res.data.data.user));
-            setStep(2);
+            setStep("Two");
             toast.success(res.data.message);
             window.location.reload();
           })
@@ -133,16 +138,31 @@ export default function Register() {
               </div>
             </div>
             <div className={RegisterWhiteDiv}>
-              <h1 className="ps-5 py-1 lg:py-4 text-2xl text-primary font-bold mb-4">
-                Take the First Step!
-              </h1>
+              {step == "One" && (
+                <>
+                  <h1 className="ps-5 py-1 lg:py-4 text-3xl text-primary font-bold mb-4">
+                    Take the First Step!
+                  </h1>
+                  <center>
+                    <RegisterForm
+                      onSubmit={handleSubmit}
+                      onGoogleClick={handleGoogleLogin}
+                    />
+                  </center>
+                </>
+              )}
+              {step == "Two" && (
+                <>
+                  <h1 className="ps-5 py-1 lg:py-4 text-3xl text-primary font-bold mb-4">
+                    Almost There!
+                  </h1>
+                  <center>
+                    <RegistrationFormTwo />
+                  </center>
 
-              <center>
-                <RegisterForm
-                  onSubmit={handleSubmit}
-                  onGoogleClick={handleGoogleLogin}
-                />
-              </center>
+                  <br />
+                </>
+              )}
 
               <CloseButton onClick={toggleModal} />
             </div>
