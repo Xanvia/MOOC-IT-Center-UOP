@@ -93,6 +93,7 @@ const DropDownCountry = ({ addSelection }: Props) => {
         >
           {countries.map((country) => (
             <li
+              key={country.id}
               className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
               id={`listbox-option-${country.id}`}
               role="option"

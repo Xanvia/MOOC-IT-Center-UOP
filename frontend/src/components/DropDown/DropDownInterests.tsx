@@ -94,6 +94,7 @@ const DropDownInterests: React.FC<Props> = ({ addSelection }) => {
         >
           {interests.map((interest) => (
             <li
+              key={interest.id}
               className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
               id={`listbox-option-${interest.id}`}
               role="option"

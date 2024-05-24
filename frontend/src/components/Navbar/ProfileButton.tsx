@@ -1,7 +1,7 @@
 "use client";
 import React, { RefObject, useEffect, useState } from "react";
 import Link from "next/link";
-
+import Image from "next/image";
 import Cookies from "js-cookie";
 const DefaultProfileImage = "/images/defaultuser.png";
 interface ProfileButtonProps {
@@ -41,7 +41,13 @@ const ProfileButton = ({
         >
           <span className="absolute -inset-1.5"></span>
           <span className="sr-only">Open user menu</span>
-          <img className="h-8 w-8 rounded-full" src={ProfileImage} alt="" />
+          <Image
+            src={ProfileImage}
+            alt="Profile Image"
+            width={32}
+            height={32}
+            className="rounded-full"
+          />
         </button>
       </div>
       {isProfileMenuOpen && (

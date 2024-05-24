@@ -67,6 +67,7 @@ const DropDownGender = ({ setGender }: Props) => {
             className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
             id="listbox-option-0"
             role="option"
+            aria-selected={selectedOption === "Male"}
             onClick={() => {
               setGender("M");
               setSelectedOption("Male");
@@ -81,6 +82,7 @@ const DropDownGender = ({ setGender }: Props) => {
             className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
             id="listbox-option-1"
             role="option"
+            aria-selected={selectedOption === "Female"}
             onClick={() => {
               setGender("F");
               setSelectedOption("Female");
@@ -95,6 +97,7 @@ const DropDownGender = ({ setGender }: Props) => {
             className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
             id="listbox-option-1"
             role="option"
+            aria-selected={selectedOption === "Other"}
             onClick={() => {
               setGender("O");
               setSelectedOption("Other");
