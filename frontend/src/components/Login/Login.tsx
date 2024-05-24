@@ -60,8 +60,9 @@ export default function Login() {
       .then((res) => {
         Cookies.set("token", res.data.data.access_token);
         Cookies.set("user", JSON.stringify(res.data.data.user));
-        toast.success(res.data.message)
+        toast.success(res.data.message);
         toggleModal();
+        window.location.reload();
       })
       .catch((err) => {
         const errorMessage = err.response?.data.message ?? "Network error";
@@ -81,7 +82,7 @@ export default function Login() {
           Cookies.set("token", res.data.data.access_token);
           console.log(res.data.user);
           Cookies.set("user", JSON.stringify(res.data.data.user));
-          toast.success(res.data.message)
+          toast.success(res.data.message);
           window.location.reload();
           toggleModal();
         })
