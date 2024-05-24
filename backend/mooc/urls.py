@@ -17,10 +17,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from userprofiles.views import InterestListAPIView
+from userprofiles.views import InterestListAPIView, CountryListAPIView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/user/", include("userprofiles.urls")),
-     path("api/interests/", InterestListAPIView.as_view(), name="interests-list"),
+    path("api/interests/", InterestListAPIView.as_view(), name="interests-list"),
+    path("api/countries/", CountryListAPIView.as_view(), name="countries-list"),
 ]

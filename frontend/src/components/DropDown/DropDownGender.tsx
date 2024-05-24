@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { InputOuterDiv } from "../components.styles";
 
-const DropDownGender = () => {
+interface Props {
+  setGender(value: string): void;
+}
+
+const DropDownGender = ({ setGender }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Select");
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -65,6 +68,7 @@ const DropDownGender = () => {
             id="listbox-option-0"
             role="option"
             onClick={() => {
+              setGender("M");
               setSelectedOption("Male");
               setIsOpen(false);
             }}
@@ -78,6 +82,7 @@ const DropDownGender = () => {
             id="listbox-option-1"
             role="option"
             onClick={() => {
+              setGender("F");
               setSelectedOption("Female");
               setIsOpen(false);
             }}
@@ -91,6 +96,7 @@ const DropDownGender = () => {
             id="listbox-option-1"
             role="option"
             onClick={() => {
+              setGender("O");
               setSelectedOption("Other");
               setIsOpen(false);
             }}

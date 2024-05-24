@@ -1,40 +1,20 @@
 "use client";
 import React, { useState } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
-import Dropdown from "../DropDown/DropDown";
-import DropDownCountry from "../DropDown/DropDownCountry";
-import DropDownGender from "../DropDown/DropDownGender";
-import DatePicker from "../DropDown/DatePicker";
 import RegisterForm from "../RegisterForm/RegisterForm";
 import RegistrationFormTwo from "../RegisterForm/RegisterFormTwo";
-import { FormikHelpers } from "formik";
 import CloseButton from "../Buttons/CloseButton";
-import axios from "axios";
-import { API_URL, redirect_uri, CALLBACK_URL } from "@/utils/constants";
 import {
   ModalClassesBG,
   RegisterModalClasses,
   RegisterBlueDiv,
   RegisterWhiteDiv,
 } from "../components.styles";
-import { getGoogleCode } from "@/utils/GoogleAuth";
-import Cookies from "js-cookie";
-import { toast } from "sonner";
-
-export interface RegistrationFormValues {
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  userRole: string;
-}
 
 export default function Register() {
   const [isOpen, setIsOpen] = useState(false);
   const [resetForm, setResetForm] = useState<(() => void) | null>(null);
-  const [step, setStep] = useState("Two");
+  const [step, setStep] = useState("One");
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -49,66 +29,6 @@ export default function Register() {
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
-  };
-
-  const handleSubmit = (
-    values: RegistrationFormValues,
-    formikHelpers: FormikHelpers<RegistrationFormValues>
-  ) => {
-    // console.log("Form values:", values);
-    setResetForm(() => formikHelpers.resetForm);
-    if (!values.userRole) {
-      toast.warning("Please select user uype");
-    } else {
-      axios
-        .post(`${API_URL}/user/register/`, {
-          firstname: values.firstName,
-          lastname: values.lastName,
-          username: values.username,
-          email: values.email,
-          password: values.password,
-          user_type: values.userRole,
-        })
-        .then((res) => {
-          Cookies.set("token", res.data.data.access_token);
-          console.log(res.data.user);
-          Cookies.set("user", JSON.stringify(res.data.data.user));
-          setStep("Two");
-          toast.success(res.data.message);
-        })
-        .catch((err) => {
-          const errorMessage = err.response?.data.message ?? "Network error";
-          toast.error(errorMessage);
-        });
-    }
-  };
-
-  const handleGoogleLogin = async (userRole: String) => {
-    if (!userRole) {
-      toast.warning("Please select user type");
-    } else {
-      const code = await getGoogleCode();
-      if (code !== null) {
-        axios
-          .post(`${API_URL}/user/google-auth/`, {
-            code: code,
-            user_type: userRole,
-            redirect_uri: CALLBACK_URL,
-          })
-          .then((res) => {
-            Cookies.set("token", res.data.data.access_token);
-            console.log(res.data.user);
-            Cookies.set("user", JSON.stringify(res.data.data.user));
-            setStep("Two");
-            toast.success(res.data.message);
-            window.location.reload();
-          })
-          .catch((err) => {
-            const errorMessage = err.response?.data.message ?? "Network error";
-            toast.error(errorMessage);
-          });
-      }
-    }
   };
 
   return (
@@ -145,8 +65,8 @@ export default function Register() {
                   </h1>
                   <center>
                     <RegisterForm
-                      onSubmit={handleSubmit}
-                      onGoogleClick={handleGoogleLogin}
+                      setStep={setStep}
+                      setResetForm={() => setResetForm(null)}
                     />
                   </center>
                 </>

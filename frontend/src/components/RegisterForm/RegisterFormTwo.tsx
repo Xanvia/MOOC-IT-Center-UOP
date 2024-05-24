@@ -7,7 +7,8 @@ import DropDownCountry from "../DropDown/DropDownCountry";
 import DropDownGender from "../DropDown/DropDownGender";
 import DropDownInterests from "../DropDown/DropDownInterests";
 import DatePicker from "../DropDown/DatePicker";
-
+import axios from "axios";
+import { API_URL } from "@/utils/constants";
 import {
   InputFieldClasses,
   InputLabel,
@@ -15,7 +16,18 @@ import {
   InputOuterDiv,
 } from "../components.styles";
 import InterestLabel from "../DropDown/InterestLabel";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
 
+interface Interest {
+  id: number;
+  label: string;
+}
+
+interface Country {
+  id: number;
+  label: string;
+}
 interface RegistrationFormValues {
   phonenumber: string;
 }
@@ -29,24 +41,76 @@ const validationSchema = Yup.object({
 });
 
 const RegistrationFormTwo: React.FC = () => {
-  const [countryCode, setCountryCode] = useState("+ 94");
+  const [country, setCountry] = useState<Country | undefined>(undefined);
+  const [gender, setGender] = useState("");
+  const [birthDate, setBirthDate] = useState<Date | null>(null);
+  const [interests, setInterests] = useState<Interest[]>([]);
 
-  const [items, setItems] = useState([
-    "Statistics",
-    "Electronics",
-    "Cyber Security",
-    "Real Analysis",
-    "Statistics",
-    "Electronics",
-    "Cyber Security",
-  ]);
+  const removeItem = (id: number) => {
+    setInterests((prevInterests) => {
+      const index = prevInterests.findIndex((interest) => interest.id === id);
+      if (index !== -1) {
+        return [
+          ...prevInterests.slice(0, index),
+          ...prevInterests.slice(index + 1),
+        ];
+      }
+      return prevInterests;
+    });
+  };
 
-  const removeItem = (index: number) => {
-    setItems((prevItems) => prevItems.filter((_, i) => i !== index));
+  const addItem = (newInterest: Interest) => {
+    setInterests((prevInterests) => {
+      if (prevInterests.some((interest) => interest.id === newInterest.id)) {
+        // If it does, return the previous interests without adding the new one
+        return prevInterests;
+      } else {
+        return [...prevInterests, newInterest];
+      }
+    });
   };
 
   const handleSubmit = (values: RegistrationFormValues) => {
-    console.log("Form values:", values);
+    console.log(birthDate);
+    const token = Cookies.get("token");
+    if (country?.label === undefined) {
+      toast.warning("Please select a country");
+    } else if (gender === "") {
+      toast.warning("Please select a gender");
+    } else if (interests.length === 0) {
+      toast.warning("Please select an interest");
+    } else if (birthDate === null) {
+      toast.warning("Please select a birthdate");
+    } else {
+
+      const date = new Date(birthDate);
+      const formattedDate = date.toLocaleDateString('en-CA');
+      axios
+        .put(
+          `${API_URL}/user/add-user-info/`,
+          {
+            mobile_number: values.phonenumber,
+            country: country.id,
+            interests: interests.map((interest) => interest.id),
+            gender: gender,
+            birth_date: formattedDate,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data.user);
+          toast.success(res.data.message);
+          window.location.reload();
+        })
+        .catch((err) => {
+          const errorMessage = err.response?.data.message ?? "Network error";
+          toast.error(errorMessage);
+        });
+    }
   };
 
   return (
@@ -57,19 +121,19 @@ const RegistrationFormTwo: React.FC = () => {
         onSubmit={handleSubmit}
       >
         <Form>
-          <div className="lg:px-10 md:pt-5 grid grid-cols-2 gap-12">
+          <div className="md:px-5 lg:px-10 md:pt-5 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-2 xl:gap-8">
             <div className={InputOuterDiv}>
               <div className={InputOuterDiv}></div>
-              <DropDownCountry />
+              <DropDownCountry addSelection={setCountry} />
             </div>
             <div className={InputOuterDiv}>
               <div className={InputOuterDiv}></div>
-              <DropDownGender />
+              <DropDownGender setGender={setGender} />
             </div>
 
             <div className={InputOuterDiv}>
               <div className={InputInnerDiv}>
-                <DatePicker />
+                <DatePicker setDate={setBirthDate} />
               </div>
             </div>
 
@@ -78,7 +142,7 @@ const RegistrationFormTwo: React.FC = () => {
                 <Field
                   name="phonenumber"
                   type="text"
-                  placeholder={countryCode}
+                  placeholder=" "
                   className={InputFieldClasses}
                 />
                 <label className={InputLabel}>Phone number</label>
@@ -91,19 +155,19 @@ const RegistrationFormTwo: React.FC = () => {
             </div>
           </div>
           <br />
-          <DropDownInterests />
+          <DropDownInterests addSelection={addItem} />
 
           <div className="flex flex-wrap justify-center gap-4  py-2 md:mx-8 mt-8 mb-2">
-            {items.map((item, index) => (
+            {interests.map((interest) => (
               <InterestLabel
-                key={index}
-                label={item}
-                onRemove={() => removeItem(index)}
+                key={interest.id}
+                label={interest.label}
+                onRemove={() => removeItem(interest.id)}
               />
             ))}
           </div>
           <div className="lg:pt-10">
-            <SolidButton text="S U B M I T" onClick={() => {}} />
+            <SolidButton type="submit" text="F I N I S H" onClick={() => {}} />
           </div>
         </Form>
       </Formik>

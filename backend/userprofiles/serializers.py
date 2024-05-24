@@ -103,6 +103,10 @@ class InterestSerializer(serializers.ModelSerializer):
         model = Interest
         fields = ["id", "label"]
 
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = ["id", "label"]
 
 class AddUserInfoSerializer(serializers.ModelSerializer):
 

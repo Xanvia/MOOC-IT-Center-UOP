@@ -6,11 +6,12 @@ from .serializers import (
     UserLoginSerializer,
     InterestSerializer,
     AddUserInfoSerializer,
+    CountrySerializer
 )
 from .utils import google_authenticate
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
-from .models import UserProfile, Interest
+from .models import UserProfile, Interest,Country
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 
@@ -158,3 +159,16 @@ class AddUserInfoView(generics.UpdateAPIView):
             "message": "User info added successfully",
         }
         return response
+
+
+class CountryListAPIView(generics.ListAPIView):
+    queryset = Country.objects.all()
+    serializer_class = CountrySerializer
+    pagination_class = None
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return Response(
+            {"status": "success", "data": {"countries": response.data}},
+            status=status.HTTP_200_OK,
+        )

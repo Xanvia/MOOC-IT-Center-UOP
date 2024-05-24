@@ -1,10 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
+import { API_URL } from "@/utils/constants";
 
-const DropDownInterests = () => {
+interface Interest {
+  id: number;
+  label: string;
+}
+
+interface Props {
+  addSelection: (selection: Interest) => void;
+}
+
+const DropDownInterests: React.FC<Props> = ({ addSelection }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(
-    "Choose Your Intereting Fields"
+    "Choose Your Intereting Fields "
   );
+  const [interests, setInterests] = useState<Interest[]>([]);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -18,11 +29,32 @@ const DropDownInterests = () => {
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
+    fetchInterests().then((data) => {
+      if (data) {
+        setInterests(data);
+      }
+    });
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  });
+  }, []);
 
+  const fetchInterests = async (): Promise<Interest[]> => {
+    try {
+      const response = await fetch(`${API_URL}/interests/`);
+      const data = await response.json();
+      if (data && data.data && Array.isArray(data.data.interests)) {
+        return data.data.interests;
+      } else {
+        console.error("Unexpected response structure:", data);
+        return [];
+      }
+    } catch (error) {
+      console.error("Error fetching interests:", error);
+      return [];
+    }
+  };
   return (
     <div className="relative" ref={dropdownRef}>
       <button
@@ -52,7 +84,7 @@ const DropDownInterests = () => {
         </span>
       </button>
 
-      {isOpen && (
+      {isOpen && interests && Array.isArray(interests) && (
         <ul
           className="absolute z-10 mt-1 max-h-56 w-80  overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm ml-44"
           tabIndex={-1}
@@ -60,67 +92,24 @@ const DropDownInterests = () => {
           aria-labelledby="listbox-label"
           aria-activedescendant="listbox-option-3"
         >
-          <li
-            className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-            id="listbox-option-0"
-            role="option"
-            onClick={() => {
-              setSelectedOption("Machine Learning");
-              setIsOpen(false);
-            }}
-          >
-            <div className="flex items-center text-primary  justify-center">
-              <span className="font-normal  ml-3 block truncate">
-                Machine Learning
-              </span>
-            </div>
-          </li>
-
-          <li
-            className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-            id="listbox-option-1"
-            role="option"
-            onClick={() => {
-              setSelectedOption("Web Development");
-              setIsOpen(false);
-            }}
-          >
-            <div className="flex items-center justify-center">
-              <span className="font-normal ml-3 block truncate">
-                Web Development
-              </span>
-            </div>
-          </li>
-          <li
-            className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-            id="listbox-option-1"
-            role="option"
-            onClick={() => {
-              setSelectedOption("");
-              setIsOpen(false);
-            }}
-          >
-            <div className="flex items-center justify-center">
-              <span className="font-normal ml-3 block truncate">
-                Graphic Design
-              </span>
-            </div>
-          </li>
-          <li
-            className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-            id="listbox-option-1"
-            role="option"
-            onClick={() => {
-              setSelectedOption("China");
-              setIsOpen(false);
-            }}
-          >
-            <div className="flex items-center justify-center">
-              <span className="font-normal ml-3 block truncate">
-                Computer Networks
-              </span>
-            </div>
-          </li>
+          {interests.map((interest) => (
+            <li
+              className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
+              id={`listbox-option-${interest.id}`}
+              role="option"
+              onClick={() => {
+                setSelectedOption(interest.label);
+                addSelection(interest);
+                setIsOpen(false);
+              }}
+            >
+              <div className="flex items-center text-primary  justify-start">
+                <span className="font-normal  ml-3 block truncate">
+                  {interest.label}
+                </span>
+              </div>
+            </li>
+          ))}
         </ul>
       )}
     </div>
