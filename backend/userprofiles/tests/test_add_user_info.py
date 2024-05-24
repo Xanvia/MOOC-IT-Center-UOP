@@ -4,7 +4,10 @@ from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
 from userprofiles.models import UserProfile
 from rest_framework_simplejwt.tokens import AccessToken
-
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+from .set_permissons import assign_permission_to_group
 
 class AddUserInfoTest(APITestCase):
     @classmethod
@@ -17,14 +20,19 @@ class AddUserInfoTest(APITestCase):
             username=cls.username, email=cls.email, password=cls.password
         )
         cls.user_profile = UserProfile.objects.create(user=cls.user)
+        cls.group = Group.objects.get(name="student")
+        cls.user.groups.add(cls.group)
+        cls.user.save()
         cls.token = str(AccessToken.for_user(cls.user))
+      
 
     def setUp(self):
+        assign_permission_to_group(self.group, UserProfile, 'change_userprofile')
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
         self.url = reverse("add-user-info")
 
-    def test_add_user_data_success(self):
 
+    def test_add_user_data_success(self):
         user_data = {
             "country": 2,
             "gender": "F",
