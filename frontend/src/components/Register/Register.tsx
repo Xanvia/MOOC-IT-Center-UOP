@@ -14,7 +14,7 @@ import {
 export default function Register() {
   const [isOpen, setIsOpen] = useState(false);
   const [resetForm, setResetForm] = useState<(() => void) | null>(null);
-  const [step, setStep] = useState("Two");
+  const [step, setStep] = useState("One");
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
