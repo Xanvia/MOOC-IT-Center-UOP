@@ -1,5 +1,6 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework import status
 from .serializers import (
     UserSerializer,
@@ -162,7 +163,7 @@ class AddUserInfoView(generics.UpdateAPIView):
 
 
 class CountryListAPIView(generics.ListAPIView):
-    queryset = Country.objects.all()
+    queryset = Country.objects.all().order_by('label')
     serializer_class = CountrySerializer
     pagination_class = None
 
