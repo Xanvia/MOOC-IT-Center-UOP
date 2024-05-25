@@ -5,6 +5,7 @@ from .views import (
     UserLoginApiView,
     GoogleLoginApiView,
     AddUserInfoView,
+    CountryListAPIView,
 )
 
 urlpatterns = [
@@ -13,4 +14,5 @@ urlpatterns = [
     path("google-auth/login/", GoogleLoginApiView.as_view(), name="user-login-google"),
     path("google-auth/", GoogleAuthRegisterView.as_view(), name="google-auth"),
     path("login/", UserLoginApiView.as_view(), name="user-login"),
+    path('countries/', CountryListAPIView.as_view(), name='country-list'),
 ]
