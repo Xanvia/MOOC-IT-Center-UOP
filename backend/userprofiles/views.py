@@ -131,7 +131,7 @@ class GoogleLoginApiView(generics.GenericAPIView):
 
 
 class InterestListAPIView(generics.ListAPIView):
-    queryset = Interest.objects.all()
+    queryset = Interest.objects.all().order_by("label")
     serializer_class = InterestSerializer
     pagination_class = None
 
