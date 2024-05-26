@@ -184,4 +184,10 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         return user.userprofile
 
     def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
+        response =  super().retrieve(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "data": response.data,
+        }
+        return response
