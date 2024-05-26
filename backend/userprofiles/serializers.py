@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
-from .models import UserProfile, Interest, Country
+from .models import UserProfile, Interest, Country, WorkExperience, Education
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -142,5 +142,35 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         
-
+        representation["full_name"] = (
+            f"{instance.user.first_name} {instance.user.last_name}"
+        )
+        representation["email"] = instance.user.email
+        representation["username"] = instance.user.username
+        representation["country"] = CountrySerializer(instance.country).label
+        representation["user_role"] = (
+            instance.user.groups.first().name if instance.user.groups.exists() else None
+        )
+        representation["gender"] = instance.get_gender_display()
+        representation.pop("interests")
+        representation["educations"] = EducationSerializer(
+            instance.education_set.all(), many=True
+        ).data
+        representation["work_experiences"] = WorkExperienceSerializer(
+            instance.workexperience_set.all(), many=True
+        ).data
         return representation
+
+
+class WorkExperienceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = WorkExperience
+        fields = "__all__"
+
+
+class EducationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Education
+        fields = "__all__"
