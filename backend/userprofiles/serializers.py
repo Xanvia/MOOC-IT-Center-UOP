@@ -103,10 +103,12 @@ class InterestSerializer(serializers.ModelSerializer):
         model = Interest
         fields = ["id", "label"]
 
+
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
         fields = ["id", "label"]
+
 
 class AddUserInfoSerializer(serializers.ModelSerializer):
 
@@ -114,14 +116,31 @@ class AddUserInfoSerializer(serializers.ModelSerializer):
         model = UserProfile
         exclude = ["profile_picture", "description"]
 
-
     def validate(self, attrs):
-        required_fields = ["country", "birth_date", "interests", "gender","mobile_number"]
+        required_fields = [
+            "country",
+            "birth_date",
+            "interests",
+            "gender",
+            "mobile_number",
+        ]
 
         for field in required_fields:
             if not attrs.get(field):
-                raise serializers.ValidationError({field: f"{field.capitalize()} is required."})
+                raise serializers.ValidationError(
+                    {field: f"{field.capitalize()} is required."}
+                )
         return super().validate(attrs)
-    
-    
-    
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserProfile
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+
+        return representation

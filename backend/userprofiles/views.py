@@ -1,18 +1,18 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, viewsets
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework import status
 from .serializers import (
     UserSerializer,
     UserLoginSerializer,
     InterestSerializer,
     AddUserInfoSerializer,
-    CountrySerializer
+    CountrySerializer,
+    UserProfileSerializer,
 )
 from .utils import google_authenticate
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
-from .models import UserProfile, Interest,Country
+from .models import UserProfile, Interest, Country
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 
@@ -163,7 +163,7 @@ class AddUserInfoView(generics.UpdateAPIView):
 
 
 class CountryListAPIView(generics.ListAPIView):
-    queryset = Country.objects.all().order_by('label')
+    queryset = Country.objects.all().order_by("label")
     serializer_class = CountrySerializer
     pagination_class = None
 
@@ -173,3 +173,15 @@ class CountryListAPIView(generics.ListAPIView):
             {"status": "success", "data": {"countries": response.data}},
             status=status.HTTP_200_OK,
         )
+
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+
+    def get_object(self):
+        user = self.request.user
+        return user.userprofile
+
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
