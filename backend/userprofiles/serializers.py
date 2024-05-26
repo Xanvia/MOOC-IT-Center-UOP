@@ -141,13 +141,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        
+
         representation["full_name"] = (
             f"{instance.user.first_name} {instance.user.last_name}"
         )
         representation["email"] = instance.user.email
         representation["username"] = instance.user.username
-        representation["country"] = CountrySerializer(instance.country).label
+        representation["country"] = instance.country.label
         representation["user_role"] = (
             instance.user.groups.first().name if instance.user.groups.exists() else None
         )
@@ -168,9 +168,22 @@ class WorkExperienceSerializer(serializers.ModelSerializer):
         model = WorkExperience
         fields = "__all__"
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation.pop("user_profile")
+
+        return representation
+
 
 class EducationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Education
         fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["institution"] = instance.institution.label
+        representation["degree"] = instance.degree.label
+        representation.pop("user_profile")
+        return representation
