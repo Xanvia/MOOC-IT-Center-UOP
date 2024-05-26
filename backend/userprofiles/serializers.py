@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
-from .models import UserProfile, Interest, Country
+from .models import UserProfile, Interest, Country, WorkExperience, Education
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -103,10 +103,12 @@ class InterestSerializer(serializers.ModelSerializer):
         model = Interest
         fields = ["id", "label"]
 
+
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
         fields = ["id", "label"]
+
 
 class AddUserInfoSerializer(serializers.ModelSerializer):
 
@@ -114,14 +116,74 @@ class AddUserInfoSerializer(serializers.ModelSerializer):
         model = UserProfile
         exclude = ["profile_picture", "description"]
 
-
     def validate(self, attrs):
-        required_fields = ["country", "birth_date", "interests", "gender","mobile_number"]
+        required_fields = [
+            "country",
+            "birth_date",
+            "interests",
+            "gender",
+            "mobile_number",
+        ]
 
         for field in required_fields:
             if not attrs.get(field):
-                raise serializers.ValidationError({field: f"{field.capitalize()} is required."})
+                raise serializers.ValidationError(
+                    {field: f"{field.capitalize()} is required."}
+                )
         return super().validate(attrs)
-    
-    
-    
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserProfile
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        representation["full_name"] = (
+            f"{instance.user.first_name} {instance.user.last_name}"
+        )
+        representation["email"] = instance.user.email
+        representation["username"] = instance.user.username
+        representation["country"] = instance.country.label
+        representation["user_role"] = (
+            instance.user.groups.first().name if instance.user.groups.exists() else None
+        )
+        representation["gender"] = instance.get_gender_display()
+        representation.pop("interests")
+        representation["educations"] = EducationSerializer(
+            instance.education_set.all(), many=True
+        ).data
+        representation["work_experiences"] = WorkExperienceSerializer(
+            instance.workexperience_set.all(), many=True
+        ).data
+        return representation
+
+
+class WorkExperienceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = WorkExperience
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation.pop("user_profile")
+
+        return representation
+
+
+class EducationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Education
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["institution"] = instance.institution.label
+        representation["degree"] = instance.degree.label
+        representation.pop("user_profile")
+        return representation
