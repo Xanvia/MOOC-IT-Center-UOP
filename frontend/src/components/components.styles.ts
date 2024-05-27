@@ -346,7 +346,7 @@ export const CloseButtonClasses = clsx(
   "ms-auto",
   "inline-flex",
   "justify-center",
-  "items-center"
+  "items-center",
 );
 
 export const CourseCardOuterClasses = clsx(
