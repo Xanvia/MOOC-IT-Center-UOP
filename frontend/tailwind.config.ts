@@ -16,6 +16,7 @@ const config: Config = {
       colors: {
         primary: "#072569",
         primary_test: "#052F8E",
+        primary_light: "#E9F0FF",
         button_yellow: "#FCD980",
         secondary: "#2563EB",
         text: "#333",

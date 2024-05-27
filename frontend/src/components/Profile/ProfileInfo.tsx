@@ -2,12 +2,12 @@ import React from "react";
 
 const ProfileInfo: React.FC = ({}) => {
   return (
-    <div className="Box bg-white mt-12 h-full w-full">
-      <div className="flex">
+    <div className="Box bg-white mt-12 h-full w-full ">
+      <div className="flex border-y border-gray-200 py-2">
         <ul className="space-y-6 text-right text-gray-600 mx-auto">
           <li className="flex items-center justify-between space-x-20 rtl:space-x-reverse">
             <svg
-              className="w-6 h-6 text-gray-800"
+              className="w-6 h-6 text-primary"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -22,7 +22,7 @@ const ProfileInfo: React.FC = ({}) => {
           </li>
           <li className="flex items-center justify-between space-x-20 rtl:space-x-reverse">
             <svg
-              className="w-6 h-6 text-gray-800"
+              className="w-6 h-6 text-primary"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -43,7 +43,7 @@ const ProfileInfo: React.FC = ({}) => {
           </li>
           <li className="flex items-center justify-between space-x-20 rtl:space-x-reverse">
             <svg
-              className="w-6 h-6 text-gray-800"
+              className="w-6 h-6 text-primary"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -58,7 +58,7 @@ const ProfileInfo: React.FC = ({}) => {
           </li>
           <li className="flex items-center justify-between space-x-20 rtl:space-x-reverse">
             <svg
-              className="w-6 h-6 text-gray-800"
+              className="w-6 h-6 text-primary"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               width="24"

@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={clsx(inter.className, "bg-sky-100")}>
+      <body className={clsx(inter.className, "bg-primary_light")}>
         <Toaster richColors closeButton position="top-right" />
         <Navbar />
         {children}
