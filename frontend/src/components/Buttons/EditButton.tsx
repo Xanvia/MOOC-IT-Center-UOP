@@ -9,7 +9,7 @@ export default function EditButton({ onClick }: EditButtonProps) {
   return (
     <button
       type="button"
-      className="absolute top-2 right-2"
+      className="absolute top-4 right-4"
       data-modal-hide="authentication-modal"
       onClick={onClick}
     >

@@ -2,8 +2,8 @@ import React from "react";
 
 const ProfileInfo: React.FC = ({}) => {
   return (
-    <div className="Box bg-white mt-12 h-full w-full ">
-      <div className="flex border-y border-gray-200 py-2">
+    <div className="Box bg-white mt-6 h-full w-full ">
+      <div className="flex py-10">
         <ul className="space-y-6 text-right text-gray-600 mx-auto">
           <li className="flex items-center justify-between space-x-20 rtl:space-x-reverse">
             <svg
@@ -20,7 +20,7 @@ const ProfileInfo: React.FC = ({}) => {
             </svg>
             <span>sanjueranga16@gmail.com</span>
           </li>
-          <li className="flex items-center justify-between space-x-20 rtl:space-x-reverse">
+          <li className="flex items-center justify-between space-x-20  rtl:space-x-reverse">
             <svg
               className="w-6 h-6 text-primary"
               aria-hidden="true"
@@ -86,8 +86,11 @@ const ProfileInfo: React.FC = ({}) => {
           </li>
         </ul>
       </div>
-      <div className=" text-center text-primary mx-10 mt-16">
-        <p className="text-sm">
+      <div className="flex justify-center">
+        <hr className="border-t-2 border-gray-200 w-1/3" />
+      </div>
+      <div className=" text-justify text-primary mx-16 mt-10">
+        <p className="text-base ">
           Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
           dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
           proident, sunt in culpa qui officia deserunt mollit anim id est
