@@ -1,5 +1,5 @@
 import Navbar from '@/components/Navbar/Navbar'
-import WorkXpCard from '@/components/WorkXpCard/WorkXpCard'
+import XpCard from '@/components/XpCard/XpCard'
 import React from 'react'
 
 
@@ -30,11 +30,12 @@ export default function page() {
             <h1 className="ps-5 py-1 lg:py-4 text-3xl text-primary font-bold mb-2">
                 Work
             </h1>
-            <WorkXpCard/>
-            <WorkXpCard/>
+            <XpCard/>
+            <XpCard/>
             <h1 className="ps-5 py-1 lg:py-4 text-3xl text-primary font-bold mb-2">
                 Education
             </h1>
+            <XpCard/>
           </div>
         </div>
  
