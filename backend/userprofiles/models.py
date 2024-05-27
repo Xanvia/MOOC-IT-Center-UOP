@@ -83,11 +83,9 @@ class Institution(models.Model):
 class Education(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     institution = models.ForeignKey(Institution, on_delete=models.PROTECT)
-    degree = models.ForeignKey(Degree, on_delete=models.PROTECT)
-    field_of_study = models.CharField(max_length=100)
+    degree = models.CharField(max_length=500)
     start_date = models.CharField(max_length=7)
     end_date = models.CharField(max_length=7)
-    description = models.TextField(max_length=1000)
 
     def __str__(self):
         return f"{self.user_profile.user.username}'s Education"
@@ -99,7 +97,6 @@ class WorkExperience(models.Model):
     position = models.CharField(max_length=100)
     start_date = models.CharField(max_length=7)
     end_date = models.CharField(max_length=7)
-    profile_picture = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return f"{self.user_profile.user.username}'s Work Experience"

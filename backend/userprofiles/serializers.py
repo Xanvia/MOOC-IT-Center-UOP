@@ -184,6 +184,5 @@ class EducationSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation["institution"] = instance.institution.label
-        representation["degree"] = instance.degree.label
         representation.pop("user_profile")
         return representation

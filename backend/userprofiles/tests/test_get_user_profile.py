@@ -7,7 +7,6 @@ from userprofiles.models import (
     Country,
     WorkExperience,
     Education,
-    Degree,
     Institution,
 )
 from rest_framework_simplejwt.tokens import AccessToken
@@ -50,18 +49,15 @@ class GetUserProfileViewSetTest(APITestCase):
             company="Google",
             start_date="2019-01",
             end_date="2021-01",
-            profile_picture="abc.cm",
         )
 
-        degree = Degree.objects.get(id=1)
         institution = Institution.objects.get(id=1)
         education = Education.objects.create(
             user_profile=self.user_profile,
-            degree=degree,
+            degree="Bsc Hons in Computer Science",
             institution=institution,
             start_date="2015-01",
             end_date="2019-01",
-            description="completed B.Tech in IIT",
         )
 
         expected_data = {
@@ -86,12 +82,10 @@ class GetUserProfileViewSetTest(APITestCase):
                 "educations": [
                     {
                         "id": education.id,
-                        "field_of_study": education.field_of_study,
                         "start_date": str(education.start_date),
                         "end_date": str(education.end_date),
-                        "description": education.description,
                         "institution": education.institution.label,
-                        "degree": education.degree.label,
+                        "degree": "Bsc Hons in Computer Science",
                     }
                     for education in self.user_profile.education_set.all()
                 ],
@@ -102,7 +96,6 @@ class GetUserProfileViewSetTest(APITestCase):
                         "position": work.position,
                         "start_date": str(work.start_date),
                         "end_date": str(work.end_date),
-                        "profile_picture": work.profile_picture,
                     }
                     for work in self.user_profile.workexperience_set.all()
                 ],
