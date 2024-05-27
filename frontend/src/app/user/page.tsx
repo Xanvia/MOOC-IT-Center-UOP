@@ -6,77 +6,29 @@ export default function page() {
   return (
     <>
         <Navbar/>
-        <div className="grid grid-cols-3 h-full  ">
-            <div className="bg-sky-100">
-                <div className="grid grid-rows-3 grid-flow-col h-full">
-                    <div className="row-start-1 row-end-4 bg-white m-10 ">
-                        <div className="relative h-32 w-32 ...">
-                            <div className="absolute bg-black inset-x-10 top-10 h-16 rounded-full ">
-                                <img 
-                                    src="/profile.png"
-                                    width={500}
-                                    height={500}
-                                    alt="Picture of the author"
-                                />
-                                02
-                            </div>
-                        </div>
-                 
-                    </div>
-                </div>
-                
-                05
-            
+        
+        <div className="flex md:rounded-lg md:shadow-2xl h-full w-full"> 
+          <div className="md:flex relative basis-5/12"> 
+            <div className="bg-sky-100 text-white py-4  rounded-l-lg absolute inset-0 flex px-10 ">
+              <div className="box bg-white md:rounded-lg md:shadow-2xl border-2 py-4 h-full w-full">
+                <center>
+                  <div className="bg-slate-300 mt-10 top-10 center h-60 w-60 rounded-full ">
+                  </div>
+                  <h1 className="text text-black text-3xl pt-3">
+                    John Doe
+                  </h1>
+                </center>
+              </div>
             </div>
-
-
-
-            <div className="col-span-2 bg-sky-100">
-                <div className="flex flex-col h-full">
-
-                    <div className="bg-sky-100 h-full basis-3/5">
-                        
-                        <div className="flex flex-col h-full">
-
-                            <h1 className='font-bold text-2xl mx-10'>work</h1>
-
-                            <div className='bg-white h-32 m-10'>
-                                01
-                            </div>
-
-                            <div className='bg-white h-32 m-10'>
-                                02
-                            </div>
-                        </div>   
-                    </div>
-
-                    <div className="bg-sky-100 h-full basis-2/5">
-
-                        <h1 className='font-bold text-2xl mx-10'>Education</h1>
-
-                        <div className="flex flex-col h-full">
-
-                            <div className='bg-white h-32 m-10'>
-                                01
-                            </div>
-
-                        </div> 
-                        01   
-                    </div>
-                    
-                </div>
-
-
-                
-                04
-                
-            </div>
-
-
+          </div>
+          <div className="relative w-full h-11/12 bg-white md:rounded-r-lg md:basis-7/12 pt-10 pl-12 pr-10">
+            <h1 className="ps-5 py-1 lg:py-4 text-3xl text-primary font-bold mb-4">
+                Take the First Step!
+            </h1>
+          </div>
         </div>
-
-
-    
+ 
+        
     </>
   )
 }
