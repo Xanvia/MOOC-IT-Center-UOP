@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar/Navbar'
+import WorkXpCard from '@/components/WorkXpCard/WorkXpCard'
 import React from 'react'
 
 
@@ -18,13 +19,21 @@ export default function page() {
                     John Doe
                   </h1>
                   
+                  <div className="">
+
+                  </div>
                 </center>
               </div>
             </div>
           </div>
-          <div className="relative w-full h-11/12 bg-white md:rounded-r-lg md:basis-7/12 pt-10 pl-12 pr-10">
-            <h1 className="ps-5 py-1 lg:py-4 text-3xl text-primary font-bold mb-4">
-                Take the First Step!
+          <div className="relative w-full h-11/12 bg-sky-100 md:rounded-r-lg md:basis-7/12 pt-10 pl-12 pr-10">
+            <h1 className="ps-5 py-1 lg:py-4 text-3xl text-primary font-bold mb-2">
+                Work
+            </h1>
+            <WorkXpCard/>
+            <WorkXpCard/>
+            <h1 className="ps-5 py-1 lg:py-4 text-3xl text-primary font-bold mb-2">
+                Education
             </h1>
           </div>
         </div>
