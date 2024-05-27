@@ -4,6 +4,8 @@ const XpCard: React.FC = ({}) => {
   return (
     <div>
         <div className="Box bg-white md:rounded-lg md:shadow-md border-2 py-3 h-36 w-full">
+          <div className="bg-slate-500 ml-auto mr-3 h-4 w-4 rounded-full ">
+            </div>
           <div className="text text-2xl  ml-4">
             <h1> University of Peradeniya</h1>
           </div>

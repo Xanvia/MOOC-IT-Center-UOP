@@ -13,7 +13,9 @@ export default function page() {
             <div className="bg-sky-100 text-white py-4  rounded-l-lg absolute inset-0 flex px-10 ">
               <div className="box bg-white md:rounded-lg md:shadow-2xl border-2 py-4 h-full w-full">
                 <center>
-                  <div className="bg-slate-300 mt-10 top-10 center h-60 w-60 rounded-full ">
+                  <div className="bg-slate-500 ml-auto mr-3 h-4 w-4 rounded-full ">
+                  </div>
+                  <div className="bg-gray-400 mt-6 top-10 center h-60 w-60 rounded-full ">
                   </div>
                   <h1 className="text text-primary text-3xl pt-3">
                     John Doe
