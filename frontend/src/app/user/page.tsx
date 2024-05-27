@@ -1,5 +1,6 @@
 import Navbar from '@/components/Navbar/Navbar'
 import XpCard from '@/components/XpCard/XpCard'
+import ProfileInfo from '@/components/ProfileInfo/ProfileInfo'
 import React from 'react'
 
 
@@ -20,10 +21,7 @@ export default function page() {
                   <h1 className="text text-primary text-3xl pt-3">
                     John Doe
                   </h1>
-                  
-                  <div className="">
-
-                  </div>
+                  <ProfileInfo/>
                 </center>
               </div>
             </div>
