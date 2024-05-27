@@ -9,12 +9,12 @@ export default function EditButton({ onClick }: EditButtonProps) {
   return (
     <button
       type="button"
-      className="absolute top-4 right-4"
+      className="absolute top-4 right-4 hover:top-3 hover:right-3"
       data-modal-hide="authentication-modal"
       onClick={onClick}
     >
       <svg
-        className="w-6 h-6 text-primary"
+        className="w-6 h-6 text-primary hover:w-7 hover:h-7 hover:ring-1 hover:ring-primary_light"
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         width="24"

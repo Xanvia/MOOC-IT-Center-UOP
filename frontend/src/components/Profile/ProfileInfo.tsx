@@ -7,7 +7,7 @@ const ProfileInfo: React.FC = ({}) => {
         <ul className="space-y-6 text-right text-gray-600 mx-auto">
           <li className="flex items-center justify-between space-x-20 rtl:space-x-reverse">
             <svg
-              className="w-6 h-6 text-primary"
+              className="w-6 h-6 text-primary "
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               width="24"

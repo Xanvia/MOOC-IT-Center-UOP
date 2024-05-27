@@ -15,7 +15,7 @@ export default function Profile() {
           alt="Profile Image"
           width={120}
           height={120}
-          className="rounded-full"
+          className="rounded-full ring-4 ring-primary_light"
         />
         <h1 className="text text-primary text-3xl pt-3">John Doe</h1>
         <ProfileInfo />
