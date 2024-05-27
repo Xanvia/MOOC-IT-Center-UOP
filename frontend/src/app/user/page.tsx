@@ -14,9 +14,10 @@ export default function page() {
                 <center>
                   <div className="bg-slate-300 mt-10 top-10 center h-60 w-60 rounded-full ">
                   </div>
-                  <h1 className="text text-black text-3xl pt-3">
+                  <h1 className="text text-primary text-3xl pt-3">
                     John Doe
                   </h1>
+                  
                 </center>
               </div>
             </div>
