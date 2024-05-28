@@ -1,22 +1,29 @@
 "use client";
 import CreateButton from "@/components/Buttons/CreateButton";
+import React, { useState } from "react";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import {
   InputFieldClasses,
-  ModalClassesBG,
-  XpCardModalClasses,
   InputLabel,
   InputInnerDiv,
   InputOuterDiv,
 } from "@/components/components.styles";
-import React, { useState } from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
+
+import {
+  ModalClassesBG,
+  XpCardModalClasses,
+} from "@/components/components.styles";
 
 interface Props {
+  ButtonText: string;
   CardTitle: string;
 }
 
-const AddXpCardModal: React.FC<Props> = ({ CardTitle}: Props) => {
+const AddExperienceModal: React.FC<Props> = ({
+  CardTitle,
+  ButtonText,
+}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleModal = () => {
@@ -33,8 +40,7 @@ const AddXpCardModal: React.FC<Props> = ({ CardTitle}: Props) => {
 
   return (
     <>
-      <CreateButton onClick={toggleModal} text={CardTitle} />
-    
+      <CreateButton onClick={toggleModal} text={ButtonText} />
 
       {isOpen && (
         <div
@@ -43,9 +49,8 @@ const AddXpCardModal: React.FC<Props> = ({ CardTitle}: Props) => {
         >
           <div onMouseDown={handleOutsideClick} className={XpCardModalClasses}>
             <div className="text-xl font-bold text-[#072569] text-center mt-2 mb-2 mx-0">
-              Add Work Experience
+              {CardTitle}
             </div>
-
             <Formik
               initialValues={{
                 company: "",
@@ -88,7 +93,7 @@ const AddXpCardModal: React.FC<Props> = ({ CardTitle}: Props) => {
                         component="div"
                         className="top-0 left-0 text-red-600 text-xs"
                       />
-                      <label className={InputLabel}>position</label>
+                      <label className={InputLabel}>Position</label>
                     </div>
                   </div>
                 </div>
@@ -100,4 +105,4 @@ const AddXpCardModal: React.FC<Props> = ({ CardTitle}: Props) => {
     </>
   );
 };
-export default AddXpCardModal;
+export default AddExperienceModal;
