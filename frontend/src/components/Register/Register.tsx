@@ -33,7 +33,7 @@ export default function Register() {
 
   return (
     <>
-      ,<PrimaryButton onClick={toggleModal} text="Register" />
+      <PrimaryButton onClick={toggleModal} text="Register" />
       {isOpen && (
         <div
           id="authentication-modal"

@@ -60,7 +60,7 @@ const EditProfileForm: React.FC = () => {
           className="rounded-full ring-4 ring-primary_light mx-auto mt-6"
         />
         <svg
-          className="w-12 h-12 text-gray-300 hover:w-7 hover:h-7 hover:ring-1 hover:ring-primary_light absolute top-20 right-8"
+          className="w-12 h-12 text-gray-300  absolute top-20 right-8"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           width="24"

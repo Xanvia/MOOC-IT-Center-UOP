@@ -4,7 +4,6 @@ import EditButton from "../Buttons/EditButton";
 import { EditProfileModalClasses, ModalClassesBG } from "../components.styles";
 import CloseButton from "../Buttons/CloseButton";
 import EditProfileForm from "../Profile/EditProfileForm";
-import SolidButton from "../Buttons/SolidButton";
 
 interface EditProfileModalProps {}
 
@@ -27,7 +26,10 @@ const EditProfileModal: React.FC<EditProfileModalProps> = (props) => {
     <>
       <EditButton onClick={toggleModal} />
       {isOpen && (
-        <div onMouseDown={handleInsideClick} className={ModalClassesBG}>
+        <div
+          onMouseDown={handleInsideClick}
+          className={`${ModalClassesBG} bg-opacity-40`}
+        >
           <div
             onMouseDown={handleOutsideClick}
             className={EditProfileModalClasses}

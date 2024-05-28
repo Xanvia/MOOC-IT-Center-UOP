@@ -445,3 +445,16 @@ export const EditProfileModalClasses = clsx(
   "px-16",
   "pt-4"
 );
+
+export const XpCardModalClasses = clsx(
+  "ml-[800px]",
+  "h-full",
+  "w-full",
+  "bg-white",
+  "rounded-lg",
+  "shadow-2xl",
+  "sm:w-[800px]",
+  "sm:h-[300px]",
+  "px-16",
+  "pt-4"
+);

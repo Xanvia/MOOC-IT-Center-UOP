@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import ProfileInfo from "./ProfileInfo";
-import EditProfileModal from "../Modals/EditProfile";
+import EditProfileModal from "./EditProfile";
 const DefaultProfileImage = "/images/52.jpg";
 
 export default function Profile() {
