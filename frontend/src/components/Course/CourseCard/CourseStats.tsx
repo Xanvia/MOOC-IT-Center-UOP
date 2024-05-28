@@ -3,7 +3,7 @@ import React from "react";
 const CourseStats: React.FC = ({}) => {
   return (
     <div className="w-full inline-flex flex-wrap items-center gap-4 mt-3 pl-1 pt-1 pb-3 group border-t-2">
-    <div className="flex justify-center 2xl:px-1 items-center pt-1 items-center text-[#333] border-r-2 border-r-[#e7e7e7] border-solid">
+    <div className="flex justify-center 2xl:px-1 pt-1 items-center text-[#333] border-r-2 border-r-[#e7e7e7] border-solid">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

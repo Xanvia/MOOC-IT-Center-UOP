@@ -2,7 +2,7 @@
 import React from "react";
 import EditButton from "../Buttons/EditButton";
 
-const XpCard: React.FC = ({}) => {
+const EduXpCard: React.FC = ({}) => {
   return (
     <div className="relative flex Box bg-white md:rounded-lg shadow-md border-2 px-4 py-4 h-40 sm:w-5/6 w-full my-5 mb-8">
       <EditButton onClick={() => {}} />
@@ -12,7 +12,7 @@ const XpCard: React.FC = ({}) => {
           <h1> University of Peradeniya</h1>
         </div>
         <div className="text text-gray-600 mt-4">
-          <h1> Lecturer | Faculty Of Science </h1>
+          <h1> Bs.c Hons in Computer Science </h1>
         </div>
         <div className="text mt-2 text-right font-medium mr-2">
           <h1> October <span className="text-primary">2020</span> - December <span className="text-primary">2021</span></h1>
@@ -22,4 +22,4 @@ const XpCard: React.FC = ({}) => {
   );
 };
 
-export default XpCard;
+export default EduXpCard;
