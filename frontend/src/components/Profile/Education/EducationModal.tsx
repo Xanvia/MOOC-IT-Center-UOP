@@ -14,16 +14,14 @@ import {
   ModalClassesBG,
   XpCardModalClasses,
 } from "@/components/components.styles";
+import EditButton from "@/components/Buttons/EditButton";
 
 interface Props {
-  ButtonText: string;
   CardTitle: string;
+  Action: string;
 }
 
-const EducationModal: React.FC<Props> = ({
-  CardTitle,
-  ButtonText,
-}: Props) => {
+const EducationModal: React.FC<Props> = ({ CardTitle, Action }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleModal = () => {
@@ -40,7 +38,11 @@ const EducationModal: React.FC<Props> = ({
 
   return (
     <>
-      <CreateButton onClick={toggleModal} text={ButtonText} />
+      {Action === "Edit" ? (
+        <EditButton onClick={toggleModal} />
+      ) : (
+        <CreateButton onClick={toggleModal} text="Education" />
+      )}
 
       {isOpen && (
         <div

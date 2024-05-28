@@ -13,15 +13,15 @@ export default function page() {
           <div className="">
             <AddExperienceModal
               CardTitle="Add Your Work Experience"
-              ButtonText="Work"
+              Action="Add"
             />
             <ExperienceCard />
             <ExperienceCard />
           </div>
           <div className="py-3">
             <AddExperienceModal
-              ButtonText="Education"
               CardTitle="Add Your Education Details"
+              Action="Add"
             />
             <ExperienceCard />
           </div>

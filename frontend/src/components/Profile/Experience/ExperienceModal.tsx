@@ -1,5 +1,6 @@
 "use client";
 import CreateButton from "@/components/Buttons/CreateButton";
+import EditButton from "@/components/Buttons/EditButton";
 import React, { useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -16,14 +17,11 @@ import {
 } from "@/components/components.styles";
 
 interface Props {
-  ButtonText: string;
   CardTitle: string;
+  Action: string;
 }
 
-const AddExperienceModal: React.FC<Props> = ({
-  CardTitle,
-  ButtonText,
-}: Props) => {
+const AddExperienceModal: React.FC<Props> = ({ CardTitle, Action }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleModal = () => {
@@ -40,7 +38,11 @@ const AddExperienceModal: React.FC<Props> = ({
 
   return (
     <>
-      <CreateButton onClick={toggleModal} text={ButtonText} />
+      {Action === "Edit" ? (
+        <EditButton onClick={toggleModal} />
+      ) : (
+        <CreateButton onClick={toggleModal} text="Education" />
+      )}
 
       {isOpen && (
         <div
