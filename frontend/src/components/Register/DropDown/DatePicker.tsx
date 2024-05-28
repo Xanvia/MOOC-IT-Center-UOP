@@ -4,16 +4,18 @@ import "react-datepicker/dist/react-datepicker.css";
 
 interface Props {
   setDate: (date: Date | null) => void;
+  initialDate?: Date | null;
 }
 
-const ReactDatePicker = ({ setDate }: Props) => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+const ReactDatePicker = ({ setDate, initialDate }: Props) => {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(
+    initialDate || null
+  );
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
     setDate(date);
   };
-
   return (
     <div className="relative">
       <div className="absolute  z-10 inset-y-1 start-0 flex items-center ps-3.5 pointer-events-none">

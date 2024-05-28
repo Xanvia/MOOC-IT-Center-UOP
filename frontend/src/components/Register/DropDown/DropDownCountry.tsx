@@ -8,11 +8,14 @@ interface Country {
 
 interface Props {
   addSelection: (item: Country) => void;
+  selectedCountry?: Country;
 }
 
-const DropDownCountry = ({ addSelection }: Props) => {
+const DropDownCountry = ({ addSelection, selectedCountry }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("Select your country");
+  const [selectedOption, setSelectedOption] = useState(
+    selectedCountry ? selectedCountry.label : "Select your country"
+  );
   const [countries, setCountries] = useState<Country[]>([]);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 

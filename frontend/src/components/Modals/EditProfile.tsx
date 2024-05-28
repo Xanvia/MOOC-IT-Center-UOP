@@ -4,6 +4,7 @@ import EditButton from "../Buttons/EditButton";
 import { EditProfileModalClasses, ModalClassesBG } from "../components.styles";
 import CloseButton from "../Buttons/CloseButton";
 import EditProfileForm from "../Profile/EditProfileForm";
+import SolidButton from "../Buttons/SolidButton";
 
 interface EditProfileModalProps {}
 

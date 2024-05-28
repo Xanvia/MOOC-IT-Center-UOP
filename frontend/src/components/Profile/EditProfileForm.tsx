@@ -1,8 +1,45 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Image from "next/image";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import {
+  InputFieldClasses,
+  InputInnerDiv,
+  InputOuterDiv,
+  InputLabel,
+  textArea,
+} from "../components.styles";
+import DropDownCountry from "../Register/DropDown/DropDownCountry";
+import ReactDatePicker from "../Register/DropDown/DatePicker";
+import SolidButton from "../Buttons/SolidButton";
+
 const DefaultProfileImage = "/images/52.jpg";
 
+const validationSchema = Yup.object({
+  firstName: Yup.string().required("Required"),
+  lastName: Yup.string().required("Required"),
+  email: Yup.string().email("Invalid email address").required("Required"),
+  dateOfBirth: Yup.date().required("Required"),
+  country: Yup.string().required("Required"),
+  phoneNumber: Yup.string().required("Required"),
+  bio: Yup.string().required("Required"),
+});
+
+interface Country {
+  id: number;
+  label: string;
+}
+
 const EditProfileForm: React.FC = () => {
+  const [country, setCountry] = useState<Country | undefined>({
+    id: 1,
+    label: "Sri Lanka",
+  });
+  const [birthDate, setBirthDate] = useState<Date | null>(
+    new Date("2000-10-12")
+  );
+
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       // Handle the new image file here
@@ -11,7 +48,7 @@ const EditProfileForm: React.FC = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="grid">
       <label
         htmlFor="profileImageUpload"
         className="cursor-pointer relative inline-block mx-auto"
@@ -21,7 +58,7 @@ const EditProfileForm: React.FC = () => {
           alt="Profile Image"
           width={120}
           height={120}
-          className="rounded-full ring-4 ring-primary_light mx-auto mt-10"
+          className="rounded-full ring-4 ring-primary_light mx-auto mt-6"
         />
         <svg
           className="w-12 h-12 text-gray-300 hover:w-7 hover:h-7 hover:ring-1 hover:ring-primary_light absolute top-20 right-8"
@@ -51,6 +88,126 @@ const EditProfileForm: React.FC = () => {
         onChange={handleImageChange}
         className="hidden"
       />
+
+      <Formik
+        initialValues={{
+          firstName: "John",
+          lastName: "Doe",
+          email: "sanjueranga16@gmail.com",
+          dateOfBirth: "12 - 10 - 2000",
+          country: "Sri Lanka",
+          phonenumber: "+94 74 5632 123",
+          bio: "",
+        }}
+        validationSchema={validationSchema}
+        onSubmit={(values) => {
+          console.log(values);
+        }}
+      >
+        <Form>
+          <div className="pt-8 grid grid-cols-1 gap-4 mx-4">
+            <div className={InputOuterDiv}>
+              <div className={InputInnerDiv}>
+                <Field
+                  type="text"
+                  name="firstName"
+                  className={InputFieldClasses}
+                  placeholder=" "
+                />
+                <ErrorMessage
+                  name="firstName"
+                  component="div"
+                  className="top-0 left-0 text-red-600 text-xs"
+                />
+                <label className={InputLabel}>First Name</label>
+              </div>
+            </div>
+            <div className={InputOuterDiv}>
+              <div className={InputInnerDiv}>
+                <Field
+                  type="text"
+                  name="lastName"
+                  className={InputFieldClasses}
+                  placeholder=" "
+                />
+                <ErrorMessage
+                  name="lastName"
+                  component="div"
+                  className="top-0 left-0 text-red-600 text-xs"
+                />
+                <label className={InputLabel}>Last Name</label>
+              </div>
+            </div>
+            <div className={InputOuterDiv}>
+              <div className={InputInnerDiv}>
+                <Field
+                  type="email"
+                  name="email"
+                  className={InputFieldClasses}
+                  placeholder=" "
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="top-0 left-0 text-red-600 text-xs"
+                />
+                <label className={InputLabel}>Email</label>
+              </div>
+            </div>
+            <div className={InputInnerDiv}>
+              <Field
+                name="phonenumber"
+                type="text"
+                placeholder=" "
+                className={InputFieldClasses}
+              />
+              <label className={InputLabel}>Phone number</label>
+              <ErrorMessage
+                name="phonenumber"
+                component="div"
+                className="top-0 left-0 text-red-600 text-xs"
+              />
+            </div>
+
+            <div className={InputOuterDiv}>
+              <div className={InputOuterDiv}></div>
+              <DropDownCountry
+                addSelection={setCountry}
+                selectedCountry={country}
+              />
+            </div>
+
+            <div className={InputOuterDiv}>
+              <div className={InputInnerDiv}>
+                <ReactDatePicker
+                  setDate={setBirthDate}
+                  initialDate={birthDate}
+                />
+              </div>
+            </div>
+
+            <div className={InputOuterDiv}>
+              <div className={textArea}>
+                <Field
+                  as="textarea"
+                  name="description"
+                  className={InputFieldClasses}
+                  placeholder=" "
+                />
+                <ErrorMessage
+                  name="description"
+                  component="div"
+                  className="top-0 left-0 text-red-600 text-xs"
+                />
+                <label className={InputLabel}>Description</label>
+              </div>
+            </div>
+          </div>
+          <div className="px-14 pt-10">
+            <SolidButton type="submit" text="S U B M I T" onClick={() => {}} />
+          </div>
+        </Form>
+      </Formik>
     </div>
   );
 };
