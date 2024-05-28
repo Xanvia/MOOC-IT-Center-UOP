@@ -1,8 +1,10 @@
 "use client";
-import ExperienceCard from "@/components/Profile/Experience/ExperienceCard";
 import React from "react";
 import Profile from "@/components/Profile/Profile";
-import AddExperienceModal from "@/components/Profile/Experience/ExperienceModal";
+import ExperienceModal from "@/components/Profile/Experience/ExperienceModal";
+import ExperienceCard from "@/components/Profile/Experience/ExperienceCard";
+import EducationCard from "@/components/Profile/Education/EducatonCard";
+import EducationModal from "@/components/Profile/Education/EducationModal";
 
 export default function page() {
   return (
@@ -11,7 +13,7 @@ export default function page() {
         <Profile />
         <div className="relative  lg:w-full h-11/12  md:rounded-r-lg lg:basis-1/2 2xl:px-12 basis-1/3 mx-6 sm:ml-32 pt-32 lg:pt-0 lg:m-0">
           <div className="">
-            <AddExperienceModal
+            <ExperienceModal
               CardTitle="Add Your Work Experience"
               Action="Add"
             />
@@ -19,11 +21,11 @@ export default function page() {
             <ExperienceCard />
           </div>
           <div className="py-3">
-            <AddExperienceModal
+            <EducationModal
               CardTitle="Add Your Education Details"
               Action="Add"
             />
-            <ExperienceCard />
+            <EducationCard />
           </div>
         </div>
       </div>

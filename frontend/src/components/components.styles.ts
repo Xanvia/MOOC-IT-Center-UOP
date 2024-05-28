@@ -447,6 +447,7 @@ export const EditProfileModalClasses = clsx(
 );
 
 export const XpCardModalClasses = clsx(
+  "relative",
   "h-full",
   "w-full",
   "bg-white",

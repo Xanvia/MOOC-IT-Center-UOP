@@ -15,6 +15,9 @@ import {
   ModalClassesBG,
   XpCardModalClasses,
 } from "@/components/components.styles";
+import MonthPicker from "../MonthPicker";
+import CloseButton from "@/components/Buttons/CloseButton";
+import SolidButton from "@/components/Buttons/SolidButton";
 
 interface Props {
   CardTitle: string;
@@ -41,7 +44,7 @@ const AddExperienceModal: React.FC<Props> = ({ CardTitle, Action }: Props) => {
       {Action === "Edit" ? (
         <EditButton onClick={toggleModal} />
       ) : (
-        <CreateButton onClick={toggleModal} text="Education" />
+        <CreateButton onClick={toggleModal} text="Work" />
       )}
 
       {isOpen && (
@@ -50,7 +53,8 @@ const AddExperienceModal: React.FC<Props> = ({ CardTitle, Action }: Props) => {
           className={`${ModalClassesBG} bg-opacity-10`}
         >
           <div onMouseDown={handleOutsideClick} className={XpCardModalClasses}>
-            <div className="text-xl font-bold text-[#072569] text-center mt-2 mb-2 mx-0">
+            <CloseButton onClick={toggleModal} />
+            <div className="text-xl font-bold text-[#072569] text-center mb-2 mx-0">
               {CardTitle}
             </div>
             <Formik
@@ -65,7 +69,7 @@ const AddExperienceModal: React.FC<Props> = ({ CardTitle, Action }: Props) => {
               onSubmit={() => {}}
             >
               <Form>
-                <div className="pt-2 grid grid-cols-1 gap-8 mx-12">
+                <div className="pt-6 grid grid-cols-1 gap-6 mx-12">
                   <div className={InputOuterDiv}>
                     <div className={InputInnerDiv}>
                       <Field
@@ -98,6 +102,31 @@ const AddExperienceModal: React.FC<Props> = ({ CardTitle, Action }: Props) => {
                       <label className={InputLabel}>Position</label>
                     </div>
                   </div>
+                  <div className={InputOuterDiv}>
+                    <div className={InputInnerDiv}>
+                      <span className="text-sm font-medium text-gray-400">
+                        From
+                      </span>
+                      <MonthPicker setDate={() => {}} text="Start Date" />
+                    </div>
+                  </div>
+                  <div className="py-4">
+                    <div className={InputOuterDiv}>
+                      <div className={InputInnerDiv}>
+                        <span className="text-sm font-medium text-gray-400">
+                          To
+                        </span>
+                        <MonthPicker setDate={() => {}} text="End Date" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="pl-[70px] pt-12">
+                  <SolidButton
+                    type="submit"
+                    text="S U B M I T"
+                    onClick={() => {}}
+                  />
                 </div>
               </Form>
             </Formik>
