@@ -2,14 +2,14 @@
 import React from "react";
 import Image from "next/image";
 import ProfileInfo from "./ProfileInfo";
-import EditButton from "../Buttons/EditButton";
+import EditProfileModal from "./EditProfile";
 const DefaultProfileImage = "/images/52.jpg";
 
 export default function Profile() {
   return (
     <div className="basis-1/2">
       <div className="relative bg-white min-h-full w-full sm:w-7/12 sm:ml-40 lg:ml-48 rounded-lg shadow-md py-14 flex flex-col items-center justify-center">
-        <EditButton onClick={() => {}} />
+        <EditProfileModal />
         <Image
           src={DefaultProfileImage}
           alt="Profile Image"

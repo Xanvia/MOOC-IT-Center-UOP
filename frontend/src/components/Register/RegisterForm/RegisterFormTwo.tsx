@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import SolidButton from "../Buttons/SolidButton";
+import SolidButton from "../../Buttons/SolidButton";
 import DropDownCountry from "../DropDown/DropDownCountry";
 import DropDownGender from "../DropDown/DropDownGender";
 import DropDownInterests from "../DropDown/DropDownInterests";
@@ -14,7 +14,7 @@ import {
   InputLabel,
   InputInnerDiv,
   InputOuterDiv,
-} from "../components.styles";
+} from "../../components.styles";
 import InterestLabel from "../DropDown/InterestLabel";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
@@ -82,9 +82,8 @@ const RegistrationFormTwo: React.FC = () => {
     } else if (birthDate === null) {
       toast.warning("Please select a birthdate");
     } else {
-
       const date = new Date(birthDate);
-      const formattedDate = date.toLocaleDateString('en-CA');
+      const formattedDate = date.toLocaleDateString("en-CA");
       axios
         .put(
           `${API_URL}/user/add-user-info/`,

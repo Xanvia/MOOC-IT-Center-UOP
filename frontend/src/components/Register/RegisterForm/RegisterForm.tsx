@@ -2,9 +2,9 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import SolidButton from "../Buttons/SolidButton";
+import SolidButton from "../../Buttons/SolidButton";
 import GoogleIcon from "@/icons/GoogleIcon";
-import SvgButton from "../Buttons/SvgButton";
+import SvgButton from "../../Buttons/SvgButton";
 import DropDown from "../DropDown/DropDown";
 import { getGoogleCode } from "@/utils/GoogleAuth";
 import Cookies from "js-cookie";
@@ -16,7 +16,7 @@ import {
   InputLabel,
   InputInnerDiv,
   InputOuterDiv,
-} from "../components.styles";
+} from "../../components.styles";
 
 export interface RegistrationFormValues {
   firstName: string;

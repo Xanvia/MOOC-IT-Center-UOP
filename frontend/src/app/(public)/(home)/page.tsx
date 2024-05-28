@@ -1,4 +1,4 @@
-"use client";
+"use-client";
 import { useEffect, useState } from "react";
 import Search from "@/components/Search/Search";
 import CourseCard from "@/components/Course/CourseCard/CourseCard";
@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <>
       <Search />
-      <div className="flex grid grid-cols-1 py-10 ml-12 sm:grid-cols-2 xl:grid-cols-4 lg:grid-cols-3 justify-center items-center mx-10 sm:mx-36 lg:mx-36 gap-4  lg:gap-4 2xl:gap-10">
+      <div className="grid grid-cols-1 py-10 ml-12 sm:grid-cols-2 xl:grid-cols-4 lg:grid-cols-3 justify-center items-center mx-10 sm:mx-36 lg:mx-36 gap-4  lg:gap-4 2xl:gap-10">
         <CourseCard
           title="Introduction to Computer Networks "
           description="The learning material on beginner-level website creation."

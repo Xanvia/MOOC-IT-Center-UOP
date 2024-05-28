@@ -346,7 +346,7 @@ export const CloseButtonClasses = clsx(
   "ms-auto",
   "inline-flex",
   "justify-center",
-  "items-center",
+  "items-center"
 );
 
 export const CourseCardOuterClasses = clsx(
@@ -360,7 +360,7 @@ export const CourseCardOuterClasses = clsx(
   "bg-white",
   "bg-clip-border",
   "text-gray-700",
-  "shadow-lg",
+  "shadow-lg"
 );
 
 export const CourseCardImageContainerClsx = clsx(
@@ -375,7 +375,6 @@ export const CourseCardImageContainerClsx = clsx(
   "bg-clip-border",
   "shadow-blue-gray-500/40"
 );
-
 
 export const CourseCardImageClsx = clsx(
   "absolute",
@@ -432,4 +431,29 @@ export const interestCloseButtonClasses = clsx(
   "justify-end",
   "items-center",
   "ml-3"
+);
+
+export const EditProfileModalClasses = clsx(
+  "relative",
+  "h-full",
+  "w-full",
+  "bg-white",
+  "rounded-lg",
+  "shadow-2xl",
+  "sm:w-[500px]",
+  "sm:h-[800px]",
+  "px-16",
+  "pt-4"
+);
+
+export const XpCardModalClasses = clsx(
+  "relative",
+  "h-full",
+  "w-full",
+  "bg-white",
+  "rounded-lg",
+  "shadow-2xl",
+  "sm:w-[400px]",
+  "sm:h-[500px]",
+  "pt-10"
 );

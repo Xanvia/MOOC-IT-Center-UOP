@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
-import RegisterForm from "../RegisterForm/RegisterForm";
-import RegistrationFormTwo from "../RegisterForm/RegisterFormTwo";
+import RegisterForm from "./RegisterForm/RegisterForm";
+import RegistrationFormTwo from "./RegisterForm/RegisterFormTwo";
 import CloseButton from "../Buttons/CloseButton";
 import {
   ModalClassesBG,
@@ -33,7 +33,7 @@ export default function Register() {
 
   return (
     <>
-      ,<PrimaryButton onClick={toggleModal} text="Register" />
+      <PrimaryButton onClick={toggleModal} text="Register" />
       {isOpen && (
         <div
           id="authentication-modal"
