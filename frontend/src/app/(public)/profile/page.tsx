@@ -6,19 +6,48 @@ import ExperienceCard from "@/components/Profile/Experience/ExperienceCard";
 import EducationCard from "@/components/Profile/Education/EducatonCard";
 import EducationModal from "@/components/Profile/Education/EducationModal";
 
-import { getUserInfo } from "@/data/api";
+interface User {
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone: string;
+  birthdate: string;
+  location: string;
+}
 
-interface User {}
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3MDYxMzQxLCJpYXQiOjE3MTY4ODg1NDEsImp0aSI6ImMwMDEyZDAyN2Q2ZjRkNmJhNTk1OTQxYmMwNjM2MzZiIiwidXNlcl9pZCI6NX0.LKtWn8K1oSyEgl95_K2fZXmtIGpHE2xILEkb7TzzojM";
 
-export default function page() {
+export default function ProfilePage() {
+  const [profileData, setProfileData] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const [user,setUser] = useState<User>(null);
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const response = await axios.get(`${API_URL}/user/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}` 
+          }
+        });
+        const data: UserInfo = response.data;
+        setProfileData(data);
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    }
 
-  useInsertionEffect(){
-    getUserInfo().then((res) => {
-      setUser(res.data);
-    }).catch((err) => {});
-  },[]
+    fetchProfile();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   return (
