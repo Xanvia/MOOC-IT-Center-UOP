@@ -445,11 +445,3 @@ export const EditProfileModalClasses = clsx(
   "px-16",
   "pt-4"
 );
-
-
-export const textArea = clsx(
-  "relative",
-  "w-full",
-  "min-w-[200px]",
-  "h-20"
-);

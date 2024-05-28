@@ -8,7 +8,6 @@ import {
   InputInnerDiv,
   InputOuterDiv,
   InputLabel,
-  textArea,
 } from "../components.styles";
 import DropDownCountry from "../Register/DropDown/DropDownCountry";
 import ReactDatePicker from "../Register/DropDown/DatePicker";
@@ -187,7 +186,7 @@ const EditProfileForm: React.FC = () => {
             </div>
 
             <div className={InputOuterDiv}>
-              <div className={textArea}>
+              <div className={`h-20 ${InputInnerDiv} `}>
                 <Field
                   as="textarea"
                   name="description"
