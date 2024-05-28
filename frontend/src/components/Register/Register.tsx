@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
-import RegisterForm from "../RegisterForm/RegisterForm";
-import RegistrationFormTwo from "../RegisterForm/RegisterFormTwo";
+import RegisterForm from "./RegisterForm/RegisterForm";
+import RegistrationFormTwo from "./RegisterForm/RegisterFormTwo";
 import CloseButton from "../Buttons/CloseButton";
 import {
   ModalClassesBG,

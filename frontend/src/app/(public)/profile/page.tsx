@@ -1,5 +1,5 @@
 "use client";
-import XpCard from "@/components/XpCard/XpCard";
+import XpCard from "@/components/Profile/XpCard/XpCard";
 import React from "react";
 import Profile from "@/components/Profile/Profile";
 import CreateButton from "@/components/Buttons/CreateButton";
