@@ -17,7 +17,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { API_URL } from "@/utils/constants";
-import CloseButton from "../Buttons/CloseButton";
 
 const DefaultProfileImage = "/images/52.jpg";
 
@@ -34,6 +33,7 @@ interface Country {
 
 interface Props {
   userData: ProfileData;
+  setProfileData: React.Dispatch<React.SetStateAction<ProfileData | undefined>>;
 }
 interface EditFromValues {
   firstName: string;
@@ -42,7 +42,7 @@ interface EditFromValues {
   description: string;
 }
 
-const EditProfileForm: React.FC<Props> = ({ userData }) => {
+const EditProfileForm: React.FC<Props> = ({ userData, setProfileData }) => {
   const [country, setCountry] = useState<Country | undefined>(userData.country);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
@@ -80,7 +80,15 @@ const EditProfileForm: React.FC<Props> = ({ userData }) => {
       )
       .then((res) => {
         toast.success(res.data.message);
-        window.location.reload();
+        setProfileData((prev) => {
+          if (prev) {
+            return {
+              ...prev,
+              profile_image: "",
+            };
+          }
+          return prev;
+        });
       })
       .catch((err) => {
         const errorMessage = err.response?.data.message ?? "Network error";
@@ -119,7 +127,7 @@ const EditProfileForm: React.FC<Props> = ({ userData }) => {
         .then((res) => {
           console.log(res.data.user);
           toast.success(res.data.message);
-          window.location.reload();
+          setProfileData(res.data.user);
         })
         .catch((err) => {
           const errorMessage = err.response?.data.message ?? "Network error";

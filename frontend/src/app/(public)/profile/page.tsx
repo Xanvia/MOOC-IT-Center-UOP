@@ -32,12 +32,14 @@ export default function ProfilePage() {
     };
 
     fetchProfileData();
-  }, []);
+  }, [profileData]);
 
   return (
     <>
       <div className="flex flex-col lg:flex-row w-full py-20">
-        {profileData && <Profile userData={profileData} />}
+        {profileData && (
+          <Profile userData={profileData} setProfileData={setProfileData} />
+        )}
         <div className="relative  lg:w-full h-11/12  md:rounded-r-lg lg:basis-1/2 2xl:px-12 basis-1/3 mx-6 sm:ml-32 pt-32 lg:pt-0 lg:m-0">
           <div className="">
             <ExperienceModal

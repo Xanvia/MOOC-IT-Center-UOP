@@ -7,9 +7,11 @@ import EditProfileForm from "../Profile/EditProfileForm";
 import { ProfileData } from "./types";
 interface EditProfileModalProps {
   userData: ProfileData;
+  setProfileData:React.Dispatch<React.SetStateAction<ProfileData | undefined>>;
+
 }
 
-const EditProfileModal: React.FC<EditProfileModalProps> = ({ userData }) => {
+const EditProfileModal: React.FC<EditProfileModalProps> = ({ userData,setProfileData }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleModal = () => {
@@ -61,7 +63,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ userData }) => {
               &nbsp; Edit Profile
             </div>
 
-            <EditProfileForm userData={userData} />
+            <EditProfileForm userData={userData} setProfileData={setProfileData}/>
           </div>
         </div>
       )}
