@@ -139,10 +139,20 @@ class AddUserInfoSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    firstname = serializers.CharField(source="user.first_name")
+    lastname = serializers.CharField(source="user.last_name")
 
     class Meta:
         model = UserProfile
-        fields = "__all__"
+        fields = [
+            "firstname",
+            "lastname",
+            "country",
+            "profile_picture",
+            "birth_date",
+            "mobile_number",
+            "description",
+        ]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -157,7 +167,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             instance.user.groups.first().name if instance.user.groups.exists() else None
         )
         representation["gender"] = instance.get_gender_display()
-        representation.pop("interests")
         representation["educations"] = EducationSerializer(
             instance.education_set.all(), many=True
         ).data
@@ -165,7 +174,18 @@ class UserProfileSerializer(serializers.ModelSerializer):
             instance.workexperience_set.all(), many=True
         ).data
         return representation
-    
+
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop("user", None)
+        super().update(instance, validated_data)
+
+        if user_data:
+            user = instance.user
+            user.first_name = user_data.get("first_name", user.first_name)
+            user.last_name = user_data.get("last_name", user.last_name)
+            user.save()
+        return instance
+
 
 class WorkExperienceSerializer(serializers.ModelSerializer):
 
