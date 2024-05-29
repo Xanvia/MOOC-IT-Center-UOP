@@ -64,15 +64,7 @@ class UserSerializer(serializers.ModelSerializer):
         if profile_picture is not None:
             profile_picture = profile_picture.split("=")[0]
         else:
-            colors = [
-                "008080",
-                "00FFFF",
-                "20B2AA",
-                "40E0D0",
-                "48D1CC",
-                "00CED1",
-                "7FFFD4",
-            ]
+            colors = ["008080", "20B2AA", "072dd0", "45a158", "fca158"]
             random_color = choice(colors)
             name = f"{user.first_name} {user.last_name}"
             profile_picture = f"https://ui-avatars.com/api/?name={name}&color=ffffff&background={random_color}"
