@@ -8,6 +8,7 @@ from .views import (
     CountryListAPIView,
     UserProfileViewSet,
     RemoveUserProfileImage,
+    WorkExperienceApiView,
 )
 
 urlpatterns = [
@@ -25,4 +26,5 @@ urlpatterns = [
     path(
         "profile-image", RemoveUserProfileImage.as_view(), name="remove-profile-image"
     ),
+    path("work/", WorkExperienceApiView.as_view(), name="workxp"),
 ]

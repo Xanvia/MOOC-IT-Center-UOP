@@ -8,11 +8,12 @@ from .serializers import (
     AddUserInfoSerializer,
     CountrySerializer,
     UserProfileSerializer,
+    WorkExperienceSerializer,
 )
 from .utils import google_authenticate
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
-from .models import UserProfile, Interest, Country
+from .models import UserProfile, Interest, Country, WorkExperience
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 
@@ -53,7 +54,7 @@ class GoogleAuthRegisterView(generics.CreateAPIView):
         }
 
         return Response(response.data, status=status.HTTP_200_OK)
-
+    
 
 class UserLoginApiView(generics.GenericAPIView):
     serializer_class = UserLoginSerializer
@@ -199,3 +200,16 @@ class RemoveUserProfileImage(generics.UpdateAPIView):
             "message": "User profile image removed successfully",
         }
         return Response(data, status=status.HTTP_200_OK)
+    
+class WorkExperienceApiView(generics.CreateAPIView):
+    queryset = WorkExperience.objects.all() 
+    serializer_class = WorkExperienceSerializer
+    permission_class = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_header(serializer.data)
+        
+        return Response.success(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

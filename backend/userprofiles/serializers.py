@@ -199,14 +199,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class WorkExperienceSerializer(serializers.ModelSerializer):
+    user_profile = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
 
     class Meta:
         model = WorkExperience
-        fields = "__all__"
+        fields = ('id', 'user_profile', 'company', 'position', 'start_date', 'end_date')
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation.pop("user_profile")
+        representation.po-p("user_profile")
 
         return representation
 
