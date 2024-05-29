@@ -17,6 +17,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { API_URL } from "@/utils/constants";
+import CloseButton from "../Buttons/CloseButton";
 
 const DefaultProfileImage = "/images/52.jpg";
 
@@ -61,6 +62,30 @@ const EditProfileForm: React.FC<Props> = ({ userData }) => {
     if (event.target.files && event.target.files[0]) {
       setImageFile(event.target.files[0]);
     }
+  };
+
+  const handleDelete = () => {
+    const token = Cookies.get("token");
+    console.log(token);
+    axios
+      .patch(
+        `${API_URL}/user/profile-image`,
+        {},
+        {
+          // Empty data payload
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        toast.success(res.data.message);
+        window.location.reload();
+      })
+      .catch((err) => {
+        const errorMessage = err.response?.data.message ?? "Network error";
+        toast.error(errorMessage);
+      });
   };
 
   const handleSubmit = (values: EditFromValues) => {
@@ -120,6 +145,7 @@ const EditProfileForm: React.FC<Props> = ({ userData }) => {
           height={120}
           className="rounded-full ring-4 ring-primary_light mx-auto mt-6"
         />
+
         <svg
           className="w-12 h-12 text-gray-300  absolute top-20 right-8"
           aria-hidden="true"
@@ -148,6 +174,31 @@ const EditProfileForm: React.FC<Props> = ({ userData }) => {
         onChange={handleImageChange}
         className="hidden"
       />
+      <div>
+        <button
+          type="button"
+          className="absolute top-20 right-44"
+          data-modal-hide="authentication-modal"
+          onClick={handleDelete}
+        >
+          <svg
+            className="w-3 h-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+            />
+          </svg>
+          <span className="sr-only">Close modal</span>
+        </button>
+      </div>
 
       <Formik
         initialValues={initialValues}
