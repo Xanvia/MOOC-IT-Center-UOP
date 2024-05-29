@@ -14,10 +14,9 @@ import {
   NotificationButtonMobileClasses,
 } from "../components.styles";
 
-
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading,setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -27,18 +26,17 @@ const Navbar = () => {
   };
 
   const toggleProfileMenu = () => {
-    setIsProfileMenuOpen(!isProfileMenuOpen);
+    if (isLoggedIn) {
+      setIsProfileMenuOpen(!isProfileMenuOpen);
+    }
   };
-
 
   const onSignOut = () => {
     Cookies.remove("token");
     Cookies.remove("user");
     setIsLoggedIn(false);
-    window.location.reload()
+    window.location.reload();
   };
-
-
 
   const handleDocumentClick = (event: MouseEvent) => {
     if (
@@ -61,9 +59,8 @@ const Navbar = () => {
     if (user) {
       setIsLoggedIn(true);
     }
-    setIsLoading(false)
+    setIsLoading(false);
   }, [isLoggedIn]);
-
 
   return (
     <nav className="bg-primary">
