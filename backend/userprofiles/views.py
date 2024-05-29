@@ -54,7 +54,7 @@ class GoogleAuthRegisterView(generics.CreateAPIView):
         }
 
         return Response(response.data, status=status.HTTP_200_OK)
-    
+
 
 class UserLoginApiView(generics.GenericAPIView):
     serializer_class = UserLoginSerializer
@@ -200,16 +200,46 @@ class RemoveUserProfileImage(generics.UpdateAPIView):
             "message": "User profile image removed successfully",
         }
         return Response(data, status=status.HTTP_200_OK)
-    
-class WorkExperienceApiView(generics.CreateAPIView):
-    queryset = WorkExperience.objects.all() 
+
+
+class WorkExperienceApiView(viewsets.ModelViewSet):
+    queryset = WorkExperience.objects.all()
     serializer_class = WorkExperienceSerializer
-    permission_class = [permissions.IsAuthenticated]
+
+    def filter_queryset(self, queryset):
+        return (
+            super()
+            .filter_queryset(queryset)
+            .filter(user_profile=self.request.user.userprofile)
+        )
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_header(serializer.data)
-        
-        return Response.success(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+        request.data["user_profile"] = request.user.userprofile.id
+        response = super().create(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Work experience added successfully",
+        }
+        return response
+
+    def update(self, request, *args, **kwargs):
+
+        response = super().update(request, partial=True, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Work experience updated successfully",
+        }
+        return response
+
+    def destroy(self, request, *args, **kwargs):
+
+        response = super().destroy(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Work experience deleted successfully",
+        }
+        return response

@@ -26,5 +26,14 @@ urlpatterns = [
     path(
         "profile-image", RemoveUserProfileImage.as_view(), name="remove-profile-image"
     ),
-    path("work/", WorkExperienceApiView.as_view(), name="workxp"),
+    path(
+        "work/",
+        WorkExperienceApiView.as_view({"post": "create", "delete": "destroy"}),
+        name="work-experience",
+    ),
+    path(
+        "work/<int:pk>/",
+        WorkExperienceApiView.as_view({"put": "update", "delete": "destroy"}),
+        name="work-experience-detail",
+    ),
 ]
