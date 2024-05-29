@@ -21,7 +21,6 @@ export interface ProfileData {
   birth_date: string;
   mobile_number: string;
   gender: string;
-  user: number;
   country: string;
   full_name: string;
   email: string;
