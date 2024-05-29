@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
 from .models import UserProfile, Interest, Country, WorkExperience, Education
 from random import choice
+from django.conf import settings
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -141,6 +142,9 @@ class AddUserInfoSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     firstname = serializers.CharField(source="user.first_name")
     lastname = serializers.CharField(source="user.last_name")
+    profile_image = serializers.ImageField(
+        max_length=None, use_url=True, required=False
+    )
 
     class Meta:
         model = UserProfile
@@ -152,11 +156,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "birth_date",
             "mobile_number",
             "description",
+            "profile_image",
         ]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-
         representation["email"] = instance.user.email
         representation["username"] = instance.user.username
         representation["country"] = instance.country.label
@@ -174,6 +178,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         user_data = validated_data.pop("user", None)
+        profile_picture = validated_data.pop("profile_picture", None)
+
         super().update(instance, validated_data)
 
         if user_data:
@@ -181,6 +187,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
             user.first_name = user_data.get("first_name", user.first_name)
             user.last_name = user_data.get("last_name", user.last_name)
             user.save()
+
+        if profile_picture:
+            instance.profile_image = profile_picture
+            instance.save()
         return instance
 
 

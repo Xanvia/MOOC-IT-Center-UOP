@@ -117,7 +117,6 @@ class AddUserInfoTest(APITestCase):
             "firstname": "John2",
             "lastname": "Doe2",
             "country": 2,
-            "profile_picture": "https://www.google.com",
             "description": "I am a student at the university of colombo",
             "birth_date": "2000-10-14",
             "mobile_number": "+94 872 2323",
@@ -137,20 +136,7 @@ class AddUserInfoTest(APITestCase):
         user_profile = self.user.userprofile
         self.assertEqual(self.user.first_name, user_data["firstname"])
         self.assertEqual(user_profile.country.id, user_data["country"])
-        self.assertEqual(user_profile.profile_picture, user_data["profile_picture"])
         self.assertEqual(user_profile.description, user_data["description"])
         self.assertEqual(user_profile.mobile_number, user_data["mobile_number"])
 
-    def test_wrong_url_type(self):
-        user_data = {
-            "profile_picture": "//www.google.com",
-        }
-        url = reverse("user-profile")
-        response = self.client.put(url, user_data, format="json")
-        expected_data = {
-            "status": "fail",
-            "message": ["Enter a valid URL."],
-        }
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(expected_data, response.data)
+   

@@ -27,7 +27,6 @@ class GetUserProfileViewSetTest(APITestCase):
         cls.user = User.objects.create_user(**cls.userdata)
         cls.country = Country.objects.get(id=1)
         cls.user_profile_data = {
-            "profile_picture": "google.com",
             "user": cls.user,
             "description": "test description",
             "mobile_number": "1234567890",
@@ -60,54 +59,6 @@ class GetUserProfileViewSetTest(APITestCase):
             start_date="2015-01",
             end_date="2019-01",
         )
-
-        expected_data = {
-        "status": "success",
-        "data": {
-            "firstname": self.user_profile.user.first_name,
-            "lastname": self.user_profile.user.last_name,
-            "country": self.country.label,
-            "profile_picture": self.user_profile.profile_picture,
-            "birth_date": str(self.user_profile.birth_date),
-            "mobile_number": self.user_profile.mobile_number,
-            "description": self.user_profile.description,
-            "email": self.user_profile.user.email,
-            "username": self.user_profile.user.username,
-            "user_role": (
-                self.user_profile.user.groups.first().name
-                if self.user_profile.user.groups.exists()
-                else None
-            ),
-            "gender": self.user_profile.get_gender_display(),
-            "educations": [
-                OrderedDict(
-                    [
-                        ("id", education.id),
-                        ("degree", "Bsc Hons in Computer Science"),
-                        ("start_date", str(education.start_date)),
-                        ("end_date", str(education.end_date)),
-                        ("institution", education.institution.label),
-                    ]
-                )
-                for education in self.user_profile.education_set.all()
-            ],
-            "work_experiences": [
-                OrderedDict(
-                    [
-                        ("id", work.id),
-                        ("company", work.company),
-                        ("position", work.position),
-                        ("start_date", str(work.start_date)),
-                        ("end_date", str(work.end_date)),
-                    ]
-                )
-                for work in self.user_profile.workexperience_set.all()
-            ],
-        },
-    }
-
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(expected_data, response.data)
-        

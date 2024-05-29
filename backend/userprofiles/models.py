@@ -44,6 +44,9 @@ class UserProfile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.URLField(max_length=1000, blank=True, null=True)
+    profile_image = models.ImageField(
+        upload_to="profile_images/", blank=True, null=True
+    )
     country = models.ForeignKey(
         Country, on_delete=models.PROTECT, blank=True, null=True
     )
