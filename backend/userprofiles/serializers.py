@@ -165,7 +165,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             instance.workexperience_set.all(), many=True
         ).data
         return representation
-
+    
 
 class WorkExperienceSerializer(serializers.ModelSerializer):
 
