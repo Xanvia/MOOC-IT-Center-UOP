@@ -114,6 +114,8 @@ class AddUserInfoTest(APITestCase):
 
     def test_update_user_data(self):
         user_data = {
+            "firstname": "John2",
+            "lastname": "Doe2",
             "country": 2,
             "profile_picture": "https://www.google.com",
             "description": "I am a student at the university of colombo",
@@ -133,7 +135,7 @@ class AddUserInfoTest(APITestCase):
         self.user.refresh_from_db()
 
         user_profile = self.user.userprofile
-
+        self.assertEqual(self.user.first_name, user_data["firstname"])
         self.assertEqual(user_profile.country.id, user_data["country"])
         self.assertEqual(user_profile.profile_picture, user_data["profile_picture"])
         self.assertEqual(user_profile.description, user_data["description"])

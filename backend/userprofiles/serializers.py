@@ -157,9 +157,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
-        representation["full_name"] = (
-            f"{instance.user.first_name} {instance.user.last_name}"
-        )
         representation["email"] = instance.user.email
         representation["username"] = instance.user.username
         representation["country"] = instance.country.label
