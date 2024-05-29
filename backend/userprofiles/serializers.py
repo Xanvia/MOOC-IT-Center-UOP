@@ -3,6 +3,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
 from .models import UserProfile, Interest, Country, WorkExperience, Education
+from random import choice
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -62,8 +63,20 @@ class UserSerializer(serializers.ModelSerializer):
 
         if profile_picture is not None:
             profile_picture = profile_picture.split("=")[0]
+        else:
+            colors = [
+                "008080",
+                "00FFFF",
+                "20B2AA",
+                "40E0D0",
+                "48D1CC",
+                "00CED1",
+                "7FFFD4",
+            ]
+            random_color = choice(colors)
+            name = f"{user.first_name} {user.last_name}"
+            profile_picture = f"https://ui-avatars.com/api/?name={name}&color=ffffff&background={random_color}"
 
-        # create user profile
         UserProfile.objects.create(user=user, profile_picture=profile_picture)
 
         return user
