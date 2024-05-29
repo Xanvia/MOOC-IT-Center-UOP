@@ -83,6 +83,11 @@ class UserLoginApiView(generics.GenericAPIView):
                         "profile_picture": (
                             user_profile.profile_picture if user_profile else None
                         ),
+                        "profile_picture": (
+                            user.userprofile.profile_image.url
+                            if user.userprofile.profile_image
+                            else None
+                        ),
                     },
                 },
             }
@@ -122,7 +127,9 @@ class GoogleLoginApiView(generics.GenericAPIView):
                     "full_name": f"{user.first_name} {user.last_name}",
                     "email": user.email,
                     "profile_picture": (
-                        user_profile.profile_picture if user_profile else None
+                        user_profile.profile.profile_image.url
+                        if user_profile.profile_image
+                        else None
                     ),
                 },
             },
@@ -194,7 +201,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         request.data["user"] = request.user.id
-        response = super().update(request,partial=True, *args, **kwargs)
+        response = super().update(request, partial=True, *args, **kwargs)
 
         response.data = {
             "status": "success",

@@ -79,13 +79,13 @@ class UserSerializer(serializers.ModelSerializer):
         return {
             "access_token": str(AccessToken.for_user(instance)),
             "user": {
-                "user_id": instance.id,
-                "username": instance.username,
-                "full_name": f"{instance.first_name} {instance.last_name}",
-                "email": instance.email,
-                "profile_picture": (
-                    user_profile.profile_picture if user_profile else None
-                ),
+            "user_id": instance.id,
+            "username": instance.username,
+            "full_name": f"{instance.first_name} {instance.last_name}",
+            "email": instance.email,
+            "profile_picture": (
+                instance.userprofile.profile_picture if  else None
+            ),
             },
         }
 
@@ -163,7 +163,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation["email"] = instance.user.email
         representation["username"] = instance.user.username
-        representation["country"] = instance.country.label
+        representation["country"] = CountrySerializer(instance.country).data
         representation["user_role"] = (
             instance.user.groups.first().name if instance.user.groups.exists() else None
         )
