@@ -15,17 +15,15 @@ import SolidButton from "../Buttons/SolidButton";
 import { ProfileData } from "./types";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { toast } from "sonner";
+import { API_URL } from "@/utils/constants";
 
 const DefaultProfileImage = "/images/52.jpg";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("Required"),
   lastName: Yup.string().required("Required"),
-  email: Yup.string().email("Invalid email address").required("Required"),
-  dateOfBirth: Yup.date().required("Required"),
-  country: Yup.string().required("Required"),
   phoneNumber: Yup.string().required("Required"),
-  bio: Yup.string().required("Required"),
 });
 
 interface Country {
@@ -36,17 +34,72 @@ interface Country {
 interface Props {
   userData: ProfileData;
 }
+interface EditFromValues {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  description: string;
+}
 
 const EditProfileForm: React.FC<Props> = ({ userData }) => {
   const [country, setCountry] = useState<Country | undefined>(userData.country);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
   const [birthDate, setBirthDate] = useState<Date | null>(
-    new Date("2000-10-12")
+    new Date(userData.birth_date)
   );
+
+  const initialValues = {
+    firstName: userData.firstname || "",
+    lastName: userData.lastname || "",
+    email: userData.email || "",
+    phoneNumber: userData.mobile_number || "",
+    description: userData.description || "",
+  };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      
+      setImageFile(event.target.files[0]);
+    }
+  };
 
+  const handleSubmit = (values: EditFromValues) => {
+    const token = Cookies.get("token");
+    if (country?.label === undefined) {
+      toast.warning("Please select a country");
+    } else if (birthDate === null) {
+      toast.warning("Please select a birthdate");
+    } else {
+      const date = new Date(birthDate);
+      const formattedDate = date.toLocaleDateString("en-CA");
+
+      const formData = new FormData();
+      formData.append("firstname", values.firstName);
+      formData.append("lastname", values.lastName);
+      formData.append("description", values.description);
+      formData.append("mobile_number", values.phoneNumber);
+      formData.append("country", country.id.toString());
+      formData.append("birth_date", formattedDate);
+      if (imageFile) {
+        formData.append("profile_image", imageFile);
+      }
+
+      axios
+        .put(`${API_URL}/user/profile/`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data.user);
+          toast.success(res.data.message);
+          window.location.reload();
+        })
+        .catch((err) => {
+          const errorMessage = err.response?.data.message ?? "Network error";
+          toast.error(errorMessage);
+        });
     }
   };
 
@@ -97,19 +150,9 @@ const EditProfileForm: React.FC<Props> = ({ userData }) => {
       />
 
       <Formik
-        initialValues={{
-          firstName: userData.firstname,
-          lastName: userData.lastname,
-          email: userData.email,
-          dateOfBirth: userData.birth_date,
-          country: userData.country,
-          phonenumber: userData.mobile_number,
-          description: userData.description,
-        }}
+        initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values) => {
-          console.log(values);
-        }}
+        onSubmit={handleSubmit}
       >
         <Form>
           <div className="pt-8 grid grid-cols-1 gap-4 mx-4">
@@ -164,7 +207,7 @@ const EditProfileForm: React.FC<Props> = ({ userData }) => {
             </div>
             <div className={InputInnerDiv}>
               <Field
-                name="phonenumber"
+                name="phoneNumber"
                 type="text"
                 placeholder=" "
                 className={InputFieldClasses}
