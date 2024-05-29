@@ -4,10 +4,14 @@ import EditButton from "../Buttons/EditButton";
 import { EditProfileModalClasses, ModalClassesBG } from "../components.styles";
 import CloseButton from "../Buttons/CloseButton";
 import EditProfileForm from "../Profile/EditProfileForm";
+import { ProfileData } from "./types";
+interface EditProfileModalProps {
+  userData: ProfileData;
+  setProfileData:React.Dispatch<React.SetStateAction<ProfileData | undefined>>;
 
-interface EditProfileModalProps {}
+}
 
-const EditProfileModal: React.FC<EditProfileModalProps> = (props) => {
+const EditProfileModal: React.FC<EditProfileModalProps> = ({ userData,setProfileData }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleModal = () => {
@@ -59,7 +63,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = (props) => {
               &nbsp; Edit Profile
             </div>
 
-            <EditProfileForm />
+            <EditProfileForm userData={userData} setProfileData={setProfileData}/>
           </div>
         </div>
       )}

@@ -1,7 +1,8 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+from userprofiles.models import UserProfile
 
 
 class UserLoginViewTest(APITestCase):
@@ -14,6 +15,10 @@ class UserLoginViewTest(APITestCase):
         cls.user = User.objects.create_user(
             username=cls.username, email=cls.email, password=cls.password
         )
+        cls.user_profile = UserProfile.objects.create(user=cls.user)
+        cls.group = Group.objects.get(name="student")
+        cls.user.groups.add(cls.group)
+        cls.user.save()
 
     def post_request(self, data):
         return self.client.post(self.url, data, format="json")
@@ -25,10 +30,9 @@ class UserLoginViewTest(APITestCase):
         user = User.objects.get(username=self.username)
         user_object = {
             "user_id": user.id,
-            "username": user.username,
-            "full_name": f"{user.first_name} {user.last_name}",
-            "email": user.email,
             "profile_picture": None,
+            "profile_image":None,
+            "userRole":"student"
         }
         expected_response = {"status": "success", "data": {"user": user_object}}
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -85,4 +89,3 @@ class UserLoginViewTest(APITestCase):
         }
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data, expected_data)
-

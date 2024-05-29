@@ -12,17 +12,18 @@ import {
 import DropDownCountry from "../Register/DropDown/DropDownCountry";
 import ReactDatePicker from "../Register/DropDown/DatePicker";
 import SolidButton from "../Buttons/SolidButton";
+import { ProfileData } from "./types";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
+import { API_URL } from "@/utils/constants";
 
 const DefaultProfileImage = "/images/52.jpg";
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("Required"),
   lastName: Yup.string().required("Required"),
-  email: Yup.string().email("Invalid email address").required("Required"),
-  dateOfBirth: Yup.date().required("Required"),
-  country: Yup.string().required("Required"),
   phoneNumber: Yup.string().required("Required"),
-  bio: Yup.string().required("Required"),
 });
 
 interface Country {
@@ -30,19 +31,108 @@ interface Country {
   label: string;
 }
 
-const EditProfileForm: React.FC = () => {
-  const [country, setCountry] = useState<Country | undefined>({
-    id: 1,
-    label: "Sri Lanka",
-  });
+interface Props {
+  userData: ProfileData;
+  setProfileData: React.Dispatch<React.SetStateAction<ProfileData | undefined>>;
+}
+interface EditFromValues {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  description: string;
+}
+
+const EditProfileForm: React.FC<Props> = ({ userData, setProfileData }) => {
+  const [country, setCountry] = useState<Country | undefined>(userData.country);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
   const [birthDate, setBirthDate] = useState<Date | null>(
-    new Date("2000-10-12")
+    new Date(userData.birth_date)
   );
+
+  const initialValues = {
+    firstName: userData.firstname || "",
+    lastName: userData.lastname || "",
+    email: userData.email || "",
+    phoneNumber: userData.mobile_number || "",
+    description: userData.description || "",
+  };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      // Handle the new image file here
-      console.log(event.target.files[0]);
+      setImageFile(event.target.files[0]);
+    }
+  };
+
+  const handleDelete = () => {
+    const token = Cookies.get("token");
+    console.log(token);
+    axios
+      .patch(
+        `${API_URL}/user/profile-image`,
+        {},
+        {
+          // Empty data payload
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        toast.success(res.data.message);
+        setProfileData((prev) => {
+          if (prev) {
+            return {
+              ...prev,
+              profile_image: "",
+            };
+          }
+          return prev;
+        });
+      })
+      .catch((err) => {
+        const errorMessage = err.response?.data.message ?? "Network error";
+        toast.error(errorMessage);
+      });
+  };
+
+  const handleSubmit = (values: EditFromValues) => {
+    const token = Cookies.get("token");
+    if (country?.label === undefined) {
+      toast.warning("Please select a country");
+    } else if (birthDate === null) {
+      toast.warning("Please select a birthdate");
+    } else {
+      const date = new Date(birthDate);
+      const formattedDate = date.toLocaleDateString("en-CA");
+
+      const formData = new FormData();
+      formData.append("firstname", values.firstName);
+      formData.append("lastname", values.lastName);
+      formData.append("description", values.description);
+      formData.append("mobile_number", values.phoneNumber);
+      formData.append("country", country.id.toString());
+      formData.append("birth_date", formattedDate);
+      if (imageFile) {
+        formData.append("profile_image", imageFile);
+      }
+
+      axios
+        .put(`${API_URL}/user/profile/`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data.user);
+          toast.success(res.data.message);
+          setProfileData(res.data.user);
+        })
+        .catch((err) => {
+          const errorMessage = err.response?.data.message ?? "Network error";
+          toast.error(errorMessage);
+        });
     }
   };
 
@@ -53,12 +143,17 @@ const EditProfileForm: React.FC = () => {
         className="cursor-pointer relative inline-block mx-auto"
       >
         <Image
-          src={DefaultProfileImage}
+          src={
+            userData.profile_image ||
+            userData.profile_picture ||
+            DefaultProfileImage
+          }
           alt="Profile Image"
           width={120}
           height={120}
           className="rounded-full ring-4 ring-primary_light mx-auto mt-6"
         />
+
         <svg
           className="w-12 h-12 text-gray-300  absolute top-20 right-8"
           aria-hidden="true"
@@ -87,21 +182,36 @@ const EditProfileForm: React.FC = () => {
         onChange={handleImageChange}
         className="hidden"
       />
+      <div>
+        <button
+          type="button"
+          className="absolute top-20 right-44"
+          data-modal-hide="authentication-modal"
+          onClick={handleDelete}
+        >
+          <svg
+            className="w-3 h-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+            />
+          </svg>
+          <span className="sr-only">Close modal</span>
+        </button>
+      </div>
 
       <Formik
-        initialValues={{
-          firstName: "John",
-          lastName: "Doe",
-          email: "sanjueranga16@gmail.com",
-          dateOfBirth: "12 - 10 - 2000",
-          country: "Sri Lanka",
-          phonenumber: "+94 74 5632 123",
-          bio: "",
-        }}
+        initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values) => {
-          console.log(values);
-        }}
+        onSubmit={handleSubmit}
       >
         <Form>
           <div className="pt-8 grid grid-cols-1 gap-4 mx-4">
@@ -144,6 +254,7 @@ const EditProfileForm: React.FC = () => {
                   name="email"
                   className={InputFieldClasses}
                   placeholder=" "
+                  disabled
                 />
                 <ErrorMessage
                   name="email"
@@ -155,7 +266,7 @@ const EditProfileForm: React.FC = () => {
             </div>
             <div className={InputInnerDiv}>
               <Field
-                name="phonenumber"
+                name="phoneNumber"
                 type="text"
                 placeholder=" "
                 className={InputFieldClasses}

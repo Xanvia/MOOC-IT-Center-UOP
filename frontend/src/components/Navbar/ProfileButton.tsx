@@ -3,6 +3,7 @@ import React, { RefObject, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Cookies from "js-cookie";
+import { API_URL, HOST } from "@/utils/constants";
 const DefaultProfileImage = "/images/defaultuser.png";
 interface ProfileButtonProps {
   isProfileMenuOpen: boolean;
@@ -23,7 +24,10 @@ const ProfileButton = ({
     const user = Cookies.get("user");
     if (user) {
       const parsedUser = JSON.parse(user);
-      if (parsedUser.profile_picture) {
+      if (parsedUser.profile_image) {
+        let profileImage = HOST + parsedUser.profile_image;
+        setProfileImage(profileImage);
+      } else if (parsedUser.profile_picture) {
         setProfileImage(parsedUser.profile_picture);
       }
     }
