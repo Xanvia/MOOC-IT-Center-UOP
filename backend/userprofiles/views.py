@@ -184,10 +184,20 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         return user.userprofile
 
     def retrieve(self, request, *args, **kwargs):
-        response =  super().retrieve(request, *args, **kwargs)
+        response = super().retrieve(request, *args, **kwargs)
 
         response.data = {
             "status": "success",
             "data": response.data,
+        }
+        return response
+
+    def update(self, request, *args, **kwargs):
+        request.data["user"] = request.user.id
+        response = super().update(request,partial=True, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "User info updated successfully",
         }
         return response

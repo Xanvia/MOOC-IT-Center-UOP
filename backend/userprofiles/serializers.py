@@ -3,6 +3,8 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
 from .models import UserProfile, Interest, Country, WorkExperience, Education
+from random import choice
+from django.conf import settings
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -62,8 +64,12 @@ class UserSerializer(serializers.ModelSerializer):
 
         if profile_picture is not None:
             profile_picture = profile_picture.split("=")[0]
+        else:
+            colors = ["008080", "20B2AA", "072dd0", "45a158", "fca158"]
+            random_color = choice(colors)
+            name = f"{user.first_name} {user.last_name}"
+            profile_picture = f"https://ui-avatars.com/api/?name={name}&color=ffffff&background={random_color}"
 
-        # create user profile
         UserProfile.objects.create(user=user, profile_picture=profile_picture)
 
         return user
@@ -134,17 +140,27 @@ class AddUserInfoSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    firstname = serializers.CharField(source="user.first_name")
+    lastname = serializers.CharField(source="user.last_name")
+    profile_image = serializers.ImageField(
+        max_length=None, use_url=True, required=False
+    )
 
     class Meta:
         model = UserProfile
-        fields = "__all__"
+        fields = [
+            "firstname",
+            "lastname",
+            "country",
+            "profile_picture",
+            "birth_date",
+            "mobile_number",
+            "description",
+            "profile_image",
+        ]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-
-        representation["full_name"] = (
-            f"{instance.user.first_name} {instance.user.last_name}"
-        )
         representation["email"] = instance.user.email
         representation["username"] = instance.user.username
         representation["country"] = instance.country.label
@@ -152,7 +168,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             instance.user.groups.first().name if instance.user.groups.exists() else None
         )
         representation["gender"] = instance.get_gender_display()
-        representation.pop("interests")
         representation["educations"] = EducationSerializer(
             instance.education_set.all(), many=True
         ).data
@@ -160,6 +175,23 @@ class UserProfileSerializer(serializers.ModelSerializer):
             instance.workexperience_set.all(), many=True
         ).data
         return representation
+
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop("user", None)
+        profile_picture = validated_data.pop("profile_picture", None)
+
+        super().update(instance, validated_data)
+
+        if user_data:
+            user = instance.user
+            user.first_name = user_data.get("first_name", user.first_name)
+            user.last_name = user_data.get("last_name", user.last_name)
+            user.save()
+
+        if profile_picture:
+            instance.profile_image = profile_picture
+            instance.save()
+        return instance
 
 
 class WorkExperienceSerializer(serializers.ModelSerializer):

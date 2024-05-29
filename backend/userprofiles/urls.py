@@ -17,6 +17,6 @@ urlpatterns = [
     path("login/", UserLoginApiView.as_view(), name="user-login"),
     path("countries/", CountryListAPIView.as_view(), name="country-list"),
     path(
-        "profile/", UserProfileViewSet.as_view({"get": "retrieve"}), name="user-profile"
+        "profile/", UserProfileViewSet.as_view({"get": "retrieve","put":"update"}), name="user-profile"
     ),
 ]
