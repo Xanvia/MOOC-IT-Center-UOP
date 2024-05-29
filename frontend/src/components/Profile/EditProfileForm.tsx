@@ -33,7 +33,7 @@ interface Country {
 
 interface Props {
   userData: ProfileData;
-  setProfileData: React.Dispatch<React.SetStateAction<ProfileData | undefined>>;
+  reloadData: () => void;
 }
 interface EditFromValues {
   firstName: string;
@@ -42,7 +42,7 @@ interface EditFromValues {
   description: string;
 }
 
-const EditProfileForm: React.FC<Props> = ({ userData, setProfileData }) => {
+const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
   const [country, setCountry] = useState<Country | undefined>(userData.country);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
@@ -80,15 +80,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, setProfileData }) => {
       )
       .then((res) => {
         toast.success(res.data.message);
-        setProfileData((prev) => {
-          if (prev) {
-            return {
-              ...prev,
-              profile_image: "",
-            };
-          }
-          return prev;
-        });
+        reloadData();
       })
       .catch((err) => {
         const errorMessage = err.response?.data.message ?? "Network error";
@@ -127,7 +119,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, setProfileData }) => {
         .then((res) => {
           console.log(res.data.user);
           toast.success(res.data.message);
-          setProfileData(res.data.user);
+          reloadData();
         })
         .catch((err) => {
           const errorMessage = err.response?.data.message ?? "Network error";

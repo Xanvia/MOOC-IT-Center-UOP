@@ -2,16 +2,16 @@ export interface Work {
   id: number;
   company: string;
   position: string;
-  startDate: string;
-  endDate: string;
+  start_date: string;
+  end_date: string;
 }
 
 export interface Education {
   id: number;
   institution: string;
   degree: string;
-  startDate: string;
-  endDate: string;
+  start_date: string;
+  end_date: string;
 }
 
 interface Country {
