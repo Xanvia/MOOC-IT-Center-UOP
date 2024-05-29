@@ -17,12 +17,14 @@ export interface Education {
 export interface ProfileData {
   id: number;
   profile_picture: string | null;
+  profile_image: string | null;
   description: string | null;
   birth_date: string;
   mobile_number: string;
   gender: string;
   country: string;
-  full_name: string;
+  firstname: string;
+  lastname: string;
   email: string;
   username: string;
   user_role: string;
