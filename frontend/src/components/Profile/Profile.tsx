@@ -20,6 +20,7 @@ const Profile: React.FC<ProfileProps> = ({ setEducation, setWork }) => {
   const [profileData, setProfileData] = useState<ProfileData | undefined>(
     undefined
   );
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -38,17 +39,18 @@ const Profile: React.FC<ProfileProps> = ({ setEducation, setWork }) => {
     };
 
     fetchProfileData();
-  }, []);
+  }, [reload]);
+
+  const reloadData = () => {
+    setReload((prevState) => !prevState);
+  };
 
   return (
     <div className="basis-1/2">
       <div className="relative bg-white min-h-full w-full sm:w-7/12 sm:ml-40 lg:ml-48 rounded-lg shadow-md py-14 flex flex-col items-center justify-center">
         {profileData ? (
           <>
-            <EditProfileModal
-              userData={profileData}
-              setProfileData={setProfileData}
-            />
+            <EditProfileModal userData={profileData} reloadData={reloadData} />
             <Image
               src={
                 profileData.profile_image ||

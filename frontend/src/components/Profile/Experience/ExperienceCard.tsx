@@ -2,6 +2,7 @@
 import React from "react";
 import AddExperienceModal from "./ExperienceModal";
 import { Work } from "../types";
+import { getFormattedDate } from "@/utils/FomatMonth";
 
 interface props {
   workData: Work;
@@ -18,9 +19,15 @@ const ExperienceCard: React.FC<props> = ({ workData }) => {
         <div className="text text-gray-600 mt-4">
           <h1>{workData.position}</h1>
         </div>
-        <div className="text mt-2 text-right font-medium mr-2">
+        <div className="text mt-2 text-right text-gray-500 font-medium mr-2">
           <h1>
-            {workData.startDate} - {workData.endDate}
+            <span className="mr-5 text-primary">
+              {getFormattedDate(workData.start_date)}
+            </span>
+            To
+            <span className="ml-5 text-primary">
+              {getFormattedDate(workData.end_date)}
+            </span>
           </h1>
         </div>
       </div>
