@@ -76,16 +76,20 @@ class UserSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         user_profile = instance.userprofile
+
         return {
             "access_token": str(AccessToken.for_user(instance)),
             "user": {
-            "user_id": instance.id,
-            "username": instance.username,
-            "full_name": f"{instance.first_name} {instance.last_name}",
-            "email": instance.email,
-            "profile_picture": (
-                instance.userprofile.profile_picture if  else None
-            ),
+                "user_id": instance.id,
+                "userRole": instance.groups.first().name,
+                "profile_picture": (
+                    user_profile.profile_picture if user_profile else None
+                ),
+                "profile_image": (
+                    user_profile.profile_image.url
+                    if user_profile.profile_image
+                    else None
+                ),
             },
         }
 

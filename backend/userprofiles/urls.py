@@ -7,6 +7,7 @@ from .views import (
     AddUserInfoView,
     CountryListAPIView,
     UserProfileViewSet,
+    RemoveUserProfileImage,
 )
 
 urlpatterns = [
@@ -17,6 +18,11 @@ urlpatterns = [
     path("login/", UserLoginApiView.as_view(), name="user-login"),
     path("countries/", CountryListAPIView.as_view(), name="country-list"),
     path(
-        "profile/", UserProfileViewSet.as_view({"get": "retrieve","put":"update"}), name="user-profile"
+        "profile/",
+        UserProfileViewSet.as_view({"get": "retrieve", "put": "update"}),
+        name="user-profile",
+    ),
+    path(
+        "profile-image", RemoveUserProfileImage.as_view(), name="remove-profile-image"
     ),
 ]

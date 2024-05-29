@@ -70,26 +70,11 @@ class UserLoginApiView(generics.GenericAPIView):
         except UserProfile.DoesNotExist:
             user_profile = None
         if user:
+            user_data = UserSerializer(user).data
             respObj = {
                 "status": "success",
                 "message": "User Loged In Successfully",
-                "data": {
-                    "access_token": str(AccessToken.for_user(user)),
-                    "user": {
-                        "user_id": user.id,
-                        "username": user.username,
-                        "full_name": f"{user.first_name} {user.last_name}",
-                        "email": user.email,
-                        "profile_picture": (
-                            user_profile.profile_picture if user_profile else None
-                        ),
-                        "profile_picture": (
-                            user.userprofile.profile_image.url
-                            if user.userprofile.profile_image
-                            else None
-                        ),
-                    },
-                },
+                "data": user_data,
             }
             return Response(respObj, status=status.HTTP_200_OK)
         else:
@@ -115,25 +100,13 @@ class GoogleLoginApiView(generics.GenericAPIView):
             user = User.objects.get(email=user_data.get("email"))
         except User.DoesNotExist:
             raise PermissionDenied("User does not exist")
-        user_profile = user.userprofile
+        user_data = UserSerializer(user).data
         respObj = {
             "status": "success",
             "message": "User Loged In Successfully",
-            "data": {
-                "access_token": str(AccessToken.for_user(user)),
-                "user": {
-                    "user_id": user.id,
-                    "username": user.username,
-                    "full_name": f"{user.first_name} {user.last_name}",
-                    "email": user.email,
-                    "profile_picture": (
-                        user_profile.profile.profile_image.url
-                        if user_profile.profile_image
-                        else None
-                    ),
-                },
-            },
+            "data": user_data,
         }
+
         return Response(respObj, status=status.HTTP_200_OK)
 
 
@@ -200,7 +173,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         return response
 
     def update(self, request, *args, **kwargs):
-        request.data["user"] = request.user.id
         response = super().update(request, partial=True, *args, **kwargs)
 
         response.data = {
@@ -208,3 +180,22 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             "message": "User info updated successfully",
         }
         return response
+
+
+class RemoveUserProfileImage(generics.UpdateAPIView):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+
+    def get_object(self):
+        user = self.request.user
+        return user.userprofile
+
+    def patch(self, request, *args, **kwargs):
+        user_profile = self.get_object()
+        user_profile.profile_image = None
+        user_profile.save()
+        data = {
+            "status": "success",
+            "message": "User profile image removed successfully",
+        }
+        return Response(data, status=status.HTTP_200_OK)
