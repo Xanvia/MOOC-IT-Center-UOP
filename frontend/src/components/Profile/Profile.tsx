@@ -13,7 +13,7 @@ const Profile: React.FC<ProfileProps> = ({ userData }) => {
   return (
     <div className="basis-1/2">
       <div className="relative bg-white min-h-full w-full sm:w-7/12 sm:ml-40 lg:ml-48 rounded-lg shadow-md py-14 flex flex-col items-center justify-center">
-        <EditProfileModal />
+        <EditProfileModal userData={userData} />
         <Image
           src={
             userData.profile_image ||
@@ -32,7 +32,7 @@ const Profile: React.FC<ProfileProps> = ({ userData }) => {
           email={userData.email}
           mobile_nubmer={userData.mobile_number}
           birth_date={userData.birth_date}
-          location={userData.country}
+          location={userData.country.label}
           description={userData.description}
         />
       </div>

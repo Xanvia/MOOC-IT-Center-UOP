@@ -14,6 +14,11 @@ export interface Education {
   endDate: string;
 }
 
+interface Country {
+  id: number;
+  label: string;
+}
+
 export interface ProfileData {
   id: number;
   profile_picture: string | null;
@@ -22,7 +27,7 @@ export interface ProfileData {
   birth_date: string;
   mobile_number: string;
   gender: string;
-  country: string;
+  country: Country;
   firstname: string;
   lastname: string;
   email: string;

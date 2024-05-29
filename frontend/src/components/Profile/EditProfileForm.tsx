@@ -12,6 +12,9 @@ import {
 import DropDownCountry from "../Register/DropDown/DropDownCountry";
 import ReactDatePicker from "../Register/DropDown/DatePicker";
 import SolidButton from "../Buttons/SolidButton";
+import { ProfileData } from "./types";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const DefaultProfileImage = "/images/52.jpg";
 
@@ -30,19 +33,20 @@ interface Country {
   label: string;
 }
 
-const EditProfileForm: React.FC = () => {
-  const [country, setCountry] = useState<Country | undefined>({
-    id: 1,
-    label: "Sri Lanka",
-  });
+interface Props {
+  userData: ProfileData;
+}
+
+const EditProfileForm: React.FC<Props> = ({ userData }) => {
+  const [country, setCountry] = useState<Country | undefined>(userData.country);
   const [birthDate, setBirthDate] = useState<Date | null>(
     new Date("2000-10-12")
   );
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      // Handle the new image file here
-      console.log(event.target.files[0]);
+      
+
     }
   };
 
@@ -53,7 +57,11 @@ const EditProfileForm: React.FC = () => {
         className="cursor-pointer relative inline-block mx-auto"
       >
         <Image
-          src={DefaultProfileImage}
+          src={
+            userData.profile_image ||
+            userData.profile_picture ||
+            DefaultProfileImage
+          }
           alt="Profile Image"
           width={120}
           height={120}
@@ -90,13 +98,13 @@ const EditProfileForm: React.FC = () => {
 
       <Formik
         initialValues={{
-          firstName: "John",
-          lastName: "Doe",
-          email: "sanjueranga16@gmail.com",
-          dateOfBirth: "12 - 10 - 2000",
-          country: "Sri Lanka",
-          phonenumber: "+94 74 5632 123",
-          bio: "",
+          firstName: userData.firstname,
+          lastName: userData.lastname,
+          email: userData.email,
+          dateOfBirth: userData.birth_date,
+          country: userData.country,
+          phonenumber: userData.mobile_number,
+          description: userData.description,
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
@@ -144,6 +152,7 @@ const EditProfileForm: React.FC = () => {
                   name="email"
                   className={InputFieldClasses}
                   placeholder=" "
+                  disabled
                 />
                 <ErrorMessage
                   name="email"
