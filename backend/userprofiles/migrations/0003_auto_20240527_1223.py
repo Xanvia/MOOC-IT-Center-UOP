@@ -8,14 +8,14 @@ from django.core.management import call_command
 def load_initial_data(apps, schema_editor):
     call_command(
         "loaddata",
-        "institution.json",
+        "interests.json",
         app_label="userprofiles",
     )
 
 
 def unload_initial_data(apps, schema_editor):
-    InsitutionModel = apps.get_model("userprofiles", "Institution")
-    InsitutionModel.objects.all().delete()
+    InterestModel = apps.get_model("userprofiles", "Interest")
+    InterestModel.objects.all().delete()
 
 
 class Migration(migrations.Migration):

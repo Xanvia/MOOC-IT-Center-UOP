@@ -7,14 +7,15 @@ from django.core.management import call_command
 def load_initial_data(apps, schema_editor):
     call_command(
         "loaddata",
-        "interests.json",
+        "country.json",
         app_label="userprofiles",
     )
 
 
 def unload_initial_data(apps, schema_editor):
-    InterestModel = apps.get_model("userprofiles", "Interest")
-    InterestModel.objects.all().delete()
+    CountryModel = apps.get_model("userprofiles", "Country")
+    CountryModel.objects.all().delete()
+
 
 
 class Migration(migrations.Migration):
