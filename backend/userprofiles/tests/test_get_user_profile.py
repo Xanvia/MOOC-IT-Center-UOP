@@ -7,7 +7,6 @@ from userprofiles.models import (
     Country,
     WorkExperience,
     Education,
-    Institution,
 )
 from rest_framework_simplejwt.tokens import AccessToken
 from collections import OrderedDict
@@ -51,11 +50,10 @@ class GetUserProfileViewSetTest(APITestCase):
             end_date="2021-01",
         )
 
-        institution = Institution.objects.get(id=1)
         education = Education.objects.create(
             user_profile=self.user_profile,
             degree="Bsc Hons in Computer Science",
-            institution=institution,
+            institution="University of Nairobi",
             start_date="2015-01",
             end_date="2019-01",
         )
