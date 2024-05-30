@@ -191,7 +191,18 @@ export const NavLinkContainer = clsx(
   "md:justify-start"
 );
 
-export const NavLink = clsx("text-white", "hover:text-gray-300");
+export const NavLink = clsx("text-white", "hover:text-gray-300", "pt-5");
+
+export const NavLinkSpecial = clsx(
+  "text-primary",
+  "hover:bg-primary_light",
+  "font-bold",
+  "bg-white",
+  "pt-[16px]",
+  "px-2",
+  "border-primary",
+  "border-4"
+);
 
 export const NotificationButtonMobileClasses = clsx(
   "relative",

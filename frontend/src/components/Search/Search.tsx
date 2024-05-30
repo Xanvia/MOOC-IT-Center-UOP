@@ -15,7 +15,7 @@ const Search: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center pb-7 px-7 bg-[#fff]">
+    <div className="flex justify-center pb-7 px-7">
       <form onSubmit={handleSubmit} className="w-1/2 pt-[150px] pb-5 ">
         <div className="relative">
           <input
