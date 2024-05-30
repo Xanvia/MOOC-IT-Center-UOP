@@ -29,7 +29,7 @@ urlpatterns = [
     ),
     path(
         "work/",
-        WorkExperienceApiView.as_view({"post": "create", "delete": "destroy"}),
+        WorkExperienceApiView.as_view({"post": "create"}),
         name="work-experience",
     ),
     path(
@@ -39,7 +39,7 @@ urlpatterns = [
     ),
     path(
         "education/",
-        EducationApiView.as_view({"post": "create", "delete": "destroy"}),
+        EducationApiView.as_view({"post": "create"}),
         name="education",
     ),
     path(
