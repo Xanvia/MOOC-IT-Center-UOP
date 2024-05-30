@@ -13,7 +13,11 @@ import {
   NavLinkSpecial,
   NotificationButtonClasses,
   NotificationButtonMobileClasses,
+  SecondaryButtonClass,
 } from "../components.styles";
+import SolidButton from "../Buttons/SolidButton";
+import PrimaryButton from "../Buttons/PrimaryButton";
+import SecondaryButton from "../Buttons/SecondaryButton";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -113,14 +117,14 @@ const Navbar = () => {
             <div className="hidden sm:flex flex-shrink-0 items-center">
               <h1 className="text-white text-3xl sm:font-bold">OpenEd</h1>
             </div>
-            <div className="hidden py-5 md:py-10 lg:pl-20 md:ml-6 md:block lg:text-base font-medium text-sm">
-              <div className="flex h-16 space-x-4">
+            <div className="hidden pt-2 lg:pl-20 md:ml-6 md:block lg:text-base font-medium text-sm">
+              <div className="flex space-x-4">
                 <Link href="/" className={NavLink}>
                   HOME
                 </Link>
-                <Link href="/courses" className={NavLinkSpecial}>
+                {/* <Link href="/courses" className={NavLink}>
                   MY COURSES
-                </Link>
+                </Link> */}
 
                 <Link href="/" className={NavLink}>
                   ABOUT US
@@ -129,6 +133,11 @@ const Navbar = () => {
                 <Link href="/" className={NavLink}>
                   FAQ
                 </Link>
+                {isLoggedIn && (
+                  <Link href="/courses" className={SecondaryButtonClass}>
+                    My Courses
+                  </Link>
+                )}
               </div>
             </div>
           </div>

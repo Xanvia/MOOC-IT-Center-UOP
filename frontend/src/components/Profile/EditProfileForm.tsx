@@ -45,6 +45,9 @@ interface EditFromValues {
 const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
   const [country, setCountry] = useState<Country | undefined>(userData.country);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(
+    userData.profile_image || userData.profile_picture || DefaultProfileImage
+  );
 
   const [birthDate, setBirthDate] = useState<Date | null>(
     new Date(userData.birth_date)
@@ -61,6 +64,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setImageFile(event.target.files[0]);
+      setImagePreviewUrl(URL.createObjectURL(event.target.files[0]));
     }
   };
 
@@ -135,11 +139,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
         className="cursor-pointer relative inline-block mx-auto"
       >
         <Image
-          src={
-            userData.profile_image ||
-            userData.profile_picture ||
-            DefaultProfileImage
-          }
+          src={imagePreviewUrl}
           alt="Profile Image"
           width={120}
           height={120}
