@@ -10,6 +10,7 @@ import {
   MobileMenuClasses,
   NavLink,
   NavLinkContainer,
+  NavLinkSpecial,
   NotificationButtonClasses,
   NotificationButtonMobileClasses,
 } from "../components.styles";
@@ -112,17 +113,19 @@ const Navbar = () => {
             <div className="hidden sm:flex flex-shrink-0 items-center">
               <h1 className="text-white text-3xl sm:font-bold">OpenEd</h1>
             </div>
-            <div className="hidden py-5 md:py-10 lg:pl-20 md:ml-6 md:block lg:text-base text-sm">
-              <div className="flex space-x-4">
+            <div className="hidden py-5 md:py-10 lg:pl-20 md:ml-6 md:block lg:text-base font-medium text-sm">
+              <div className="flex h-16 space-x-4">
                 <Link href="/" className={NavLink}>
                   HOME
                 </Link>
+                <Link href="/courses" className={NavLinkSpecial}>
+                  MY COURSES
+                </Link>
+
                 <Link href="/" className={NavLink}>
                   ABOUT US
                 </Link>
-                <Link href="/" className={NavLink}>
-                  CONTACTS
-                </Link>
+
                 <Link href="/" className={NavLink}>
                   FAQ
                 </Link>
@@ -207,9 +210,7 @@ const Navbar = () => {
             <a href="#" className={MobileLinkClasses}>
               ABOUT US
             </a>
-            <a href="#" className={MobileLinkClasses}>
-              CONTACTS
-            </a>
+
             <a href="#" className={MobileLinkClasses}>
               FAQ
             </a>
