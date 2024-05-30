@@ -9,11 +9,12 @@ from .serializers import (
     CountrySerializer,
     UserProfileSerializer,
     WorkExperienceSerializer,
+    EducationSerializer,
 )
 from .utils import google_authenticate
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
-from .models import UserProfile, Interest, Country, WorkExperience
+from .models import Education, UserProfile, Interest, Country, WorkExperience
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 
@@ -243,3 +244,46 @@ class WorkExperienceApiView(viewsets.ModelViewSet):
             "message": "Work experience deleted successfully",
         }
         return response
+    
+
+class EducationApiView(viewsets.ModelViewSet):
+    queryset = Education.objects.all()
+    serializer_class = EducationSerializer
+
+    def filter_queryset(self, queryset):
+        return (
+            super()
+            .filter_queryset(queryset)
+            .filter(user_profile=self.request.user.userprofile)
+        )
+
+    def create(self, request, *args, **kwargs):
+
+        request.data["user_profile"] = request.user.userprofile.id
+        response = super().create(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Education details added successfully",
+        }
+        return response
+
+    def update(self, request, *args, **kwargs):
+
+        response = super().update(request, partial=True, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Education details updated successfully",
+        }
+        return response
+
+    def destroy(self, request, *args, **kwargs):
+
+        response = super().destroy(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Education details deleted successfully",
+        }
+        return response    
