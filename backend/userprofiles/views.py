@@ -8,11 +8,12 @@ from .serializers import (
     AddUserInfoSerializer,
     CountrySerializer,
     UserProfileSerializer,
+    WorkExperienceSerializer,
 )
 from .utils import google_authenticate
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
-from .models import UserProfile, Interest, Country
+from .models import UserProfile, Interest, Country, WorkExperience
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 
@@ -199,3 +200,46 @@ class RemoveUserProfileImage(generics.UpdateAPIView):
             "message": "User profile image removed successfully",
         }
         return Response(data, status=status.HTTP_200_OK)
+
+
+class WorkExperienceApiView(viewsets.ModelViewSet):
+    queryset = WorkExperience.objects.all()
+    serializer_class = WorkExperienceSerializer
+
+    def filter_queryset(self, queryset):
+        return (
+            super()
+            .filter_queryset(queryset)
+            .filter(user_profile=self.request.user.userprofile)
+        )
+
+    def create(self, request, *args, **kwargs):
+
+        request.data["user_profile"] = request.user.userprofile.id
+        response = super().create(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Work experience added successfully",
+        }
+        return response
+
+    def update(self, request, *args, **kwargs):
+
+        response = super().update(request, partial=True, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Work experience updated successfully",
+        }
+        return response
+
+    def destroy(self, request, *args, **kwargs):
+
+        response = super().destroy(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Work experience deleted successfully",
+        }
+        return response

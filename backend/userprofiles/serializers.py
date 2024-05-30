@@ -199,7 +199,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class WorkExperienceSerializer(serializers.ModelSerializer):
-
+    
     class Meta:
         model = WorkExperience
         fields = "__all__"
@@ -207,8 +207,8 @@ class WorkExperienceSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation.pop("user_profile")
-
         return representation
+
 
 
 class EducationSerializer(serializers.ModelSerializer):
@@ -222,3 +222,5 @@ class EducationSerializer(serializers.ModelSerializer):
         representation["institution"] = instance.institution.label
         representation.pop("user_profile")
         return representation
+    
+    

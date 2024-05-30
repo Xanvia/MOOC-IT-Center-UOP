@@ -51,7 +51,7 @@ class EducationAdmin(admin.ModelAdmin):
 
 
 class WorkExperienceAdmin(admin.ModelAdmin):
-    list_display = ("user_profile", "company", "position", "start_date", "end_date")
+    list_display = ("user_profile", "company", "position", "id")
 
 
 admin.site.register(Country, CountryAdmin)
