@@ -206,8 +206,6 @@ class WorkExperienceSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        if instance.end_date is None:
-            representation["end_date"] = "Present"
         representation.pop("user_profile")
         return representation
 
@@ -223,6 +221,4 @@ class EducationSerializer(serializers.ModelSerializer):
         representation["institution"] = instance.institution.label
         representation.pop("user_profile")
 
-        if instance.end_date is None:
-            representation["end_date"] = "Present"
         return representation
