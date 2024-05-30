@@ -35,7 +35,7 @@ const Navbar = () => {
     Cookies.remove("token");
     Cookies.remove("user");
     setIsLoggedIn(false);
-    window.location.reload();
+    window.location.href = "/";
   };
 
   const handleDocumentClick = (event: MouseEvent) => {

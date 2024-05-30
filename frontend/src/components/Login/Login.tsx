@@ -164,7 +164,7 @@ export default function Login() {
                     />
                     <br />
                     <div className="text-blue-950 pt-16 text-center">
-                      Already have an account? <u>Login</u>
+                      Don't have an account? <u>Register</u>
                     </div>
                   </div>
                 </Form>

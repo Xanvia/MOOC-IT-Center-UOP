@@ -454,6 +454,51 @@ export const XpCardModalClasses = clsx(
   "rounded-lg",
   "shadow-2xl",
   "sm:w-[400px]",
-  "sm:h-[500px]",
+  "sm:h-auto",
   "pt-10"
+);
+
+export const ProfileBackground = clsx(
+  "relative",
+  "bg-white",
+  "min-h-[800px]",
+  "w-full",
+  "sm:w-7/12",
+  "sm:ml-40",
+  "lg:ml-48",
+  "rounded-lg",
+  "shadow-md",
+  "py-14",
+  "flex",
+  "flex-col",
+  "items-center",
+  "justify-center"
+);
+
+export const DeleteButtonClasses = clsx(
+  "bg-button_yellow",
+  "px-5",
+  "min-w-64",
+  "hover:bg-red-500",
+  "hover:text-white",
+  "align-middle",
+  "select-none",
+  "font-sans",
+  "font-bold",
+  "text-center",
+  "uppercase",
+  "transition-all",
+  "disabled:opacity-90",
+  "disabled:shadow-none",
+  "disabled:pointer-events-none",
+  "text-xs",
+  "py-3",
+  "px-16",
+  "rounded-lg",
+  "bg-accent",
+  "text-red-500",
+  "shadow-md",
+  "shadow-gray-900/10",
+  "hover:shadow-lg",
+  "hover:shadow-gray-900/20"
 );

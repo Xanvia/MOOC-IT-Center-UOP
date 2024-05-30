@@ -88,7 +88,7 @@ class Education(models.Model):
     institution = models.ForeignKey(Institution, on_delete=models.PROTECT)
     degree = models.CharField(max_length=500)
     start_date = models.CharField(max_length=7)
-    end_date = models.CharField(max_length=7)
+    end_date = models.CharField(max_length=7,blank=True, null=True)
 
     def __str__(self):
         return f"{self.user_profile.user.username}'s Education"
@@ -99,7 +99,7 @@ class WorkExperience(models.Model):
     company = models.CharField(max_length=100)
     position = models.CharField(max_length=100)
     start_date = models.CharField(max_length=7)
-    end_date = models.CharField(max_length=7)
+    end_date = models.CharField(max_length=7, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user_profile.user.username}'s Work Experience"
