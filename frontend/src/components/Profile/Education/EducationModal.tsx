@@ -31,14 +31,13 @@ const EducationModal: React.FC<Props> = ({
   eduData,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
 
-  useEffect(() => {
-    setStartDate(eduData?.start_date ? new Date(eduData.start_date) : null);
-    setEndDate(eduData?.end_date ? new Date(eduData.end_date) : null);
-  });
-
+  const [startDate, setStartDate] = useState<Date | null>(
+    eduData ? new Date(eduData.start_date) : null
+  );
+  const [endDate, setEndDate] = useState<Date | null>(
+    eduData && eduData.end_date ? new Date(eduData.end_date) : null
+  );
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -126,7 +125,7 @@ const EducationModal: React.FC<Props> = ({
                       </span>
                       <MonthPicker
                         setDate={setStartDate}
-                        initialDate={startDate}
+                        initialDate={Action === "Edit" ? endDate : null}
                         text="Start Date"
                       />
                     </div>
@@ -139,7 +138,7 @@ const EducationModal: React.FC<Props> = ({
                         </span>
                         <MonthPicker
                           setDate={setEndDate}
-                          initialDate={endDate}
+                          initialDate={Action === "Edit" ? endDate : null}
                           text="End Date"
                         />
                       </div>

@@ -47,13 +47,13 @@ const AddExperienceModal: React.FC<Props> = ({
   realoadData,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
 
-  useEffect(() => {
-    setStartDate(workData?.start_date ? new Date(workData.start_date) : null);
-    setEndDate(workData?.end_date ? new Date(workData.end_date) : null);
-  });
+  const [startDate, setStartDate] = useState<Date | null>(
+    new Date(workData?.start_date || new Date().toISOString())
+  );
+  const [endDate, setEndDate] = useState<Date | null>(
+    workData?.end_date ? new Date(workData.end_date) : null
+  );
 
   const handleSubmit = async (values: FormData) => {
     try {
@@ -66,7 +66,7 @@ const AddExperienceModal: React.FC<Props> = ({
         start_date: startDate ? format(startDate, "yyyy-MM") : null,
         end_date: endDate ? format(endDate, "yyyy-MM") : null,
       };
-
+      console.log(data);
       let response;
       if (Action === "Edit") {
         response = await axios.put(
@@ -188,7 +188,7 @@ const AddExperienceModal: React.FC<Props> = ({
                       <MonthPicker
                         setDate={setStartDate}
                         text="Start Date"
-                        initialDate={startDate}
+                        initialDate={Action === "Edit" ? endDate : null}
                       />
                     </div>
                   </div>
@@ -201,7 +201,7 @@ const AddExperienceModal: React.FC<Props> = ({
                         <MonthPicker
                           setDate={setEndDate}
                           text="End Date"
-                          initialDate={endDate}
+                          initialDate={Action === "Edit" ? endDate : null}
                         />
                       </div>
                     </div>
