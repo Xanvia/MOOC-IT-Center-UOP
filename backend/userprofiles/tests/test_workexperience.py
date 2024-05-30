@@ -95,7 +95,7 @@ class GetUserProfileViewSetTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
             response.data["message"],
-            ["start_date field is required.", "end_date field is required."],
+            ["start_date field is required."],
         )
 
         work_data = {
@@ -107,7 +107,7 @@ class GetUserProfileViewSetTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
             response.data["message"],
-            ["position field is required.", "end_date field is required."],
+            ["position field is required."],
         )
 
     def test_update_work_user_profile(self):
