@@ -457,3 +457,20 @@ export const XpCardModalClasses = clsx(
   "sm:h-[500px]",
   "pt-10"
 );
+
+export const ProfileBackground = clsx(
+  "relative",
+  "bg-white",
+  "min-h-[800px]",
+  "w-full",
+  "sm:w-7/12",
+  "sm:ml-40",
+  "lg:ml-48",
+  "rounded-lg",
+  "shadow-md",
+  "py-14",
+  "flex",
+  "flex-col",
+  "items-center",
+  "justify-center"
+);

@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 import { API_URL } from "@/utils/constants";
 const DefaultProfileImage = "/images/52.jpg";
 import { toast } from "sonner";
+import { ProfileBackground } from "../components.styles";
 
 const token = Cookies.get("token");
 interface ProfileProps {
@@ -47,7 +48,7 @@ const Profile: React.FC<ProfileProps> = ({ setEducation, setWork }) => {
 
   return (
     <div className="basis-1/2">
-      <div className="relative bg-white min-h-full w-full sm:w-7/12 sm:ml-40 lg:ml-48 rounded-lg shadow-md py-14 flex flex-col items-center justify-center">
+      <div className={ProfileBackground}>
         {profileData ? (
           <>
             <EditProfileModal userData={profileData} reloadData={reloadData} />
