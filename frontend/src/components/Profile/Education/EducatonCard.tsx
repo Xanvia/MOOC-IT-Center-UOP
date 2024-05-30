@@ -9,7 +9,6 @@ interface props {
 }
 
 const EducationCard: React.FC<props> = ({ eduData }) => {
-  console.log(eduData);
   return (
     <div className="relative flex Box bg-white md:rounded-lg shadow-md border-2 px-4 py-4 h-40 sm:w-5/6 w-full my-5 mb-8">
       <EducationModal CardTitle="Edit Education Details" Action="Edit" />

@@ -25,6 +25,7 @@ import { API_URL } from "@/utils/constants";
 import { format } from "date-fns";
 import { Work } from "../types";
 import { relative } from "path";
+import DeleteButton from "@/components/Buttons/DeleteButton";
 
 const token = Cookies.get("token");
 
@@ -94,6 +95,24 @@ const AddExperienceModal: React.FC<Props> = ({
 
   const handleInsideClick = () => {
     setIsOpen(false);
+  };
+
+  const handleDelete = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const response = await axios.delete(
+        `${API_URL}/user/work/${workData?.id}/`,
+        { headers }
+      );
+      toast.success("Work Experience Deleted");
+      console.log(response.data)
+      realoadData();
+      setIsOpen(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -186,13 +205,22 @@ const AddExperienceModal: React.FC<Props> = ({
                     </div>
                   </div>
                 </div>
-                <div className="pl-[70px] pt-12">
+                <div
+                  className={`pl-[70px] pt-10 ${
+                    Action === "Edit" ? "mb-8" : "mb-12"
+                  }`}
+                >
                   <SolidButton
                     type="submit"
                     text="S U B M I T"
                     onClick={() => {}}
                   />
                 </div>
+                {Action === "Edit" && (
+                  <div className="pl-[70px]  mb-10 ">
+                    <DeleteButton text="D E L E T E" onClick={handleDelete} />
+                  </div>
+                )}
               </Form>
             </Formik>
           </div>
