@@ -9,6 +9,7 @@ from .views import (
     UserProfileViewSet,
     RemoveUserProfileImage,
     WorkExperienceApiView,
+    EducationApiView,
 )
 
 urlpatterns = [
@@ -35,5 +36,15 @@ urlpatterns = [
         "work/<int:pk>/",
         WorkExperienceApiView.as_view({"put": "update", "delete": "destroy"}),
         name="work-experience-detail",
+    ),
+    path(
+        "education/",
+        EducationApiView.as_view({"post": "create", "delete": "destroy"}),
+        name="education",
+    ),
+    path(
+        "education/<int:pk>/",
+        EducationApiView.as_view({"put": "update", "delete": "destroy"}),
+        name="education-detail",
     ),
 ]
