@@ -27,7 +27,9 @@ const EducationCard: React.FC<props> = ({ eduData }) => {
             </span>
             To
             <span className="ml-5 text-primary">
-              {getFormattedDate(eduData.end_date)}
+              {eduData.end_date
+                ? getFormattedDate(eduData.end_date)
+                : "Present"}
             </span>
           </h1>
         </div>

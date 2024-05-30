@@ -1,51 +1,19 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import ProfileInfo from "./ProfileInfo";
 import EditProfileModal from "./EditProfile";
 import { ProfileData, Work, Education } from "@/components/Profile/types";
-import axios from "axios";
 import Cookies from "js-cookie";
-import { API_URL } from "@/utils/constants";
 const DefaultProfileImage = "/images/52.jpg";
-import { toast } from "sonner";
 import { ProfileBackground } from "../components.styles";
 
-const token = Cookies.get("token");
 interface ProfileProps {
-  setWork: React.Dispatch<React.SetStateAction<Work[]>>;
-  setEducation: React.Dispatch<React.SetStateAction<Education[]>>;
+  profileData: ProfileData | undefined;
+  reloadData: () => void;
 }
 
-const Profile: React.FC<ProfileProps> = ({ setEducation, setWork }) => {
-  const [profileData, setProfileData] = useState<ProfileData | undefined>(
-    undefined
-  );
-  const [reload, setReload] = useState(false);
-
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/user/profile/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setProfileData(response.data.data);
-        setWork(response.data.data.work_experiences);
-        setEducation(response.data.data.educations);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchProfileData();
-  }, [reload]);
-
-  const reloadData = () => {
-    setReload((prevState) => !prevState);
-  };
-
+const Profile: React.FC<ProfileProps> = ({ profileData, reloadData }) => {
   return (
     <div className="basis-1/2">
       <div className={ProfileBackground}>

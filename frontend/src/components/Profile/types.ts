@@ -3,7 +3,7 @@ export interface Work {
   company: string;
   position: string;
   start_date: string;
-  end_date: string;
+  end_date: string | null;
 }
 
 export interface Education {
@@ -11,7 +11,7 @@ export interface Education {
   institution: string;
   degree: string;
   start_date: string;
-  end_date: string;
+  end_date: string | null;
 }
 
 interface Country {
