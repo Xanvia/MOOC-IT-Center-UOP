@@ -1,6 +1,6 @@
 "use client";
 import CreateButton from "@/components/Buttons/CreateButton";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import {
@@ -17,14 +17,27 @@ import EditButton from "@/components/Buttons/EditButton";
 import MonthPicker from "../MonthPicker";
 import CloseButton from "@/components/Buttons/CloseButton";
 import SolidButton from "@/components/Buttons/SolidButton";
-
+import { Education } from "../types";
+import DeleteButton from "@/components/Buttons/DeleteButton";
 interface Props {
   CardTitle: string;
   Action: string;
+  eduData?: Education;
 }
 
-const EducationModal: React.FC<Props> = ({ CardTitle, Action }: Props) => {
+const EducationModal: React.FC<Props> = ({
+  CardTitle,
+  Action,
+  eduData,
+}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
+  useEffect(() => {
+    setStartDate(eduData?.start_date ? new Date(eduData.start_date) : null);
+    setEndDate(eduData?.end_date ? new Date(eduData.end_date) : null);
+  });
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -36,7 +49,12 @@ const EducationModal: React.FC<Props> = ({ CardTitle, Action }: Props) => {
 
   const handleInsideClick = () => {
     setIsOpen(false);
+    setStartDate(null);
+    setEndDate(null);
   };
+
+  const handleDelete = async () => {};
+  const handleSubmit = async (values: FormData) => {};
 
   return (
     <>
@@ -106,7 +124,11 @@ const EducationModal: React.FC<Props> = ({ CardTitle, Action }: Props) => {
                       <span className="text-sm font-medium text-gray-400">
                         From
                       </span>
-                      <MonthPicker setDate={() => {}} text="Start Date" />
+                      <MonthPicker
+                        setDate={setStartDate}
+                        initialDate={startDate}
+                        text="Start Date"
+                      />
                     </div>
                   </div>
                   <div className="py-4">
@@ -115,18 +137,31 @@ const EducationModal: React.FC<Props> = ({ CardTitle, Action }: Props) => {
                         <span className="text-sm font-medium text-gray-400">
                           To
                         </span>
-                        <MonthPicker setDate={() => {}} text="End Date" />
+                        <MonthPicker
+                          setDate={setEndDate}
+                          initialDate={endDate}
+                          text="End Date"
+                        />
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="pl-[70px] pt-12">
+                <div
+                  className={`pl-[70px] pt-10 ${
+                    Action === "Edit" ? "mb-8" : "mb-12"
+                  }`}
+                >
                   <SolidButton
                     type="submit"
                     text="S U B M I T"
                     onClick={() => {}}
                   />
                 </div>
+                {Action === "Edit" && (
+                  <div className="pl-[70px]  mb-10 ">
+                    <DeleteButton text="D E L E T E" onClick={handleDelete} />
+                  </div>
+                )}
               </Form>
             </Formik>
           </div>

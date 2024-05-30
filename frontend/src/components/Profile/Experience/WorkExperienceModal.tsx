@@ -1,7 +1,7 @@
 "use client";
 import CreateButton from "@/components/Buttons/CreateButton";
 import EditButton from "@/components/Buttons/EditButton";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import {
@@ -24,7 +24,6 @@ import { toast } from "sonner";
 import { API_URL } from "@/utils/constants";
 import { format } from "date-fns";
 import { Work } from "../types";
-import { relative } from "path";
 import DeleteButton from "@/components/Buttons/DeleteButton";
 
 const token = Cookies.get("token");
@@ -48,12 +47,13 @@ const AddExperienceModal: React.FC<Props> = ({
   realoadData,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [startDate, setStartDate] = useState<Date | null>(
-    new Date(workData?.start_date || new Date().toISOString())
-  );
-  const [endDate, setEndDate] = useState<Date | null>(
-    workData?.end_date ? new Date(workData.end_date) : null
-  );
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
+  useEffect(() => {
+    setStartDate(workData?.start_date ? new Date(workData.start_date) : null);
+    setEndDate(workData?.end_date ? new Date(workData.end_date) : null);
+  });
 
   const handleSubmit = async (values: FormData) => {
     try {
@@ -95,6 +95,8 @@ const AddExperienceModal: React.FC<Props> = ({
 
   const handleInsideClick = () => {
     setIsOpen(false);
+    setStartDate(null);
+    setEndDate(null);
   };
 
   const handleDelete = async () => {
@@ -107,7 +109,7 @@ const AddExperienceModal: React.FC<Props> = ({
         { headers }
       );
       toast.success("Work Experience Deleted");
-      console.log(response.data)
+      console.log(response.data);
       realoadData();
       setIsOpen(false);
     } catch (error) {
