@@ -199,16 +199,17 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class WorkExperienceSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = WorkExperience
         fields = "__all__"
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
+        if instance.end_date is None:
+            representation["end_date"] = "Present"
         representation.pop("user_profile")
         return representation
-
 
 
 class EducationSerializer(serializers.ModelSerializer):
@@ -221,6 +222,7 @@ class EducationSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation["institution"] = instance.institution.label
         representation.pop("user_profile")
+
+        if instance.end_date is None:
+            representation["end_date"] = "Present"
         return representation
-    
-    
