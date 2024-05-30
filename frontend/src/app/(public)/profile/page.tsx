@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Profile from "@/components/Profile/Profile";
-import ExperienceModal from "@/components/Profile/Experience/ExperienceModal";
-import ExperienceCard from "@/components/Profile/Experience/ExperienceCard";
+import ExperienceModal from "@/components/Profile/Experience/WorkExperienceModal";
+import ExperienceCard from "@/components/Profile/Experience/WorkExperienceCard";
 import EducationCard from "@/components/Profile/Education/EducatonCard";
 import EducationModal from "@/components/Profile/Education/EducationModal";
 import { Work, Education, ProfileData } from "@/components/Profile/types";
@@ -64,7 +64,11 @@ export default function ProfilePage() {
             />
             {work && work.length > 0 ? (
               work.map((workItem) => (
-                <ExperienceCard key={workItem.id} workData={workItem} reload={reloadData}/>
+                <ExperienceCard
+                  key={workItem.id}
+                  workData={workItem}
+                  reload={reloadData}
+                />
               ))
             ) : (
               <div className="py-10 text-xl">
