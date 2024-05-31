@@ -19,16 +19,31 @@ import CloseButton from "@/components/Buttons/CloseButton";
 import SolidButton from "@/components/Buttons/SolidButton";
 import { Education } from "../types";
 import DeleteButton from "@/components/Buttons/DeleteButton";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
+import { API_URL } from "@/utils/constants";
+import { format } from "date-fns";
+
+const token = Cookies.get("token");
+
 interface Props {
   CardTitle: string;
   Action: string;
   eduData?: Education;
+  realoadData: () => void;
+}
+
+interface FormData {
+  institution: string;
+  degree: string;
 }
 
 const EducationModal: React.FC<Props> = ({
   CardTitle,
   Action,
   eduData,
+  realoadData,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -38,6 +53,12 @@ const EducationModal: React.FC<Props> = ({
   const [endDate, setEndDate] = useState<Date | null>(
     eduData && eduData.end_date ? new Date(eduData.end_date) : null
   );
+
+  useEffect(() => {
+    setStartDate(eduData?.start_date ? new Date(eduData.start_date) : null);
+    setEndDate(eduData?.end_date ? new Date(eduData.end_date) : null);
+  });
+
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -52,8 +73,53 @@ const EducationModal: React.FC<Props> = ({
     setEndDate(null);
   };
 
-  const handleDelete = async () => {};
-  const handleSubmit = async (values: FormData) => {};
+  const handleSubmit = async (values: FormData) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const data = {
+        ...values,
+        start_date: startDate ? format(startDate, "yyyy-MM") : null,
+        end_date: endDate ? format(endDate, "yyyy-MM") : null,
+      };
+      console.log(data);
+      let response;
+      if (Action === "Edit") {
+        response = await axios.put(
+          `${API_URL}/user/education/${eduData?.id}/`,
+          data,
+          { headers }
+        );
+      } else {
+        response = await axios.post(`${API_URL}/user/education/`, data, { headers });
+      }
+      toast.success(response.data.message);
+      realoadData();
+      setIsOpen(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const response = await axios.delete(
+        `${API_URL}/user/education/${eduData?.id}/`,
+        { headers }
+      );
+      toast.success("Education Details Deleted");
+      console.log(response.data);
+      realoadData();
+      setIsOpen(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -75,14 +141,14 @@ const EducationModal: React.FC<Props> = ({
             </div>
             <Formik
               initialValues={{
-                institution: "",
-                degree: "",
+                institution: eduData?.institution || "",
+                degree: eduData?.degree || "",
               }}
               validationSchema={Yup.object({
                 company: Yup.string().required("Required"),
                 position: Yup.string().required("Required"),
               })}
-              onSubmit={() => {}}
+              onSubmit={handleSubmit}
             >
               <Form>
                 <div className="pt-6 grid grid-cols-1 gap-6 mx-12">
@@ -125,7 +191,7 @@ const EducationModal: React.FC<Props> = ({
                       </span>
                       <MonthPicker
                         setDate={setStartDate}
-                        initialDate={Action === "Edit" ? endDate : null}
+                        //initialDate={Action === "Edit" ? endDate : null}
                         text="Start Date"
                       />
                     </div>
@@ -138,7 +204,7 @@ const EducationModal: React.FC<Props> = ({
                         </span>
                         <MonthPicker
                           setDate={setEndDate}
-                          initialDate={Action === "Edit" ? endDate : null}
+                          //initialDate={Action === "Edit" ? endDate : null}
                           text="End Date"
                         />
                       </div>
