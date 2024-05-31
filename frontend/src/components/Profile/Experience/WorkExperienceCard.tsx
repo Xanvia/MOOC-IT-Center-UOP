@@ -14,7 +14,6 @@ const ExperienceCard: React.FC<props> = ({ workData, reload }) => {
     <div className="relative flex Box bg-white md:rounded-lg shadow-md border-2 px-4 py-4 h-40 sm:w-5/6 w-full my-5 mb-8">
       <AddExperienceModal
         CardTitle="Edit Work Experience"
-        Action="Edit"
         workData={workData}
         realoadData={reload}
       />

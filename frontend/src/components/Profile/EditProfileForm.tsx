@@ -21,9 +21,9 @@ import { API_URL } from "@/utils/constants";
 const DefaultProfileImage = "/images/52.jpg";
 
 const validationSchema = Yup.object({
-  firstName: Yup.string().required("Required"),
-  lastName: Yup.string().required("Required"),
-  phoneNumber: Yup.string().required("Required"),
+  firstName: Yup.string().required("First Name is Required"),
+  lastName: Yup.string().required("Last Name is Required"),
+  phoneNumber: Yup.string().required("Phone number is Required"),
 });
 
 interface Country {
@@ -256,19 +256,21 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
                 <label className={InputLabel}>Email</label>
               </div>
             </div>
-            <div className={InputInnerDiv}>
-              <Field
-                name="phoneNumber"
-                type="text"
-                placeholder=" "
-                className={InputFieldClasses}
-              />
-              <label className={InputLabel}>Phone number</label>
-              <ErrorMessage
-                name="phonenumber"
-                component="div"
-                className="top-0 left-0 text-red-600 text-xs"
-              />
+            <div className={InputOuterDiv}>
+              <div className={InputInnerDiv}>
+                <Field
+                  type="text"
+                  name="firstName"
+                  className={InputFieldClasses}
+                  placeholder=" "
+                />
+                <ErrorMessage
+                  name="firstName"
+                  component="div"
+                  className="top-0 left-0 text-red-600 text-xs"
+                />
+                <label className={InputLabel}>Phone Number</label>
+              </div>
             </div>
 
             <div className={InputOuterDiv}>
