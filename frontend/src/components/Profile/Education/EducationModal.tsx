@@ -29,7 +29,6 @@ const token = Cookies.get("token");
 
 interface Props {
   CardTitle: string;
-  Action: string;
   eduData?: Education;
   realoadData: () => void;
 }
@@ -41,7 +40,6 @@ interface FormData {
 
 const EducationModal: React.FC<Props> = ({
   CardTitle,
-  Action,
   eduData,
   realoadData,
 }: Props) => {
@@ -54,11 +52,6 @@ const EducationModal: React.FC<Props> = ({
     eduData && eduData.end_date ? new Date(eduData.end_date) : null
   );
 
-  useEffect(() => {
-    setStartDate(eduData?.start_date ? new Date(eduData.start_date) : null);
-    setEndDate(eduData?.end_date ? new Date(eduData.end_date) : null);
-  });
-
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -69,8 +62,6 @@ const EducationModal: React.FC<Props> = ({
 
   const handleInsideClick = () => {
     setIsOpen(false);
-    setStartDate(null);
-    setEndDate(null);
   };
 
   const handleSubmit = async (values: FormData) => {
@@ -86,14 +77,16 @@ const EducationModal: React.FC<Props> = ({
       };
       console.log(data);
       let response;
-      if (Action === "Edit") {
+      if (eduData) {
         response = await axios.put(
           `${API_URL}/user/education/${eduData?.id}/`,
           data,
           { headers }
         );
       } else {
-        response = await axios.post(`${API_URL}/user/education/`, data, { headers });
+        response = await axios.post(`${API_URL}/user/education/`, data, {
+          headers,
+        });
       }
       toast.success(response.data.message);
       realoadData();
@@ -123,7 +116,7 @@ const EducationModal: React.FC<Props> = ({
 
   return (
     <>
-      {Action === "Edit" ? (
+      {eduData ? (
         <EditButton onClick={toggleModal} />
       ) : (
         <CreateButton onClick={toggleModal} text="Education" />
@@ -145,8 +138,8 @@ const EducationModal: React.FC<Props> = ({
                 degree: eduData?.degree || "",
               }}
               validationSchema={Yup.object({
-                company: Yup.string().required("Required"),
-                position: Yup.string().required("Required"),
+                institution: Yup.string().required("Required"),
+                degree: Yup.string().required("Required"),
               })}
               onSubmit={handleSubmit}
             >
@@ -191,7 +184,7 @@ const EducationModal: React.FC<Props> = ({
                       </span>
                       <MonthPicker
                         setDate={setStartDate}
-                        //initialDate={Action === "Edit" ? endDate : null}
+                        initialDate={eduData ? startDate : null}
                         text="Start Date"
                       />
                     </div>
@@ -204,7 +197,7 @@ const EducationModal: React.FC<Props> = ({
                         </span>
                         <MonthPicker
                           setDate={setEndDate}
-                          //initialDate={Action === "Edit" ? endDate : null}
+                          initialDate={eduData ? endDate : null}
                           text="End Date"
                         />
                       </div>
@@ -212,9 +205,7 @@ const EducationModal: React.FC<Props> = ({
                   </div>
                 </div>
                 <div
-                  className={`pl-[70px] pt-10 ${
-                    Action === "Edit" ? "mb-8" : "mb-12"
-                  }`}
+                  className={`pl-[70px] pt-10 ${eduData ? "mb-8" : "mb-12"}`}
                 >
                   <SolidButton
                     type="submit"
@@ -222,7 +213,7 @@ const EducationModal: React.FC<Props> = ({
                     onClick={() => {}}
                   />
                 </div>
-                {Action === "Edit" && (
+                {eduData && (
                   <div className="pl-[70px]  mb-10 ">
                     <DeleteButton text="D E L E T E" onClick={handleDelete} />
                   </div>

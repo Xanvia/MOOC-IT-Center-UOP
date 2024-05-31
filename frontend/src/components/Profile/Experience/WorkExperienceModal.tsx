@@ -30,7 +30,6 @@ const token = Cookies.get("token");
 
 interface Props {
   CardTitle: string;
-  Action: string;
   workData?: Work;
   realoadData: () => void;
 }
@@ -42,7 +41,6 @@ interface FormData {
 
 const AddExperienceModal: React.FC<Props> = ({
   CardTitle,
-  Action,
   workData,
   realoadData,
 }: Props) => {
@@ -68,7 +66,7 @@ const AddExperienceModal: React.FC<Props> = ({
       };
       console.log(data);
       let response;
-      if (Action === "Edit") {
+      if (workData) {
         response = await axios.put(
           `${API_URL}/user/work/${workData?.id}/`,
           data,
@@ -95,8 +93,6 @@ const AddExperienceModal: React.FC<Props> = ({
 
   const handleInsideClick = () => {
     setIsOpen(false);
-    setStartDate(null);
-    setEndDate(null);
   };
 
   const handleDelete = async () => {
@@ -119,7 +115,7 @@ const AddExperienceModal: React.FC<Props> = ({
 
   return (
     <>
-      {Action === "Edit" ? (
+      {workData ? (
         <EditButton onClick={toggleModal} />
       ) : (
         <CreateButton onClick={toggleModal} text="Work" />
@@ -187,8 +183,8 @@ const AddExperienceModal: React.FC<Props> = ({
                       </span>
                       <MonthPicker
                         setDate={setStartDate}
+                        initialDate={workData ? startDate : null}
                         text="Start Date"
-                        initialDate={Action === "Edit" ? endDate : null}
                       />
                     </div>
                   </div>
@@ -201,16 +197,14 @@ const AddExperienceModal: React.FC<Props> = ({
                         <MonthPicker
                           setDate={setEndDate}
                           text="End Date"
-                          initialDate={Action === "Edit" ? endDate : null}
+                          initialDate={workData ? endDate : null}
                         />
                       </div>
                     </div>
                   </div>
                 </div>
                 <div
-                  className={`pl-[70px] pt-10 ${
-                    Action === "Edit" ? "mb-8" : "mb-12"
-                  }`}
+                  className={`pl-[70px] pt-10 ${workData ? "mb-8" : "mb-12"}`}
                 >
                   <SolidButton
                     type="submit"
@@ -218,7 +212,7 @@ const AddExperienceModal: React.FC<Props> = ({
                     onClick={() => {}}
                   />
                 </div>
-                {Action === "Edit" && (
+                {workData && (
                   <div className="pl-[70px]  mb-10 ">
                     <DeleteButton text="D E L E T E" onClick={handleDelete} />
                   </div>

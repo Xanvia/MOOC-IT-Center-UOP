@@ -57,22 +57,25 @@ export default function ProfilePage() {
         <Profile reloadData={reloadData} profileData={profileData} />
         <div className="relative  lg:w-full h-11/12  md:rounded-r-lg lg:basis-1/2 2xl:px-12 basis-1/3 mx-6 sm:ml-32 pt-32 lg:pt-0 lg:m-0">
           <div className="min-h-[300px]">
-          <EducationModal
+            <EducationModal
               CardTitle="Add Your Education Details"
-              Action="Add"
+              realoadData={reloadData}
             />
             {education && education.length > 0 ? (
               education.map((eduItem) => (
-                <EducationCard key={eduItem.id} eduData={eduItem} />
+                <EducationCard
+                  key={eduItem.id}
+                  eduData={eduItem}
+                  reload={reloadData}
+                />
               ))
             ) : (
-              <EducationCard eduData={dummyEdu} />
+              <EducationCard eduData={education[0]} reload={reloadData} />
             )}
           </div>
           <div className="py-3">
-          <ExperienceModal
+            <ExperienceModal
               CardTitle="Add Your Work Experience"
-              Action="Add"
               realoadData={reloadData}
             />
             {work && work.length > 0 ? (
@@ -88,7 +91,6 @@ export default function ProfilePage() {
                 <p>Add your work experience here</p>
               </div>
             )}
-            
           </div>
         </div>
       </div>
