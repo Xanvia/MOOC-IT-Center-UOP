@@ -10,14 +10,11 @@ import {
   MobileMenuClasses,
   NavLink,
   NavLinkContainer,
-  NavLinkSpecial,
   NotificationButtonClasses,
   NotificationButtonMobileClasses,
   SecondaryButtonClass,
 } from "../components.styles";
-import SolidButton from "../Buttons/SolidButton";
-import PrimaryButton from "../Buttons/PrimaryButton";
-import SecondaryButton from "../Buttons/SecondaryButton";
+
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
