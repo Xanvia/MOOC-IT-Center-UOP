@@ -80,7 +80,7 @@ export default function Courses() {
                   id="title"
                   name="title"
                   className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
-                    formik.touched.title && formik.errors.title ? "border-red-500" : ""
+                    formik.touched.title && formik.errors.title ? "border-primary" : ""
                   }`}
                   placeholder="Enter course title"
                 />
