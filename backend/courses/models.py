@@ -3,12 +3,14 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from userprofiles.models import Interest
 
 
 class Course(models.Model):
     course_creator = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField()
+    category = models.ForeignKey(Interest, on_delete=models.CASCADE)
     stats = models.JSONField(default=dict, blank=True, null=True)
     outcomes = models.JSONField(default=list, blank=True, null=True)
 
@@ -61,9 +63,8 @@ class Component(models.Model):
 class Note(Component):
     text = models.TextField()
     images = models.ManyToManyField("Image")
-    chapter = models.ForeignKey(
-        Chapter, related_name="notes", on_delete=models.CASCADE
-    )
+    chapter = models.ForeignKey(Chapter, related_name="notes", on_delete=models.CASCADE)
+
 
 class Video(Component):
     url = models.URLField()
@@ -71,6 +72,7 @@ class Video(Component):
     chapter = models.ForeignKey(
         Chapter, related_name="videos", on_delete=models.CASCADE
     )
+
 
 class Quiz(Component):
     title = models.CharField(max_length=255)
@@ -80,6 +82,7 @@ class Quiz(Component):
         Chapter, related_name="quizzes", on_delete=models.CASCADE
     )
 
+
 class CodingAssignment(Component):
     question = models.TextField()
     test_cases = models.JSONField(default=list)
@@ -87,16 +90,19 @@ class CodingAssignment(Component):
         Chapter, related_name="coding_assignments", on_delete=models.CASCADE
     )
 
+
 class Image(models.Model):
     image = models.ImageField(upload_to="note_images/")
     alt_text = models.CharField(max_length=255)
+
 
 class Progress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
-    component = GenericForeignKey('content_type', 'object_id')
+    component = GenericForeignKey("content_type", "object_id")
     percentage = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+
 
 class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions")
