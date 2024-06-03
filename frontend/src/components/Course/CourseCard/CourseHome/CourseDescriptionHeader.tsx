@@ -1,5 +1,6 @@
 import React from "react";
 
+const computer = "/images/computer.jpg";
 const CourseHeader: React.FC = () => {
   return <>
 
@@ -24,7 +25,9 @@ const CourseHeader: React.FC = () => {
               </p>
             </div>
 
-            <div>
+            <div className="w-full h-64 bg-white">
+
+              image={computer}
               {/* Add image */}
             </div>
 
@@ -33,8 +36,8 @@ const CourseHeader: React.FC = () => {
                 <h1 className="font-bold">Specification and Software</h1>
                 <li className="ml-10">Pc/laptop</li>
                 <li className="ml-10">Browser</li>
-                <li className="ml-10">Pc/laptop</li>
-                <li className="ml-10">Browser</li>
+                <li className="ml-10">Text editor</li>
+                <li className="ml-10">Akses Internet</li>
                 
               </ul>
             
