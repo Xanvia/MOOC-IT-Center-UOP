@@ -68,6 +68,7 @@ export default function Courses() {
             />
           </div>
           <CourseCategoryDropdown value={category} onChange={handleCategoryChange} />
+          <br/>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
             <textarea
