@@ -2,8 +2,8 @@
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import CourseCard from "@/components/Course/CourseCard/CourseCard";
 import React, { useState } from "react";
-import Modal from "@/components/CreateCourseModal/CreateCourseModal";
 import CreateCourseModal from "@/components/CreateCourseModal/CreateCourseModal";
+import CourseCategoryDropdown from "@/components/CreateCourseModal/CourseCategoryDropdown";
 
 const course2 = "/images/course2.png";
 const course3 = "/images/course3.png";
@@ -11,9 +11,14 @@ const course5 = "/images/course5.png";
 
 export default function Courses() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [category, setCategory] = useState("");
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setCategory(value);
   };
 
   return (
@@ -49,7 +54,9 @@ export default function Courses() {
       </div>
 
       <CreateCourseModal isOpen={isModalOpen} onClose={toggleModal}>
+        <center>
         <h2 className="text-2xl font-bold mb-4">Create Course</h2>
+        </center>
         <form>
           {/* Adjusted form fields */}
           <div className="mb-4">
@@ -60,6 +67,7 @@ export default function Courses() {
               placeholder="Enter course title"
             />
           </div>
+          <CourseCategoryDropdown value={category} onChange={handleCategoryChange} />
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
             <textarea
@@ -67,13 +75,16 @@ export default function Courses() {
               placeholder="Enter course description"
             ></textarea>
           </div>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-          >
-            Submit
-          </button>
+          <center>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+            >
+              Submit
+            </button>
+          </center>
         </form>
+        
       </CreateCourseModal>
     </>
   );
