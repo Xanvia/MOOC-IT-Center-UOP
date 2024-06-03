@@ -1,9 +1,12 @@
 "use client";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
+import SolidButton from "@/components/Buttons/SolidButton";
 import CourseCard from "@/components/Course/CourseCard/CourseCard";
 import React, { useState } from "react";
 import CreateCourseModal from "@/components/CreateCourseModal/CreateCourseModal";
 import CourseCategoryDropdown from "@/components/CreateCourseModal/CourseCategoryDropdown";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 const course2 = "/images/course2.png";
 const course3 = "/images/course3.png";
@@ -57,28 +60,48 @@ export default function Courses() {
         <center>
         <h2 className="text-2xl text-primary font-bold mb-4">Create Course</h2>
         </center>
-        <form>
-          {/* Adjusted form fields */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-primary mb-1">Course Title</label>
-            <input
-              type="text"
-              className="mt-1 block w-full border border-primary rounded-md shadow-sm p-2"
-              placeholder="Enter course title"
-            />
-          </div>
-          <CourseCategoryDropdown value={category} onChange={handleCategoryChange} />
-          <br/>
-          
-          <center>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-            >
-              Submit
-            </button>
-          </center>
-        </form>
+        <Formik
+          initialValues={{ title: "" }}
+          validationSchema={Yup.object({
+            title: Yup.string().required("Course title is required"),
+          })}
+          onSubmit={(values) => {
+            // Handle form submission here
+            console.log(values);
+          }}
+        >
+          {(formik) => (
+            <Form>
+              {/* Course title field */}
+              <div className="mb-4">
+                <label htmlFor="title" className="block text-sm font-medium text-primary mb-1">Course Title</label>
+                <Field
+                  type="text"
+                  id="title"
+                  name="title"
+                  className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
+                    formik.touched.title && formik.errors.title ? "border-red-500" : ""
+                  }`}
+                  placeholder="Enter course title"
+                />
+                <ErrorMessage name="title" component="div" className="text-red-500 text-sm" />
+              </div>
+              {/* Course category dropdown */}
+              <CourseCategoryDropdown value={category} onChange={handleCategoryChange} />
+              <br/>
+              <center>
+                <div className="mt-6 mb-2">
+                  {/* Submit button */}
+                  <SolidButton
+                    type="submit"
+                    text="S U B M I T"
+                    onClick={() => {}}
+                  />
+                </div>
+              </center>
+            </Form>
+          )}
+        </Formik>
         
       </CreateCourseModal>
     </>
