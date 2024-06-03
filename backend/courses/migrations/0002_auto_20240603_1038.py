@@ -73,7 +73,7 @@ def remove_permissions(apps, schema_editor):
         Video,
         CodingAssignment,
     ]
-    student_models = [Progress, UserAnswers, UserCoding]
+    student_models = [Progress, UserAnswer, UserCodingAnswer]
 
     # Get the groups
     admin = Group.objects.get(name="admin")
