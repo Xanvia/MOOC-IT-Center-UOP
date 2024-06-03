@@ -51,9 +51,9 @@ export default function Courses() {
       <CreateCourseModal isOpen={isModalOpen} onClose={toggleModal}>
         <h2 className="text-2xl font-bold mb-4">Create Course</h2>
         <form>
-          {/* Your form fields go here */}
+          {/* Adjusted form fields */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Course Title</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Course Title</label>
             <input
               type="text"
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
@@ -61,7 +61,7 @@ export default function Courses() {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
             <textarea
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               placeholder="Enter course description"
