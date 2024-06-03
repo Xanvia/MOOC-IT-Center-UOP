@@ -55,27 +55,21 @@ export default function Courses() {
 
       <CreateCourseModal isOpen={isModalOpen} onClose={toggleModal}>
         <center>
-        <h2 className="text-2xl font-bold mb-4">Create Course</h2>
+        <h2 className="text-2xl text-primary font-bold mb-4">Create Course</h2>
         </center>
         <form>
           {/* Adjusted form fields */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Course Title</label>
+            <label className="block text-sm font-medium text-primary mb-1">Course Title</label>
             <input
               type="text"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+              className="mt-1 block w-full border border-primary rounded-md shadow-sm p-2"
               placeholder="Enter course title"
             />
           </div>
           <CourseCategoryDropdown value={category} onChange={handleCategoryChange} />
           <br/>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-              placeholder="Enter course description"
-            ></textarea>
-          </div>
+          
           <center>
             <button
               type="submit"
