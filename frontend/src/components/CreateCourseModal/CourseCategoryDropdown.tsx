@@ -5,10 +5,10 @@ interface Props {
   onChange: (value: string) => void;
 }
 
-const CourseCategoryDropdown: React.FC<Props> = ({ value, onChange }) => { // Use Props interface
+const CourseCategoryDropdown: React.FC<Props> = ({ value, onChange }) => {
+  // Use Props interface
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Choose");
-  //const [selectedOption, setSelectedOption] = useState(value); // Set initial selected option to value prop
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -29,7 +29,9 @@ const CourseCategoryDropdown: React.FC<Props> = ({ value, onChange }) => { // Us
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <span className="text-sm font-semibold text-primary pr-52">Course Category</span>
+      <span className="text-sm font-semibold text-primary sm:pr-52">
+        Course Category
+      </span>
       <button
         type="button"
         className="relative w-full mt-1 cursor-default rounded-md bg-white py-2 pl-3 pr-10 text-left text-primary shadow-sm ring-1 ring-inset ring-primary focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
@@ -77,10 +79,12 @@ const CourseCategoryDropdown: React.FC<Props> = ({ value, onChange }) => { // Us
             }}
           >
             <div className="flex items-center text-primary justify-center">
-              <span className="font-normal  ml-3 block truncate ">Statistics</span>
+              <span className="font-normal  ml-3 block truncate ">
+                Statistics
+              </span>
             </div>
           </li>
-          
+
           <li
             className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
             id="listbox-option-0"
@@ -109,7 +113,9 @@ const CourseCategoryDropdown: React.FC<Props> = ({ value, onChange }) => { // Us
             }}
           >
             <div className="flex items-center text-primary justify-center">
-              <span className="font-normal  ml-3 block truncate ">Chemistry</span>
+              <span className="font-normal  ml-3 block truncate ">
+                Chemistry
+              </span>
             </div>
           </li>
         </ul>
