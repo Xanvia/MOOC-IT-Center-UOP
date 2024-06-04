@@ -11,7 +11,8 @@ def create_groups(apps, schema_editor):
 
 
 def remove_groups(apps, schema_editor):
-    Group.objects.filter(name__in=["admin", "student", "teacher"]).delete()
+    # Group.objects.filter(name__in=["admin", "student", "teacher"]).delete()
+    pass
 
 
 class Migration(migrations.Migration):

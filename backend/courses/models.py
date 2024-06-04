@@ -10,7 +10,7 @@ class Course(models.Model):
     course_creator = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    category = models.ForeignKey(Interest, on_delete=models.CASCADE)
+    category = models.ForeignKey(Interest, on_delete=models.CASCADE ,blank=True, null=True)
     stats = models.JSONField(default=dict, blank=True, null=True)
     outcomes = models.JSONField(default=list, blank=True, null=True)
 
