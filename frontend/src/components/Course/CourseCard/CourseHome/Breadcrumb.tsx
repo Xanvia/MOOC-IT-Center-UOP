@@ -12,7 +12,7 @@ const Breadcrumbs = ({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) => {
   if (!breadcrumbs || breadcrumbs.length === 0) return null;
 
   return (
-    <nav className="flex" aria-label="Breadcrumb">
+    <nav className="flex bg-sky-200 p-4" aria-label="Breadcrumb">
       <ol className="inline-flex items-center space-x-1 md:space-x-3">
         {breadcrumbs.map((breadcrumb, index) => (
           <li key={breadcrumb.breadcrumb}>
