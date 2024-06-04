@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { API_URL } from "@/utils/constants";
+import { Field, ErrorMessage } from "formik";
+import {
+  InputFieldClasses,
+  InputLabel,
+  InputInnerDiv,
+  InputOuterDiv,
+} from "@/components/components.styles";
 
 interface Institution {
   id: number;
@@ -7,16 +14,17 @@ interface Institution {
 }
 
 interface Props {
-  addSelection: (item: Institution) => void;
-  selectedInstitution?: Institution;
+  addSelection: (item: string) => void;
+  selectedInstitution?: string;
 }
 
 const DropDownInstitution = ({ addSelection, selectedInstitution }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
+
   const [selectedOption, setSelectedOption] = useState(
-    selectedInstitution ? selectedInstitution.label : "Select your Institution"
+    selectedInstitution ? selectedInstitution : "Select your Institution"
   );
-  const [countries, setCountries] = useState<Institution[]>([]);
+  const [institutions, setInstitutions] = useState<Institution[]>([]);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -32,7 +40,7 @@ const DropDownInstitution = ({ addSelection, selectedInstitution }: Props) => {
     document.addEventListener("mousedown", handleClickOutside);
     fetchInterests().then((data) => {
       if (data) {
-        setCountries(data);
+        setInstitutions(data);
       }
     });
 
@@ -45,8 +53,8 @@ const DropDownInstitution = ({ addSelection, selectedInstitution }: Props) => {
     try {
       const response = await fetch(`${API_URL}/institutions/`);
       const data = await response.json();
-      if (data && data.data && Array.isArray(data.data.countries)) {
-        return data.data.countries;
+      if (data && data.data && Array.isArray(data.data.institutions)) {
+        return data.data.institutions;
       } else {
         console.error("Unexpected response structure:", data);
         return [];
@@ -58,35 +66,38 @@ const DropDownInstitution = ({ addSelection, selectedInstitution }: Props) => {
   };
   return (
     <div className="relative" ref={dropdownRef}>
-      <span className="text-sm font-semibold text-primary pr-52">Country</span>
-      <button
-        type="button"
-        className="relative w-full cursor-default rounded-md bg-white mt-1 py-1.5 pl-3 pr-10 text-left text-primary shadow-sm ring-1 ring-inset ring-primary focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
-        aria-haspopup="listbox"
-        aria-expanded="true"
-        aria-labelledby="listbox-label"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <span className="flex items-center text-primary justify-center">
-          <span className="ml-3 block truncate">{selectedOption}</span>
-        </span>
-        <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
-          <svg
-            className="h-5 w-5 text-gray-400"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
-              clip-rule="evenodd"
-            />
-          </svg>
-        </span>
-      </button>
+      <span className="text-sm font-semibold text-primary ">
+        Your Institution
+      </span>
+      <div className={InputOuterDiv}>
+        <div className={InputInnerDiv}>
+          <Field
+            type="text"
+            name="institution"
+            value = {selectedOption}
+            className={InputFieldClasses}
+            placeholder=" "
+            onClick={() => setIsOpen(!isOpen)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setSelectedOption(e.target.value);
+              addSelection(e.target.value);
+              if (e.target.value === '') {
+                setIsOpen(false);
+              } else {
+                setIsOpen(true);
+              }
+            }}
+          />
+          <ErrorMessage
+            name="institution"
+            component="div"
+            className="top-0 left-0 text-red-600 text-xs"
+          />
+          <label className={InputLabel}>Institution</label>
+        </div>
+      </div>
 
-      {isOpen && countries && Array.isArray(countries) && (
+      {isOpen && institutions && Array.isArray(institutions) && (
         <ul
           className="absolute z-20 mt-1 max-h-56 w-80  overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           tabIndex={-1}
@@ -94,21 +105,21 @@ const DropDownInstitution = ({ addSelection, selectedInstitution }: Props) => {
           aria-labelledby="listbox-label"
           aria-activedescendant="listbox-option-3"
         >
-          {countries.map((country) => (
+          {institutions.map((institution) => (
             <li
-              key={country.id}
+              key={institution.id}
               className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-              id={`listbox-option-${country.id}`}
+              id={`listbox-option-${institution.id}`}
               role="option"
               onClick={() => {
-                setSelectedOption(country.label);
-                addSelection(country);
+                setSelectedOption(institution.label);
+                addSelection(institution.label);
                 setIsOpen(false);
               }}
             >
               <div className="flex items-center text-primary  justify-start">
                 <span className="font-normal  ml-3 block truncate">
-                  {country.label}
+                  {institution.label}
                 </span>
               </div>
             </li>
