@@ -125,6 +125,12 @@ class CountrySerializer(serializers.ModelSerializer):
         model = Country
         fields = ["id", "label"]
 
+class InstitutionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Institution
+        fields = ["id", "label"]
+
+
 
 class AddUserInfoSerializer(serializers.ModelSerializer):
 
