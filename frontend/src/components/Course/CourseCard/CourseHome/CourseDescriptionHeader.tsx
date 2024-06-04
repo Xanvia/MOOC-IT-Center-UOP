@@ -1,4 +1,16 @@
 import React from "react";
+import Breadcrumb from '../CourseHome/Breadcrumb';
+
+interface BreadcrumbItem {
+  breadcrumb: string;
+  href?: string; // Make href optional
+}
+
+const breadcrumbs: BreadcrumbItem[] = [
+  { breadcrumb: 'Home >', href: '/' },
+  { breadcrumb: 'Courses  >', href: '/courses' },
+  { breadcrumb: 'Basic Web Programming  >', href: '/courses/1' },
+];
 
 const computer = "/images/computer.jpg";
 const CourseHeader: React.FC = () => {
@@ -37,7 +49,7 @@ const CourseHeader: React.FC = () => {
             </a>
           </nav>
         </div>
-
+        <Breadcrumb breadcrumbs={breadcrumbs}/>
         <div className="container mx-auto my-8 p-4 bg-white shadow-md">
           {/* Description Content */}
           <div>
@@ -46,7 +58,7 @@ const CourseHeader: React.FC = () => {
               <p className="mb-4">
                 This course provides an introduction to web development using
                 HTML, CSS, and JavaScript. You learn how to create responsive
-                and interactive web pages, and you'll gain a solid foundation in
+                and interactive web pages, and youll gain a solid foundation in
                 web programming.
               </p>
             </div>
