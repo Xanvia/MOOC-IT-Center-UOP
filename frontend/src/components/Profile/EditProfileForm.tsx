@@ -9,8 +9,8 @@ import {
   InputOuterDiv,
   InputLabel,
 } from "../components.styles";
-import DropDownCountry from "../Register/DropDown/DropDownCountry";
-import ReactDatePicker from "../Register/DropDown/DatePicker";
+import DropDownCountry from "@/components/DropDown/DropDownCountry";
+import ReactDatePicker from "@/components/DropDown/DatePicker";
 import SolidButton from "../Buttons/SolidButton";
 import { ProfileData } from "./types";
 import axios from "axios";

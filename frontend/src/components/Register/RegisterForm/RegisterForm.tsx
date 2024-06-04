@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import SolidButton from "../../Buttons/SolidButton";
 import GoogleIcon from "@/icons/GoogleIcon";
 import SvgButton from "../../Buttons/SvgButton";
-import DropDown from "../DropDown/DropDown";
+import DropDown from "@/components/DropDown/DropDown";
 import { getGoogleCode } from "@/utils/GoogleAuth";
 import Cookies from "js-cookie";
 import { toast } from "sonner";

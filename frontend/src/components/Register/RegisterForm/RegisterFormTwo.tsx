@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import SolidButton from "../../Buttons/SolidButton";
-import DropDownCountry from "../DropDown/DropDownCountry";
-import DropDownGender from "../DropDown/DropDownGender";
-import DropDownInterests from "../DropDown/DropDownInterests";
-import DatePicker from "../DropDown/DatePicker";
+import DropDownCountry from "@/components/DropDown/DropDownCountry";
+import DropDownGender from "@/components/DropDown/DropDownGender";
+import DropDownInterests from "@/components/DropDown/DropDownInterests";
+import DatePicker from "@/components/DropDown/DatePicker";
 import axios from "axios";
 import { API_URL } from "@/utils/constants";
 import {
@@ -15,7 +15,7 @@ import {
   InputInnerDiv,
   InputOuterDiv,
 } from "../../components.styles";
-import InterestLabel from "../DropDown/InterestLabel";
+import InterestLabel from "@/components/DropDown/InterestLabel";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 
