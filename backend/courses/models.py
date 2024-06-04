@@ -11,7 +11,6 @@ class Course(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     category = models.ForeignKey(Interest, on_delete=models.CASCADE ,blank=True, null=True)
-    stats = models.JSONField(default=dict, blank=True, null=True)
     outcomes = models.JSONField(default=list, blank=True, null=True)
 
     def get_progress(self, user):
@@ -20,7 +19,15 @@ class Course(models.Model):
             return 0
         total_progress = sum([week.get_progress(user) for week in weeks])
         return total_progress / len(weeks)
+    
 
+class CourseStats(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    duration = models.CharField(max_length=255)
+    difficulty = models.CharField(max_length=255)
+    students = models.IntegerField(default=0)
+    rating = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    
 
 class Week(models.Model):
     name = models.CharField(max_length=255)

@@ -1,6 +1,6 @@
 // components/Item.tsx
 import React from "react";
-import { interestCloseButtonClasses } from "../../components.styles";
+import { interestCloseButtonClasses } from "@/components/components.styles";
 
 interface ItemProps {
   label: string;

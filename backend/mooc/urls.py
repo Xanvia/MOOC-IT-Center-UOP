@@ -14,12 +14,17 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.conf import settings
 from django.conf.urls.static import static
 
 from django.contrib import admin
 from django.urls import path, include
-from userprofiles.views import InterestListAPIView, CountryListAPIView
+from userprofiles.views import (
+    InterestListAPIView,
+    CountryListAPIView,
+    InstitutionsListAPIView,
+)
 
 
 urlpatterns = [
@@ -27,6 +32,9 @@ urlpatterns = [
     path("api/user/", include("userprofiles.urls")),
     path("api/interests/", InterestListAPIView.as_view(), name="interests-list"),
     path("api/countries/", CountryListAPIView.as_view(), name="countries-list"),
+    path(
+        "api/institutions/", InstitutionsListAPIView.as_view(), name="institutions-list"
+    ),
 ]
 
 

@@ -8,13 +8,18 @@ export interface Work {
 
 export interface Education {
   id: number;
-  institution: string;
+  institution: Institution;
   degree: string;
   start_date: string;
   end_date: string | null;
 }
 
 interface Country {
+  id: number;
+  label: string;
+}
+
+interface Institution {
   id: number;
   label: string;
 }

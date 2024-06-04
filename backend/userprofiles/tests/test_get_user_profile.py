@@ -6,6 +6,7 @@ from userprofiles.models import (
     UserProfile,
     Country,
     WorkExperience,
+    Institution,
     Education,
 )
 from rest_framework_simplejwt.tokens import AccessToken
@@ -49,11 +50,11 @@ class GetUserProfileViewSetTest(APITestCase):
             start_date="2019-01",
             end_date="2021-01",
         )
-
+        institution = Institution.objects.create(label="University of Nairobi")
         education = Education.objects.create(
             user_profile=self.user_profile,
             degree="Bsc Hons in Computer Science",
-            institution="University of Nairobi",
+            institution=institution,
             start_date="2015-01",
             end_date="2019-01",
         )

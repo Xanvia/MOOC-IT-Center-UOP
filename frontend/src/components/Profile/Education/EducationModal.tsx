@@ -24,6 +24,7 @@ import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { API_URL } from "@/utils/constants";
 import { format } from "date-fns";
+import DropDownInstitution from "@/components/DropDown/DropDownUni";
 
 const token = Cookies.get("token");
 
@@ -34,7 +35,6 @@ interface Props {
 }
 
 interface FormData {
-  institution: string;
   degree: string;
 }
 
@@ -45,6 +45,7 @@ const EducationModal: React.FC<Props> = ({
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const [institution, setInstitution] = useState(eduData?.institution || "");
   const [startDate, setStartDate] = useState<Date | null>(
     eduData ? new Date(eduData.start_date) : null
   );
@@ -65,13 +66,16 @@ const EducationModal: React.FC<Props> = ({
   };
 
   const handleSubmit = async (values: FormData) => {
+    if (institution === "") {
+      toast.warning("Please select an institution");
+    }
     try {
       const headers = {
         Authorization: `Bearer ${token}`,
       };
-
       const data = {
         ...values,
+        institution: institution,
         start_date: startDate ? format(startDate, "yyyy-MM") : null,
         end_date: endDate ? format(endDate, "yyyy-MM") : null,
       };
@@ -134,33 +138,16 @@ const EducationModal: React.FC<Props> = ({
             </div>
             <Formik
               initialValues={{
-                institution: eduData?.institution || "",
                 degree: eduData?.degree || "",
               }}
               validationSchema={Yup.object({
-                institution: Yup.string().required("Required"),
                 degree: Yup.string().required("Required"),
               })}
               onSubmit={handleSubmit}
             >
               <Form>
                 <div className="pt-6 grid grid-cols-1 gap-6 mx-12">
-                  <div className={InputOuterDiv}>
-                    <div className={InputInnerDiv}>
-                      <Field
-                        type="text"
-                        name="institution"
-                        className={InputFieldClasses}
-                        placeholder=" "
-                      />
-                      <ErrorMessage
-                        name="institution"
-                        component="div"
-                        className="top-0 left-0 text-red-600 text-xs"
-                      />
-                      <label className={InputLabel}>Institution</label>
-                    </div>
-                  </div>
+                  <DropDownInstitution addSelection={setInstitution} selectedInstitution={institution as string} />
                   <div className={InputOuterDiv}>
                     <div className={InputInnerDiv}>
                       <Field

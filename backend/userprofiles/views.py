@@ -10,11 +10,19 @@ from .serializers import (
     UserProfileSerializer,
     WorkExperienceSerializer,
     EducationSerializer,
+    InstitutionSerializer,
 )
 from .utils import google_authenticate
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
-from .models import Education, UserProfile, Interest, Country, WorkExperience
+from .models import (
+    Education,
+    UserProfile,
+    Interest,
+    Country,
+    WorkExperience,
+    Institution,
+)
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 
@@ -244,7 +252,7 @@ class WorkExperienceApiView(viewsets.ModelViewSet):
             "message": "Work experience deleted successfully",
         }
         return response
-    
+
 
 class EducationApiView(viewsets.ModelViewSet):
     queryset = Education.objects.all()
@@ -286,4 +294,17 @@ class EducationApiView(viewsets.ModelViewSet):
             "status": "success",
             "message": "Education details deleted successfully",
         }
-        return response    
+        return response
+
+
+class InstitutionsListAPIView(generics.ListAPIView):
+    queryset = Institution.objects.all().order_by("label")
+    serializer_class = InstitutionSerializer
+    pagination_class = None
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return Response(
+            {"status": "success", "data": {"institutions": response.data}},
+            status=status.HTTP_200_OK,
+        )

@@ -2,9 +2,15 @@ from rest_framework import serializers
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
-from .models import UserProfile, Interest, Country, WorkExperience, Education
+from .models import (
+    UserProfile,
+    Interest,
+    Country,
+    WorkExperience,
+    Education,
+    Institution,
+)
 from random import choice
-from django.conf import settings
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -119,6 +125,12 @@ class CountrySerializer(serializers.ModelSerializer):
         model = Country
         fields = ["id", "label"]
 
+class InstitutionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Institution
+        fields = ["id", "label"]
+
+
 
 class AddUserInfoSerializer(serializers.ModelSerializer):
 
@@ -211,6 +223,7 @@ class WorkExperienceSerializer(serializers.ModelSerializer):
 
 
 class EducationSerializer(serializers.ModelSerializer):
+    institution = serializers.CharField()
 
     class Meta:
         model = Education
@@ -218,7 +231,19 @@ class EducationSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["institution"] = instance.institution
+        representation["institution"] = instance.institution.label
         representation.pop("user_profile")
 
         return representation
+
+    def create(self, validated_data):
+        institution_name = validated_data.pop("institution")
+        institution, _ = Institution.objects.get_or_create(label=institution_name)
+        return Education.objects.create(institution=institution, **validated_data)
+
+    def update(self, instance, validated_data):
+        institution_name = validated_data.pop("institution", None)
+        if institution_name is not None:
+            institution, _ = Institution.objects.get_or_create(label=institution_name)
+            instance.institution = institution
+        return super().update(instance, validated_data)
