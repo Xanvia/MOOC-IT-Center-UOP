@@ -1,5 +1,6 @@
 import React from "react";
 import Breadcrumb from '../CourseHome/Breadcrumb';
+import Image from "next/image";
 
 interface BreadcrumbItem {
   breadcrumb: string;
@@ -7,15 +8,17 @@ interface BreadcrumbItem {
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-  { breadcrumb: 'Home >', href: '/' },
-  { breadcrumb: 'Courses  >', href: '/courses' },
-  { breadcrumb: 'Basic Web Programming  >', href: '/courses/1' },
+  { breadcrumb: 'Home', href: '/' },
+  { breadcrumb: '> Courses', href: '/courses' },
+  { breadcrumb: '> Basic Web Programming', href: '/courses/1' },
 ];
 
 const computer = "/images/computer.jpg";
+
 const CourseHeader: React.FC = () => {
   return (
     <>
+      <Breadcrumb breadcrumbs={breadcrumbs}/>
       <div className="bg-white shadow-md">
         <div className="container mx-auto">
           <nav className="flex space-x-8 py-4">
@@ -49,7 +52,7 @@ const CourseHeader: React.FC = () => {
             </a>
           </nav>
         </div>
-        <Breadcrumb breadcrumbs={breadcrumbs}/>
+        
         <div className="container mx-auto my-8 p-4 bg-white shadow-md">
           {/* Description Content */}
           <div>
