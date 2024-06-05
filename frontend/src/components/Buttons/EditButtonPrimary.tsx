@@ -21,7 +21,7 @@ const EditButtonPrimary: React.FC<ButtonProps> = ({
     >
       <div className="flex">
         <svg
-          className="w-6 h-6 text-primary hover:ring-1 hover:ring-primary_light "
+          className="lg:w-6 lg:h-6 w-4 h-4 text-primary hover:ring-1 hover:ring-primary_light "
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -40,7 +40,7 @@ const EditButtonPrimary: React.FC<ButtonProps> = ({
             clip-rule="evenodd"
           />
         </svg>
-        <span className="pt-0.5 pl-2">{text}</span>
+        <span className="pt-0.5 pl-2 text-xs lg:text-sm">{text}</span>
       </div>
     </button>
   );

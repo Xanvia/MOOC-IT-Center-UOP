@@ -4,7 +4,7 @@ const CourseHStat: React.FC = () => {
   return (
     <div className="bg-primary_light py-5 mt-2 md:mt-0 absolute w-full">
       <div className="max-w-7xl mx-auto">
-        <div className="grid sm:grid-cols-6 sm:gap-8 gap-2 text-center">
+        <div className="grid grid-cols-2 md:grid-cols-6 sm:gap-8 gap-2 text-center">
           <div>
             <p className="md:text-xl sm:text-base text-sm font-bold ">
               21.000+

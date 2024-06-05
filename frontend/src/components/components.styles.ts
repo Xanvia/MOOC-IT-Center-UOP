@@ -255,7 +255,8 @@ export const PrimaryButtonClass = clsx(
   "focus:ring-primary_test",
   "font-medium",
   "rounded-lg",
-  "text-sm",
+  "lg:text-sm",
+  "text-xs",
   "px-5",
   "py-2",
   "me-2",
@@ -280,7 +281,8 @@ export const SecondaryButtonClass = clsx(
   "mb-2",
   "dark:focus:ring-white-900",
   "border",
-  "border-white-800"
+  "border-white-800",
+
 );
 
 export const SolidButtonClasses = clsx(
