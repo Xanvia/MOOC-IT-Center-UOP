@@ -29,19 +29,15 @@ const CourseDetailsTabs = () => {
                 />
             </div>
 
-            <div className = "mt-10 text-2xl font-semibold text-primary">
+            <div className = "mt-14 text-2xl font-semibold text-primary">
                 <h1>Specifications & Softwares</h1>
             </div>
             <ul className="mt-4 list-disc list-inside">
-                <li>PC/Laptop dengan minimal 1 GB Ram dan 2 GB free disk</li>
-                <li>PC/Laptop dengan minimal 1 GB Ram dan 2 GB free disk</li>
-                <li>PC/Laptop dengan minimal 1 GB Ram dan 2 GB free disk</li>
-                <li>PC/Laptop dengan minimal 1 GB Ram dan 2 GB free disk</li>
-            </ul>
-            <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
-            Click Me
-            </button> 
-            
+                <li>PC/Laptop 1 GB Ram dan 2 GB free disk</li>
+                <li>Web browser</li>
+                <li>Text Editor (VsCode)</li>
+                <li>Internet access</li>
+            </ul> 
         </div>
         ) 
     },
