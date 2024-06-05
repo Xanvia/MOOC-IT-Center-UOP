@@ -3,7 +3,7 @@ import React from "react";
 const CourseDetails: React.FC = () => {
   return (
     <>  
-    <div className="bg-white mt-24 shadow-md">
+    <div className="bg-white mt-24 shadow-sm">
         <div className="container mx-auto">
           <nav className="flex space-x-8 py-4">
             <a href="#" className="hover:text-blue-500 tab-link" data-tab="description">Description</a>
