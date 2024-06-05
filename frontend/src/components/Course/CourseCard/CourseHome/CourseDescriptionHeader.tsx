@@ -4,6 +4,7 @@ import Breadcrumb from "../CourseHome/Breadcrumb";
 import Image from "next/image";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
+import CourseHStat from "./CourseHStat";
 
 const headerImage = "/images/course-header.jpg";
 
@@ -36,7 +37,7 @@ const CourseHeader: React.FC = () => {
           height={500}
           className="w-full h-full object-cover absolute mix-blend-overlay"
         />
-        <div className="lg:p-24 sm:p-20 p-10">
+        <div className="lg:p-24 sm:p-20 p-10 pb-0 lg:pb-8 sm:pb-0">
           <div className="grid grid-cols-1 md:grid-flow-col gap-6 sm:gap-10 md:gap-24 sm:mx-16 min-h-[150px]">
             <div>
               <h1 className="text-white text-2xl sm:text-4xl md:text-4xl lg:text-5xl font-bold whit">
@@ -55,7 +56,7 @@ const CourseHeader: React.FC = () => {
               </h2>
             </div>
           </div>
-          <div className="relative mt-20 sm:mt-20 md:mt-14 sm:ml-20 ml-2">
+          <div className="relative mt-10 sm:mt-10 md:mt-14 sm:ml-20 ml-2">
             {isEdit ? (
               <EditButtonPrimary text="E D I T" onClick={handleClick} />
             ) : (
@@ -63,6 +64,7 @@ const CourseHeader: React.FC = () => {
             )}
           </div>
         </div>
+        <CourseHStat />
       </div>
     </>
   );
