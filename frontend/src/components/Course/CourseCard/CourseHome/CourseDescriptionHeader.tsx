@@ -37,7 +37,7 @@ const CourseHeader: React.FC = () => {
           height={500}
           className="w-full h-full object-cover absolute mix-blend-overlay"
         />
-        <div className="lg:p-24 sm:p-20 p-10 pb-0 lg:pb-8 sm:pb-0">
+        <div className="lg:p-24 sm:p-20 p-10 pb-10 lg:pb-8 sm:pb-8">
           <div className="grid grid-cols-1 md:grid-flow-col gap-6 sm:gap-10 md:gap-24 sm:mx-16 min-h-[150px]">
             <div>
               <h1 className="text-white text-2xl sm:text-4xl md:text-4xl lg:text-5xl font-bold whit">
