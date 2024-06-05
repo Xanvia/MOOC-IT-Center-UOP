@@ -43,7 +43,7 @@ const EducationCard: React.FC<props> = ({ eduData, reload }) => {
       />
       <div className="flex flex-col ml-4 w-full">
         <div className="text text-xl font-semibold border-b border-gray-300 pb-2 pt-1">
-          <h1>{eduData.institution}</h1>
+          <h1>{eduData.institution.label}</h1>
         </div>
         <div className="text text-gray-600 mt-4">
           <h1>{eduData.degree}</h1>
