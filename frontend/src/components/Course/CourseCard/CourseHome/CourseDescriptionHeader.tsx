@@ -1,10 +1,11 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Breadcrumb from "../CourseHome/Breadcrumb";
 import Image from "next/image";
-import SolidButton from "@/components/Buttons/SolidButton";
-import { toast } from "sonner";
+import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
+
+const headerImage = "/images/course-header.jpg";
 
 interface BreadcrumbItem {
   breadcrumb: string;
@@ -17,16 +18,18 @@ const breadcrumbs: BreadcrumbItem[] = [
   { breadcrumb: "> Basic Web Programming", href: "/courses/1" },
 ];
 
-const handleClick = () => {};
-
 const CourseHeader: React.FC = () => {
+  const [isEdit, setIsEdit] = useState(true);
+
+  const handleClick = () => {};
+
   return (
     <>
       <Breadcrumb breadcrumbs={breadcrumbs} />
 
       <div className="bg-gradient-to-tl from-gray-600 to-gray-800 h-96 w-full relative">
         <Image
-          src="/images/computer.jpg"
+          src={headerImage}
           alt="Computer"
           layout="fil"
           width={2000}
@@ -53,7 +56,11 @@ const CourseHeader: React.FC = () => {
             </div>
           </div>
           <div className="relative mt-20 sm:mt-20 md:mt-14 sm:ml-20 ml-2">
-            <PrimaryButton text="E N R O L L" onClick={handleClick} />
+            {isEdit ? (
+              <EditButtonPrimary text="E D I T" onClick={handleClick} />
+            ) : (
+              <PrimaryButton text="E N R O L L" onClick={handleClick} />
+            )}
           </div>
         </div>
       </div>

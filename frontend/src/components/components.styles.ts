@@ -191,7 +191,7 @@ export const NavLinkContainer = clsx(
   "md:justify-start"
 );
 
-export const NavLink = clsx("text-white", "hover:text-gray-300","pt-2");
+export const NavLink = clsx("text-white", "hover:text-gray-300", "pt-2");
 
 export const NavLinkSpecial = clsx(
   "text-white",
@@ -199,7 +199,7 @@ export const NavLinkSpecial = clsx(
   "font-bold",
   "bg-primary",
   "px-2",
-  "border-primary",
+  "border-primary"
 );
 
 export const NotificationButtonMobileClasses = clsx(
@@ -244,7 +244,7 @@ export const MobileLinkClasses = clsx(
 
 export const PrimaryButtonClass = clsx(
   "focus:outline-none",
-  "text-black",
+  "text-primary",
   "font-times",
   "bg-white",
   "hover:bg-primary",
@@ -306,7 +306,7 @@ export const SolidButtonClasses = clsx(
   "shadow-md",
   "shadow-gray-900/10",
   "hover:shadow-lg",
-  "hover:shadow-gray-900/20",
+  "hover:shadow-gray-900/20"
 );
 
 export const SvgButtonClasses = clsx(
@@ -509,4 +509,24 @@ export const DeleteButtonClasses = clsx(
   "shadow-gray-900/10",
   "hover:shadow-lg",
   "hover:shadow-gray-900/20"
+);
+
+export const EditButtonClasses = clsx(
+  "focus:outline-none",
+  "text-primary",
+  "font-medium",
+  "font-times",
+  "bg-white",
+  "hover:ring-1",
+  "hover:ring-white",
+  "focus:ring-4",
+  "focus:ring-primary_test",
+  "font-medium",
+  "rounded-lg",
+  "text-md",
+  "px-3",
+  "py-2",
+  "mb-2",
+  "pr-5",
+  "dark:focus:ring-white"
 );
