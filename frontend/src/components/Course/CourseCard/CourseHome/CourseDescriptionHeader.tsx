@@ -37,7 +37,7 @@ const CourseHeader: React.FC = () => {
               <div><h1 className="text-white text-6xl font-bold">Basic Web Development</h1>
               <h2 className="text-white text-2xl">Offered by Imperiel Institute</h2></div>
               <div><h2 className="text-white space-y-6 text-2xl font-semibold ">Prof. Namal Balasooriya</h2>
-              <h2 className="text-white space-y-6 text-xl">few things about Instructor</h2></div>
+              <h2 className="text-white space-y-6 text-sm">a few detail about Instructor</h2></div>
             </div>
             <div className="mt-28 ml-20">
               <SolidButton
