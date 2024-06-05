@@ -12,8 +12,8 @@ const Breadcrumbs = ({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) => {
 
   return (
     <nav className=" bg-primary_light" aria-label="Breadcrumb">
-      <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 p-1 sm:p-4">
-        <ol className="inline-flex items-center justify-between md:space-x-3 text-sm">
+      <div className="mx-auto max-w-7xl  lg:px-8 p-1">
+        <ol className="inline-flex items-center justify-between md:space-x-3 text-xs text-gray-600">
           {breadcrumbs.map((breadcrumb, index) => (
             <li key={breadcrumb.breadcrumb}>
               {breadcrumb.href ? (
