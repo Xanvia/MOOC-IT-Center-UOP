@@ -307,7 +307,7 @@ export const SolidButtonClasses = clsx(
   "shadow-md",
   "shadow-gray-900/10",
   "hover:shadow-lg",
-  "hover:shadow-gray-900/20"
+  "hover:shadow-gray-900/20",
 );
 
 export const SvgButtonClasses = clsx(

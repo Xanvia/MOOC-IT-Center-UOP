@@ -12,7 +12,7 @@ const Breadcrumbs = ({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) => {
   if (!breadcrumbs || breadcrumbs.length === 0) return null;
 
   return (
-    <nav className=" bg-sky-200 " aria-label="Breadcrumb">
+    <nav className=" bg-primary_light" aria-label="Breadcrumb">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 p-4">
       <ol className="inline-flex items-center justify-between md:space-x-3">
         {breadcrumbs.map((breadcrumb, index) => (
