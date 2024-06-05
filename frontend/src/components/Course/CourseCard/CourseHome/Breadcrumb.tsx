@@ -1,32 +1,30 @@
-import Link from 'next/link';
-import React from 'react';
+import Link from "next/link";
+import React from "react";
 
 // components/Breadcrumb.tsx
 interface BreadcrumbItem {
-    breadcrumb: string;
-    href?: string; // Make href optional
-  }
-  
+  breadcrumb: string;
+  href?: string; // Make href optional
+}
 
 const Breadcrumbs = ({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) => {
   if (!breadcrumbs || breadcrumbs.length === 0) return null;
 
   return (
     <nav className=" bg-primary_light" aria-label="Breadcrumb">
-      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 p-4">
-      <ol className="inline-flex items-center justify-between md:space-x-3">
-        {breadcrumbs.map((breadcrumb, index) => (
-          <li key={breadcrumb.breadcrumb}>
-            {breadcrumb.href ? (
-              <Link href={breadcrumb.href} > {breadcrumb.breadcrumb}</Link>
-            ) : (
-              <span>{breadcrumb.breadcrumb}</span>
-            )}
-          </li>
-        ))}
-      </ol>
+      <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 p-1 sm:p-4">
+        <ol className="inline-flex items-center justify-between md:space-x-3 text-sm">
+          {breadcrumbs.map((breadcrumb, index) => (
+            <li key={breadcrumb.breadcrumb}>
+              {breadcrumb.href ? (
+                <Link href={breadcrumb.href}> {breadcrumb.breadcrumb}</Link>
+              ) : (
+                <span>{breadcrumb.breadcrumb}</span>
+              )}
+            </li>
+          ))}
+        </ol>
       </div>
-      
     </nav>
   );
 };

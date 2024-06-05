@@ -1,7 +1,8 @@
 "use client";
-import SecondaryButton from "@/components/Buttons/SecondaryButton";
+import { useState } from "react";
 import CourseCard from "@/components/Course/CourseCard/CourseCard";
 import Breadcrumb from "@/components/Course/CourseCard/CourseHome/Breadcrumb";
+import CreateCourseModal from "@/components/CreateCourseModal/CreateCourseModal";
 
 import React from "react";
 
@@ -15,8 +16,8 @@ interface BreadcrumbItem {
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-  { breadcrumb: 'Home', href: '/' },
-  { breadcrumb: '> Courses', href: '/courses' },
+  { breadcrumb: "Home", href: "/" },
+  { breadcrumb: "> Courses", href: "/courses" },
 ];
 
 export default function Courses() {
@@ -28,8 +29,8 @@ export default function Courses() {
 
   return (
     <>
-      <Breadcrumb breadcrumbs={breadcrumbs}/>
-      
+      <Breadcrumb breadcrumbs={breadcrumbs} />
+
       <div className="container mx-auto px-4 mt-20">
         <div className="mx-36 flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">My Courses</h1>

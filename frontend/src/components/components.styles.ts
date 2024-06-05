@@ -295,7 +295,6 @@ export const SolidButtonClasses = clsx(
   "text-center",
   "uppercase",
   "transition-all",
-  "disabled:opacity-90",
   "disabled:shadow-none",
   "disabled:pointer-events-none",
   "text-xs",

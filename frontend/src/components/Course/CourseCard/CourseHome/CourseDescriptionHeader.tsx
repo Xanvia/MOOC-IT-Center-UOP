@@ -1,8 +1,10 @@
+"use client";
 import React from "react";
 import Breadcrumb from "../CourseHome/Breadcrumb";
-import CourseBigImage from "./CourseBigImage";
 import Image from "next/image";
 import SolidButton from "@/components/Buttons/SolidButton";
+import { toast } from "sonner";
+import PrimaryButton from "@/components/Buttons/PrimaryButton";
 
 interface BreadcrumbItem {
   breadcrumb: string;
@@ -15,14 +17,12 @@ const breadcrumbs: BreadcrumbItem[] = [
   { breadcrumb: "> Basic Web Programming", href: "/courses/1" },
 ];
 
-const computer = "/images/computer.jpg";
+const handleClick = () => {};
 
 const CourseHeader: React.FC = () => {
   return (
     <>
       <Breadcrumb breadcrumbs={breadcrumbs} />
-
-      {/* <CourseBigImage title="" image={computer} description=""/> */}
 
       <div className="bg-gradient-to-tl from-gray-600 to-gray-800 h-96 w-full relative">
         <Image
@@ -33,18 +33,18 @@ const CourseHeader: React.FC = () => {
           height={500}
           className="w-full h-full object-cover absolute mix-blend-overlay"
         />
-        <div className="p-24">
-          <div className="grid grid-col-2 grid-flow-col gap-24">
+        <div className="lg:p-24 sm:p-20 p-10">
+          <div className="grid grid-cols-1 md:grid-flow-col gap-6 sm:gap-10 md:gap-24 sm:mx-16 min-h-[150px]">
             <div>
-              <h1 className="text-white text-6xl font-bold">
+              <h1 className="text-white text-2xl sm:text-4xl md:text-4xl lg:text-5xl font-bold whit">
                 Basic Web Development
               </h1>
-              <h2 className="text-white text-2xl">
+              <h2 className="text-white sm:text-1xl lg:text-xl">
                 Offered by Imperiel Institute
               </h2>
             </div>
             <div>
-              <h2 className="text-white space-y-6 text-2xl font-semibold ">
+              <h2 className="text-white space-y-6 text-base sm:text-xl lg:text-2xl font-semibold ">
                 Prof. Namal Balasooriya
               </h2>
               <h2 className="text-white space-y-6 text-sm">
@@ -52,8 +52,8 @@ const CourseHeader: React.FC = () => {
               </h2>
             </div>
           </div>
-          <div className="mt-28 ml-32">
-            <SolidButton type="submit" text="E N R O L L" onClick={() => {}} disabled={false} />
+          <div className="relative mt-20 sm:mt-20 md:mt-14 sm:ml-20 ml-2">
+            <PrimaryButton text="E N R O L L" onClick={handleClick} />
           </div>
         </div>
       </div>

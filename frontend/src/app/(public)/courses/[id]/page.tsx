@@ -8,11 +8,7 @@ export default function CoursesHome() {
   return (
     <>
       <CourseHeader />
-      <div className="flex justify-center">
-        <h1>WelCome To Course</h1>
-
-        <h1>Introuduction to programming</h1>
-      </div>
+     
       <CourseDetails />
       <CourseContent />
       <CourseOutcomes />
