@@ -13,7 +13,7 @@ const CourseDetailsTabs = () => {
         content: (
         <div>
             <br/>
-            <h1 className="text-2xl font-semibold">About the Course</h1>
+            <h1 className="text-2xl font-semibold text-primary">About the Course</h1>
             <br/>
             <p>Web programming or web development is a term closely related to websites and the internet. Why is that? Because web programming is one of the processes involved in creating websites for internet purposes, which are commonly referred to as the World Wide Web (WWW). The term WWW is well-known because it is, after all, the most popular internet service today.</p>
             <br/>
@@ -28,6 +28,16 @@ const CourseDetailsTabs = () => {
                     className="mt-4"
                 />
             </div>
+
+            <div className = "mt-10 text-2xl font-semibold text-primary">
+                <h1>Specifications & Softwares</h1>
+            </div>
+            <ul className="mt-4 list-disc list-inside">
+                <li>PC/Laptop dengan minimal 1 GB Ram dan 2 GB free disk</li>
+                <li>PC/Laptop dengan minimal 1 GB Ram dan 2 GB free disk</li>
+                <li>PC/Laptop dengan minimal 1 GB Ram dan 2 GB free disk</li>
+                <li>PC/Laptop dengan minimal 1 GB Ram dan 2 GB free disk</li>
+            </ul>
             <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
             Click Me
             </button> 
