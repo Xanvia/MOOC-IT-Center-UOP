@@ -13,7 +13,7 @@ const breadcrumbs: BreadcrumbItem[] = [
   { breadcrumb: '> Basic Web Programming', href: '/courses/1' },
 ];
 
-const course3 = "/images/course3.png";
+const computer = "/images/computer.jpg";
 
 const CourseHeader: React.FC = () => {
   return (
@@ -21,9 +21,9 @@ const CourseHeader: React.FC = () => {
       <Breadcrumb breadcrumbs={breadcrumbs}/>
       <div className = "">
       <CourseBigImage
-            title="Digital Marketing"
+            title="Digital Marketingggg"
             description="Material on beginner marketing strategies and concepts"
-            image={course3}
+            image={computer}
           />
       </div>
       

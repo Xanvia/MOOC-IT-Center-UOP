@@ -13,7 +13,7 @@ const CourseBigImage: React.FC<CourseImageProps> = ({
 }) => {
     return (
         <div>
-            <Image src={image} alt={title} width={1200} height={200} />
+            <Image src={image} alt={title} width={2300} height={500}  />
 
         </div>
     );

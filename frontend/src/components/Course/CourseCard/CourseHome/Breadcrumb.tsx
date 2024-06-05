@@ -12,8 +12,9 @@ const Breadcrumbs = ({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) => {
   if (!breadcrumbs || breadcrumbs.length === 0) return null;
 
   return (
-    <nav className="flex bg-sky-200 p-4 pl-40" aria-label="Breadcrumb">
-      <ol className="inline-flex items-center space-x-1 md:space-x-3">
+    <nav className=" bg-sky-200 " aria-label="Breadcrumb">
+      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 p-4">
+      <ol className="inline-flex items-center justify-between md:space-x-3">
         {breadcrumbs.map((breadcrumb, index) => (
           <li key={breadcrumb.breadcrumb}>
             {breadcrumb.href ? (
@@ -24,6 +25,8 @@ const Breadcrumbs = ({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) => {
           </li>
         ))}
       </ol>
+      </div>
+      
     </nav>
   );
 };
