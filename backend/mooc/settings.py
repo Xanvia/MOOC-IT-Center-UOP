@@ -17,10 +17,10 @@ from datetime import timedelta
 from django.conf.urls.static import static
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # stored files.
-MEDIA_URL = '/media/'
+MEDIA_URL = "/media/"
 
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -173,5 +173,3 @@ REST_FRAMEWORK = {
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-
-

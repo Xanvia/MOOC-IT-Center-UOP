@@ -10,7 +10,7 @@ interface ButtonProps {
 
 const SolidButton: React.FC<ButtonProps> = ({ text, onClick, disabled, type = "button" }) => {
   return (
-    <button className={SolidButtonClasses} disabled={disabled} type={type}>
+    <button className={SolidButtonClasses} disabled={disabled} type={type} onClick={onClick}>
       {text}
     </button>
   );
