@@ -9,7 +9,7 @@ export default function CoursesHome() {
   return (
     <>
       <CourseHeader />
-      <CourseHStat/>
+      <CourseHStat />
       <CourseDetails />
       <CourseContent />
       <CourseOutcomes />

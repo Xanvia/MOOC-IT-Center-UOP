@@ -2,7 +2,7 @@ import React from "react";
 
 const CourseHStat: React.FC = () => {
   return (
-    <div className="bg-primary_light py-5 mt-2 md:mt-0 absolute w-full">
+    <div className="bg-primary_light py-5 md:mt-0  w-full">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-6 sm:gap-8 gap-2 text-center">
           <div>

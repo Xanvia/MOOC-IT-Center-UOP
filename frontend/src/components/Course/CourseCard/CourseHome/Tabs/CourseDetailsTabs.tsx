@@ -26,7 +26,7 @@ const CourseDetailsTabs = () => {
           <button
             key={tab.name}
             onClick={() => setActiveTab(tab.name)}
-            className={`mx-16 px-8 py-2  font-semibold text-gray-700 border-b-2 transition-colors duration-300 ${
+            className={`xl:mx-16 md:mx-8 px-1 sm:px-8 py-2  font-semibold text-gray-700 border-b-2 transition-colors duration-300 ${
               activeTab === tab.name
                 ? "border-blue-800 text-blue-500"
                 : "border-transparent hover:border-gray-300"
@@ -36,13 +36,13 @@ const CourseDetailsTabs = () => {
           </button>
         ))}
       </div>
-      <div className="mx-32">
+      <div className="lg:mx-32">
         {tabs.map(
           (tab) =>
             activeTab === tab.name && (
               <div
                 key={tab.name}
-                className="py-14 px-20 mx-28 text-left bg-primary_light"
+                className="py-14 px-3 sm:px-20 xl:mx-28  text-left bg-primary_light"
               >
                 {tab.content}
               </div>
