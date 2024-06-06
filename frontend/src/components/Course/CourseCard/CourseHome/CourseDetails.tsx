@@ -1,5 +1,5 @@
 import React from "react";
-import CourseDetailsTabs from "../CourseHome/CourseDetailsTabs";
+import CourseDetailsTabs from "./Tabs/CourseDetailsTabs";
 
 const CourseDetails: React.FC = () => {
   return (
