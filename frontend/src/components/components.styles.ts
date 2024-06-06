@@ -281,8 +281,7 @@ export const SecondaryButtonClass = clsx(
   "mb-2",
   "dark:focus:ring-white-900",
   "border",
-  "border-white-800",
-
+  "border-white-800"
 );
 
 export const SolidButtonClasses = clsx(
@@ -530,5 +529,6 @@ export const EditButtonClasses = clsx(
   "py-2",
   "mb-2",
   "pr-5",
-  "dark:focus:ring-white"
+  "dark:focus:ring-white",
+  "ring-1"
 );

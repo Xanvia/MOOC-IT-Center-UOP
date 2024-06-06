@@ -4,7 +4,7 @@ import Breadcrumb from "../CourseHome/Breadcrumb";
 import Image from "next/image";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
-import CourseHStat from "./CourseHStat";
+
 
 const headerImage = "/images/course-header.jpg";
 
@@ -64,7 +64,7 @@ const CourseHeader: React.FC = () => {
             )}
           </div>
         </div>
-        <CourseHStat />
+        
       </div>
     </>
   );
