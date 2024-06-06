@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "userprofiles",
     "corsheaders",
     "courses",
+    "coursemanagement",
 ]
 
 MIDDLEWARE = [
