@@ -5,7 +5,7 @@ const CourseDetails: React.FC = () => {
   return (
     <>  
     <center>
-      <div className="bg-white shadow-sm">
+      <div className="bg-white shadow-sm mt-10">
         <div className="container mx-auto p-8">
           <CourseDetailsTabs/>
         </div>
