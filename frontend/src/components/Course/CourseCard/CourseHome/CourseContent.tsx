@@ -24,8 +24,8 @@ const CourseContent: React.FC = () => {
           </ul>
         </span>
       </div>
-      <div className="col-span-2">
-        <h1> Course Recommendations For You</h1>
+      <div className="col-span-2 mx-44">
+        <h1 className= "text-2xl text-primary font-semibold"> Course Recommendations For You</h1>
         <div className="w-full h-px bg-gray-200 my-4" />
 
         
