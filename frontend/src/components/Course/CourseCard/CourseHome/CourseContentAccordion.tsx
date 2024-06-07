@@ -38,7 +38,7 @@ const Accordion = () => {
       {accordionData.map((item, index) => (
         <div key={index}>
           <div 
-            style={{ display: 'flex', justifyContent: 'space-between', cursor: 'pointer', marginBottom: '32px',borderBottom: '1px solid black', paddingBottom: '8px' }}
+            style={{ display: 'flex', justifyContent: 'space-between', cursor: 'pointer', marginBottom: '32px',borderBottom: '1px solid black', paddingBottom: '8px', }}
             onClick={() => handleToggle(index)}
           >
             <span style={{ color: activeIndex === index ? 'blue' : 'black' }}>
