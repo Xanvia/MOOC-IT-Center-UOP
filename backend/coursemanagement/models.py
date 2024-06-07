@@ -1,63 +1,36 @@
 from django.db import models
-    
-class Course(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.CharField(max_length=500)
-    credits = models.IntegerField()
-    start_date = models.DateField()
-    end_date = models.DateField()
+from courses.models import Course, Enrollment
+from django.contrib.auth.models import User
+
+
+class CoursePermissions(models.Model):
+    label = models.CharField(max_length=100)
+
+
+class Payments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    enrollement = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title + ' - ' + self.description
-    
-
-class CourseTeacher(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
-    
-
-class Student(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    date_of_birth = models.DateField()
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return self.user.username
 
 
-class Enrollment(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+class CourseTeachers(models.Model):
+    ROLES = [
+        ("course_creator", "Course Creator"),
+        ("editing_teacher", "Editing Teacher"),
+        ("non-editing_teacher", "Non-Editing Teacher"),
+    ]
+
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    date_enrolled = models.DateField(auto_now_add=True)
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=20, choices=ROLES, default="non-editing_teacher")
+    permissions = models.ManyToManyField(CoursePermissions, blank=True)
 
     class Meta:
-        unique_together = ('student', 'course')
+        unique_together = ("course", "teacher")
 
     def __str__(self):
-        return f"{self.student} enrolled in {self.course}"
-
-
-class Assignment(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    due_date = models.DateField()
-
-    def __str__(self):
-        return self.title
-
-
-class Submission(models.Model):
-    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    submitted_date = models.DateField(auto_now_add=True)
-    content = models.TextField()
-
-    def __str__(self):
-        return f"Submission by {self.student} for {self.assignment}"
-
+        return self.teacher.username
