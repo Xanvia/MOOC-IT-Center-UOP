@@ -9,19 +9,19 @@ interface AccordionItem {
 const accordionData: AccordionItem[] = [
   {
     title: "Introduction to jQuery",
-    content: "Beginner-friendly course that teaches the basics of using jQuery, a popular JavaScript library."
+    content: "Beginner-friendly course that teaches the basics of using jQuery, a popular JavaScript library. Learn how to make asynchronous requests using AJAX.Beginner-friendly co the basics of using jQuery, a popular JavaScript library."
   },
   {
     title: "Introduction to AJAX",
-    content: "Learn how to make asynchronous requests using AJAX."
+    content: "Learn how to make asynchronous requests using AJAX.Beginner-friendly course that teaches the basics of using jQuery, a popular JavaScript library. the basics of using jQuery, a popular JavaScript library."
   },
   {
     title: "Single Page Applications (SPAs)",
-    content: "Understand the principles behind SPAs and how they work."
+    content: "Understand the principles behind SPAs and how they work. Learn how to make asynchronous requests using AJAX.Beginner-friendly co Learn how to make asynchronous requests using AJAX.Beginner-friendly co the basics of using jQuery, a popular JavaScript library."
   },
   {
     title: "Angular as a SPA Framework",
-    content: "Learn how to use Angular for building SPAs."
+    content: "Learn how to use Angular for building SPAs. Learn how to make asynchronous requests using AJAX.Beginner-friendly co Learn how to make asynchronous requests using AJAX.Beginner-friendly co the basics of using jQuery, a popular JavaScript library."
   }
 ];
 
@@ -33,24 +33,30 @@ const Accordion = () => {
   };
 
   return (
-    <div>
+    <div className="">
+      <div className= " ">
       {accordionData.map((item, index) => (
         <div key={index}>
           <div 
-            style={{ display: 'flex', justifyContent: 'space-between', cursor: 'pointer', marginBottom: '8px' }}
+            style={{ display: 'flex', justifyContent: 'space-between', cursor: 'pointer', marginBottom: '32px' }}
             onClick={() => handleToggle(index)}
           >
-            <span>{index + 1 < 10 ? `0${index + 1}` : index + 1} {item.title}</span>
+            <span style={{ color: activeIndex === index ? 'blue' : 'black' }}>
+              {index + 1 < 10 ? `0${index + 1}.` : index + 1} {item.title}.
+            </span>
             <span>{activeIndex === index ? 'x' : '+'}</span>
           </div>
           {activeIndex === index && (
-            <div style={{ paddingLeft: '20px', marginBottom: '8px' }}>
+            <div style={{ paddingLeft: '32px', marginBottom: '44px', }}>
               {item.content}
             </div>
           )}
         </div>
       ))}
     </div>
+
+    </div>
+    
   );
 };
 
