@@ -1,14 +1,15 @@
-import React from 'react';
+import React from "react";
 import Image from "next/image";
-import EditButtonPrimary from '@/components/Buttons/EditButtonPrimary';
+import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 
 const headerImage = "/images/course-header.jpg";
 
 const DescriptionTab: React.FC = () => {
-    return (
-        <div>
-           <div className="space-y-2">
-          <EditButtonPrimary onClick={()=>{}} text='E D I T'/>
+  return (
+    <div className="lg:mx-32">
+      <div className="py-14 px-3 sm:px-20 xl:mx-28  text-left bg-primary_light">
+        <div className="space-y-2">
+          <EditButtonPrimary onClick={() => {}} text="E D I T" />
           <br />
           <h1 className="text-2xl font-semibold text-primary">
             About the Course
@@ -58,8 +59,9 @@ const DescriptionTab: React.FC = () => {
             <li>Internet access</li>
           </ul>
         </div>
-        </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default DescriptionTab;

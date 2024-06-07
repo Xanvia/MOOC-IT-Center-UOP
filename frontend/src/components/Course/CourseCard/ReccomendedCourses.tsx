@@ -9,14 +9,14 @@ const RecommendedCourses: React.FC = () => {
   return (
     <>
       <div className="col-span-2 mx-44 mt-20">
-        <h1 className="text-2xl text-primary font-semibold ml-8">
+        <h1 className="text-2xl text-primary font-semibold mx-44">
           {" "}
           Course Recommendations For You
         </h1>
         <div className="w-full h-px bg-gray-200 my-4" />
       </div>
-      <div className="col-span-2 mx-44 mb-6 pb-20">
-        <div className="grid grid-cols-3 gap-2">
+      <div className="container mx-auto px-4 mt-10">
+        <div className="grid grid-cols-1 py-10 ml-12 sm:grid-cols-2 xl:grid-cols-3 lg:grid-cols-3 justify-center items-center mx-10 sm:mx-36 lg:mx-36 gap-4 lg:gap-4 2xl:gap-10">
           <CourseCard
             title="Digital Marketing"
             description="Material on beginner marketing strategies and concepts"
@@ -32,6 +32,7 @@ const RecommendedCourses: React.FC = () => {
             description="Material on beginner marketing strategies and concepts"
             image={course5}
           />
+        
         </div>
       </div>
     </>

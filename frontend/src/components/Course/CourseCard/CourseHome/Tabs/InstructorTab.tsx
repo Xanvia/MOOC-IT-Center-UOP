@@ -23,6 +23,8 @@ const instructors: Instructor[] = [
 
 const InstructorTab: React.FC = () => {
   return (
+    <div className="lg:mx-32">
+      <div className="py-14 px-3 sm:px-20 xl:mx-28  text-left bg-primary_light">
     <div className="flex flex-col gap-4 bg-white rounded-lg">
       {instructors.map((instructor, index) => (
         <div key={index} className="p-4  rounded shadow flex  md:flex-row md:justify-between">
@@ -39,6 +41,8 @@ const InstructorTab: React.FC = () => {
         </div>
       ))}
     </div>
+  </div>
+</div>
   );
 };
 

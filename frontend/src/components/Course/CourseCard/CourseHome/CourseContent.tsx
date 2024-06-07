@@ -38,13 +38,13 @@ const CourseContent: React.FC = () => {
   return (
     <>
       <div className="w-full">
-        <div className="grid grid-cols-2 gap-2 mx-12 my-24 center">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-2 xl:mx-12 my-24 md:mx-28 mx-10  lg:mx-40">
           <div>
             <h1 className="text-3xl text-center font-bold text-primary">
               Course Content
             </h1>
           </div>
-          <div className="mr-56">
+          <div className="xl:mr-56 pt-10 xl-pt-0">
             <div className="">
               <div className=" ">
                 {accordionData.map((item, index) => (
