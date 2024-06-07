@@ -1,5 +1,10 @@
 import React from "react";
 import CourseContentAccordion from "../CourseHome/CourseContentAccordion";
+import CourseCard from "@/components/Course/CourseCard/CourseCard";
+
+const course1 = "/images/course1.png";
+const course2 = "/images/course2.png";
+const course5 = "/images/course5.png";
 
 const CourseContent: React.FC = () => {
   return <>
@@ -24,12 +29,28 @@ const CourseContent: React.FC = () => {
           </ul>
         </span>
       </div>
-      <div className="col-span-2 mx-44">
-        <h1 className= "text-2xl text-primary font-semibold"> Course Recommendations For You</h1>
+      <div className="col-span-2 mx-44 mt-6">
+        <h1 className= "text-2xl text-primary font-semibold ml-8"> Course Recommendations For You</h1>
         <div className="w-full h-px bg-gray-200 my-4" />
-
-        
-
+      </div>
+      <div className= "col-span-2 mx-44 mt-6">
+      <div className="grid grid-cols-3 gap-2">
+          <CourseCard
+            title="Digital Marketing"
+            description="Material on beginner marketing strategies and concepts"
+            image={course1}
+          />
+          <CourseCard
+            title="Data Analysis"
+            description="Description 3"
+            image={course2}
+          />
+          <CourseCard
+            title="Digital Marketing"
+            description="Material on beginner marketing strategies and concepts"
+            image={course5}
+          />
+          </div>
       </div>
 
 
