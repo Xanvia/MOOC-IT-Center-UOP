@@ -103,8 +103,17 @@ class Image(models.Model):
     alt_text = models.CharField(max_length=255)
 
 
+class Enrollment(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    date_enrolled = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.student.username
+
+
 class Progress(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    enrollement = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     component = GenericForeignKey("content_type", "object_id")
@@ -125,13 +134,13 @@ class Answer(models.Model):
 
 
 class UserAnswer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    enrollement = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
     grade = models.DecimalField(max_digits=5, decimal_places=2)
 
 
 class UserCodingAnswer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    enrollement = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
     coding_assignment = models.ForeignKey(CodingAssignment, on_delete=models.CASCADE)
     code = models.TextField()
     result = models.TextField()
