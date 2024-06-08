@@ -13,8 +13,6 @@ export default function Home() {
   return (
     <>
       <Search />
-  
-      
 
       <div className="grid grid-cols-1 py-10 ml-12 sm:grid-cols-2 xl:grid-cols-4 lg:grid-cols-3 justify-center items-center mx-10 sm:mx-36 lg:mx-36 gap-4  lg:gap-4 2xl:gap-10">
         <CourseCard

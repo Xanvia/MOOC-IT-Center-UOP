@@ -4,9 +4,10 @@ import Image from "next/image";
 import ProfileInfo from "./ProfileInfo";
 import EditProfileModal from "./EditProfile";
 import { ProfileData, Work, Education } from "@/components/Profile/types";
-import Cookies from "js-cookie";
-const DefaultProfileImage = "/images/52.jpg";
 import { ProfileBackground } from "../components.styles";
+import Loader from "../Loarder/Loarder";
+
+const DefaultProfileImage = "/images/52.jpg";
 
 interface ProfileProps {
   profileData: ProfileData | undefined;
@@ -43,7 +44,7 @@ const Profile: React.FC<ProfileProps> = ({ profileData, reloadData }) => {
             />
           </>
         ) : (
-          <div>Loading...</div>
+          <Loader />
         )}
       </div>
     </div>
