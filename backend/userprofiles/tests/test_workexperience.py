@@ -10,8 +10,6 @@ from userprofiles.models import (
     Institution,
 )
 from rest_framework_simplejwt.tokens import AccessToken
-from collections import OrderedDict
-from .set_permissons import assign_permission_to_group
 
 
 class GetUserProfileViewSetTest(APITestCase):
@@ -38,9 +36,6 @@ class GetUserProfileViewSetTest(APITestCase):
         cls.group = Group.objects.get(name="student")
         cls.user.groups.add(cls.group)
         cls.user.save()
-        assign_permission_to_group(cls.group, WorkExperience, "change_workexperience")
-        assign_permission_to_group(cls.group, WorkExperience, "delete_workexperience")
-        assign_permission_to_group(cls.group, WorkExperience, "add_workexperience")
         cls.token = str(AccessToken.for_user(cls.user))
         cls.maxDiff = None
 

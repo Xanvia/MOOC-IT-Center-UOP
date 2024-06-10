@@ -5,6 +5,6 @@ urlpatterns = [
     path(
         "",
         CourseCreateView.as_view({"get": "retrieve", "post": "create"}),
-        name="create-course",
+        name="course-list",
     )
 ]

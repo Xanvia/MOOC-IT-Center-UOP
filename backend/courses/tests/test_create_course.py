@@ -5,14 +5,14 @@ from django.contrib.auth.models import User, Group
 from userprofiles.models import (
     UserProfile,
     Country,
-    WorkExperience,
-    Institution,
-    Education,
+    Interest,
+    Institution
 )
 from rest_framework_simplejwt.tokens import AccessToken
+from collections import OrderedDict
 
 
-class GetUserProfileViewSetTest(APITestCase):
+class CreateCourseTest(APITestCase):
     @classmethod
     def setUpTestData(cls):
         cls.userdata = {
@@ -33,29 +33,31 @@ class GetUserProfileViewSetTest(APITestCase):
             "birth_date": "2000-01-01",
         }
         cls.user_profile = UserProfile.objects.create(**cls.user_profile_data)
+        cls.group = Group.objects.get(name="teacher")
+        cls.user.groups.add(cls.group)
+        cls.user.save()
         cls.token = str(AccessToken.for_user(cls.user))
         cls.maxDiff = None
 
     def setUp(self):
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
-        self.url = reverse("user-profile")
+        self.url = reverse("course-list")
 
-    def test_get_user_profile_success(self):
-        work = WorkExperience.objects.create(
-            user_profile=self.user_profile,
-            position="Software Engineer",
-            company="Google",
-            start_date="2019-01",
-            end_date="2021-01",
-        )
-        institution = Institution.objects.create(label="University of Nairobi")
-        education = Education.objects.create(
-            user_profile=self.user_profile,
-            degree="Bsc Hons in Computer Science",
-            institution=institution,
-            start_date="2015-01",
-            end_date="2019-01",
-        )
-        response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    def test_create_course_success(self):
+        institute = Institution.objects.get(id=1)
+        category = Interest.objects.get(id=1)
+        data = {
+            "name": "test course",
+            "category": 1,
+            "institution": 1,
+        }
+        response = self.client.post(self.url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        expected_data = {
+            "status": "success",
+            "message": "Course created successfully",
+        }
+        
+        self.assertEqual(response.data, expected_data)
