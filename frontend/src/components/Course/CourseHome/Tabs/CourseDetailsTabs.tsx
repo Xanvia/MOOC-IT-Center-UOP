@@ -1,10 +1,10 @@
 "use client";
 import React, { lazy, useState } from "react";
 const CourseContent = lazy(
-  () => import("@/components/Course/CourseCard/CourseHome/CourseContent")
+  () => import("@/components/Course/CourseHome/CourseContent")
 );
 const CourseOutcomes = lazy(
-  () => import("@/components/Course/CourseCard/CourseHome/CourseOutcomes")
+  () => import("@/components/Course/CourseHome/CourseOutcomes")
 );
 const DescriptionTab = lazy(() => import("./DescriptionTab"));
 const InstructorTab = lazy(() => import("./InstructorTab"));

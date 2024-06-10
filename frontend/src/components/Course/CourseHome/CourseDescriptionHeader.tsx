@@ -1,11 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import Breadcrumb from "../CourseHome/Breadcrumb";
+import Breadcrumb from "./Breadcrumb";
 import Image from "next/image";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
 import CourseDescEditModal from "@/components/Course/CourseCard/CourseHome/CourseDescEditModal";
-
 
 const headerImage = "/images/course-header.jpg";
 
@@ -69,7 +68,6 @@ const CourseHeader: React.FC = () => {
             
           </div>
         </div>
-        
       </div>
     </>
   );

@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 import CourseCard from "@/components/Course/CourseCard/CourseCard";
-import Breadcrumb from "@/components/Course/CourseCard/CourseHome/Breadcrumb";
-import CreateCourseModal from "@/components/CreateCourseModal/CreateCourseModal";
+import Breadcrumb from "@/components/Course/CourseHome/Breadcrumb";
+import CreateCourseModal from "@/components/Course/CreateCourseModal/CreateCourseModal";
 
 import React from "react";
 
