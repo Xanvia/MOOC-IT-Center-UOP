@@ -6,9 +6,9 @@ from django.contrib.contenttypes.models import ContentType
 from coursemanagement.models import CourseTeachers,CoursePermissions,Payments
 
 
-
 def assign_permissions(apps, schema_editor):
-  
+    
+
     admin_teacher_models = [
      CourseTeachers,CoursePermissions
     ]

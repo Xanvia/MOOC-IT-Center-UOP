@@ -19,8 +19,10 @@ from courses.models import (
     UserCodingAnswer,
 )
 
-
 def assign_permissions(apps, schema_editor):
+   
+
+
     # Define the models for which you want to assign permissions
     admin_teacher_models = [
         Course,

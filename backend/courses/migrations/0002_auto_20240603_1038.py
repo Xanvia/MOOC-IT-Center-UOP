@@ -5,9 +5,9 @@ from django.contrib.auth.models import Group
 
 
 def create_groups(apps, schema_editor):
-    Group.objects.get_or_create(name="admin")
-    Group.objects.get_or_create(name="student")
-    Group.objects.get_or_create(name="teacher")
+    Group.objects.get(name="admin")
+    Group.objects.get(name="student")
+    Group.objects.get(name="teacher")
 
 
 def remove_groups(apps, schema_editor):

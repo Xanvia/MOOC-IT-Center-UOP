@@ -12,9 +12,9 @@ from userprofiles.models import (
     Interest,
 )
 
-
 def assign_permissions(apps, schema_editor):
     # Define the models for which you want to assign permissions
+
     models = [UserProfile, Degree,  Education, WorkExperience]
     admin_only_models = [Country, UserType, Interest]
 
