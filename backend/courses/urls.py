@@ -2,6 +2,9 @@ from django.urls import path
 from .views import CourseCreateView
 
 urlpatterns = [
-    path("", CourseCreateView.as_view(),name="create-course")
-
+    path(
+        "",
+        CourseCreateView.as_view({"get": "retrieve", "post": "create"}),
+        name="create-course",
+    )
 ]

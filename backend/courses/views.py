@@ -1,23 +1,20 @@
-from django.shortcuts import render
-
-# Create your views here.
-from rest_framework import generics
+from rest_framework import viewsets
 from .models import Course
 from .serializers import CourseSerializer
 
 
-class CourseCreateView(generics.CreateAPIView):
+class CourseCreateView(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
-    def create(self, serializer, request):
-        # Assume the user is available in the request context
-        user = self.request.user
-        serializer.save(course_creator=user)
+    def create(self, request, *args, **kwargs):
 
+        # we need to add course creator
         request.data["course_creator"] = request.user.id
 
-
-    
-
-
+        response = super().create(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "message": "Course created successfully",
+        }
+        return response
