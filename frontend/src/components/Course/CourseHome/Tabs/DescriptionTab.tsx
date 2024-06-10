@@ -61,7 +61,7 @@ const DescriptionTab: React.FC = () => {
           </ul>
           </div> */}
 
-          <TextEditor />
+          <TextEditor value={"Test content"} onChange={() => {}} />
         </div>
       </div>
     </div>
