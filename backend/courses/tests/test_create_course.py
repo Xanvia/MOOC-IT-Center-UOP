@@ -2,14 +2,10 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import User, Group
-from userprofiles.models import (
-    UserProfile,
-    Country,
-    Interest,
-    Institution
-)
+from userprofiles.models import UserProfile, Country, Interest, Institution
 from rest_framework_simplejwt.tokens import AccessToken
-from collections import OrderedDict
+from rest_framework.exceptions import ErrorDetail
+from courses.models import Course
 
 
 class CreateCourseTest(APITestCase):
@@ -43,7 +39,6 @@ class CreateCourseTest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
         self.url = reverse("course-list")
 
-
     def test_create_course_success(self):
         institute = Institution.objects.get(id=1)
         category = Interest.objects.get(id=1)
@@ -59,5 +54,44 @@ class CreateCourseTest(APITestCase):
             "status": "success",
             "message": "Course created successfully",
         }
-        
+        self.assertEqual(response.data, expected_data)
+
+        #check if the course is created in db
+        course = Course.objects.get(name="test course")
+        self.assertEqual(course.name, "test course")
+
+    def test_create_course_required_fields(self):
+        response = self.client.post(self.url, {}, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        expected_data = {
+            "status": "fail",
+            "message": [
+                "name field is required.",
+                "category field is required.",
+                "institution field is required.",
+            ],
+        }
+
+        self.assertEqual(response.data, expected_data)
+
+    def test_create_course_invalid_category(self):
+        data = {
+            "name": "test course",
+            "category": 1000,
+            "institution": 1,
+        }
+        response = self.client.post(self.url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        expected_data = {
+            "status": "fail",
+            "message": [
+                ErrorDetail(
+                    string='Invalid pk "1000" - object does not exist.',
+                    code="does_not_exist",
+                )
+            ],
+        }
+
         self.assertEqual(response.data, expected_data)
