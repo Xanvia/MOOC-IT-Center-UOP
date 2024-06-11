@@ -59,12 +59,14 @@ const CourseHeader: React.FC = () => {
           </div>
           <div className="relative mt-10 sm:mt-10 md:mt-14 sm:ml-20 ml-2">
             {isEdit ? (
-              <EditButtonPrimary text="E D I T" onClick={handleClick} />
+              <CourseDescEditModal/>
+              
+              
             ) : (
               <PrimaryButton text="E N R O L L" onClick={handleClick} />
             )}
-
-            <CourseDescEditModal/>
+            
+            
           </div>
         </div>
         

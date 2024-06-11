@@ -6,6 +6,7 @@ import SolidButton from "@/components/Buttons/SolidButton";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import CloseButton from "@/components/Buttons/CloseButton";
 import { ModalClassesBG } from "@/components/components.styles";
+import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 
 export default function CourseDescEditModal() {
   const [category, setCategory] = useState<string | null>(null);
@@ -13,6 +14,8 @@ export default function CourseDescEditModal() {
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
+
+  
 
   const handleInsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsOpen(false);
@@ -29,7 +32,7 @@ export default function CourseDescEditModal() {
 
   return (
     <>
-      <SecondaryButton onClick={toggleModal} text="Edit" />
+      <EditButtonPrimary text="E D I T" onClick={ toggleModal} />
 
       {isOpen && (
         <div className={ModalClassesBG} onMouseDown={handleInsideClick}>
@@ -75,6 +78,79 @@ export default function CourseDescEditModal() {
                     value={category ?? ""}
                     onChange={handleCategoryChange}
                   />
+                  <div className="mb-4">
+                    <label
+                      htmlFor="title"
+                      className="block text-sm font-medium text-primary mb-1"
+                    >
+                      Institute
+                    </label>
+                    <Field
+                      type="text"
+                      id="title"
+                      name="title"
+                      className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
+                        formik.touched.title && formik.errors.title
+                          ? "border-primary"
+                          : ""
+                      }`}
+                      placeholder="Enter Institute"
+                    />
+                    <ErrorMessage
+                      name="title"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="title"
+                      className="block text-sm font-medium text-primary mb-1"
+                    >
+                      Level
+                    </label>
+                    <Field
+                      type="text"
+                      id="title"
+                      name="title"
+                      className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
+                        formik.touched.title && formik.errors.title
+                          ? "border-primary"
+                          : ""
+                      }`}
+                      placeholder="ex:Beginer"
+                    />
+                    <ErrorMessage
+                      name="title"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="title"
+                      className="block text-sm font-medium text-primary mb-1"
+                    >
+                      Course Duration
+                    </label>
+                    <Field
+                      type="text"
+                      id="title"
+                      name="title"
+                      className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
+                        formik.touched.title && formik.errors.title
+                          ? "border-primary"
+                          : ""
+                      }`}
+                      placeholder="No of weeks"
+                    />
+                    <ErrorMessage
+                      name="title"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+                  
                   <br />
                   <center>
                     <div className="mt-6 mb-2">
