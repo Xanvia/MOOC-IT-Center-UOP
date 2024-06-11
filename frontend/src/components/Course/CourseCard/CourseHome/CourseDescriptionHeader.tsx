@@ -4,6 +4,7 @@ import Breadcrumb from "../CourseHome/Breadcrumb";
 import Image from "next/image";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
+import CourseDescEditModal from "@/components/Course/CourseCard/CourseHome/CourseDescEditModal";
 
 
 const headerImage = "/images/course-header.jpg";
@@ -20,7 +21,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const CourseHeader: React.FC = () => {
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(true);
 
   const handleClick = () => {};
 
@@ -62,6 +63,8 @@ const CourseHeader: React.FC = () => {
             ) : (
               <PrimaryButton text="E N R O L L" onClick={handleClick} />
             )}
+
+            <CourseDescEditModal/>
           </div>
         </div>
         
