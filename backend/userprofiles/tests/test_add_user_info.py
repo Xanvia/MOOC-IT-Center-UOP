@@ -5,9 +5,6 @@ from django.contrib.auth.models import User
 from userprofiles.models import UserProfile
 from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth.models import Group
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
-from .set_permissons import assign_permission_to_group
 
 
 class AddUserInfoTest(APITestCase):
@@ -27,7 +24,7 @@ class AddUserInfoTest(APITestCase):
         cls.token = str(AccessToken.for_user(cls.user))
 
     def setUp(self):
-        assign_permission_to_group(self.group, UserProfile, "change_userprofile")
+        # assign_permission_to_group(self.group, UserProfile, "change_userprofile")
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
         self.url = reverse("add-user-info")
 

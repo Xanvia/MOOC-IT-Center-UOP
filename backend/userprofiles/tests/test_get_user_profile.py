@@ -10,8 +10,6 @@ from userprofiles.models import (
     Education,
 )
 from rest_framework_simplejwt.tokens import AccessToken
-from collections import OrderedDict
-from .set_permissons import assign_permission_to_group
 
 
 class GetUserProfileViewSetTest(APITestCase):
