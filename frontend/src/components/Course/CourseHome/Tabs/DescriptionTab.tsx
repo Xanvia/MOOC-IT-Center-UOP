@@ -11,7 +11,7 @@ const DescriptionTab: React.FC = () => {
       <div className="py-14 px-3 sm:px-20 xl:mx-28  text-left bg-primary_light">
         <div className="space-y-2">
           <EditButtonPrimary onClick={() => {}} text="E D I T" />
-          {/* <div className="pt-10">
+          <div className="pt-10">
           <h1 className="text-2xl font-semibold text-primary">
             About the Course
           </h1>
@@ -59,7 +59,7 @@ const DescriptionTab: React.FC = () => {
             <li>Text Editor (VsCode)</li>
             <li>Internet access</li>
           </ul>
-          </div> */}
+          </div>
 
           <TextEditor />
         </div>
