@@ -152,15 +152,15 @@ export default function CourseDescEditModal() {
                   </div>
                   
                   <br />
-                  <center>
-                    <div className="mt-6 mb-2">
+                  
+                    <div className="mt-4 mb-2 flex justify-end">
                       <SolidButton
                         type="submit"
-                        text="S U B M I T"
+                        text="D O N E"
                         onClick={() => {}}
                       />
                     </div>
-                  </center>
+                  
                 </Form>
               )}
             </Formik>
