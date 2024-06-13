@@ -93,7 +93,7 @@ const DropDownInstitution = ({ addSelection, selectedInstitution }: Props) => {
             component="div"
             className="top-0 left-0 text-red-600 text-xs"
           />
-          <label className={InputLabel}>Institution</label>
+         {/*} <label className={InputLabel}>Institution</label>*/}
         </div>
       </div>
 
