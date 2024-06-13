@@ -3,7 +3,6 @@ import React from "react";
 import Image from "next/image";
 import TextEditor from "../../CourseTextEditor";
 import CourseDescEditModal from "../CourseDescEditModal";
-
 const headerImage = "/images/course-header.jpg";
 
 const DescriptionTab: React.FC = () => {
@@ -11,11 +10,10 @@ const DescriptionTab: React.FC = () => {
     <div className="lg:mx-32">
       <div className="py-14 px-3 sm:px-20 xl:mx-28  text-left bg-primary_light">
         <CourseDescEditModal />
-
         <div className="space-y-2">
-          <div className="pt-10">
+          <div className="pt-4">
             <h1 className="text-2xl font-semibold text-primary">
-              About the Course
+              Basic Web Development
             </h1>
             <br />
             <p>

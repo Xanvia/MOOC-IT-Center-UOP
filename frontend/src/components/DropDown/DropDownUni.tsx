@@ -16,9 +16,10 @@ interface Institution {
 interface Props {
   addSelection: (item: string) => void;
   selectedInstitution?: string;
+  label : string;
 }
 
-const DropDownInstitution = ({ addSelection, selectedInstitution }: Props) => {
+const DropDownInstitution = ({ addSelection, selectedInstitution,label }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState(
@@ -67,7 +68,7 @@ const DropDownInstitution = ({ addSelection, selectedInstitution }: Props) => {
   return (
     <div className="relative" ref={dropdownRef}>
       <span className="text-sm font-semibold text-primary ">
-        Your Institution
+        {label}
       </span>
       <div className={InputOuterDiv}>
         <div className={InputInnerDiv}>

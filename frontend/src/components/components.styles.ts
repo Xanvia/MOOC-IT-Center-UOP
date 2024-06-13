@@ -543,3 +543,11 @@ export const SolidInputFieldClasses = clsx(
   "shadow-sm",
   "p-2 "
 );
+
+export const InputLabelClasses2 = clsx(
+  "block",
+  "text-sm",
+  "font-medium",
+  "text-primary",
+  "mb-1"
+);

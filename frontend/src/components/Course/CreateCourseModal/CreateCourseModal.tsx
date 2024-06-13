@@ -5,7 +5,10 @@ import * as Yup from "yup";
 import SolidButton from "@/components/Buttons/SolidButton";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import CloseButton from "../../Buttons/CloseButton";
-import { ModalClassesBG,SolidInputFieldClasses } from "../../components.styles";
+import {
+  ModalClassesBG,
+  SolidInputFieldClasses,
+} from "../../components.styles";
 
 export default function CreateCourseModal() {
   const [category, setCategory] = useState<string | null>(null);
