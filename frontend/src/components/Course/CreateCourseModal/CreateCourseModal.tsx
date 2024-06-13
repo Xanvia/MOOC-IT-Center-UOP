@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import SolidButton from "@/components/Buttons/SolidButton";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import CloseButton from "../../Buttons/CloseButton";
-import { ModalClassesBG } from "../../components.styles";
+import { ModalClassesBG,SolidInputFieldClasses } from "../../components.styles";
 
 export default function CreateCourseModal() {
   const [category, setCategory] = useState<string | null>(null);
@@ -58,7 +58,7 @@ export default function CreateCourseModal() {
                       type="text"
                       id="title"
                       name="title"
-                      className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
+                      className={`${SolidInputFieldClasses}  ${
                         formik.touched.title && formik.errors.title
                           ? "border-primary"
                           : ""

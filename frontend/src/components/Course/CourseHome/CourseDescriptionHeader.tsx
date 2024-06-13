@@ -2,9 +2,8 @@
 import React, { useState } from "react";
 import Breadcrumb from "./Breadcrumb";
 import Image from "next/image";
-import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
-import CourseDescEditModal from "@/components/Course/CourseCard/CourseHome/CourseDescEditModal";
+import CourseDescEditModal from "./CourseDescEditModal";
 
 const headerImage = "/images/course-header.jpg";
 
@@ -57,13 +56,9 @@ const CourseHeader: React.FC = () => {
             </div>
           </div>
           <div className="relative mt-10 sm:mt-10 md:mt-14 sm:ml-20 ml-2">
-            {isEdit ? (
-              <CourseDescEditModal/>
-            ) : (
-              <PrimaryButton text="E N R O L L" onClick={handleClick} />
+            {!isEdit && (
+              <PrimaryButton text="E N R O L" onClick={handleClick} />
             )}
-            
-            
           </div>
         </div>
       </div>

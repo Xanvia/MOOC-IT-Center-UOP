@@ -532,3 +532,14 @@ export const EditButtonClasses = clsx(
   "dark:focus:ring-white",
   "ring-1"
 );
+
+export const SolidInputFieldClasses = clsx(
+  "mt-1",
+  "block",
+  "w-full",
+  "border",
+  "border-primary",
+  "rounded-md",
+  "shadow-sm",
+  "p-2 "
+);
