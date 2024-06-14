@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import CourseCategoryDropdown from "@/components/CreateCourseModal/CourseCategoryDropdown";
+import CourseDifficultyDropdown from "@/components/CreateCourseModal/CourseDifficultyDropdown";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import SolidButton from "@/components/Buttons/SolidButton";
@@ -94,12 +95,17 @@ export default function CreateCourseModal() {
                       />
                     </div>
                     <div>
-                    <CourseCategoryDropdown
-                      value={category ?? ""}
-                      onChange={handleCategoryChange}
-                    />
+                      <CourseCategoryDropdown
+                        value={category ?? ""}
+                        onChange={handleCategoryChange}
+                      />
                     </div>
-                    <div><p>helo</p></div>
+                    <div>
+                      <CourseDifficultyDropdown 
+                        value={category ?? ""}
+                        onChange={handleCategoryChange}
+                      />
+                    </div>
                     
                   </div>
                   <br />
