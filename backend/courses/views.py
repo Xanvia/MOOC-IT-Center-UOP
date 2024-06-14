@@ -23,6 +23,8 @@ class CourseCreateView(viewsets.ModelViewSet):
 
         request.data["course_creator"] = request.user.id
 
+
+
         response = super().update(request, partial=True, *args, **kwargs)
 
         response.data = {
