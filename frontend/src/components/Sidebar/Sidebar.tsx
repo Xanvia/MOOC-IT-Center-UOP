@@ -1,110 +1,69 @@
 "use client";
-import React from 'react';
-import { useState } from "react";
-interface AccordionItem {
-  title: string;
-  content: string;
-}
-const accordionData: AccordionItem[] = [
-    {
-      title: "Introduction to jQuery",
-      content:
-        "Beginner-friendly course that teaches the basics of using jQuery, a popular JavaScript library. Learn how to make asynchronous requests using AJAX.Beginner-friendly co the basics of using jQuery, a popular JavaScript library.",
-    },
-    {
-      title: "Introduction to AJAX",
-      content:
-        "Learn how to make asynchronous requests using AJAX.Beginner-friendly course that teaches the basics of using jQuery, a popular JavaScript library. the basics of using jQuery, a popular JavaScript library.",
-    },
-    {
-      title: "Single Page Applications (SPAs)",
-      content:
-        "Understand the principles behind SPAs and how they work. Learn how to make asynchronous requests using AJAX.Beginner-friendly co Learn how to make asynchronous requests using AJAX.Beginner-friendly co the basics of using jQuery, a popular JavaScript library.",
-    },
-    {
-      title: "Angular as a SPA Framework",
-      content:
-        "Learn how to use Angular for building SPAs. Learn how to make asynchronous requests using AJAX.Beginner-friendly co Learn how to make asynchronous requests using AJAX.Beginner-friendly co the basics of using jQuery, a popular JavaScript library.",
-    },
-  ];
+// components/Sidebar.tsx
+import React, { useState } from 'react';
+
+const topics = [
+  {
+    category: 'Intro',
+    items: [{ title: 'Perkenalan instruktur', content: 'Content for Perkenalan instruktur' }],
+  },
+  {
+    category: 'Installation',
+    items: [
+      { title: 'Download Tools', content: 'Content for Download Tools' },
+      { title: 'Instalasi Tools', content: 'Content for Instalasi Tools' },
+      { title: 'Basic Penggunaan Tools', content: 'Content for Basic Penggunaan Tools' },
+    ],
+  },
+  {
+    category: 'Basic HTML',
+    items: [
+      { title: 'Tentang HTML', content: 'Content for Tentang HTML' },
+      { title: 'Menjalankan Kode', content: 'Content for Menjalankan Kode' },
+      { title: 'Tag', content: 'Content for Tag' },
+      { title: 'Header dan Paragraf', content: 'Content for Header dan Paragraf' },
+      { title: 'List', content: 'Content for List' },
+      { title: 'Table', content: 'Content for Table' },
+    ],
+  },
+];
 
 const Sidebar = () => {
+  const [selectedTopic, setSelectedTopic] = useState(topics[0].items[0]);
 
-    const [activeIndex, setActiveIndex] = useState<number | null>(0);
-    const handleToggle = (index: number) => {
-        setActiveIndex(activeIndex === index ? null : index);
-      };
-    return (
-        <div className="w-64 p-4 border-r border-gray-200">
+  return (
+    <div className="flex">
+      <div className="w-64 p-4 border-r border-gray-200">
         <div className="mb-6">
-            <h3 className="text-lg font-semibold">Stats</h3>
-            <div className="relative h-2 mt-2 bg-gray-300 rounded">
-            <div className="absolute top-0 left-0 h-full bg-blue-600 rounded" style={{ width: '40%' }}></div>
-            </div>
-            <p className="mt-2 text-sm text-gray-600">4 of the 20 videos have been completed</p>
+          <h3 className="text-lg font-semibold">Stats</h3>
+          <div className="relative h-2 mt-2 bg-gray-300 rounded">
+            <div className="absolute top-0 left-0 h-full bg-blue-600 rounded" style={{ width: '20%' }}></div>
+          </div>
+          <p className="mt-2 text-sm text-gray-600">4 dari 20 video telah selesai</p>
         </div>
-        <div className="mb-6">
-            <h4 className="text-md font-medium">Intro</h4>
-            <p className="mt-3 text-blue-600 cursor-pointer hover:underline">Instructor introduction</p>
-        </div>
-        <div className="mb-6">
-            <h4 className="text-md font-medium">Installation</h4>
-            <p className="mt-3 text-blue-600 cursor-pointer hover:underline">Download Tools</p>
-            <p className="mt-2 font-semibold text-blue-600 cursor-pointer">Tools Installation</p>
-            <p className="mt-2 text-blue-600 cursor-pointer hover:underline">Basic Usage Tools</p>
-        </div>
-        <div className="mb-6">
-            <h4 className="text-md font-medium">Basic HTML</h4>
-            <p className="mt-3 text-blue-600 cursor-pointer hover:underline">About HTML</p>
-            <p className="mt-2 text-blue-600 cursor-pointer hover:underline">Running Code</p>
-            <p className="mt-2 text-blue-600 cursor-pointer hover:underline">Tag</p>
-            <p className="mt-2 text-blue-600 cursor-pointer hover:underline">Header and Paragraph</p>
-            <p className="mt-2 text-blue-600 cursor-pointer hover:underline">List</p>
-            <p className="mt-2 text-blue-600 cursor-pointer hover:underline">Table</p>
-        </div>
-        <div className='mb=6'>
-        <div className="xl:mr-56 pt-10 xl-pt-0">
-                <div className="">
-                <div className=" ">
-                    {accordionData.map((item, index) => (
-                    <div key={index}>
-                        <div
-                        style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            cursor: "pointer",
-                            marginBottom: "32px",
-                            borderBottom: "1px solid black",
-                            paddingBottom: "8px",
-                        }}
-                        onClick={() => handleToggle(index)}
-                        >
-                        <span
-                            style={{
-                            color: activeIndex === index ? "blue" : "black",
-                            }}
-                        >
-                            {index + 1 < 10 ? `0${index + 1}.` : index + 1}{" "}
-                            {item.title}.
-                        </span>
-
-                        <span>{activeIndex === index ? "x" : "+"}</span>
-                        </div>
-                        {activeIndex === index && (
-                        <div
-                            style={{ paddingLeft: "32px", marginBottom: "44px" }}
-                        >
-                            {item.content}
-                        </div>
-                        )}
-                    </div>
-                    ))}
-                </div>
-                </div>
-            </div>
-        </div>
-        </div>
-    );
-    };
+        {topics.map((topic, index) => (
+          <div key={index} className="mb-6">
+            <h4 className="text-md font-medium">{topic.category}</h4>
+            {topic.items.map((item, idx) => (
+              <p
+                key={idx}
+                className={`mt-2 cursor-pointer ${
+                  selectedTopic.title === item.title ? 'font-semibold text-blue-600' : 'text-blue-600'
+                } hover:underline`}
+                onClick={() => setSelectedTopic(item)}
+              >
+                {item.title}
+              </p>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div className="flex-grow p-4">
+        <h1 className="text-xl font-bold">{selectedTopic.title}</h1>
+        <p className="mt-4">{selectedTopic.content}</p>
+      </div>
+    </div>
+  );
+};
 
 export default Sidebar;
