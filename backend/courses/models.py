@@ -14,6 +14,9 @@ class Course(models.Model):
     category = models.ForeignKey(Interest, on_delete=models.CASCADE)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
     outcomes = models.JSONField(default=list, blank=True, null=True)
+    header_image = models.ImageField(
+        upload_to="course_images/", blank=True, null=True
+    )
 
     def get_progress(self, user):
         weeks = self.weeks.all()
