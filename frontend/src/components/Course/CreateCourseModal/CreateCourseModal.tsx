@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import CourseCategoryDropdown from "@/components/CreateCourseModal/CourseCategoryDropdown";
+import CourseCategoryDropdown from "@/components/Course/CreateCourseModal/CourseCategoryDropdown";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import SolidButton from "@/components/Buttons/SolidButton";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
-import CloseButton from "../Buttons/CloseButton";
-import { ModalClassesBG } from "../components.styles";
+import CloseButton from "../../Buttons/CloseButton";
+import {
+  ModalClassesBG,
+  SolidInputFieldClasses,
+} from "../../components.styles";
 
 export default function CreateCourseModal() {
   const [category, setCategory] = useState<string | null>(null);
@@ -58,7 +61,7 @@ export default function CreateCourseModal() {
                       type="text"
                       id="title"
                       name="title"
-                      className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
+                      className={`${SolidInputFieldClasses}  ${
                         formik.touched.title && formik.errors.title
                           ? "border-primary"
                           : ""

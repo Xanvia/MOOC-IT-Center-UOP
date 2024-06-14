@@ -16,9 +16,10 @@ interface Institution {
 interface Props {
   addSelection: (item: string) => void;
   selectedInstitution?: string;
+  label : string;
 }
 
-const DropDownInstitution = ({ addSelection, selectedInstitution }: Props) => {
+const DropDownInstitution = ({ addSelection, selectedInstitution,label }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState(
@@ -67,7 +68,7 @@ const DropDownInstitution = ({ addSelection, selectedInstitution }: Props) => {
   return (
     <div className="relative" ref={dropdownRef}>
       <span className="text-sm font-semibold text-primary ">
-        Your Institution
+        {label}
       </span>
       <div className={InputOuterDiv}>
         <div className={InputInnerDiv}>
@@ -93,7 +94,7 @@ const DropDownInstitution = ({ addSelection, selectedInstitution }: Props) => {
             component="div"
             className="top-0 left-0 text-red-600 text-xs"
           />
-          <label className={InputLabel}>Institution</label>
+         {/*} <label className={InputLabel}>Institution</label>*/}
         </div>
       </div>
 

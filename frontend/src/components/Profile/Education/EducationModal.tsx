@@ -147,7 +147,11 @@ const EducationModal: React.FC<Props> = ({
             >
               <Form>
                 <div className="pt-6 grid grid-cols-1 gap-6 mx-12">
-                  <DropDownInstitution addSelection={setInstitution} selectedInstitution={institution as string} />
+                  <DropDownInstitution
+                    label="Your Institution"
+                    addSelection={setInstitution}
+                    selectedInstitution={institution as string}
+                  />
                   <div className={InputOuterDiv}>
                     <div className={InputInnerDiv}>
                       <Field
