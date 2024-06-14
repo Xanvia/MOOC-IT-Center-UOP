@@ -44,6 +44,7 @@ class CreateCourseTest(APITestCase):
             "name": "test course",
             "category": 1,
             "institution": 1,
+            "difficulty": "beginner",
         }
         url = reverse("course-list")
         response = self.client.post(url, course_data, format="json")

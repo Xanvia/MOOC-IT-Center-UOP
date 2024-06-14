@@ -14,9 +14,9 @@ class Course(models.Model):
     category = models.ForeignKey(Interest, on_delete=models.CASCADE)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
     outcomes = models.JSONField(default=list, blank=True, null=True)
-    header_image = models.ImageField(
-        upload_to="course_images/", blank=True, null=True
-    )
+    header_image = models.ImageField(upload_to="course_images/", blank=True, null=True)
+    duration = models.CharField(max_length=255, blank=True, null=True)
+    difficulty = models.CharField(max_length=255)
 
     def get_progress(self, user):
         weeks = self.weeks.all()
@@ -24,14 +24,6 @@ class Course(models.Model):
             return 0
         total_progress = sum([week.get_progress(user) for week in weeks])
         return total_progress / len(weeks)
-
-
-class CourseStats(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    duration = models.CharField(max_length=255)
-    difficulty = models.CharField(max_length=255)
-    students = models.IntegerField(default=0)
-    rating = models.DecimalField(max_digits=5, decimal_places=2, default=0)
 
 
 class Week(models.Model):

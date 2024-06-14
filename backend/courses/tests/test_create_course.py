@@ -46,6 +46,7 @@ class CreateCourseTest(APITestCase):
             "name": "test course",
             "category": 1,
             "institution": 1,
+            "difficulty": "beginner",
         }
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -56,7 +57,7 @@ class CreateCourseTest(APITestCase):
         }
         self.assertEqual(response.data, expected_data)
 
-        #check if the course is created in db
+        # check if the course is created in db
         course = Course.objects.get(name="test course")
         self.assertEqual(course.name, "test course")
 
@@ -68,6 +69,7 @@ class CreateCourseTest(APITestCase):
             "status": "fail",
             "message": [
                 "name field is required.",
+                "difficulty field is required.",
                 "category field is required.",
                 "institution field is required.",
             ],
@@ -80,6 +82,7 @@ class CreateCourseTest(APITestCase):
             "name": "test course",
             "category": 1000,
             "institution": 1,
+            "difficulty": "beginner",
         }
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

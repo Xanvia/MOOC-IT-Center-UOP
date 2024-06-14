@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import (
     Course,
-    CourseStats,
     Week,
     Chapter,
     Note,
