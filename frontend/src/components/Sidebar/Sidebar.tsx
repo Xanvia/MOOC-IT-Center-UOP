@@ -2,7 +2,11 @@
 // components/Sidebar.tsx
 import React, { useState } from 'react';
 import CourseCard from '../Course/CourseCard/CourseCard';
-import SolidButton from '../Buttons/SolidButton';
+import RecommendedCourses from '../Course/CourseCard/ReccomendedCourses';
+import CourseOutcomes from '../Course/CourseCard/CourseHome/CourseOutcomes';
+
+const headerImage = "/images/course-header.jpg";
+
 
 const topics = [
   {
@@ -12,9 +16,13 @@ const topics = [
   {
     category: 'Installation',
     items: [
-      { title: 'Download Tools', content: 'Content for Download Tools' },
-      { title: 'Tools Instalation', content: 'Content for Tools Instalation' },
-      { title: 'Basic Usage Tools', content: 'Content for Basic Usage Tools' },
+      { title: 'Download Tools', content: <CourseOutcomes/> },
+      { title: 'Tools Instalation', content: <p>content for tools installation</p> },
+      { title: 'Basic Usage Tools', content: <CourseCard
+      title="Basic Usage Tools"
+      description="Learn how to install tools necessary for web development."
+      image="/images/course-header.jpg"
+    /> },
     ],
   },
   {
@@ -34,7 +42,7 @@ const Sidebar = () => {
   const [selectedTopic, setSelectedTopic] = useState(topics[0].items[0]);
 
   return (
-    <div className="flex">
+    <div className="flex ">
       <div className="w-64 p-4 border-r border-gray-200">
         <div className="mb-6">
           <h3 className="text-lg font-semibold">Stats</h3>
@@ -64,7 +72,9 @@ const Sidebar = () => {
         <h1 className="text-xl font-bold">{selectedTopic.title}</h1>
         <p className="mt-4">{selectedTopic.content}</p>
       </div>
+      
     </div>
+    
   );
 };
 
