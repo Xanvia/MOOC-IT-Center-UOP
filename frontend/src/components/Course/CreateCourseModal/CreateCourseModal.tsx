@@ -41,6 +41,7 @@ export default function CreateCourseModal() {
             onMouseDown={handleOutsideClick}
           >
             <CloseButton onClick={toggleModal} />
+            <h1 className= "text-primary font-bold text-center text-2xl mb-8">Create Your Course</h1>
             <Formik
               initialValues={{ title: "" }}
               validationSchema={Yup.object({
