@@ -42,22 +42,22 @@ const Sidebar = () => {
   const [selectedTopic, setSelectedTopic] = useState(topics[0].items[0]);
 
   return (
-    <div className="flex ">
-      <div className="w-64 p-4 border-r border-gray-200">
+    <div className="flex bg-white">
+      <div className="w-72 p-4 border-r border-gray-200">
         <div className="mb-6">
           <h3 className="text-lg font-semibold">Stats</h3>
           <div className="relative h-2 mt-2 bg-gray-300 rounded">
             <div className="absolute top-0 left-0 h-full bg-blue-600 rounded" style={{ width: '20%' }}></div>
           </div>
-          <p className="mt-2 text-sm text-gray-600">4 of the 20 videos have been completed</p>
+          <p className="my-2 text-sm text-gray-600">4 of the 20 videos have been completed</p>
         </div>
         {topics.map((topic, index) => (
-          <div key={index} className="mb-6">
+          <div key={index} className="mb-6 ml-4">
             <h4 className="text-md font-medium">{topic.category}</h4>
             {topic.items.map((item, idx) => (
               <p
                 key={idx}
-                className={`mt-2 cursor-pointer ${
+                className={`mt-2 ml-4 cursor-pointer ${
                   selectedTopic.title === item.title ? 'font-semibold text-blue-600' : 'text-blue-600'
                 } hover:underline`}
                 onClick={() => setSelectedTopic(item)}
