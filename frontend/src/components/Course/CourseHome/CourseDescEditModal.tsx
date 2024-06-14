@@ -23,7 +23,7 @@ const DefaultImage = "/images/course-header.jpg";
 
 export default function CourseDescEditModal() {
   const [category, setCategory] = useState<string | null>(null);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(DefaultImage);
@@ -138,7 +138,12 @@ export default function CourseDescEditModal() {
             </div>
 
             <Formik
-              initialValues={{title: "", category: "", duration:"",description:""}}
+              initialValues={{
+                title: "",
+                category: "",
+                duration: "",
+                description: "",
+              }}
               validationSchema={Yup.object({
                 title: Yup.string().required("Course title is required"),
                 category: Yup.string().required("Course category is required"),
@@ -220,7 +225,7 @@ export default function CourseDescEditModal() {
                         placeholder="No of weeks"
                       />
                       <ErrorMessage
-                        name="title"
+                        name="duration"
                         component="div"
                         className="text-red-500 text-xs"
                       />
@@ -229,7 +234,10 @@ export default function CourseDescEditModal() {
                     <div className="col-span-2">
                       <div className={InputOuterDiv}>
                         <div className={`h-20 ${InputInnerDiv} `}>
-                          <label htmlFor="description" className={InputLabelClasses2}>
+                          <label
+                            htmlFor="description"
+                            className={InputLabelClasses2}
+                          >
                             Description
                           </label>
 

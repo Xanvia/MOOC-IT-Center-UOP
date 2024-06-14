@@ -3,10 +3,9 @@ import React from "react";
 import Image from "next/image";
 import TextEditor from "../../CourseTextEditor";
 import CourseDescEditModal from "../CourseDescEditModal";
-
+import SolidButton from "@/components/Buttons/SolidButton";
 
 const headerImage = "/images/course-header.jpg";
-
 
 const DescriptionTab: React.FC = () => {
   return (
@@ -63,8 +62,16 @@ const DescriptionTab: React.FC = () => {
               <li>Internet access</li>
             </ul>
           </div>
+          <div className="pt-8">
+            <h1 className="text-2xl mb-6 font-semibold text-primary text-center">
+              Add More Informations
+            </h1>
+            <TextEditor />
 
-          <TextEditor />
+            <div className="flex justify-end mt-8 ">
+              <SolidButton type="submit" text="S A V E" onClick={() => {}} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
