@@ -5,8 +5,9 @@ from rest_framework_simplejwt.tokens import AccessToken
 from .models import Course
 from userprofiles.models import Interest
 
+
 class CourseSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Course
         fields = "__all__"
@@ -17,6 +18,4 @@ class CourseSerializer(serializers.ModelSerializer):
             allowed_fields = {"outcomes", "specifications"}
             # Filter the data to only include allowed fields
             data = {key: value for key, value in data.items() if key in allowed_fields}
-
-        
         return data
