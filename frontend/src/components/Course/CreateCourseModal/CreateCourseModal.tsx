@@ -53,7 +53,7 @@ export default function CreateCourseModal() {
             >
               {(formik) => (
                 <Form>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-6">
                     <div className="col-span-2 mb-4">
                       <label
                         htmlFor="title"

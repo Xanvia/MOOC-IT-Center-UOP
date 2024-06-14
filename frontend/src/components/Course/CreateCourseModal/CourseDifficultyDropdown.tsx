@@ -29,7 +29,7 @@ const CourseCategoryDropdown: React.FC<Props> = ({ value, onChange }) => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <span className="text-sm font-semibold text-primary sm:pr-52">
+      <span className="text-sm font-semibold text-primary ">
         Course Difficulty
       </span>
       <button
