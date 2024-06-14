@@ -1,27 +1,29 @@
 "use client";
 // components/Sidebar.tsx
 import React, { useState } from 'react';
+import CourseCard from '../Course/CourseCard/CourseCard';
+import SolidButton from '../Buttons/SolidButton';
 
 const topics = [
   {
     category: 'Intro',
-    items: [{ title: 'Perkenalan instruktur', content: 'Content for Perkenalan instruktur' }],
+    items: [{ title: 'Instructor introduction', content: 'Content for Instructor introduction' }],
   },
   {
     category: 'Installation',
     items: [
       { title: 'Download Tools', content: 'Content for Download Tools' },
-      { title: 'Instalasi Tools', content: 'Content for Instalasi Tools' },
-      { title: 'Basic Penggunaan Tools', content: 'Content for Basic Penggunaan Tools' },
+      { title: 'Tools Instalation', content: 'Content for Tools Instalation' },
+      { title: 'Basic Usage Tools', content: 'Content for Basic Usage Tools' },
     ],
   },
   {
     category: 'Basic HTML',
     items: [
-      { title: 'Tentang HTML', content: 'Content for Tentang HTML' },
-      { title: 'Menjalankan Kode', content: 'Content for Menjalankan Kode' },
+      { title: 'About HTML', content: 'Content for About HTML' },
+      { title: 'Running Code', content: 'Content for Running Code' },
       { title: 'Tag', content: 'Content for Tag' },
-      { title: 'Header dan Paragraf', content: 'Content for Header dan Paragraf' },
+      { title: 'Header and Paragraph', content: 'Content for Header and Paragraph' },
       { title: 'List', content: 'Content for List' },
       { title: 'Table', content: 'Content for Table' },
     ],
@@ -39,7 +41,7 @@ const Sidebar = () => {
           <div className="relative h-2 mt-2 bg-gray-300 rounded">
             <div className="absolute top-0 left-0 h-full bg-blue-600 rounded" style={{ width: '20%' }}></div>
           </div>
-          <p className="mt-2 text-sm text-gray-600">4 dari 20 video telah selesai</p>
+          <p className="mt-2 text-sm text-gray-600">4 of the 20 videos have been completed</p>
         </div>
         {topics.map((topic, index) => (
           <div key={index} className="mb-6">
@@ -67,3 +69,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+ 
