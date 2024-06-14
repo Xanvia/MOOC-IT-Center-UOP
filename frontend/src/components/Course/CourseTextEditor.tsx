@@ -5,6 +5,7 @@ import "react-quill/dist/quill.snow.css";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
+
 const TextEditor: React.FC = () => {
   const [value, setValue] = useState<string>("");
 

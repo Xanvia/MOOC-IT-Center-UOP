@@ -3,7 +3,10 @@ import React from "react";
 import Image from "next/image";
 import TextEditor from "../../CourseTextEditor";
 import CourseDescEditModal from "../CourseDescEditModal";
+
+
 const headerImage = "/images/course-header.jpg";
+
 
 const DescriptionTab: React.FC = () => {
   return (
