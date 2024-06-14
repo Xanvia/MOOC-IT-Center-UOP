@@ -18,3 +18,15 @@ class CourseCreateView(viewsets.ModelViewSet):
             "message": "Course created successfully",
         }
         return response
+
+    def add_details(self, request, *args, **kwargs):
+
+        request.data["course_creator"] = request.user.id
+
+        response = super().update(request, partial=True, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Course details added successfully",
+        }
+        return response
