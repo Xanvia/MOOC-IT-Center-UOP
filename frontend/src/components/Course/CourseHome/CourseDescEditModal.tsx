@@ -17,7 +17,6 @@ import {
 } from "@/components/components.styles";
 import Image from "next/image";
 import DropDownLevel from "@/components/DropDown/DropDownLevel";
-import { duration } from "@mui/material";
 
 const DefaultImage = "/images/course-header.jpg";
 
