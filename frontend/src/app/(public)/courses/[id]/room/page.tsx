@@ -6,7 +6,11 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 export default function CoursesRoom() {
     return (
       <>
-        <Sidebar/>
+        <div className="bg-sky-100">
+          
+          <Sidebar/>
+        </div>
+        
       </>
     );
   }

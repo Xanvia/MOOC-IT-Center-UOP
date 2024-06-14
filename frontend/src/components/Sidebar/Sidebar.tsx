@@ -42,9 +42,9 @@ const Sidebar = () => {
   const [selectedTopic, setSelectedTopic] = useState(topics[0].items[0]);
 
   return (
-    <div className="flex bg-white">
-      <div className="w-72 p-4 border-r border-gray-200">
-        <div className="mb-6">
+    <div className="flex ">
+      <div className="w-72 p-4 border-r bg-white border-gray-200">
+        <div className="mb-6 ">
           <h3 className="text-lg font-semibold">Stats</h3>
           <div className="relative h-2 mt-2 bg-gray-300 rounded">
             <div className="absolute top-0 left-0 h-full bg-blue-600 rounded" style={{ width: '20%' }}></div>
