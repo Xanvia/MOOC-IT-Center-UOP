@@ -42,39 +42,65 @@ export default function CreateCourseModal() {
               initialValues={{ title: "" }}
               validationSchema={Yup.object({
                 title: Yup.string().required("Course title is required"),
+                
               })}
               onSubmit={handleSubmit}
             >
               {(formik) => (
                 <Form>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="title"
-                      className="block text-sm font-medium text-primary mb-1"
-                    >
-                      Course Title
-                    </label>
-                    <Field
-                      type="text"
-                      id="title"
-                      name="title"
-                      className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
-                        formik.touched.title && formik.errors.title
-                          ? "border-primary"
-                          : ""
-                      }`}
-                      placeholder="Enter course title"
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="col-span-2 mb-4">
+                      <label
+                        htmlFor="title"
+                        className="block text-sm font-medium text-primary mb-1"
+                      >
+                        Course Title
+                      </label>
+                      <Field
+                        type="text"
+                        id="title"
+                        name="title"
+                        className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
+                          formik.touched.title && formik.errors.title
+                            ? "border-primary"
+                            : ""
+                        }`}
+                        placeholder="Enter course title"
+                      />
+                      <ErrorMessage
+                        name="title"
+                        component="div"
+                        className="text-red-500 text-sm"
+                      />
+                    </div>
+                    <div className="col-span-2 mb-4">
+                      <label
+                        htmlFor="title"
+                        className="block text-sm font-medium text-primary mb-1"
+                      >
+                        Organization Name
+                      </label>
+                      <Field
+                        type="text"
+                        id="title"
+                        name="title"
+                        className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
+                          formik.touched.title && formik.errors.title
+                            ? "border-primary"
+                            : ""
+                        }`}
+                        placeholder="Enter the organization that course offered by"
+                      />
+                    </div>
+                    <div>
+                    <CourseCategoryDropdown
+                      value={category ?? ""}
+                      onChange={handleCategoryChange}
                     />
-                    <ErrorMessage
-                      name="title"
-                      component="div"
-                      className="text-red-500 text-sm"
-                    />
+                    </div>
+                    <div><p>helo</p></div>
+                    
                   </div>
-                  <CourseCategoryDropdown
-                    value={category ?? ""}
-                    onChange={handleCategoryChange}
-                  />
                   <br />
                   <center>
                     <div className="mt-6 mb-2">
