@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import CourseCategoryDropdown from "@/components/CreateCourseModal/CourseCategoryDropdown";
-import CourseDifficultyDropdown from "@/components/CreateCourseModal/CourseDifficultyDropdown";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import SolidButton from "@/components/Buttons/SolidButton";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import CloseButton from "../../Buttons/CloseButton";
+import CourseCategoryDropdown from "./CourseCategoryDropdown";
+import CourseDifficultyDropdown from "./CourseDifficultyDropdown";
 import {
   ModalClassesBG,
   SolidInputFieldClasses,
