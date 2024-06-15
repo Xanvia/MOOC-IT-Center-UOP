@@ -1,6 +1,4 @@
-import CourseContent from "@/components/Course/CourseHome/CourseContent";
 import CourseHeader from "@/components/Course/CourseHome/CourseDescriptionHeader";
-import CourseOutcomes from "@/components/Course/CourseHome/CourseOutcomes";
 import CourseHStat from "@/components/Course/CourseHome/CourseHStat";
 import ReccomendedCourses from "@/components/Course/CourseCard/ReccomendedCourses";
 import CourseDetailsTabs from "@/components/Course/CourseHome/Tabs/CourseDetailsTabs";

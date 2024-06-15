@@ -2,8 +2,7 @@
 // components/Sidebar.tsx
 import React, { useState } from 'react';
 import CourseCard from '../Course/CourseCard/CourseCard';
-import RecommendedCourses from '../Course/CourseCard/ReccomendedCourses';
-import CourseOutcomes from '../Course/CourseCard/CourseHome/CourseOutcomes';
+import CourseOutcomes from '../Course/CourseHome/CourseOutcomes';
 
 const headerImage = "/images/course-header.jpg";
 
