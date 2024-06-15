@@ -38,7 +38,7 @@ export default function CreateCourseModal() {
       {isOpen && (
         <div className={ModalClassesBG} onMouseDown={handleInsideClick}>
           <div
-            className="bg-white p-10 px-24 rounded-lg shadow-lg relative max-w-3xl w-full"
+            className="bg-white p-10 px-md; rounded-lg shadow-lg relative max-w-3xl w-full"
             onMouseDown={handleOutsideClick}
           >
             <CloseButton onClick={toggleModal} />
@@ -54,7 +54,7 @@ export default function CreateCourseModal() {
               {(formik) => (
                 <Form>
                   <div className="grid grid-cols-2 gap-6">
-                    <div className="col-span-2 mb-4">
+                    <div className="col-span-2 mb-4 md:px-5 lg:px-10">
                       <label
                         htmlFor="title"
                         className="block text-sm font-medium text-primary mb-1"
@@ -78,7 +78,7 @@ export default function CreateCourseModal() {
                         className="text-red-500 text-sm"
                       />
                     </div>
-                    <div className="col-span-2 mb-4">
+                    <div className="col-span-2 mb-4 md:px-5 lg:px-10">
                       <label
                         htmlFor="title"
                         className="block text-sm font-medium text-primary mb-1"
@@ -97,13 +97,13 @@ export default function CreateCourseModal() {
                         placeholder="Enter the organization that course offered by"
                       />
                     </div>
-                    <div>
+                    <div className="md:px-5 lg:px-10">
                       <CourseCategoryDropdown
                         value={category ?? ""}
                         onChange={handleCategoryChange}
                       />
                     </div>
-                    <div>
+                    <div className="md:px-5 lg:px-10">
                       <CourseDifficultyDropdown 
                         value={category ?? ""}
                         onChange={handleCategoryChange}
