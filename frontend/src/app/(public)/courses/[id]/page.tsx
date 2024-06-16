@@ -5,12 +5,21 @@ import CourseDetailsTabs from "@/components/Course/CourseHome/Tabs/CourseDetails
 import Breadcrumb from "@/components/Course/CourseHome/Breadcrumb";
 import React from "react";
 
+interface BreadcrumbItem {
+  breadcrumb: string;
+  href?: string; // Make href optional
+}
 
+const breadcrumbs: BreadcrumbItem[] = [
+  { breadcrumb: "Home", href: "/" },
+  { breadcrumb: "> Courses", href: "/courses" },
+  { breadcrumb: "> Basic Web Programming", href: "/courses/1" },
+];
 
 export default function CoursesHome() {
   return (
     <>
-      
+      <Breadcrumb breadcrumbs={breadcrumbs} />
       <CourseHeader />
       <CourseHStat />
 
