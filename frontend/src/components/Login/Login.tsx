@@ -10,7 +10,7 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { API_URL, CALLBACK_URL, redirect_uri } from "@/utils/constants";
+import { API_URL, CALLBACK_URL } from "@/utils/constants";
 
 import {
   ModalClassesBG,
@@ -20,7 +20,6 @@ import {
   InputInnerDiv,
   InputOuterDiv,
 } from "../components.styles";
-import { attachReactRefresh } from "next/dist/build/webpack-config";
 import { toast } from "sonner";
 
 export interface LoginFormValues {

@@ -14,9 +14,9 @@ import ReactDatePicker from "@/components/DropDown/DatePicker";
 import SolidButton from "../Buttons/SolidButton";
 import { ProfileData } from "./types";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { API_URL } from "@/utils/constants";
+import { useGlobal } from "@/contexts/store";
 
 const DefaultProfileImage = "/images/52.jpg";
 
@@ -43,6 +43,8 @@ interface EditFromValues {
 }
 
 const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
+  const { token } = useGlobal();
+
   const [country, setCountry] = useState<Country | undefined>(userData.country);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(
@@ -69,8 +71,6 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
   };
 
   const handleDelete = () => {
-    const token = Cookies.get("token");
-    console.log(token);
     axios
       .patch(
         `${API_URL}/user/profile-image`,
@@ -93,7 +93,6 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
   };
 
   const handleSubmit = (values: EditFromValues) => {
-    const token = Cookies.get("token");
     if (country?.label === undefined) {
       toast.warning("Please select a country");
     } else if (birthDate === null) {

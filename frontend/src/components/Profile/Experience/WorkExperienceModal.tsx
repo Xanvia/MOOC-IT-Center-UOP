@@ -19,14 +19,13 @@ import MonthPicker from "../MonthPicker";
 import CloseButton from "@/components/Buttons/CloseButton";
 import SolidButton from "@/components/Buttons/SolidButton";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { API_URL } from "@/utils/constants";
 import { format } from "date-fns";
 import { Work } from "../types";
 import DeleteButton from "@/components/Buttons/DeleteButton";
+import { useGlobal } from "@/contexts/store";
 
-const token = Cookies.get("token");
 
 interface Props {
   CardTitle: string;
@@ -44,6 +43,8 @@ const AddExperienceModal: React.FC<Props> = ({
   workData,
   realoadData,
 }: Props) => {
+  const { token } = useGlobal();
+
   const [isOpen, setIsOpen] = useState(false);
 
   const [startDate, setStartDate] = useState<Date | null>(

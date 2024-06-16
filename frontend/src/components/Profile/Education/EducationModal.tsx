@@ -20,13 +20,11 @@ import SolidButton from "@/components/Buttons/SolidButton";
 import { Education } from "../types";
 import DeleteButton from "@/components/Buttons/DeleteButton";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { API_URL } from "@/utils/constants";
 import { format } from "date-fns";
 import DropDownInstitution from "@/components/DropDown/DropDownUni";
-
-const token = Cookies.get("token");
+import { useGlobal } from "@/contexts/store";
 
 interface Props {
   CardTitle: string;
@@ -44,6 +42,7 @@ const EducationModal: React.FC<Props> = ({
   realoadData,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { token } = useGlobal();
 
   const [institution, setInstitution] = useState(eduData?.institution || "");
   const [startDate, setStartDate] = useState<Date | null>(

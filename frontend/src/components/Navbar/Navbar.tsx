@@ -18,7 +18,8 @@ import Loader from "../Loarder/Loarder";
 import { useGlobal } from "../../contexts/store";
 
 const Navbar = () => {
-  const { isLoggedIn, setIsLoggedIn, isLoading, setLoading } = useGlobal();
+  const { isLoggedIn, setIsLoggedIn, isLoading, setLoading, setToken } =
+    useGlobal();
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -34,8 +35,8 @@ const Navbar = () => {
   };
 
   const onSignOut = () => {
+    setToken(null);
     Cookies.remove("token");
-    Cookies.remove("user");
     setIsLoggedIn(false);
     setLoading(false);
     window.location.href = "/";
