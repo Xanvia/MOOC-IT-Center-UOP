@@ -6,7 +6,6 @@ import CourseOutcomes from '../Course/CourseHome/CourseOutcomes';
 
 const headerImage = "/images/course-header.jpg";
 
-
 const topics = [
   {
     category: 'Week 1',
@@ -41,9 +40,9 @@ const Sidebar = () => {
   const [selectedTopic, setSelectedTopic] = useState(topics[0].items[0]);
 
   return (
-    <div className="flex ">
+    <div className="flex">
       <div className="w-72 p-4 border-r bg-white border-gray-200">
-        <div className="mb-6 ">
+        <div className="mb-6">
           <h3 className="text-lg font-semibold">Stats</h3>
           <div className="relative h-2 mt-2 bg-gray-300 rounded">
             <div className="absolute top-0 left-0 h-full bg-blue-600 rounded" style={{ width: '20%' }}></div>
@@ -51,11 +50,11 @@ const Sidebar = () => {
           <p className="my-2 text-sm text-gray-600">4 of the 20 videos have been completed</p>
         </div>
         {topics.map((topic, index) => (
-          <div key={index} className="mb-6 ml-4" 
-            style={{marginBottom: "32px",
-            borderBottom: "1px solid black",
-            paddingBottom: "8px",}}>
-            <h4 className="text-md font-medium">{topic.category}</h4>
+          <div
+            key={index}
+            className="mb-8 ml-4 border-b pb-2 border-gray-200"
+          >
+            <h4 className="text-md font-medium border-b pb-1 mb-2 border-gray-400">{topic.category}</h4>
             {topic.items.map((item, idx) => (
               <p
                 key={idx}
@@ -74,11 +73,8 @@ const Sidebar = () => {
         <h1 className="text-xl font-bold">{selectedTopic.title}</h1>
         <p className="mt-4">{selectedTopic.content}</p>
       </div>
-      
     </div>
-    
   );
 };
 
 export default Sidebar;
- 
