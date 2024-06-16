@@ -15,12 +15,10 @@ import {
   SecondaryButtonClass,
 } from "../components.styles";
 import Loader from "../Loarder/Loarder";
-import { useAuth } from "../../contexts/store";
+import { useGlobal } from "../../contexts/store";
 
 const Navbar = () => {
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { isLoggedIn, setIsLoggedIn } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
+  const { isLoggedIn, setIsLoggedIn, isLoading, setLoading } = useGlobal();
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -39,6 +37,7 @@ const Navbar = () => {
     Cookies.remove("token");
     Cookies.remove("user");
     setIsLoggedIn(false);
+    setLoading(false);
     window.location.href = "/";
   };
 
@@ -57,14 +56,6 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleDocumentClick);
     };
   }, []);
-
-  useEffect(() => {
-    const user = Cookies.get("user");
-    if (user) {
-      setIsLoggedIn(true);
-    }
-    setIsLoading(false);
-  }, [isLoggedIn]);
 
   return (
     <>

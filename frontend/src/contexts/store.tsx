@@ -1,26 +1,67 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+"use client";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react"; // Add useEffect to the import
+import Cookies from "js-cookie";
+import { set } from "jodit/types/core/helpers";
 
-interface AuthContextType {
+interface GlobalContextType {
   isLoggedIn: boolean;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
+  token: string | null;
+  setToken: (token: string | null) => void;
+  isLoading: boolean;
+  setLoading: (isLoading: boolean) => void;
+  userRole: string | null;
+  setUserRole: (userRole: string | null) => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const GlobalContextProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setLoading] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const tokenFromCookie = Cookies.get("token");
+    if (tokenFromCookie) {
+      setIsLoggedIn(true);
+      setToken(tokenFromCookie);
+    }
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+    <GlobalContext.Provider
+      value={{
+        isLoggedIn,
+        setIsLoggedIn,
+        token,
+        setToken,
+        isLoading,
+        setLoading,
+        userRole,
+        setUserRole,
+      }}
+    >
       {children}
-    </AuthContext.Provider>
+    </GlobalContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
+export const useGlobal = () => {
+  const context = useContext(GlobalContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error("useGlobal must be used within a GlobalContextProvider");
   }
   return context;
 };
