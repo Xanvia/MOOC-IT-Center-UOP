@@ -15,7 +15,7 @@ import {
   SecondaryButtonClass,
 } from "../components.styles";
 import Loader from "../Loarder/Loarder";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/store";
 
 const Navbar = () => {
   // const [isLoggedIn, setIsLoggedIn] = useState(false);

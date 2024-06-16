@@ -9,7 +9,7 @@ import { Work, Education, ProfileData } from "@/components/Profile/types";
 import axios from "axios";
 import { API_URL } from "@/utils/constants";
 import Cookies from "js-cookie";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/store";
 
 const token = Cookies.get("token");
 
@@ -22,7 +22,6 @@ const dummyEdu = {
 };
 
 export default function ProfilePage() {
-
   const [work, setWork] = useState<Work[]>([]);
   const [education, setEducation] = useState<Education[]>([]);
   const [profileData, setProfileData] = useState<ProfileData | undefined>(
