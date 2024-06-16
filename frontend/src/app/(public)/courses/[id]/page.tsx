@@ -2,11 +2,15 @@ import CourseHeader from "@/components/Course/CourseHome/CourseDescriptionHeader
 import CourseHStat from "@/components/Course/CourseHome/CourseHStat";
 import ReccomendedCourses from "@/components/Course/CourseCard/ReccomendedCourses";
 import CourseDetailsTabs from "@/components/Course/CourseHome/Tabs/CourseDetailsTabs";
+import Breadcrumb from "@/components/Course/CourseHome/Breadcrumb";
 import React from "react";
+
+
 
 export default function CoursesHome() {
   return (
     <>
+      
       <CourseHeader />
       <CourseHStat />
 
