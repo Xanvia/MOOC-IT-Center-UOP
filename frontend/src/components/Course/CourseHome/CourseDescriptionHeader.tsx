@@ -7,16 +7,7 @@ import CourseDescEditModal from "./CourseDescEditModal";
 
 const headerImage = "/images/course-header.jpg";
 
-interface BreadcrumbItem {
-  breadcrumb: string;
-  href?: string; // Make href optional
-}
 
-const breadcrumbs: BreadcrumbItem[] = [
-  { breadcrumb: "Home", href: "/" },
-  { breadcrumb: "> Courses", href: "/courses" },
-  { breadcrumb: "> Basic Web Programming", href: "/courses/1" },
-];
 
 const CourseHeader: React.FC = () => {
   const [isEdit, setIsEdit] = useState(true);
@@ -25,7 +16,7 @@ const CourseHeader: React.FC = () => {
 
   return (
     <>
-      <Breadcrumb breadcrumbs={breadcrumbs} />
+      
 
       <div className="bg-gradient-to-tl from-gray-600 to-gray-800 h-96 w-full relative">
         <Image
