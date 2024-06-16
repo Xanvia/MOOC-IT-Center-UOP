@@ -9,11 +9,11 @@ const headerImage = "/images/course-header.jpg";
 
 const topics = [
   {
-    category: 'Intro',
+    category: 'Week 1',
     items: [{ title: 'Instructor introduction', content: 'Content for Instructor introduction' }],
   },
   {
-    category: 'Installation',
+    category: 'Week 2',
     items: [
       { title: 'Download Tools', content: <CourseOutcomes/> },
       { title: 'Tools Instalation', content: <p>content for tools installation</p> },
@@ -25,7 +25,7 @@ const topics = [
     ],
   },
   {
-    category: 'Basic HTML',
+    category: 'Week 3',
     items: [
       { title: 'About HTML', content: 'Content for About HTML' },
       { title: 'Running Code', content: 'Content for Running Code' },
@@ -51,14 +51,17 @@ const Sidebar = () => {
           <p className="my-2 text-sm text-gray-600">4 of the 20 videos have been completed</p>
         </div>
         {topics.map((topic, index) => (
-          <div key={index} className="mb-6 ml-4">
+          <div key={index} className="mb-6 ml-4" 
+            style={{marginBottom: "32px",
+            borderBottom: "1px solid black",
+            paddingBottom: "8px",}}>
             <h4 className="text-md font-medium">{topic.category}</h4>
             {topic.items.map((item, idx) => (
               <p
                 key={idx}
                 className={`mt-2 ml-4 cursor-pointer ${
-                  selectedTopic.title === item.title ? 'font-semibold text-blue-600' : 'text-blue-600'
-                } hover:underline`}
+                  selectedTopic.title === item.title ? 'font-semibold text-blue-800' : 'text-blue-600'
+                } transition transform hover:-translate-y-1`}
                 onClick={() => setSelectedTopic(item)}
               >
                 {item.title}
