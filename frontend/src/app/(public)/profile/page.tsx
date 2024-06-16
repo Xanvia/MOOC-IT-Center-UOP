@@ -9,6 +9,7 @@ import { Work, Education, ProfileData } from "@/components/Profile/types";
 import axios from "axios";
 import { API_URL } from "@/utils/constants";
 import Cookies from "js-cookie";
+import { useAuth } from "@/contexts/store";
 
 const token = Cookies.get("token");
 
