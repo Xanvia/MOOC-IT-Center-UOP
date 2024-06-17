@@ -126,7 +126,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <div className="flex">
-      <div className="w-72 p-4 border-r bg-white border-gray-200">
+      <div className="w-84 p-4 border-r bg-white border-gray-200">
         <div className="mb-6">
           <h3 className="text-lg font-semibold">Stats</h3>
           <div className="relative h-2 mt-2 bg-gray-300 rounded">
