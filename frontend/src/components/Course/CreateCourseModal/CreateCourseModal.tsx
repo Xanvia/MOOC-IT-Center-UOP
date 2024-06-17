@@ -42,12 +42,13 @@ export default function CreateCourseModal() {
             onMouseDown={handleOutsideClick}
           >
             <CloseButton onClick={toggleModal} />
-            <h1 className= "text-primary font-bold text-center text-2xl mb-8">Create Your Course</h1>
+            <h1 className="text-primary font-bold text-center text-2xl mb-8">
+              Create Your Course
+            </h1>
             <Formik
               initialValues={{ title: "" }}
               validationSchema={Yup.object({
                 title: Yup.string().required("Course title is required"),
-                
               })}
               onSubmit={handleSubmit}
             >
@@ -97,19 +98,18 @@ export default function CreateCourseModal() {
                         placeholder="Enter the organization that course offered by"
                       />
                     </div>
-                    <div className="md:px-5 lg:px-10">
+                    <div className="md:px-5 lg:px-10 col-span-2 sm:col-span-1">
                       <CourseCategoryDropdown
                         value={category ?? ""}
                         onChange={handleCategoryChange}
                       />
                     </div>
-                    <div className="md:px-5 lg:px-10">
-                      <CourseDifficultyDropdown 
+                    <div className="md:px-5 lg:px-10 col-span-2 sm:col-span-1">
+                      <CourseDifficultyDropdown
                         value={category ?? ""}
                         onChange={handleCategoryChange}
                       />
                     </div>
-                    
                   </div>
                   <br />
                   <center>
