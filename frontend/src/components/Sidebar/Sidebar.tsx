@@ -160,7 +160,7 @@ const Sidebar: React.FC = () => {
                         {subtopic.items.map((item, itemIndex) => (
                           <p
                             key={itemIndex}
-                            className={`mt-3 ml-8 cursor-pointer ${
+                            className={`mt-4 ml-8 cursor-pointer ${
                               selectedTopic.title === item.title ? 'font-semibold text-gray-800' : 'text-gray-500'
                             } transition transform hover:-translate-y-1`}
                             onClick={() => setSelectedTopic(item)}
