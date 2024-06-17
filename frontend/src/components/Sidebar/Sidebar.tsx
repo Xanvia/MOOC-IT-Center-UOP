@@ -36,13 +36,19 @@ const topics: Topic[] = [
       {
         title: 'Tools',
         items: [
-          { title: 'Download Tools', content: <CourseOutcomes/>, type: 'video' },
-          { title: 'Tools Installation', content: <p>content for tools installation</p>, type: 'note' },
-          { title: 'Basic Usage Tools', content: <CourseCard
-            title="Basic Usage Tools"
-            description="Learn how to install tools necessary for web development."
-            image="/images/course-header.jpg"
-          />, type: 'video' },
+          { title: 'Download Tools', content: <CourseOutcomes />, type: 'video' },
+          { title: 'Tools Installation', content: <p>Content for tools installation</p>, type: 'note' },
+          {
+            title: 'Basic Usage Tools',
+            content: (
+              <CourseCard
+                title="Basic Usage Tools"
+                description="Learn how to install tools necessary for web development."
+                image="/images/course-header.jpg"
+              />
+            ),
+            type: 'video',
+          },
         ],
       },
     ],
@@ -64,13 +70,19 @@ const topics: Topic[] = [
       {
         title: 'Tools',
         items: [
-          { title: 'Download Tools', content: <CourseOutcomes/>, type: 'video' },
-          { title: 'Tools Installation', content: <p>content for tools installation</p>, type: 'note' },
-          { title: 'Basic Usage Tools', content: <CourseCard
-            title="Basic Usage Tools"
-            description="Learn how to install tools necessary for web development."
-            image="/images/course-header.jpg"
-          />, type: 'video' },
+          { title: 'Download Tools', content: <CourseOutcomes />, type: 'video' },
+          { title: 'Tools Installation', content: <p>Content for tools installation</p>, type: 'note' },
+          {
+            title: 'Basic Usage Tools',
+            content: (
+              <CourseCard
+                title="Basic Usage Tools"
+                description="Learn how to install tools necessary for web development."
+                image="/images/course-header.jpg"
+              />
+            ),
+            type: 'video',
+          },
         ],
       },
     ],
@@ -92,13 +104,23 @@ const getIcon = (type: string) => {
 
 const Sidebar: React.FC = () => {
   const [selectedTopic, setSelectedTopic] = useState<Item>(topics[0].subtopics[0].items[0]);
-  const [expandedWeek, setExpandedWeek] = useState<number | null>(0);
-  const [expandedSubtopic, setExpandedSubtopic] = useState<{ [key: number]: number | null }>({});
+  const [expandedWeeks, setExpandedWeeks] = useState<{ [key: number]: boolean }>({});
+  const [expandedSubtopics, setExpandedSubtopics] = useState<{ [weekIndex: number]: { [subtopicIndex: number]: boolean } }>({});
+
+  const toggleWeek = (weekIndex: number) => {
+    setExpandedWeeks((prev) => ({
+      ...prev,
+      [weekIndex]: !prev[weekIndex],
+    }));
+  };
 
   const toggleSubtopic = (weekIndex: number, subtopicIndex: number) => {
-    setExpandedSubtopic((prev) => ({
+    setExpandedSubtopics((prev) => ({
       ...prev,
-      [weekIndex]: prev[weekIndex] === subtopicIndex ? null : subtopicIndex,
+      [weekIndex]: {
+        ...prev[weekIndex],
+        [subtopicIndex]: !(prev[weekIndex] && prev[weekIndex][subtopicIndex]),
+      },
     }));
   };
 
@@ -116,11 +138,11 @@ const Sidebar: React.FC = () => {
           <div key={weekIndex} className="mb-8 ml-4 border-b pb-2 border-gray-200">
             <h4
               className="text-md font-medium border-b pb-1 mb-2 border-gray-400 cursor-pointer"
-              onClick={() => setExpandedWeek(expandedWeek === weekIndex ? null : weekIndex)}
+              onClick={() => toggleWeek(weekIndex)}
             >
               {topic.category}
             </h4>
-            {expandedWeek === weekIndex && (
+            {expandedWeeks[weekIndex] && (
               <div>
                 {topic.subtopics.map((subtopic, subtopicIndex) => (
                   <div key={subtopicIndex}>
@@ -130,7 +152,7 @@ const Sidebar: React.FC = () => {
                     >
                       {subtopic.title}
                     </h5>
-                    {expandedSubtopic[weekIndex] === subtopicIndex && (
+                    {expandedSubtopics[weekIndex] && expandedSubtopics[weekIndex][subtopicIndex] && (
                       <div>
                         {subtopic.items.map((item, itemIndex) => (
                           <p
