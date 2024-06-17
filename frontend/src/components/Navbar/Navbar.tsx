@@ -18,8 +18,7 @@ import Loader from "../Loarder/Loarder";
 import { useGlobal } from "../../contexts/store";
 
 const Navbar = () => {
-  const { isLoggedIn, setIsLoggedIn, isLoading, setLoading, setToken } =
-    useGlobal();
+  const { isLoggedIn, setIsLoggedIn, isLoading, setLoading } = useGlobal();
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -35,8 +34,8 @@ const Navbar = () => {
   };
 
   const onSignOut = () => {
-    setToken(null);
     Cookies.remove("token");
+    Cookies.remove("user");
     setIsLoggedIn(false);
     setLoading(false);
     window.location.href = "/";
@@ -73,7 +72,7 @@ const Navbar = () => {
                 onClick={toggleMobileMenu}
               >
                 <span className="absolute -inset-0.5"></span>
-                <span className="sr-only">Open main menu</span>
+                <span className="sr-only">Open main menu </span>
 
                 <svg
                   className="block h-6 w-6"

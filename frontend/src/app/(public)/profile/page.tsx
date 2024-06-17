@@ -8,8 +8,8 @@ import EducationModal from "@/components/Profile/Education/EducationModal";
 import { Work, Education, ProfileData } from "@/components/Profile/types";
 import axios from "axios";
 import { API_URL } from "@/utils/constants";
+import Cookies from "js-cookie";
 import { useGlobal } from "@/contexts/store";
-
 
 const dummyEdu = {
   id: 1,
@@ -20,15 +20,13 @@ const dummyEdu = {
 };
 
 export default function ProfilePage() {
-  const { token } = useGlobal();
-
+  const token = Cookies.get("token");
   const [work, setWork] = useState<Work[]>([]);
   const [education, setEducation] = useState<Education[]>([]);
   const [profileData, setProfileData] = useState<ProfileData | undefined>(
     undefined
   );
   const [reload, setReload] = useState(false);
-
   useEffect(() => {
     const fetchProfileData = async () => {
       try {

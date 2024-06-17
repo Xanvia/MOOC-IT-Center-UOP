@@ -30,7 +30,7 @@ const CourseCategoryDropdown: React.FC<Props> = ({ value, onChange }) => {
   return (
     <div className="relative" ref={dropdownRef}>
       <span className="text-sm font-semibold text-primary ">
-        Course Category
+        Course Difficulty
       </span>
       <button
         type="button"
@@ -71,16 +71,16 @@ const CourseCategoryDropdown: React.FC<Props> = ({ value, onChange }) => {
             className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
             id="listbox-option-0"
             role="option"
-            aria-selected={selectedOption === "Statistics"}
+            aria-selected={selectedOption === "Beginner"}
             onClick={() => {
               onChange("");
-              setSelectedOption("Statistics");
+              setSelectedOption("Beginner");
               setIsOpen(false);
             }}
           >
             <div className="flex items-center text-primary justify-center">
               <span className="font-normal  ml-3 block truncate ">
-                Statistics
+                Beginner
               </span>
             </div>
           </li>
@@ -89,15 +89,15 @@ const CourseCategoryDropdown: React.FC<Props> = ({ value, onChange }) => {
             className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
             id="listbox-option-0"
             role="option"
-            aria-selected={selectedOption === "Physics"}
+            aria-selected={selectedOption === "Intermediate"}
             onClick={() => {
               onChange("");
-              setSelectedOption("Physics");
+              setSelectedOption("Intermediate");
               setIsOpen(false);
             }}
           >
             <div className="flex items-center text-primary justify-center">
-              <span className="font-normal  ml-3 block truncate ">Physics</span>
+              <span className="font-normal  ml-3 block truncate ">Intermediate</span>
             </div>
           </li>
 
@@ -105,16 +105,16 @@ const CourseCategoryDropdown: React.FC<Props> = ({ value, onChange }) => {
             className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
             id="listbox-option-0"
             role="option"
-            aria-selected={selectedOption === "Chemistry"}
+            aria-selected={selectedOption === "Advanced"}
             onClick={() => {
               onChange("");
-              setSelectedOption("Chemistry");
+              setSelectedOption("Advanced");
               setIsOpen(false);
             }}
           >
             <div className="flex items-center text-primary justify-center">
               <span className="font-normal  ml-3 block truncate ">
-                Chemistry
+                Advanced
               </span>
             </div>
           </li>

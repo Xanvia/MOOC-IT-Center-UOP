@@ -17,6 +17,7 @@ import {
   InputInnerDiv,
   InputOuterDiv,
 } from "../../components.styles";
+import { useGlobal } from "@/contexts/store";
 
 export interface RegistrationFormValues {
   firstName: string;
@@ -86,7 +87,6 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
         })
         .then((res) => {
           Cookies.set("token", res.data.data.access_token);
-          console.log(res.data.user);
           Cookies.set("user", JSON.stringify(res.data.data.user));
           setStep("Two");
           toast.success(res.data.message);
@@ -112,7 +112,6 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
           })
           .then((res) => {
             Cookies.set("token", res.data.data.access_token);
-            console.log(res.data.user);
             Cookies.set("user", JSON.stringify(res.data.data.user));
             setStep("Two");
             toast.success(res.data.message);
