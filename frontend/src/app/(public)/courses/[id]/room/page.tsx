@@ -20,7 +20,6 @@ export default function CoursesRoom() {
       <>
         <Breadcrumb breadcrumbs={breadcrumbs} />
         <div className="bg-sky-100">
-          
           <Sidebar/>
         </div>
         
