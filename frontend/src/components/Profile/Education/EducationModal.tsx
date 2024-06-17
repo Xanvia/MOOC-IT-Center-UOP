@@ -24,7 +24,7 @@ import { toast } from "sonner";
 import { API_URL } from "@/utils/constants";
 import { format } from "date-fns";
 import DropDownInstitution from "@/components/DropDown/DropDownUni";
-import { useGlobal } from "@/contexts/store";
+import Cookies from "js-cookie";
 
 interface Props {
   CardTitle: string;
@@ -42,7 +42,7 @@ const EducationModal: React.FC<Props> = ({
   realoadData,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { token } = useGlobal();
+  const token = Cookies.get("token");
 
   const [institution, setInstitution] = useState(eduData?.institution || "");
   const [startDate, setStartDate] = useState<Date | null>(
@@ -78,7 +78,6 @@ const EducationModal: React.FC<Props> = ({
         start_date: startDate ? format(startDate, "yyyy-MM") : null,
         end_date: endDate ? format(endDate, "yyyy-MM") : null,
       };
-      console.log(data);
       let response;
       if (eduData) {
         response = await axios.put(
@@ -109,7 +108,6 @@ const EducationModal: React.FC<Props> = ({
         { headers }
       );
       toast.success("Education Details Deleted");
-      console.log(response.data);
       realoadData();
       setIsOpen(false);
     } catch (error) {

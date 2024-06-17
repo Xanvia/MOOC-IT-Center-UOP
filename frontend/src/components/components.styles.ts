@@ -58,20 +58,20 @@ export const InputFieldClasses = clsx(
   "outline-0",
   "focus:outline-0",
   "disabled:bg-blue-gray-50",
-  "disabled:border-t-transparent",
   "transition-all",
   "placeholder-shown:border",
-  "placeholder-shown:border-blue-gray-200",
+  "placeholder-shown:border-primary",
   "placeholder-shown:border-t-blue-gray-200",
   "border",
   "focus:border-2",
+  "border-t-transparent",
   "focus:border-t-transparent",
   "text-sm",
   "px-3",
   "py-2.5",
   "rounded-[7px]",
   "border-primary",
-  "focus:border-gray-900"
+  "focus:border-primary",
 );
 
 const LabelbaseClasses = clsx(
@@ -88,8 +88,6 @@ const LabelbaseClasses = clsx(
   "peer-placeholder-shown:text-primary",
   "leading-tight",
   "peer-focus:leading-tight",
-  "peer-disabled:text-transparent",
-  "peer-disabled:peer-placeholder-shown:text-blue-gray-500",
   "transition-all",
   "-top-1.5",
   "peer-placeholder-shown:text-sm",
@@ -116,9 +114,9 @@ const LabelbeforeClasses = clsx(
   "peer-focus:before:border-l-2",
   "before:pointer-events-none",
   "before:transition-all",
-  "peer-disabled:before:border-transparent",
-  "before:border-blue-gray-200",
-  "peer-focus:before:!border-gray-900"
+  "before:border-primary",
+  "peer-focus:before:!border-gray-900",
+
 );
 
 const LabelafterClasses = clsx(
@@ -138,9 +136,8 @@ const LabelafterClasses = clsx(
   "peer-focus:after:border-r-2",
   "after:pointer-events-none",
   "after:transition-all",
-  "peer-disabled:after:border-transparent",
-  "after:border-blue-gray-200",
-  "peer-focus:after:!border-gray-900"
+  "after:border-primary",
+  "peer-focus:after:!border-primary"
 );
 
 export const InputLabel = clsx(

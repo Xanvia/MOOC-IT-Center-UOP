@@ -16,8 +16,8 @@ import {
   InputOuterDiv,
 } from "../../components.styles";
 import InterestLabel from "@/components/DropDown/InterestLabel";
-import Cookies from "js-cookie";
 import { toast } from "sonner";
+import { useGlobal } from "@/contexts/store";
 
 interface Interest {
   id: number;
@@ -41,6 +41,8 @@ const validationSchema = Yup.object({
 });
 
 const RegistrationFormTwo: React.FC = () => {
+  const { token } = useGlobal();
+
   const [country, setCountry] = useState<Country | undefined>(undefined);
   const [gender, setGender] = useState("");
   const [birthDate, setBirthDate] = useState<Date | null>(null);
@@ -72,7 +74,7 @@ const RegistrationFormTwo: React.FC = () => {
 
   const handleSubmit = (values: RegistrationFormValues) => {
     console.log(birthDate);
-    const token = Cookies.get("token");
+
     if (country?.label === undefined) {
       toast.warning("Please select a country");
     } else if (gender === "") {

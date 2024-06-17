@@ -24,8 +24,7 @@ import { API_URL } from "@/utils/constants";
 import { format } from "date-fns";
 import { Work } from "../types";
 import DeleteButton from "@/components/Buttons/DeleteButton";
-import { useGlobal } from "@/contexts/store";
-
+import Cookies from "js-cookie";
 
 interface Props {
   CardTitle: string;
@@ -43,7 +42,7 @@ const AddExperienceModal: React.FC<Props> = ({
   workData,
   realoadData,
 }: Props) => {
-  const { token } = useGlobal();
+  const token = Cookies.get("token");
 
   const [isOpen, setIsOpen] = useState(false);
 

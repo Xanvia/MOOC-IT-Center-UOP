@@ -11,6 +11,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { API_URL, CALLBACK_URL } from "@/utils/constants";
+import { useGlobal } from "@/contexts/store";
 
 import {
   ModalClassesBG,
@@ -37,6 +38,7 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function Login() {
+
   const [isOpen, setIsOpen] = useState(false);
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();

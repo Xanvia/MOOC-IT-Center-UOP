@@ -14,9 +14,9 @@ import ReactDatePicker from "@/components/DropDown/DatePicker";
 import SolidButton from "../Buttons/SolidButton";
 import { ProfileData } from "./types";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { API_URL } from "@/utils/constants";
-import { useGlobal } from "@/contexts/store";
 
 const DefaultProfileImage = "/images/52.jpg";
 
@@ -43,8 +43,6 @@ interface EditFromValues {
 }
 
 const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
-  const { token } = useGlobal();
-
   const [country, setCountry] = useState<Country | undefined>(userData.country);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(
@@ -71,6 +69,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
   };
 
   const handleDelete = () => {
+    const token = Cookies.get("token");
     axios
       .patch(
         `${API_URL}/user/profile-image`,
@@ -93,6 +92,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
   };
 
   const handleSubmit = (values: EditFromValues) => {
+    const token = Cookies.get("token");
     if (country?.label === undefined) {
       toast.warning("Please select a country");
     } else if (birthDate === null) {
@@ -120,7 +120,6 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
           },
         })
         .then((res) => {
-          console.log(res.data.user);
           toast.success(res.data.message);
           reloadData();
         })
@@ -259,12 +258,12 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
               <div className={InputInnerDiv}>
                 <Field
                   type="text"
-                  name="firstName"
+                  name="phoneNumber"
                   className={InputFieldClasses}
                   placeholder=" "
                 />
                 <ErrorMessage
-                  name="firstName"
+                  name="phoneNumber"
                   component="div"
                   className="top-0 left-0 text-red-600 text-xs"
                 />
