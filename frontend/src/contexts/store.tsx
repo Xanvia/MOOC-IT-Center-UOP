@@ -12,8 +12,6 @@ import { set } from "jodit/types/core/helpers";
 interface GlobalContextType {
   isLoggedIn: boolean;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
-  token: string | null;
-  setToken: (token: string | null) => void;
   isLoading: boolean;
   setLoading: (isLoading: boolean) => void;
   userRole: string | null;
@@ -28,7 +26,6 @@ export const GlobalContextProvider = ({
   children: ReactNode;
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
   const [isLoading, setLoading] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
 
@@ -36,7 +33,6 @@ export const GlobalContextProvider = ({
     const tokenFromCookie = Cookies.get("token");
     if (tokenFromCookie) {
       setIsLoggedIn(true);
-      setToken(tokenFromCookie);
     }
   }, []);
 
@@ -45,8 +41,6 @@ export const GlobalContextProvider = ({
       value={{
         isLoggedIn,
         setIsLoggedIn,
-        token,
-        setToken,
         isLoading,
         setLoading,
         userRole,

@@ -17,8 +17,7 @@ import {
 } from "../../components.styles";
 import InterestLabel from "@/components/DropDown/InterestLabel";
 import { toast } from "sonner";
-import { useGlobal } from "@/contexts/store";
-
+import Cookies from "js-cookie";
 interface Interest {
   id: number;
   label: string;
@@ -41,7 +40,7 @@ const validationSchema = Yup.object({
 });
 
 const RegistrationFormTwo: React.FC = () => {
-  const { token } = useGlobal();
+  const token = Cookies.get("token");
 
   const [country, setCountry] = useState<Country | undefined>(undefined);
   const [gender, setGender] = useState("");
