@@ -77,5 +77,6 @@ class GetCourseTest(APITestCase):
             "course_creator": 1,
             "category": 1,
             "institution": 1,
+            "status": "unpublished",
         }
         self.assertEqual(response.data, expected_data)
