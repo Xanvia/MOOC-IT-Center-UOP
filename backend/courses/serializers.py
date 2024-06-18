@@ -19,3 +19,8 @@ class CourseSerializer(serializers.ModelSerializer):
             # Filter the data to only include allowed fields
             data = {key: value for key, value in data.items() if key in allowed_fields}
         return data
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["course_creator"] = instance.course_creator.username
+        return representation
