@@ -12,15 +12,17 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
+import dj_database_url
 from pathlib import Path
 from datetime import timedelta
 from django.conf.urls.static import static
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # stored files.
-MEDIA_URL = "/media/"
+MEDIA_URL = '/media/'
+
 
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -45,7 +47,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS"),"127.0.0.1"]
 
 
 # Application definition
@@ -61,7 +63,6 @@ INSTALLED_APPS = [
     "userprofiles",
     "corsheaders",
     "courses",
-    "coursemanagement",
 ]
 
 MIDDLEWARE = [
@@ -102,16 +103,21 @@ WSGI_APPLICATION = "mooc.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-if os.getenv("DJANGO_ENV") == "production":
+
+# DJANGO_ENV =os.getenv("DJANGO_ENV") 
+DJANGO_ENV = "production"
+
+if DJANGO_ENV == "production":
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": os.getenv("DB_NAME"),
-            "USER": os.getenv("DB_USER"),
-            "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": os.getenv("DB_HOST", "localhost"),
-            "PORT": os.getenv("DB_PORT", "5432"),
-        }
+        # "default": {
+        #     "ENGINE": "django.db.backends.postgresql_psycopg2",
+        #     "NAME": os.getenv("DB_NAME"),
+        #     "USER": os.getenv("DB_USER"),
+        #     "PASSWORD": os.getenv("DB_PASSWORD"),
+        #     "HOST": os.getenv("DB_HOST", "localhost"),
+        #     "PORT": os.getenv("DB_PORT", "5432"),
+        # }
+        "default": dj_database_url.parse(os.getenv("DATABASE_URL"))
     }
 else:
     DATABASES = {
