@@ -103,3 +103,7 @@ class WorkExperience(models.Model):
 
     def __str__(self):
         return f"{self.user_profile.user.username}'s Work Experience"
+    
+
+    def is_current(self):
+        return not self.end_date
