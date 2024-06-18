@@ -66,17 +66,20 @@ class GetCourseTest(APITestCase):
             },
         }
         expected_data = {
-            "id": 1,
-            "name": "test course",
-            "description": None,
-            "specifications": None,
-            "outcomes": [],
-            "header_image": None,
-            "duration": None,
-            "difficulty": "beginner",
-            "course_creator": 1,
-            "category": 1,
-            "institution": 1,
-            "status": "unpublished",
+            "status": "success",
+            "data": {
+                "id": 1,
+                "name": "test course",
+                "description": None,
+                "specifications": None,
+                "outcomes": [],
+                "header_image": None,
+                "duration": None,
+                "difficulty": "beginner",
+                "status": "unpublished",
+                "course_creator": "test_user1",
+                "category": 1,
+                "institution": 1,
+            },
         }
         self.assertEqual(response.data, expected_data)
