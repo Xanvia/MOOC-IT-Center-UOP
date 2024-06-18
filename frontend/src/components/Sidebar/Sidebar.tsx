@@ -107,14 +107,11 @@ const getIcon = (type: string) => {
 
 const Sidebar: React.FC = () => {
   const [selectedTopic, setSelectedTopic] = useState<Item>(topics[0].subtopics[0].items[0]);
-  const [expandedWeeks, setExpandedWeeks] = useState<{ [key: number]: boolean }>({});
+  const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
   const [expandedSubtopics, setExpandedSubtopics] = useState<{ [weekIndex: number]: { [subtopicIndex: number]: boolean } }>({});
 
   const toggleWeek = (weekIndex: number) => {
-    setExpandedWeeks((prev) => ({
-      ...prev,
-      [weekIndex]: !prev[weekIndex],
-    }));
+    setExpandedWeek(expandedWeek === weekIndex ? null : weekIndex);
   };
 
   const toggleSubtopic = (weekIndex: number, subtopicIndex: number) => {
@@ -145,7 +142,7 @@ const Sidebar: React.FC = () => {
             >
               {topic.category}
             </h4>
-            {expandedWeeks[weekIndex] && (
+            {expandedWeek === weekIndex && (
               <div>
                 {topic.subtopics.map((subtopic, subtopicIndex) => (
                   <div key={subtopicIndex}>
