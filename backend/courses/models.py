@@ -17,6 +17,7 @@ class Course(models.Model):
     header_image = models.ImageField(upload_to="course_images/", blank=True, null=True)
     duration = models.CharField(max_length=255, blank=True, null=True)
     difficulty = models.CharField(max_length=255)
+    status = models.CharField(max_length=255, default="unpublished")
 
     def get_progress(self, user):
         weeks = self.weeks.all()
