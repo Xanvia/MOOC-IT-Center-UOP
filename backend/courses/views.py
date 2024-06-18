@@ -3,7 +3,7 @@ from .models import Course
 from .serializers import CourseSerializer
 
 
-class CourseCreateView(viewsets.ModelViewSet):
+class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
@@ -37,7 +37,7 @@ class CourseCreateView(viewsets.ModelViewSet):
 
         request.data["course_creator"] = request.user.id
 
-        response = super().update(request, *args, **kwargs)
+        response = super().update(request, partial=True, *args, **kwargs)
 
         response.data = {
             "status": "success",
