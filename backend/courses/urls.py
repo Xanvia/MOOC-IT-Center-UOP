@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CourseViewSet, CourseDetailView
+from .views import CourseViewSet
 
 urlpatterns = [
     path(
@@ -14,5 +14,4 @@ urlpatterns = [
         ),
         name="course-detail",
     ),
-    path("courses/<int:pk>/", CourseDetailView.as_view(), name="course-detail"),
 ]
