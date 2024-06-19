@@ -50,7 +50,8 @@ class CourseTeacherSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation["full_name"] = f"{instance.first_name} {instance.last_name}"
-
+        representation.pop("first_name")
+        representation.pop("last_name")
         work = self.get_current_work(instance)
         representation["work"] = work
         return representation
