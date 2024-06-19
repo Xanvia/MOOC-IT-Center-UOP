@@ -219,7 +219,6 @@ class WorkExperienceSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation.pop("user_profile")
-        representation["is_present"] = self.is_present(instance.end_date)
         return representation
     
 

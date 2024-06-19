@@ -101,11 +101,8 @@ class WorkExperience(models.Model):
     position = models.CharField(max_length=100)
     start_date = models.CharField(max_length=7)
     end_date = models.CharField(max_length=7, null=True, blank=True)
-    is_current = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user_profile.user.username}'s Work Experience"
     
 
-    def is_current(self):
-        return not self.end_date
