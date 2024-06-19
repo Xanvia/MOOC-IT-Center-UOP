@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import AccessToken
 from .models import Course
 from userprofiles.models import Interest
-from userprofiles.serializers import WorkExperienceSerializer, InterestSerializer
+from userprofiles.serializers import WorkExperienceSerializer, InterestSerializer, InstitutionSerializer
 
 
 
@@ -44,15 +44,6 @@ class CourseTeacherSerializer(serializers.ModelSerializer):
 #         fields = "__all__"
 
 
-class CourseInstitutionSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = "__all__"
-
-    
-
-
 class CourseSerializer(serializers.ModelSerializer):
     
     
@@ -72,7 +63,8 @@ class CourseSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation["course_creator"] = CourseTeacherSerializer(instance.course_creator).data 
-        representation["course_category"] = InterestSerializer(instance.category).data 
+        representation["category"] = InterestSerializer(instance.category).data
+        representation["institution"] = InstitutionSerializer(instance.institution).data 
         return representation
 
 
