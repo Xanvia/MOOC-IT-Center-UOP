@@ -89,6 +89,7 @@ class Education(models.Model):
     degree = models.CharField(max_length=500)
     start_date = models.CharField(max_length=7)
     end_date = models.CharField(max_length=7, blank=True, null=True)
+    is_current = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user_profile.user.username}'s Education"
@@ -100,6 +101,7 @@ class WorkExperience(models.Model):
     position = models.CharField(max_length=100)
     start_date = models.CharField(max_length=7)
     end_date = models.CharField(max_length=7, null=True, blank=True)
+    is_current = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user_profile.user.username}'s Work Experience"
