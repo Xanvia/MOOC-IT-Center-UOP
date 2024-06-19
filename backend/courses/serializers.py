@@ -57,6 +57,8 @@ class CourseTeacherSerializer(serializers.ModelSerializer):
 
     def get_current_work(self,instance):
         work = instance.userprofile.workexperience_set.last()
+        if work:
+            return work.company
         return work
 
     # def to_representation(self, instance):
