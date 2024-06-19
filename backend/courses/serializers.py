@@ -52,6 +52,7 @@ class CourseTeacherSerializer(serializers.ModelSerializer):
         representation["full_name"] = f"{instance.first_name} {instance.last_name}"
 
         work = self.get_current_work(instance)
+        representation["work"] = work
         return representation
 
     def get_current_work(self,instance):
