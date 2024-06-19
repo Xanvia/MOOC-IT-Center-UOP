@@ -84,6 +84,14 @@ class CourseSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         request = self.context.get("request")
+
+        if request and request.method == "POST":
+            user = request.user
+            if user.userprofile.workexperience_set.count() == 0:
+                raise serializers.ValidationError(
+                    "You can't create a course if you have no work experience"
+                )
+
         if request and request.method == "PATCH":
             allowed_fields = {"outcomes", "specifications"}
             # Filter the data to only include allowed fields
