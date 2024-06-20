@@ -51,6 +51,7 @@ class UserProfile(models.Model):
         Country, on_delete=models.PROTECT, blank=True, null=True
     )
     description = models.TextField(max_length=2000, blank=True, null=True)
+    headline = models.CharField(max_length=500, blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)
     interests = models.ManyToManyField(Interest)
     mobile_number = models.CharField(max_length=15, blank=True, null=True)

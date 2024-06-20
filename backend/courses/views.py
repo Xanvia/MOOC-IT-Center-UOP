@@ -7,6 +7,12 @@ class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+
+        response.data = {"status": "success", "data": response.data}
+        return response
+
     def create(self, request, *args, **kwargs):
 
         # we need to add course creator

@@ -9,8 +9,9 @@ urlpatterns = [
     ),
     path(
         "<int:pk>",
-        CourseViewSet.as_view({"get": "retrieve", "patch": "add_details","put":"update"}),
+        CourseViewSet.as_view(
+            {"get": "retrieve", "patch": "add_details", "put": "update"}
+        ),
         name="course-detail",
     ),
-
 ]
