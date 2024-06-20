@@ -40,6 +40,8 @@ class GetCourseTest(APITestCase):
         self.url = reverse("course-detail", args=[1])
 
     def test_get_course_details_success(self):
+        institution = Institution.objects.get(id=1)
+        category = Interest.objects.get(id=1)
         course_data = {
             "name": "test course",
             "category": 1,
@@ -77,9 +79,13 @@ class GetCourseTest(APITestCase):
                 "duration": None,
                 "difficulty": "beginner",
                 "status": "unpublished",
-                "course_creator": "test_user1",
-                "category": 1,
-                "institution": 1,
+                "course_creator": {
+                    "email": "test@gmail.com",
+                    "full_name": "test user",
+                    "headline": None,
+                },
+                "category": category.label,
+                "institution": institution.label,
             },
         }
         self.assertEqual(response.data, expected_data)
