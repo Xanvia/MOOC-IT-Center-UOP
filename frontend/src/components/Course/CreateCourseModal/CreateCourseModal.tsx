@@ -6,14 +6,16 @@ import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import CloseButton from "../../Buttons/CloseButton";
 import CourseCategoryDropdown from "./CourseCategoryDropdown";
 import CourseDifficultyDropdown from "./CourseDifficultyDropdown";
-import {
-  ModalClassesBG,
-  SolidInputFieldClasses,
-} from "../../components.styles";
+import { ModalClassesBG } from "../../components.styles";
+import axios from "axios";
+import { toast } from "sonner"; // Ensure you have this dependency
+import { API_URL } from "@/utils/constants"; // Adjust the path as per your project structure
 
 export default function CreateCourseModal() {
   const [category, setCategory] = useState<string | null>(null);
+  const [difficulty, setDifficulty] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
@@ -25,20 +27,44 @@ export default function CreateCourseModal() {
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
+
   const handleCategoryChange = (value: string) => {
     setCategory(value);
   };
 
-  const handleSubmit = (values: any) => {};
+  const handleDifficultyChange = (value: string) => {
+    setDifficulty(value);
+  };
+
+  const handleSubmit = (values: any, { setSubmitting, resetForm }: any) => {
+    axios
+      .post(`${API_URL}/course/create`, {
+        title: values.title,
+        organization: values.organization,
+        category: category,
+        difficulty: difficulty,
+      })
+      .then((response) => {
+        toast.success("Course created successfully!");
+        resetForm();
+        setIsOpen(false);
+      })
+      .catch((error) => {
+        const errorMessage = error.response?.data.message ?? "Network error";
+        toast.error(errorMessage);
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
+  };
 
   return (
     <>
       <SecondaryButton onClick={toggleModal} text="Create Course" />
-
       {isOpen && (
         <div className={ModalClassesBG} onMouseDown={handleInsideClick}>
           <div
-            className="bg-white p-10 px-md; rounded-lg shadow-lg relative max-w-3xl w-full"
+            className="bg-white p-10 px-md rounded-lg shadow-lg relative max-w-3xl w-full"
             onMouseDown={handleOutsideClick}
           >
             <CloseButton onClick={toggleModal} />
@@ -46,9 +72,10 @@ export default function CreateCourseModal() {
               Create Your Course
             </h1>
             <Formik
-              initialValues={{ title: "" }}
+              initialValues={{ title: "", organization: "" }}
               validationSchema={Yup.object({
                 title: Yup.string().required("Course title is required"),
+                organization: Yup.string().required("Organization name is required"),
               })}
               onSubmit={handleSubmit}
             >
@@ -81,21 +108,26 @@ export default function CreateCourseModal() {
                     </div>
                     <div className="col-span-2 mb-4 md:px-5 lg:px-10">
                       <label
-                        htmlFor="title"
+                        htmlFor="organization"
                         className="block text-sm font-medium text-primary mb-1"
                       >
                         Organization Name
                       </label>
                       <Field
                         type="text"
-                        id="title"
-                        name="title"
+                        id="organization"
+                        name="organization"
                         className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
-                          formik.touched.title && formik.errors.title
+                          formik.touched.organization && formik.errors.organization
                             ? "border-primary"
                             : ""
                         }`}
                         placeholder="Enter the organization that course offered by"
+                      />
+                      <ErrorMessage
+                        name="organization"
+                        component="div"
+                        className="text-red-500 text-sm"
                       />
                     </div>
                     <div className="md:px-5 lg:px-10 col-span-2 sm:col-span-1">
@@ -106,8 +138,8 @@ export default function CreateCourseModal() {
                     </div>
                     <div className="md:px-5 lg:px-10 col-span-2 sm:col-span-1">
                       <CourseDifficultyDropdown
-                        value={category ?? ""}
-                        onChange={handleCategoryChange}
+                        value={difficulty ?? ""}
+                        onChange={handleDifficultyChange}
                       />
                     </div>
                   </div>
