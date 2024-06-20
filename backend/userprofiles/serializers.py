@@ -125,11 +125,11 @@ class CountrySerializer(serializers.ModelSerializer):
         model = Country
         fields = ["id", "label"]
 
+
 class InstitutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Institution
         fields = ["id", "label"]
-
 
 
 class AddUserInfoSerializer(serializers.ModelSerializer):
@@ -173,6 +173,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "mobile_number",
             "description",
             "profile_image",
+            "headline",
         ]
 
     def to_representation(self, instance):
@@ -220,7 +221,7 @@ class WorkExperienceSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation.pop("user_profile")
         return representation
-    
+
 
 class EducationSerializer(serializers.ModelSerializer):
     institution = serializers.CharField()

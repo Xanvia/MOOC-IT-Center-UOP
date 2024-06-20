@@ -51,6 +51,7 @@ class UserProfile(models.Model):
         Country, on_delete=models.PROTECT, blank=True, null=True
     )
     description = models.TextField(max_length=2000, blank=True, null=True)
+    headline = models.CharField(max_length=500, blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)
     interests = models.ManyToManyField(Interest)
     mobile_number = models.CharField(max_length=15, blank=True, null=True)
@@ -89,7 +90,6 @@ class Education(models.Model):
     degree = models.CharField(max_length=500)
     start_date = models.CharField(max_length=7)
     end_date = models.CharField(max_length=7, blank=True, null=True)
-    is_current = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user_profile.user.username}'s Education"
@@ -104,5 +104,3 @@ class WorkExperience(models.Model):
 
     def __str__(self):
         return f"{self.user_profile.user.username}'s Work Experience"
-    
-

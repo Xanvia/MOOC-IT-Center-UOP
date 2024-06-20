@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User, Group
-from django.contrib.auth import authenticate
-from rest_framework_simplejwt.tokens import AccessToken
+from django.contrib.auth.models import User
 from .models import Course
-from userprofiles.models import Interest
-from userprofiles.serializers import WorkExperienceSerializer, InterestSerializer, InstitutionSerializer
-
+from userprofiles.serializers import (
+    WorkExperienceSerializer,
+    InterestSerializer,
+    InstitutionSerializer,
+)
 
 
 class CourseTeacherSerializer(serializers.ModelSerializer):
@@ -17,36 +17,14 @@ class CourseTeacherSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation["full_name"] = f"{instance.first_name} {instance.last_name}"
+        representation["headline"] = instance.userprofile.headline
         representation.pop("first_name")
         representation.pop("last_name")
-        work = self.get_current_work(instance)
-        representation["work"] = work
         return representation
-
-    def get_current_work(self, instance):
-        # Filter the WorkExperience objects related to the user profile to find the current work experience
-        current_work = instance.userprofile.workexperience_set.filter(end_date__isnull=True).first()
-
-
-        # Serialize the current work experience if it exists
-        if current_work:
-            current_work = WorkExperienceSerializer(current_work).data
-        
-        
-
-        return current_work
-    
-        
-# class CourseCategorySerializer(serializers.ModelSerializer):
-
-#     class Meta:
-#         model = Interest
-#         fields = "__all__"
 
 
 class CourseSerializer(serializers.ModelSerializer):
-    
-    
+
     class Meta:
         model = Course
         fields = "__all__"
@@ -59,14 +37,12 @@ class CourseSerializer(serializers.ModelSerializer):
             # Filter the data to only include allowed fields
             data = {key: value for key, value in data.items() if key in allowed_fields}
         return data
-    
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["course_creator"] = CourseTeacherSerializer(instance.course_creator).data 
-        representation["category"] = InterestSerializer(instance.category).data
-        representation["institution"] = InstitutionSerializer(instance.institution).data 
+        representation["course_creator"] = CourseTeacherSerializer(
+            instance.course_creator
+        ).data
+        representation["category"] = instance.category.label
+        representation["institution"] = instance.institution.label
         return representation
-
-
-
-
