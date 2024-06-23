@@ -44,7 +44,7 @@ const EducationModal: React.FC<Props> = ({
   const [isOpen, setIsOpen] = useState(false);
   const token = Cookies.get("token");
 
-  const [institution, setInstitution] = useState(eduData?.institution || "");
+  const [institution, setInstitution] = useState(eduData?.institution || "Select Your Institution");
   const [startDate, setStartDate] = useState<Date | null>(
     eduData ? new Date(eduData.start_date) : null
   );

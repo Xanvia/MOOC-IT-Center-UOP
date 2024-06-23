@@ -8,14 +8,16 @@ import CourseCategoryDropdown from "./CourseCategoryDropdown";
 import CourseDifficultyDropdown from "./CourseDifficultyDropdown";
 import { ModalClassesBG } from "../../components.styles";
 import axios from "axios";
-import { toast } from "sonner"; // Ensure you have this dependency
-import { API_URL } from "@/utils/constants"; // Adjust the path as per your project structure
+import { toast } from "sonner";
+import { API_URL } from "@/utils/constants";
+import DropDownInstitution from "../../DropDown/DropDownUni";
 
 export default function CreateCourseModal() {
   const [category, setCategory] = useState<string | null>(null);
   const [difficulty, setDifficulty] = useState<string | null>(null);
+  const [institution, setInstitution] = useState("Your Organization");
   const [isOpen, setIsOpen] = useState(false);
-  
+
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
@@ -75,7 +77,9 @@ export default function CreateCourseModal() {
               initialValues={{ title: "", institution: "" }}
               validationSchema={Yup.object({
                 title: Yup.string().required("Course title is required"),
-                institution: Yup.string().required("Organization name is required"),
+                institution: Yup.string().required(
+                  "Organization name is required"
+                ),
               })}
               onSubmit={handleSubmit}
             >
@@ -107,27 +111,10 @@ export default function CreateCourseModal() {
                       />
                     </div>
                     <div className="col-span-2 mb-4 md:px-5 lg:px-10">
-                      <label
-                        htmlFor="organization"
-                        className="block text-sm font-medium text-primary mb-1"
-                      >
-                        Organization Name
-                      </label>
-                      <Field
-                        type="text"
-                        id="organization"
-                        name="organization"
-                        className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
-                          formik.touched.institution && formik.errors.institution
-                            ? "border-primary"
-                            : ""
-                        }`}
-                        placeholder="Enter the organization that course offered by"
-                      />
-                      <ErrorMessage
-                        name="organization"
-                        component="div"
-                        className="text-red-500 text-sm"
+                      <DropDownInstitution
+                        label="Organization Name"
+                        addSelection={setInstitution}
+                        selectedInstitution={institution as string}
                       />
                     </div>
                     <div className="md:px-5 lg:px-10 col-span-2 sm:col-span-1">
