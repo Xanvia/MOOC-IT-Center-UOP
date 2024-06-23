@@ -15,7 +15,7 @@ import DropDownInstitution from "../../DropDown/DropDownUni";
 export default function CreateCourseModal() {
   const [category, setCategory] = useState<string | null>(null);
   const [difficulty, setDifficulty] = useState<string | null>(null);
-  const [institution, setInstitution] = useState("Your Organization");
+  const [institution, setInstitution] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
