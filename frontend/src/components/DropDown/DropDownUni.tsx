@@ -6,6 +6,7 @@ import {
   InputLabel,
   InputInnerDiv,
   InputOuterDiv,
+  SolidInputFieldClasses,
 } from "@/components/components.styles";
 
 interface Institution {
@@ -78,7 +79,7 @@ const DropDownInstitution = ({
             type="text"
             name="institution"
             value={selectedOption}
-            className={InputFieldClasses}
+            className={SolidInputFieldClasses}
             placeholder=" "
             onClick={() => setIsOpen(!isOpen)}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
