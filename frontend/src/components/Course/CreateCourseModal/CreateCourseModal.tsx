@@ -28,6 +28,7 @@ export default function CreateCourseModal() {
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
+    setInstitution("");
   };
 
   const handleCategoryChange = (value: string) => {
@@ -38,25 +39,21 @@ export default function CreateCourseModal() {
     setDifficulty(value);
   };
 
-  const handleSubmit = (values: any, { setSubmitting, resetForm }: any) => {
+  const handleSubmit = (values: any) => {
     axios
-      .post(`${API_URL}/course`, {
+      .post(`${API_URL}/course/`, {
         title: values.title,
-        institution: values.institution,
+        institution: institution,
         category: category,
         difficulty: difficulty,
       })
       .then((response) => {
         toast.success("Course created successfully!");
-        resetForm();
         setIsOpen(false);
       })
       .catch((error) => {
         const errorMessage = error.response?.data.message ?? "Network error";
         toast.error(errorMessage);
-      })
-      .finally(() => {
-        setSubmitting(false);
       });
   };
 
@@ -77,9 +74,6 @@ export default function CreateCourseModal() {
               initialValues={{ title: "", institution: "" }}
               validationSchema={Yup.object({
                 title: Yup.string().required("Course title is required"),
-                institution: Yup.string().required(
-                  "Organization name is required"
-                ),
               })}
               onSubmit={handleSubmit}
             >
@@ -133,11 +127,7 @@ export default function CreateCourseModal() {
                   <br />
                   <center>
                     <div className="mt-6 mb-2">
-                      <SolidButton
-                        type="submit"
-                        text="S U B M I T"
-                        onClick={() => {}}
-                      />
+                      <SolidButton type="submit" text="S U B M I T" />
                     </div>
                   </center>
                 </Form>
