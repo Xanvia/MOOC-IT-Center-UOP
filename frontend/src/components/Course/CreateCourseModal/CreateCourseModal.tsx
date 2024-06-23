@@ -40,7 +40,7 @@ export default function CreateCourseModal() {
     axios
       .post(`${API_URL}/course`, {
         title: values.title,
-        organization: values.organization,
+        institution: values.institution,
         category: category,
         difficulty: difficulty,
       })
@@ -72,10 +72,10 @@ export default function CreateCourseModal() {
               Create Your Course
             </h1>
             <Formik
-              initialValues={{ title: "", organization: "" }}
+              initialValues={{ title: "", institution: "" }}
               validationSchema={Yup.object({
                 title: Yup.string().required("Course title is required"),
-                organization: Yup.string().required("Organization name is required"),
+                institution: Yup.string().required("Organization name is required"),
               })}
               onSubmit={handleSubmit}
             >
@@ -118,7 +118,7 @@ export default function CreateCourseModal() {
                         id="organization"
                         name="organization"
                         className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
-                          formik.touched.organization && formik.errors.organization
+                          formik.touched.institution && formik.errors.institution
                             ? "border-primary"
                             : ""
                         }`}
