@@ -38,7 +38,7 @@ export default function CreateCourseModal() {
 
   const handleSubmit = (values: any, { setSubmitting, resetForm }: any) => {
     axios
-      .post(`${API_URL}/course/create`, {
+      .post(`${API_URL}/course`, {
         title: values.title,
         organization: values.organization,
         category: category,
