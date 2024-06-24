@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 interface Props {
-  value: string; // Define value prop
+  value: string;
   onChange: (value: string) => void;
 }
 
@@ -73,7 +73,7 @@ const CourseCategoryDropdown: React.FC<Props> = ({ value, onChange }) => {
             role="option"
             aria-selected={selectedOption === "Beginner"}
             onClick={() => {
-              onChange("");
+              onChange("Beginer");
               setSelectedOption("Beginner");
               setIsOpen(false);
             }}
@@ -91,13 +91,15 @@ const CourseCategoryDropdown: React.FC<Props> = ({ value, onChange }) => {
             role="option"
             aria-selected={selectedOption === "Intermediate"}
             onClick={() => {
-              onChange("");
+              onChange("Intermediate");
               setSelectedOption("Intermediate");
               setIsOpen(false);
             }}
           >
             <div className="flex items-center text-primary justify-center">
-              <span className="font-normal  ml-3 block truncate ">Intermediate</span>
+              <span className="font-normal  ml-3 block truncate ">
+                Intermediate
+              </span>
             </div>
           </li>
 
@@ -107,7 +109,7 @@ const CourseCategoryDropdown: React.FC<Props> = ({ value, onChange }) => {
             role="option"
             aria-selected={selectedOption === "Advanced"}
             onClick={() => {
-              onChange("");
+              onChange("Advanced");
               setSelectedOption("Advanced");
               setIsOpen(false);
             }}

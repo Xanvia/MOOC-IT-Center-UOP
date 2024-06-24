@@ -4,19 +4,23 @@ import * as Yup from "yup";
 import SolidButton from "@/components/Buttons/SolidButton";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import CloseButton from "../../Buttons/CloseButton";
-import CourseCategoryDropdown from "./CourseCategoryDropdown";
 import CourseDifficultyDropdown from "./CourseDifficultyDropdown";
 import { ModalClassesBG } from "../../components.styles";
 import axios from "axios";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { API_URL } from "@/utils/constants";
-import DropDownInstitution from "../../DropDown/DropDownUni";
+import DropDownInstitution from "@/components/DropDown/DropDownUni";
+import DropDownInterests from "@/components/DropDown/DropDownInterests";
+
+interface Interest {
+  id: number;
+  label: string;
+}
 
 export default function CreateCourseModal() {
- 
-  const [category, setCategory] = useState<string | null>(null);
-  const [difficulty, setDifficulty] = useState<string | null>(null);
+  const [category, setCategory] = useState<Interest>();
+  const [difficulty, setDifficulty] = useState("")
   const [institution, setInstitution] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -33,7 +37,7 @@ export default function CreateCourseModal() {
     setInstitution("");
   };
 
-  const handleCategoryChange = (value: string) => {
+  const handleCategoryChange = (value: Interest) => {
     setCategory(value);
   };
 
@@ -42,35 +46,41 @@ export default function CreateCourseModal() {
   };
 
   const handleSubmit = (values: any) => {
-    
-    if (institution==""){
+    if (institution == "") {
       toast.error("Please select an organization");
       return;
-    }else{
+    } else if (!category) {
+      toast.error("Please select a category");
+      return;
+    } else if(!difficulty){
+      toast.error("Please select a difficulty");
+      return;
+    }else {
       const token = Cookies.get("token");
       axios
-      .post(`${API_URL}/course/`, {
-        title: values.title,
-        institution: institution,
-        category: category,
-        difficulty: difficulty,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-      )
-      .then((response) => {
-        toast.success("Course created successfully!");
-        setIsOpen(false);
-      })
-      .catch((error) => {
-        const errorMessage = error.response?.data.message ?? "Network error";
-        toast.error(errorMessage);
-      });
+        .post(
+          `${API_URL}/course/`,
+          {
+            name: values.title,
+            institution: institution,
+            category: category.id,
+            difficulty: difficulty,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          toast.success("Course created successfully!");
+          setIsOpen(false);
+        })
+        .catch((error) => {
+          const errorMessage = error.response?.data.message ?? "Network error";
+          toast.error(errorMessage);
+        });
     }
-    
   };
 
   return (
@@ -128,10 +138,7 @@ export default function CreateCourseModal() {
                       />
                     </div>
                     <div className="md:px-5 lg:px-10 col-span-2 sm:col-span-1">
-                      <CourseCategoryDropdown
-                        value={category ?? ""}
-                        onChange={handleCategoryChange}
-                      />
+                      <DropDownInterests addSelection={handleCategoryChange} />
                     </div>
                     <div className="md:px-5 lg:px-10 col-span-2 sm:col-span-1">
                       <CourseDifficultyDropdown
