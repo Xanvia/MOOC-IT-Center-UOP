@@ -8,13 +8,12 @@ interface Interest {
 
 interface Props {
   addSelection: (selection: Interest) => void;
+  value: string;
 }
 
-const DropDownInterests: React.FC<Props> = ({ addSelection }) => {
+const DropDownInterests: React.FC<Props> = ({ addSelection, value }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(
-    "Choose Your Intereting Fields "
-  );
+  const [selectedOption, setSelectedOption] = useState(value);
   const [interests, setInterests] = useState<Interest[]>([]);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -59,7 +58,7 @@ const DropDownInterests: React.FC<Props> = ({ addSelection }) => {
     <div className="relative" ref={dropdownRef}>
       <button
         type="button"
-        className="relative w-80 cursor-default rounded-md bg-white mt-8 py-1.5 pl-3 pr-10 text-left text-primary shadow-sm ring-1 ring-inset ring-primary focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+        className="relative w-80 cursor-default rounded-md bg-white mt-2 py-1.5 pl-3 pr-10 text-left text-primary shadow-sm ring-1 ring-inset ring-primary focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
         aria-haspopup="listbox"
         aria-expanded="true"
         aria-labelledby="listbox-label"

@@ -6,21 +6,24 @@ import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import CloseButton from "../../Buttons/CloseButton";
 import CourseDifficultyDropdown from "./CourseDifficultyDropdown";
 import { ModalClassesBG } from "../../components.styles";
-import axios from "axios";
 import { toast } from "sonner";
-import Cookies from "js-cookie";
-import { API_URL } from "@/utils/constants";
 import DropDownInstitution from "@/components/DropDown/DropDownUni";
 import DropDownInterests from "@/components/DropDown/DropDownInterests";
+import { createCourse } from "@/services/course.service";
+import { CreateCourseData } from "../course.types";
 
 interface Interest {
   id: number;
   label: string;
 }
 
+interface FromValues {
+  title: string;
+}
+
 export default function CreateCourseModal() {
   const [category, setCategory] = useState<Interest>();
-  const [difficulty, setDifficulty] = useState("")
+  const [difficulty, setDifficulty] = useState("");
   const [institution, setInstitution] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -45,41 +48,30 @@ export default function CreateCourseModal() {
     setDifficulty(value);
   };
 
-  const handleSubmit = (values: any) => {
-    if (institution == "") {
+  const handleSubmit = async (values: FromValues) => {
+    if (institution === "") {
       toast.error("Please select an organization");
       return;
-    } else if (!category) {
+    } else if (category === undefined) {
       toast.error("Please select a category");
       return;
-    } else if(!difficulty){
+    } else if (difficulty === "") {
       toast.error("Please select a difficulty");
       return;
-    }else {
-      const token = Cookies.get("token");
-      axios
-        .post(
-          `${API_URL}/course/`,
-          {
-            name: values.title,
-            institution: institution,
-            category: category.id,
-            difficulty: difficulty,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((response) => {
-          toast.success("Course created successfully!");
-          setIsOpen(false);
-        })
-        .catch((error) => {
-          const errorMessage = error.response?.data.message ?? "Network error";
-          toast.error(errorMessage);
-        });
+    }
+    const data: CreateCourseData = {
+      name: values.title,
+      institution: institution,
+      category: category.id,
+      difficulty: difficulty,
+    };
+    try {
+      await createCourse(data);
+      toast.success("Course created successfully!");
+      setIsOpen(false);
+    } catch (error: any) {
+      const errorMessage = error.message ?? "Failed to create course";
+      toast.error(errorMessage);
     }
   };
 
@@ -109,7 +101,7 @@ export default function CreateCourseModal() {
                     <div className="col-span-2 mb-4 md:px-5 lg:px-10">
                       <label
                         htmlFor="title"
-                        className="block text-sm font-medium text-primary mb-1"
+                        className="block text-sm font-bold text-primary mb-1"
                       >
                         Course Title
                       </label>
@@ -138,7 +130,16 @@ export default function CreateCourseModal() {
                       />
                     </div>
                     <div className="md:px-5 lg:px-10 col-span-2 sm:col-span-1">
-                      <DropDownInterests addSelection={handleCategoryChange} />
+                      <label
+                        htmlFor="title"
+                        className=" text-sm font-bold text-primary"
+                      >
+                        Course Category
+                      </label>
+                      <DropDownInterests
+                        addSelection={handleCategoryChange}
+                        value="Select Course Category"
+                      />
                     </div>
                     <div className="md:px-5 lg:px-10 col-span-2 sm:col-span-1">
                       <CourseDifficultyDropdown

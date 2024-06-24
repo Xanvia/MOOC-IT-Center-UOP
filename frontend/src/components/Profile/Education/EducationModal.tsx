@@ -19,17 +19,19 @@ import CloseButton from "@/components/Buttons/CloseButton";
 import SolidButton from "@/components/Buttons/SolidButton";
 import { Education } from "../types";
 import DeleteButton from "@/components/Buttons/DeleteButton";
-import axios from "axios";
 import { toast } from "sonner";
-import { API_URL } from "@/utils/constants";
 import { format } from "date-fns";
 import DropDownInstitution from "@/components/DropDown/DropDownUni";
-import Cookies from "js-cookie";
+import {
+  addEducationData,
+  deleteEducationData,
+  editEducationData,
+} from "@/services/user.service";
 
 interface Props {
   CardTitle: string;
   eduData?: Education;
-  realoadData: () => void;
+  reloadData: () => void;
 }
 
 interface FormData {
@@ -39,14 +41,11 @@ interface FormData {
 const EducationModal: React.FC<Props> = ({
   CardTitle,
   eduData,
-  realoadData,
+  reloadData,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const token = Cookies.get("token");
 
-  const [institution, setInstitution] = useState(
-    eduData?.institution || "Select Your Institution"
-  );
+  const [institution, setInstitution] = useState(eduData?.institution || "");
   const [startDate, setStartDate] = useState<Date | null>(
     eduData ? new Date(eduData.start_date) : null
   );
@@ -71,49 +70,37 @@ const EducationModal: React.FC<Props> = ({
       toast.warning("Please select an institution");
     }
     try {
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
       const data = {
         ...values,
-        institution: institution,
+        institution,
         start_date: startDate ? format(startDate, "yyyy-MM") : null,
         end_date: endDate ? format(endDate, "yyyy-MM") : null,
       };
       let response;
       if (eduData) {
-        response = await axios.put(
-          `${API_URL}/user/education/${eduData?.id}/`,
-          data,
-          { headers }
-        );
+        response = await editEducationData(eduData.id, data);
+        toast.success(response.message);
       } else {
-        response = await axios.post(`${API_URL}/user/education/`, data, {
-          headers,
-        });
+        response = await addEducationData(data);
+        toast.success(response.message);
       }
-      toast.success(response.data.message);
-      realoadData();
+      reloadData();
       setIsOpen(false);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
   const handleDelete = async () => {
     try {
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-      const response = await axios.delete(
-        `${API_URL}/user/education/${eduData?.id}/`,
-        { headers }
-      );
-      toast.success("Education Details Deleted");
-      realoadData();
-      setIsOpen(false);
-    } catch (error) {
-      console.error(error);
+      if (eduData) {
+        const response = await deleteEducationData(eduData.id);
+        toast.success("Work Experience Deleted");
+        reloadData();
+        setIsOpen(false);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
