@@ -1,5 +1,9 @@
 import axiosInstance from "../lib/axiosInstance";
-import { EditProfileData, WorkData } from "@/components/Profile/types";
+import {
+  EditProfileData,
+  WorkData,
+  EducationData,
+} from "@/components/Profile/types";
 
 export const fetchProfileData = async () => {
   try {
@@ -69,6 +73,33 @@ export const editWorkData = async (id: number, values: WorkData) => {
 export const deleteWorkData = async (id: number) => {
   try {
     const response = await axiosInstance.delete(`/user/work/${id}/`);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const addEducationData = async (values: EducationData) => {
+  try {
+    const response = await axiosInstance.post("/user/education/", values);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const editEducationData = async (id: number, values: EducationData) => {
+  try {
+    const response = await axiosInstance.put(`/user/education/${id}/`, values);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const deleteEducationData = async (id: number) => {
+  try {
+    const response = await axiosInstance.delete(`/user/education/${id}/`);
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");

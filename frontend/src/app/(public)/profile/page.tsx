@@ -43,7 +43,7 @@ export default function ProfilePage() {
           <div className="min-h-[300px]">
             <EducationModal
               CardTitle="Add Your Education Details"
-              realoadData={reloadData}
+              reloadData={reloadData}
             />
             {education && education.length > 0 ? (
               education.map((eduItem) => (

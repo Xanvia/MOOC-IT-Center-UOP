@@ -12,6 +12,13 @@ export interface WorkData {
   end_date: string | null;
 }
 
+export interface EducationData {
+  institution: string;
+  degree: string;
+  start_date: string | null;
+  end_date: string | null;
+}
+
 export interface Education {
   id: number;
   institution: string;
