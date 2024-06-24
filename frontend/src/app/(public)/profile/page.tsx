@@ -9,15 +9,6 @@ import { Work, Education, ProfileData } from "@/components/Profile/types";
 import axios from "axios";
 import { API_URL } from "@/utils/constants";
 import Cookies from "js-cookie";
-import { useGlobal } from "@/contexts/store";
-
-const dummyEdu = {
-  id: 1,
-  institution: "Add your Education Experience Here",
-  degree: "Bsc Hons in Computer Science",
-  start_date: "2019-01-",
-  end_date: "2023-01-",
-};
 
 export default function ProfilePage() {
   const token = Cookies.get("token");
