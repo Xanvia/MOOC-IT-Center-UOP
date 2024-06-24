@@ -6,35 +6,29 @@ import ExperienceCard from "@/components/Profile/Experience/WorkExperienceCard";
 import EducationCard from "@/components/Profile/Education/EducatonCard";
 import EducationModal from "@/components/Profile/Education/EducationModal";
 import { Work, Education, ProfileData } from "@/components/Profile/types";
-import axios from "axios";
-import { API_URL } from "@/utils/constants";
-import Cookies from "js-cookie";
+import { fetchProfileData } from "@/services/user.service";
 
 export default function ProfilePage() {
-  const token = Cookies.get("token");
   const [work, setWork] = useState<Work[]>([]);
   const [education, setEducation] = useState<Education[]>([]);
   const [profileData, setProfileData] = useState<ProfileData | undefined>(
     undefined
   );
   const [reload, setReload] = useState(false);
+
   useEffect(() => {
-    const fetchProfileData = async () => {
+    const loadProfileData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/user/profile/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setProfileData(response.data.data);
-        setWork(response.data.data.work_experiences);
-        setEducation(response.data.data.educations);
+        const data = await fetchProfileData();
+        setWork(data.work_experiences);
+        setEducation(data.educations);
+        setProfileData(data);
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchProfileData();
+    loadProfileData();
   }, [reload]);
 
   const reloadData = () => {
