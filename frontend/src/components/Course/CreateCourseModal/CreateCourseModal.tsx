@@ -59,7 +59,7 @@ export default function CreateCourseModal() {
       toast.error("Please select a difficulty");
       return;
     }
-    const data : CreateCourseData = {
+    const data: CreateCourseData = {
       name: values.title,
       institution: institution,
       category: category.id,
@@ -101,7 +101,7 @@ export default function CreateCourseModal() {
                     <div className="col-span-2 mb-4 md:px-5 lg:px-10">
                       <label
                         htmlFor="title"
-                        className="block text-sm font-medium text-primary mb-1"
+                        className="block text-sm font-bold text-primary mb-1"
                       >
                         Course Title
                       </label>
@@ -130,7 +130,16 @@ export default function CreateCourseModal() {
                       />
                     </div>
                     <div className="md:px-5 lg:px-10 col-span-2 sm:col-span-1">
-                      <DropDownInterests addSelection={handleCategoryChange} />
+                      <label
+                        htmlFor="title"
+                        className=" text-sm font-bold text-primary"
+                      >
+                        Course Category
+                      </label>
+                      <DropDownInterests
+                        addSelection={handleCategoryChange}
+                        value="Select Course Category"
+                      />
                     </div>
                     <div className="md:px-5 lg:px-10 col-span-2 sm:col-span-1">
                       <CourseDifficultyDropdown

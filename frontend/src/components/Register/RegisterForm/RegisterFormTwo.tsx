@@ -155,7 +155,12 @@ const RegistrationFormTwo: React.FC = () => {
             </div>
           </div>
           <br />
-          <DropDownInterests addSelection={addItem} />
+          <div className="mt-6">
+            <DropDownInterests
+              addSelection={addItem}
+              value="Choose Your Intereting Fields"
+            />
+          </div>
 
           <div className="flex flex-wrap justify-center gap-4  py-2 md:mx-8 mt-8 mb-2">
             {interests.map((interest) => (
