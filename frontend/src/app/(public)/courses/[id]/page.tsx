@@ -20,7 +20,10 @@ export default function CoursesHome() {
   return (
     <>
       <Breadcrumb breadcrumbs={breadcrumbs} />
-      <CourseHeader />
+      <CourseHeader courseTitle="Basic Web Development"
+        institutionName="Imperiel Institute"
+        instructorName="Prof. Namal Balasooriya"
+        instructorDetails="A few details about the instructor"/>
       <CourseHStat />
 
       <div className="bg-white shadow-sm mt-10">

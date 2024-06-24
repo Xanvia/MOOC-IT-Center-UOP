@@ -1,15 +1,23 @@
 "use client";
 import React, { useState } from "react";
-import Breadcrumb from "./Breadcrumb";
 import Image from "next/image";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
 import CourseDescEditModal from "./CourseDescEditModal";
 
 const headerImage = "/images/course-header.jpg";
 
+interface CourseHeaderProps {
+  courseTitle: string;
+  institutionName: string;
+  instructorName: string;
+  instructorDetails: string;
+  
+}
 
-
-const CourseHeader: React.FC = () => {
+const CourseHeader: React.FC<CourseHeaderProps> = ({courseTitle,
+  institutionName,
+  instructorName,
+  instructorDetails,}) => {
   const [isEdit, setIsEdit] = useState(true);
 
   const handleClick = () => {};
@@ -31,18 +39,18 @@ const CourseHeader: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-flow-col gap-6 sm:gap-10 md:gap-24 sm:mx-16 min-h-[150px]">
             <div>
               <h1 className="text-white text-2xl sm:text-4xl md:text-4xl lg:text-5xl font-bold whit">
-                Basic Web Development
+              {courseTitle}
               </h1>
               <h2 className="text-white sm:text-1xl lg:text-xl">
-                Offered by Imperiel Institute
+              Offered by {institutionName}
               </h2>
             </div>
             <div>
               <h2 className="text-white space-y-6 text-base sm:text-xl lg:text-2xl font-semibold ">
-                Prof. Namal Balasooriya
+                {instructorName}
               </h2>
               <h2 className="text-white space-y-6 text-sm">
-                a few detail about Instructor
+                {instructorDetails}
               </h2>
             </div>
           </div>
