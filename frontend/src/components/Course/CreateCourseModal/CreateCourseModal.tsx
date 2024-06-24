@@ -9,10 +9,12 @@ import CourseDifficultyDropdown from "./CourseDifficultyDropdown";
 import { ModalClassesBG } from "../../components.styles";
 import axios from "axios";
 import { toast } from "sonner";
+import Cookies from "js-cookie";
 import { API_URL } from "@/utils/constants";
 import DropDownInstitution from "../../DropDown/DropDownUni";
 
 export default function CreateCourseModal() {
+ 
   const [category, setCategory] = useState<string | null>(null);
   const [difficulty, setDifficulty] = useState<string | null>(null);
   const [institution, setInstitution] = useState("");
@@ -40,13 +42,25 @@ export default function CreateCourseModal() {
   };
 
   const handleSubmit = (values: any) => {
-    axios
+    
+    if (institution==""){
+      toast.error("Please select an organization");
+      return;
+    }else{
+      const token = Cookies.get("token");
+      axios
       .post(`${API_URL}/course/`, {
         title: values.title,
         institution: institution,
         category: category,
         difficulty: difficulty,
-      })
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+      )
       .then((response) => {
         toast.success("Course created successfully!");
         setIsOpen(false);
@@ -55,6 +69,8 @@ export default function CreateCourseModal() {
         const errorMessage = error.response?.data.message ?? "Network error";
         toast.error(errorMessage);
       });
+    }
+    
   };
 
   return (
