@@ -60,7 +60,7 @@ export default function ProfilePage() {
           <div className="py-3">
             <ExperienceModal
               CardTitle="Add Your Work Experience"
-              realoadData={reloadData}
+              reloadData={reloadData}
             />
             {work && work.length > 0 ? (
               work.map((workItem) => (

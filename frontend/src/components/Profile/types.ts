@@ -5,6 +5,12 @@ export interface Work {
   start_date: string;
   end_date: string | null;
 }
+export interface WorkData {
+  company: string;
+  position: string;
+  start_date: string | null;
+  end_date: string | null;
+}
 
 export interface Education {
   id: number;
