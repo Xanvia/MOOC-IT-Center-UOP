@@ -6,6 +6,7 @@ import {
   InputLabel,
   InputInnerDiv,
   InputOuterDiv,
+  SolidInputFieldClasses,
 } from "@/components/components.styles";
 
 interface Institution {
@@ -16,14 +17,18 @@ interface Institution {
 interface Props {
   addSelection: (item: string) => void;
   selectedInstitution?: string;
-  label : string;
+  label: string;
 }
 
-const DropDownInstitution = ({ addSelection, selectedInstitution,label }: Props) => {
+const DropDownInstitution = ({
+  addSelection,
+  selectedInstitution,
+  label,
+}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState(
-    selectedInstitution ? selectedInstitution : "Select your Institution"
+    selectedInstitution ? selectedInstitution : ""
   );
   const [institutions, setInstitutions] = useState<Institution[]>([]);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -67,22 +72,20 @@ const DropDownInstitution = ({ addSelection, selectedInstitution,label }: Props)
   };
   return (
     <div className="relative" ref={dropdownRef}>
-      <span className="text-sm font-semibold text-primary ">
-        {label}
-      </span>
+      <span className="text-sm font-semibold text-primary ">{label}</span>
       <div className={InputOuterDiv}>
         <div className={InputInnerDiv}>
           <Field
             type="text"
             name="institution"
-            value = {selectedOption}
-            className={InputFieldClasses}
+            value={selectedOption}
+            className={SolidInputFieldClasses}
             placeholder=" "
             onClick={() => setIsOpen(!isOpen)}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setSelectedOption(e.target.value);
               addSelection(e.target.value);
-              if (e.target.value === '') {
+              if (e.target.value === "") {
                 setIsOpen(false);
               } else {
                 setIsOpen(true);
@@ -94,7 +97,7 @@ const DropDownInstitution = ({ addSelection, selectedInstitution,label }: Props)
             component="div"
             className="top-0 left-0 text-red-600 text-xs"
           />
-         {/*} <label className={InputLabel}>Institution</label>*/}
+          {/*} <label className={InputLabel}>Institution</label>*/}
         </div>
       </div>
 

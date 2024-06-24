@@ -45,7 +45,7 @@ class CreateCourseTest(APITestCase):
         data = {
             "name": "test course",
             "category": 1,
-            "institution": 1,
+            "institution": institute.label,
             "difficulty": "beginner",
         }
         response = self.client.post(self.url, data, format="json")
@@ -69,10 +69,10 @@ class CreateCourseTest(APITestCase):
         expected_data = {
             "status": "fail",
             "message": [
+                "institution field is required.",
                 "name field is required.",
                 "difficulty field is required.",
                 "category field is required.",
-                "institution field is required.",
             ],
         }
 
@@ -82,7 +82,7 @@ class CreateCourseTest(APITestCase):
         data = {
             "name": "test course",
             "category": 1000,
-            "institution": 1,
+            "institution": "institution",
             "difficulty": "beginner",
         }
         response = self.client.post(self.url, data, format="json")
@@ -99,3 +99,25 @@ class CreateCourseTest(APITestCase):
         }
 
         self.assertEqual(response.data, expected_data)
+
+    def test_create_course_new_institution(self):
+        category = Interest.objects.get(id=1)
+        data = {
+            "name": "test course",
+            "category": 1,
+            "institution": "new institution",
+            "difficulty": "beginner",
+        }
+        response = self.client.post(self.url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        expected_data = {
+            "status": "success",
+            "message": "Course created successfully",
+            "data": {"id": 1},
+        }
+        self.assertEqual(response.data, expected_data)
+
+        # check if the course is created in db
+        course = Course.objects.get(name="test course")
+        self.assertEqual(course.name, "test course")

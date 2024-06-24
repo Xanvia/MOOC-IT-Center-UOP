@@ -1,12 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Course
-from userprofiles.serializers import (
-    WorkExperienceSerializer,
-    InterestSerializer,
-    InstitutionSerializer,
-)
-
+from userprofiles.models import Institution
 
 class CourseTeacherSerializer(serializers.ModelSerializer):
 
@@ -24,7 +19,7 @@ class CourseTeacherSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
-
+    institution = serializers.CharField()
     class Meta:
         model = Course
         fields = "__all__"
@@ -37,6 +32,13 @@ class CourseSerializer(serializers.ModelSerializer):
             # Filter the data to only include allowed fields
             data = {key: value for key, value in data.items() if key in allowed_fields}
         return data
+    
+
+    def create(self, validated_data):
+        institution_name = validated_data.pop("institution")
+        institution, _ = Institution.objects.get_or_create(label=institution_name)
+        validated_data["institution"] = institution
+        return super().create(validated_data)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

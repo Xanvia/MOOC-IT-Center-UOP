@@ -4,16 +4,26 @@ import * as Yup from "yup";
 import SolidButton from "@/components/Buttons/SolidButton";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import CloseButton from "../../Buttons/CloseButton";
-import CourseCategoryDropdown from "./CourseCategoryDropdown";
 import CourseDifficultyDropdown from "./CourseDifficultyDropdown";
-import {
-  ModalClassesBG,
-  SolidInputFieldClasses,
-} from "../../components.styles";
+import { ModalClassesBG } from "../../components.styles";
+import axios from "axios";
+import { toast } from "sonner";
+import Cookies from "js-cookie";
+import { API_URL } from "@/utils/constants";
+import DropDownInstitution from "@/components/DropDown/DropDownUni";
+import DropDownInterests from "@/components/DropDown/DropDownInterests";
+
+interface Interest {
+  id: number;
+  label: string;
+}
 
 export default function CreateCourseModal() {
-  const [category, setCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<Interest>();
+  const [difficulty, setDifficulty] = useState("")
+  const [institution, setInstitution] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
@@ -24,21 +34,62 @@ export default function CreateCourseModal() {
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
+    setInstitution("");
   };
-  const handleCategoryChange = (value: string) => {
+
+  const handleCategoryChange = (value: Interest) => {
     setCategory(value);
   };
 
-  const handleSubmit = (values: any) => {};
+  const handleDifficultyChange = (value: string) => {
+    setDifficulty(value);
+  };
+
+  const handleSubmit = (values: any) => {
+    if (institution == "") {
+      toast.error("Please select an organization");
+      return;
+    } else if (!category) {
+      toast.error("Please select a category");
+      return;
+    } else if(!difficulty){
+      toast.error("Please select a difficulty");
+      return;
+    }else {
+      const token = Cookies.get("token");
+      axios
+        .post(
+          `${API_URL}/course/`,
+          {
+            name: values.title,
+            institution: institution,
+            category: category.id,
+            difficulty: difficulty,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          toast.success("Course created successfully!");
+          setIsOpen(false);
+        })
+        .catch((error) => {
+          const errorMessage = error.response?.data.message ?? "Network error";
+          toast.error(errorMessage);
+        });
+    }
+  };
 
   return (
     <>
       <SecondaryButton onClick={toggleModal} text="Create Course" />
-
       {isOpen && (
         <div className={ModalClassesBG} onMouseDown={handleInsideClick}>
           <div
-            className="bg-white p-10 px-md; rounded-lg shadow-lg relative max-w-3xl w-full"
+            className="bg-white p-10 px-md rounded-lg shadow-lg relative max-w-3xl w-full"
             onMouseDown={handleOutsideClick}
           >
             <CloseButton onClick={toggleModal} />
@@ -46,7 +97,7 @@ export default function CreateCourseModal() {
               Create Your Course
             </h1>
             <Formik
-              initialValues={{ title: "" }}
+              initialValues={{ title: "", institution: "" }}
               validationSchema={Yup.object({
                 title: Yup.string().required("Course title is required"),
               })}
@@ -80,45 +131,26 @@ export default function CreateCourseModal() {
                       />
                     </div>
                     <div className="col-span-2 mb-4 md:px-5 lg:px-10">
-                      <label
-                        htmlFor="title"
-                        className="block text-sm font-medium text-primary mb-1"
-                      >
-                        Organization Name
-                      </label>
-                      <Field
-                        type="text"
-                        id="title"
-                        name="title"
-                        className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
-                          formik.touched.title && formik.errors.title
-                            ? "border-primary"
-                            : ""
-                        }`}
-                        placeholder="Enter the organization that course offered by"
+                      <DropDownInstitution
+                        label="Organization Name"
+                        addSelection={setInstitution}
+                        selectedInstitution={institution as string}
                       />
                     </div>
                     <div className="md:px-5 lg:px-10 col-span-2 sm:col-span-1">
-                      <CourseCategoryDropdown
-                        value={category ?? ""}
-                        onChange={handleCategoryChange}
-                      />
+                      <DropDownInterests addSelection={handleCategoryChange} />
                     </div>
                     <div className="md:px-5 lg:px-10 col-span-2 sm:col-span-1">
                       <CourseDifficultyDropdown
-                        value={category ?? ""}
-                        onChange={handleCategoryChange}
+                        value={difficulty ?? ""}
+                        onChange={handleDifficultyChange}
                       />
                     </div>
                   </div>
                   <br />
                   <center>
                     <div className="mt-6 mb-2">
-                      <SolidButton
-                        type="submit"
-                        text="S U B M I T"
-                        onClick={() => {}}
-                      />
+                      <SolidButton type="submit" text="S U B M I T" />
                     </div>
                   </center>
                 </Form>
