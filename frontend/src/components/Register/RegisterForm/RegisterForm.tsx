@@ -7,18 +7,14 @@ import GoogleIcon from "@/icons/GoogleIcon";
 import SvgButton from "../../Buttons/SvgButton";
 import DropDown from "@/components/DropDown/DropDown";
 import { getGoogleCode } from "@/utils/GoogleAuth";
-import Cookies from "js-cookie";
 import { toast } from "sonner";
-import axios from "axios";
-import { API_URL, CALLBACK_URL } from "@/utils/constants";
 import {
   InputFieldClasses,
   InputLabel,
   InputInnerDiv,
   InputOuterDiv,
 } from "../../components.styles";
-import { useGlobal } from "@/contexts/store";
-
+import { registerUser, registerWithGoogle } from "@/services/auth.service";
 export interface RegistrationFormValues {
   firstName: string;
   lastName: string;
@@ -71,56 +67,31 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
   setStep,
   setResetForm,
 }) => {
-  const handleSubmit = (values: RegistrationFormValues) => {
+  const handleSubmit = async (values: RegistrationFormValues) => {
     setResetForm();
-    if (!values.userRole) {
-      toast.warning("Please select user uype");
-    } else {
-      axios
-        .post(`${API_URL}/user/register/`, {
-          firstname: values.firstName,
-          lastname: values.lastName,
-          username: values.username,
-          email: values.email,
-          password: values.password,
-          user_type: values.userRole,
-        })
-        .then((res) => {
-          Cookies.set("token", res.data.data.access_token);
-          Cookies.set("user", JSON.stringify(res.data.data.user));
-          setStep("Two");
-          toast.success(res.data.message);
-        })
-        .catch((err) => {
-          const errorMessage = err.response?.data.message ?? "Network error";
-          toast.error(errorMessage);
-        });
+    try {
+      const res = await registerUser(values);
+      toast.success(res.message);
+      setStep("Two");
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
-  const handleGoogleLogin = async (userRole: String) => {
-    if (!userRole) {
-      toast.warning("Please select user type");
-    } else {
+  const handleGoogleRegister = async (userRole: string) => {
+    try {
+      if (!userRole) {
+        toast.warning("Please select user type");
+        return;
+      }
       const code = await getGoogleCode();
       if (code !== null) {
-        axios
-          .post(`${API_URL}/user/google-auth/`, {
-            code: code,
-            user_type: userRole,
-            redirect_uri: CALLBACK_URL,
-          })
-          .then((res) => {
-            Cookies.set("token", res.data.data.access_token);
-            Cookies.set("user", JSON.stringify(res.data.data.user));
-            setStep("Two");
-            toast.success(res.data.message);
-          })
-          .catch((err) => {
-            const errorMessage = err.response?.data.message ?? "Network error";
-            toast.error(errorMessage);
-          });
+        const res = await registerWithGoogle(code, userRole);
+        toast.success(res.message);
+        setStep("Two");
       }
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
@@ -250,7 +221,7 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
           </div>
           <SvgButton
             text="Continue with google"
-            onClick={() => handleGoogleLogin(values.userRole)}
+            onClick={() => handleGoogleRegister(values.userRole)}
             svg={<GoogleIcon />}
           />
           <br />
