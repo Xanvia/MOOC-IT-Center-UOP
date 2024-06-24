@@ -14,7 +14,7 @@ export interface Education {
   end_date: string | null;
 }
 
-interface Country {
+export interface Country {
   id: number;
   label: string;
 }
@@ -35,4 +35,14 @@ export interface ProfileData {
   user_role: string;
   educations: Education[];
   work_experiences: Work[];
+}
+
+export interface EditProfileData {
+  firstName: string;
+  lastName: string;
+  description: string;
+  phoneNumber: string;
+  country: { id: number; label: string };
+  birthDate: Date | null;
+  imageFile: File | null;
 }

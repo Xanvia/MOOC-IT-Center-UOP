@@ -12,11 +12,9 @@ import {
 import DropDownCountry from "@/components/DropDown/DropDownCountry";
 import ReactDatePicker from "@/components/DropDown/DatePicker";
 import SolidButton from "../Buttons/SolidButton";
-import { ProfileData } from "./types";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { ProfileData, EditProfileData, Country } from "./types";
 import { toast } from "sonner";
-import { API_URL } from "@/utils/constants";
+import { editUserProfile, deleteProfileImage } from "@/services/user.service";
 
 const DefaultProfileImage = "/images/52.jpg";
 
@@ -25,11 +23,6 @@ const validationSchema = Yup.object({
   lastName: Yup.string().required("Last Name is Required"),
   phoneNumber: Yup.string().required("Phone number is Required"),
 });
-
-interface Country {
-  id: number;
-  label: string;
-}
 
 interface Props {
   userData: ProfileData;
@@ -68,65 +61,41 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
     }
   };
 
-  const handleDelete = () => {
-    const token = Cookies.get("token");
-    axios
-      .patch(
-        `${API_URL}/user/profile-image`,
-        {},
-        {
-          // Empty data payload
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((res) => {
-        toast.success(res.data.message);
-        reloadData();
-      })
-      .catch((err) => {
-        const errorMessage = err.response?.data.message ?? "Network error";
-        toast.error(errorMessage);
-      });
+  const handleDelete = async () => {
+    try {
+      const res = await deleteProfileImage();
+      toast.success(res.message);
+      reloadData();
+    } catch (error: any) {
+      const errorMessage = error.message ?? "Network error";
+      toast.error(errorMessage);
+    }
   };
 
-  const handleSubmit = (values: EditFromValues) => {
-    const token = Cookies.get("token");
-    if (country?.label === undefined) {
-      toast.warning("Please select a country");
-    } else if (birthDate === null) {
-      toast.warning("Please select a birthdate");
-    } else {
-      const date = new Date(birthDate);
-      const formattedDate = date.toLocaleDateString("en-CA");
-
-      const formData = new FormData();
-      formData.append("firstname", values.firstName);
-      formData.append("lastname", values.lastName);
-      formData.append("description", values.description);
-      formData.append("mobile_number", values.phoneNumber);
-      formData.append("country", country.id.toString());
-      formData.append("birth_date", formattedDate);
-      if (imageFile) {
-        formData.append("profile_image", imageFile);
+  const handleSubmit = async (values: EditFromValues) => {
+    try {
+      if (!country?.label) {
+        toast.warning("Please select a country");
+        return;
       }
-
-      axios
-        .put(`${API_URL}/user/profile/`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          toast.success(res.data.message);
-          reloadData();
-        })
-        .catch((err) => {
-          const errorMessage = err.response?.data.message ?? "Network error";
-          toast.error(errorMessage);
-        });
+      if (!birthDate) {
+        toast.warning("Please select a birthdate");
+        return;
+      }
+      const editProfileData: EditProfileData = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        description: values.description,
+        phoneNumber: values.phoneNumber,
+        country: country,
+        birthDate: birthDate,
+        imageFile: imageFile,
+      };
+      const res = await editUserProfile(editProfileData);
+      toast.success(res.message);
+      reloadData();
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
