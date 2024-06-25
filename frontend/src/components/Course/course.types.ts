@@ -5,22 +5,22 @@ export interface CreateCourseData {
   difficulty: string;
 }
 
-export interface CourseCreator{
-  email:string;
-  full_name:string;
-  headline:string;
+export interface CourseCreator {
+  email: string;
+  full_name: string;
+  headline: string;
 }
 
 export interface CourseData {
   id: number;
   institution: string;
   name: string;
-  description: string | null; // Optional description property
-  specifications: any; // Can't determine specific type from provided data
+  description: string | null;
+  specifications: any;
   outcomes: string[];
   header_image: string;
-  duration: string; // May need a more specific type depending on representation
-  difficulty: string; // May need a more specific type depending on representation
+  duration: string;
+  difficulty: string;
   status: string;
   course_creator: CourseCreator;
   category: string;

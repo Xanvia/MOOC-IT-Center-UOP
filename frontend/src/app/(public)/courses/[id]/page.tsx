@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import CourseHeader from "@/components/Course/CourseHome/CourseDescriptionHeader";
 import CourseHStat from "@/components/Course/CourseHome/CourseHStat";
 import ReccomendedCourses from "@/components/Course/CourseCard/ReccomendedCourses";
@@ -7,13 +8,11 @@ import CourseDetailsTabs from "@/components/Course/CourseHome/Tabs/CourseDetails
 import Breadcrumb from "@/components/Course/CourseHome/Breadcrumb";
 import { CourseData } from "@/components/Course/course.types";
 import { fetchCourseData } from "@/services/course.service";
-import { deflate } from "zlib";
 
 interface BreadcrumbItem {
   breadcrumb: string;
-  href?: string; // Make href optional
+  href?: string;
 }
-
 
 const breadcrumbs: BreadcrumbItem[] = [
   { breadcrumb: "Home", href: "/" },
@@ -22,14 +21,17 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function CoursesHome() {
-
-  const [courseData, setCourseData] = useState<CourseData[]>([]);
-  const [reload, setReload] = useState(false);
+  const params = useParams();
+  const [courseData, setCourseData] = useState<CourseData | undefined>(
+    undefined
+  );
+  const courseId = params.id;
 
   useEffect(() => {
     const loadCourseData = async () => {
+      if (!courseId) return;
       try {
-        const data = await fetchCourseData();
+        const data = await fetchCourseData(courseId as string);
         setCourseData(data);
       } catch (error) {
         console.error(error);
@@ -37,31 +39,30 @@ export default function CoursesHome() {
     };
 
     loadCourseData();
-  }, [reload]);
+  }, [courseId]);
 
-  const reloadData = () => {
-    setReload((prevState) => !prevState);
-  };
-
-  
   return (
     <>
-      <Breadcrumb breadcrumbs={breadcrumbs} />
-      <CourseHeader courseTitle="Prof. Namal Balasooriya"
-        institutionName="Prof. Namal Balasooriya"
-        instructorName="Prof. Namal Balasooriya"
-        instructorDetails="A few details about the instructor"/>
-      <CourseHStat />
+      {courseData && (
+        <>
+          <Breadcrumb breadcrumbs={breadcrumbs} />
+          <CourseHeader
+            courseTitle={courseData.name}
+            institutionName={courseData.institution}
+            instructorName={courseData.course_creator.full_name}
+            instructorDetails={courseData.course_creator.headline}
+          />
+          <CourseHStat />
 
-      <div className="bg-white shadow-sm mt-10">
-        <div className="container mx-auto p-8">
-          <CourseDetailsTabs />
-        </div>
-      </div>
+          <div className="bg-white shadow-sm mt-10">
+            <div className="container mx-auto p-8">
+              <CourseDetailsTabs />
+            </div>
+          </div>
 
-      <ReccomendedCourses />
+          <ReccomendedCourses />
+        </>
+      )}
     </>
   );
-};
-
-
+}

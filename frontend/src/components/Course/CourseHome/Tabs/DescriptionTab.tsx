@@ -49,6 +49,7 @@ const DescriptionTab: React.FC = () => {
                 width={1000}
                 height={500}
                 className="my-10"
+                priority
               />
             </div>
 

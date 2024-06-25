@@ -1,5 +1,5 @@
 import axiosInstance from "../lib/axiosInstance";
-import { CreateCourseData, CourseCreator, CourseData } from "@/components/Course/course.types";
+import { CreateCourseData } from "@/components/Course/course.types";
 
 export const createCourse = async (values: CreateCourseData) => {
   try {
@@ -16,12 +16,11 @@ export const createCourse = async (values: CreateCourseData) => {
   }
 };
 
-export const fetchCourseData = async () => {
+export const fetchCourseData = async (courseId: string) => {
   try {
-    const response = await axiosInstance.get("/course/");
+    const response = await axiosInstance.get(`/course/${courseId}`);
     return response.data.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
   }
 };

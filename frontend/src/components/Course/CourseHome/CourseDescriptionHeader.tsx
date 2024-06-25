@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
-import CourseDescEditModal from "./CourseDescEditModal";
 
 const headerImage = "/images/course-header.jpg";
 
@@ -33,6 +32,7 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({courseTitle,
           width={2000}
           height={500}
           className="w-full h-full object-cover absolute mix-blend-overlay"
+          priority
         />
         <div className="lg:p-24 sm:p-20 p-10 pb-10 lg:pb-8 sm:pb-8">
           <div className="grid grid-cols-1 md:grid-flow-col gap-6 sm:gap-10 md:gap-24 sm:mx-16 min-h-[150px]">
