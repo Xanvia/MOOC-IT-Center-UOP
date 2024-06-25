@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import CourseCard from "../Course/CourseCard/CourseCard";
 import CourseOutcomes from "../Course/CourseHome/CourseOutcomes";
 
+
 interface Item {
   title: string;
   content: JSX.Element | string;
