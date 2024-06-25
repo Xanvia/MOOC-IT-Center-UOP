@@ -17,13 +17,19 @@ import {
 } from "@/components/components.styles";
 import Image from "next/image";
 import DropDownLevel from "@/components/DropDown/DropDownLevel";
+import DropDownInterests from "@/components/DropDown/DropDownInterests";
 
 const DefaultImage = "/images/course-header.jpg";
 
-export default function CourseDescEditModal() {
-  const [category, setCategory] = useState<string | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
+interface Interest {
+  id: number;
+  label: string;
+}
 
+
+export default function CourseDescEditModal() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [category, setCategory] = useState<Interest>();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(DefaultImage);
 
@@ -42,9 +48,10 @@ export default function CourseDescEditModal() {
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
-  const handleCategoryChange = (value: string) => {
+  const handleCategoryChange = (value: Interest) => {
     setCategory(value);
   };
+
 
   const handleDelete = () => {};
 
@@ -153,7 +160,7 @@ export default function CourseDescEditModal() {
             >
               {(formik) => (
                 <Form>
-                  <div className="grid grid-cols-2 gap-2 mt-6">
+                  <div className="grid grid-cols-2 gap-4 mt-6">
                     <div className="col-span-2">
                       <label htmlFor="title" className={InputLabelClasses2}>
                         Course Title
@@ -176,24 +183,15 @@ export default function CourseDescEditModal() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="category" className={InputLabelClasses2}>
+                      <label
+                        htmlFor="title"
+                        className=" text-sm font-bold text-primary"
+                      >
                         Course Category
                       </label>
-                      <Field
-                        type="text"
-                        id="category"
-                        name="category"
-                        className={`${SolidInputFieldClasses} ${
-                          formik.touched.category && formik.errors.category
-                            ? "border-primary"
-                            : ""
-                        }`}
-                        placeholder="Enter course Category "
-                      />
-                      <ErrorMessage
-                        name="Category is requird"
-                        component="div"
-                        className="text-red-500 text-xs"
+                      <DropDownInterests
+                        addSelection={handleCategoryChange}
+                        value="Select Course Category"
                       />
                     </div>
                     <div>
@@ -243,7 +241,7 @@ export default function CourseDescEditModal() {
                           <Field
                             as="textarea"
                             name="description"
-                            className={InputFieldClasses}
+                            className={SolidInputFieldClasses}
                             placeholder=" "
                           />
                           <ErrorMessage
@@ -254,7 +252,7 @@ export default function CourseDescEditModal() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex justify-end mt-8 col-span-2">
+                    <div className="flex justify-end mt-6 mb-2 col-span-2">
                       <SolidButton
                         type="submit"
                         text="S A V E"
