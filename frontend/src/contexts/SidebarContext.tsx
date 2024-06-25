@@ -19,7 +19,7 @@ export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
   children,
 }) => {
   const [selectedTopic, setSelectedTopic] = useState<Item>(
-    initialWeeks[0].subtopics[0].items![0]
+    initialWeeks[0].chapters[0].items![0]
   );
 
   return (

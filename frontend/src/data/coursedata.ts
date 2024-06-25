@@ -3,7 +3,7 @@ import { Week } from "@/components/Course/types";
 export const initialWeeks: Week[] = [
   {
     weekname: "Week 1",
-    subtopics: [
+    chapters: [
       {
         title: "Introduction",
         items: [
@@ -18,7 +18,7 @@ export const initialWeeks: Week[] = [
   },
   {
     weekname: "Week 2",
-    subtopics: [
+    chapters: [
       {
         title: "Tools",
         items: [
@@ -43,7 +43,7 @@ export const initialWeeks: Week[] = [
   },
   {
     weekname: "Week 3",
-    subtopics: [
+    chapters: [
       {
         title: "HTML Basics",
         items: [

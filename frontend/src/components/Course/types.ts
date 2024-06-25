@@ -4,12 +4,12 @@ export interface Item {
   type: "video" | "note" | "quiz";
 }
 
-export interface Subtopic {
+export interface Chapter {
   title: string;
   items?: Item[];
 }
 
 export interface Week {
   weekname: string;
-  subtopics: Subtopic[];
+  chapters: Chapter[];
 }
