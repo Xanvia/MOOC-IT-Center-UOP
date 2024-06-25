@@ -39,7 +39,7 @@ const EducationCard: React.FC<props> = ({ eduData, reload }) => {
       <EducationModal
         CardTitle="Edit Education Details"
         eduData={eduData}
-        realoadData={reload}
+        reloadData={reload}
       />
       <div className="flex flex-col ml-4 w-full">
         <div className="text text-xl font-semibold border-b border-gray-300 pb-2 pt-1">

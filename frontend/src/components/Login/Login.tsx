@@ -8,10 +8,9 @@ import { getGoogleCode } from "@/utils/GoogleAuth";
 import CloseButton from "../Buttons/CloseButton";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import Cookies from "js-cookie";
-import { API_URL, CALLBACK_URL } from "@/utils/constants";
-import { useGlobal } from "@/contexts/store";
+import { CALLBACK_URL } from "@/utils/constants";
+import { login, loginWithGoogle } from "@/services/auth.service";
 
 import {
   ModalClassesBG,
@@ -38,7 +37,6 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function Login() {
-
   const [isOpen, setIsOpen] = useState(false);
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -52,45 +50,26 @@ export default function Login() {
     setIsOpen(!isOpen);
   };
 
-  const handleSubmit = (values: LoginFormValues) => {
-    axios
-      .post(`${API_URL}/user/login/`, {
-        email: values.email,
-        password: values.password,
-      })
-      .then((res) => {
-        Cookies.set("token", res.data.data.access_token);
-        Cookies.set("user", JSON.stringify(res.data.data.user));
-        toast.success(res.data.message);
-        toggleModal();
-        window.location.reload();
-      })
-      .catch((err) => {
-        const errorMessage = err.response?.data.message ?? "Network error";
-        toast.error(errorMessage);
-      });
+  const handleSubmit = async (values: LoginFormValues) => {
+    try {
+      const res = await login(values.email, values.password);
+      toast.success(res.message);
+      window.location.reload();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   const handleGoogleLogin = async () => {
-    const code = await getGoogleCode();
-    if (code !== null) {
-      axios
-        .post(`${API_URL}/user/google-auth/login/`, {
-          code: code,
-          redirect_uri: CALLBACK_URL,
-        })
-        .then((res) => {
-          Cookies.set("token", res.data.data.access_token);
-          console.log(res.data.user);
-          Cookies.set("user", JSON.stringify(res.data.data.user));
-          toast.success(res.data.message);
-          window.location.reload();
-          toggleModal();
-        })
-        .catch((err) => {
-          const errorMessage = err.response?.data.message ?? "Network error";
-          toast.error(errorMessage);
-        });
+    try {
+      const code = await getGoogleCode();
+      if (code !== null) {
+        const res = await loginWithGoogle(code);
+        toast.success(res.message);
+        window.location.reload();
+      }
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 

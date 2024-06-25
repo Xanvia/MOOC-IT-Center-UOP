@@ -15,7 +15,7 @@ const ExperienceCard: React.FC<props> = ({ workData, reload }) => {
       <AddExperienceModal
         CardTitle="Edit Work Experience"
         workData={workData}
-        realoadData={reload}
+        reloadData={reload}
       />
       <div className="flex flex-col ml-4 w-full">
         <div className="text text-xl font-semibold border-b border-gray-300 pb-2 pt-1">

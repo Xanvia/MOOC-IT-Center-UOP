@@ -18,18 +18,20 @@ import {
 import MonthPicker from "../MonthPicker";
 import CloseButton from "@/components/Buttons/CloseButton";
 import SolidButton from "@/components/Buttons/SolidButton";
-import axios from "axios";
 import { toast } from "sonner";
-import { API_URL } from "@/utils/constants";
 import { format } from "date-fns";
 import { Work } from "../types";
 import DeleteButton from "@/components/Buttons/DeleteButton";
-import Cookies from "js-cookie";
+import {
+  addWorkData,
+  editWorkData,
+  deleteWorkData,
+} from "@/services/user.service";
 
 interface Props {
   CardTitle: string;
   workData?: Work;
-  realoadData: () => void;
+  reloadData: () => void;
 }
 
 interface FormData {
@@ -40,10 +42,8 @@ interface FormData {
 const AddExperienceModal: React.FC<Props> = ({
   CardTitle,
   workData,
-  realoadData,
+  reloadData,
 }: Props) => {
-  const token = Cookies.get("token");
-
   const [isOpen, setIsOpen] = useState(false);
 
   const [startDate, setStartDate] = useState<Date | null>(
@@ -55,28 +55,20 @@ const AddExperienceModal: React.FC<Props> = ({
 
   const handleSubmit = async (values: FormData) => {
     try {
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-
       const data = {
         ...values,
         start_date: startDate ? format(startDate, "yyyy-MM") : null,
         end_date: endDate ? format(endDate, "yyyy-MM") : null,
       };
-      console.log(data);
       let response;
       if (workData) {
-        response = await axios.put(
-          `${API_URL}/user/work/${workData?.id}/`,
-          data,
-          { headers }
-        );
+        response = await editWorkData(workData.id, data);
+        toast.success(response.message);
       } else {
-        response = await axios.post(`${API_URL}/user/work/`, data, { headers });
+        response = await addWorkData(data);
+        toast.success(response.message);
       }
-      toast.success(response.data.message);
-      realoadData();
+      reloadData();
       setIsOpen(false);
     } catch (error) {
       console.error(error);
@@ -97,19 +89,14 @@ const AddExperienceModal: React.FC<Props> = ({
 
   const handleDelete = async () => {
     try {
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-      const response = await axios.delete(
-        `${API_URL}/user/work/${workData?.id}/`,
-        { headers }
-      );
-      toast.success("Work Experience Deleted");
-      console.log(response.data);
-      realoadData();
-      setIsOpen(false);
-    } catch (error) {
-      console.error(error);
+      if (workData) {
+        const response = await deleteWorkData(workData.id);
+        toast.success("Work Experience Deleted");
+        reloadData();
+        setIsOpen(false);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
