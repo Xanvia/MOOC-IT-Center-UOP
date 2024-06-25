@@ -11,7 +11,6 @@ interface CourseHeaderProps {
   institutionName: string;
   instructorName: string;
   instructorDetails: string;
-  
 }
 
 const CourseHeader: React.FC<CourseHeaderProps> = ({courseTitle,
