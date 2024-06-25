@@ -6,10 +6,10 @@ export interface Item {
 
 export interface Subtopic {
   title: string;
-  items: Item[];
+  items?: Item[];
 }
 
-export interface Topic {
-  category: string;
+export interface Week {
+  weekname: string;
   subtopics: Subtopic[];
 }

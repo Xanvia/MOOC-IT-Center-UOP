@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { initialTopics } from "@/data/coursedata";
+import { initialWeeks } from "@/data/coursedata";
 import { Item } from "@/components/Course/types";
 interface SelectedTopicContextType {
   selectedTopic: Item;
@@ -19,7 +19,7 @@ export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
   children,
 }) => {
   const [selectedTopic, setSelectedTopic] = useState<Item>(
-    initialTopics[0].subtopics[0].items[0]
+    initialWeeks[0].subtopics[0].items![0]
   );
 
   return (

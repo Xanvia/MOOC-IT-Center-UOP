@@ -1,8 +1,8 @@
-import { Topic } from "@/components/Course/types";
+import { Week } from "@/components/Course/types";
 
-export const initialTopics: Topic[] = [
+export const initialWeeks: Week[] = [
   {
-    category: "Week 1",
+    weekname: "Week 1",
     subtopics: [
       {
         title: "Introduction",
@@ -17,7 +17,7 @@ export const initialTopics: Topic[] = [
     ],
   },
   {
-    category: "Week 2",
+    weekname: "Week 2",
     subtopics: [
       {
         title: "Tools",
@@ -42,7 +42,7 @@ export const initialTopics: Topic[] = [
     ],
   },
   {
-    category: "Week 3",
+    weekname: "Week 3",
     subtopics: [
       {
         title: "HTML Basics",

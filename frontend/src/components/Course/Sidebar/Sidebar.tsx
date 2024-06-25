@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { useSelectedTopic } from "@/contexts/SidebarContext";
-import { initialTopics } from "@/data/coursedata";
-import { Topic } from "@/components/Course/types";
+import { initialWeeks } from "@/data/coursedata";
+import { Week } from "@/components/Course/types";
 
 const getIcon = (type: string) => {
   switch (type) {
@@ -65,7 +65,7 @@ const getIcon = (type: string) => {
 
 const Sidebar: React.FC = () => {
   const { selectedTopic, setSelectedTopic } = useSelectedTopic();
-  const [topics, setTopics] = useState<Topic[]>(initialTopics);
+  const [weeks, setWeeks] = useState<Week[]>(initialWeeks);
   const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
   const [expandedSubtopics, setExpandedSubtopics] = useState<{
     [weekIndex: number]: { [subtopicIndex: number]: boolean };
@@ -86,25 +86,25 @@ const Sidebar: React.FC = () => {
   };
 
   const addNewWeek = () => {
-    setTopics((prevTopics) => [
-      ...prevTopics,
-      { category: `Week ${prevTopics.length + 1}`, subtopics: [] },
+    setWeeks((prevWeeks) => [
+      ...prevWeeks,
+      { weekname: `Week ${prevWeeks.length + 1}`, subtopics: [] },
     ]);
   };
 
   const addNewTopic = (weekIndex: number) => {
-    setTopics((prevTopics) => {
-      const newTopics = [...prevTopics];
-      const newSubtopics = [...newTopics[weekIndex].subtopics];
+    setWeeks((prevWeeks) => {
+      const newWeeks = [...prevWeeks];
+      const newSubtopics = [...newWeeks[weekIndex].subtopics];
       newSubtopics.push({
         title: `New Topic ${newSubtopics.length + 1}`,
         items: [],
       });
-      newTopics[weekIndex] = {
-        ...newTopics[weekIndex],
+      newWeeks[weekIndex] = {
+        ...newWeeks[weekIndex],
         subtopics: newSubtopics,
       };
-      return newTopics;
+      return newWeeks;
     });
   };
 
@@ -123,7 +123,7 @@ const Sidebar: React.FC = () => {
             4 of the 20 videos have been completed
           </p>
         </div>
-        {topics.map((topic, weekIndex) => (
+        {weeks.map((week, weekIndex) => (
           <div
             key={weekIndex}
             className="mb-8 mx-2 border-b pb-2 border-gray-200"
@@ -132,11 +132,11 @@ const Sidebar: React.FC = () => {
               className="text-md font-medium text-primary border-b pb-1 mb-2 border-gray-400 cursor-pointer"
               onClick={() => toggleWeek(weekIndex)}
             >
-              {topic.category}
+              {week.weekname}
             </h4>
             {expandedWeek === weekIndex && (
               <div>
-                {topic.subtopics.map((subtopic, subtopicIndex) => (
+                {week.subtopics.map((subtopic, subtopicIndex) => (
                   <div key={subtopicIndex}>
                     <h5
                       className="text-md font-medium ml-4 my-4 cursor-pointer"
@@ -147,7 +147,7 @@ const Sidebar: React.FC = () => {
                     {expandedSubtopics[weekIndex] &&
                       expandedSubtopics[weekIndex][subtopicIndex] && (
                         <div>
-                          {subtopic.items.map((item, itemIndex) => (
+                          {subtopic.items?.map((item, itemIndex) => (
                             <p
                               key={itemIndex}
                               className={`mt-4 ml-8 cursor-pointer ${
