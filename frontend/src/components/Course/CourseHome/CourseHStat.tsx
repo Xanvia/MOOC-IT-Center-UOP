@@ -1,6 +1,26 @@
 import React from "react";
 
-const CourseHStat: React.FC = () => {
+interface CourseHStatProps {
+  studentsEnrolled: string;
+  duration: string;
+  lessons: string;
+  activities: string;
+  ratings: number;
+  level: string;
+}
+
+const CourseHStat: React.FC<CourseHStatProps> = ({
+  studentsEnrolled,
+  duration,
+  lessons,
+  activities,
+  ratings,
+  level,
+}) => {
+  const parts = duration.split(" ");
+  const number = parts[0];
+  const durationType = parts[1];
+
   return (
     <div className="bg-primary_light py-5 md:mt-0  w-full">
       <div className="max-w-7xl mx-auto">
@@ -14,24 +34,34 @@ const CourseHStat: React.FC = () => {
             </p>
           </div>
           <div>
-            <p className="md:text-xl sm:text-base text-sm font-bold ">20</p>
-            <p className="text-gray-500 text-xs md:text-base ">Weeks</p>
+            <p className="md:text-xl sm:text-base text-sm font-bold ">
+              {number}
+            </p>
+            <p className="text-gray-500 text-xs md:text-base ">
+              {durationType}
+            </p>
           </div>
           <div>
-            <p className="md:text-xl sm:text-base text-sm font-bold ">30+</p>
+            <p className="md:text-xl sm:text-base text-sm font-bold ">
+              {lessons}
+            </p>
             <p className="text-gray-500 text-xs md:text-base ">Lessons</p>
           </div>
           <div>
-            <p className="md:text-xl sm:text-base text-sm font-bold ">50+</p>
+            <p className="md:text-xl sm:text-base text-sm font-bold ">
+              {activities}
+            </p>
             <p className="text-gray-500 text-xs md:text-base ">Activities</p>
           </div>
           <div>
-            <p className="md:text-xl sm:text-base text-sm font-bold ">4.3</p>
+            <p className="md:text-xl sm:text-base text-sm font-bold ">
+              {ratings}
+            </p>
             <p className="text-gray-500 text-xs md:text-base ">Ratings</p>
           </div>
           <div>
             <p className="md:text-xl sm:text-base text-sm font-bold ">
-              BEGINNER{" "}
+              {level}
             </p>
             <p className="text-gray-500 text-xs md:text-base ">Level</p>
           </div>

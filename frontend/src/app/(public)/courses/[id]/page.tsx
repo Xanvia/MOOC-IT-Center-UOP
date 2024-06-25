@@ -52,11 +52,23 @@ export default function CoursesHome() {
             instructorName={courseData.course_creator.full_name}
             instructorDetails={courseData.course_creator.headline}
           />
-          <CourseHStat />
+          <CourseHStat
+            studentsEnrolled={"21.000+"}
+            duration={courseData.duration}
+            lessons={"30+"}
+            activities={"50+"}
+            ratings={4.5}
+            level={courseData.difficulty}
+          />
 
           <div className="bg-white shadow-sm mt-10">
             <div className="container mx-auto p-8">
-              <CourseDetailsTabs />
+              <CourseDetailsTabs
+                courseTitle={courseData.name}
+                description={courseData.description || ""}
+                outcomes={courseData.outcomes}
+                specifications={courseData.specifications || ""}
+              />
             </div>
           </div>
 
