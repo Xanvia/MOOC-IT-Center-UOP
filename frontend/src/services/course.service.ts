@@ -15,3 +15,12 @@ export const createCourse = async (values: CreateCourseData) => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const fetchCourseData = async (courseId: string) => {
+  try {
+    const response = await axiosInstance.get(`/course/${courseId}`);
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
