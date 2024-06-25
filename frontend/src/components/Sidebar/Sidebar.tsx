@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import CourseCard from "../Course/CourseCard/CourseCard";
 import CourseOutcomes from "../Course/CourseHome/CourseOutcomes";
-
+import { useSelectedTopic } from "@/contexts/SidebarContext";
 
 interface Item {
   title: string;
@@ -20,7 +20,7 @@ interface Topic {
   subtopics: Subtopic[];
 }
 
-const initialTopics: Topic[] = [
+export const initialTopics: Topic[] = [
   {
     category: "Week 1",
     subtopics: [
@@ -183,10 +183,9 @@ const getIcon = (type: string) => {
 };
 
 const Sidebar: React.FC = () => {
+  const { selectedTopic, setSelectedTopic } = useSelectedTopic();
   const [topics, setTopics] = useState<Topic[]>(initialTopics);
-  const [selectedTopic, setSelectedTopic] = useState<Item>(
-    initialTopics[0].subtopics[0].items[0]
-  );
+
   const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
   const [expandedSubtopics, setExpandedSubtopics] = useState<{
     [weekIndex: number]: { [subtopicIndex: number]: boolean };
@@ -302,10 +301,6 @@ const Sidebar: React.FC = () => {
         >
           Add Week +
         </button>
-      </div>
-      <div className="flex-grow p-4">
-        <h1 className="text-xl font-bold">{selectedTopic.title}</h1>
-        <div className="mt-4">{selectedTopic.content}</div>
       </div>
     </div>
   );

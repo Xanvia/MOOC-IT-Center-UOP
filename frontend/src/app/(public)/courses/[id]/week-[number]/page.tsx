@@ -1,16 +1,10 @@
-import React from 'react';
+import React from "react";
 
-interface PageProps {
-  title: string;
-  children: React.ReactNode;
-  customStyle?: React.CSSProperties;
-}
-
-const Page: React.FC<PageProps> = ({ title, children, customStyle }) => {
+const Page: React.FC = () => {
   return (
-    <div style={{ padding: '20px', ...customStyle }}>
-      <h1>{title}</h1>
-      <div>{children}</div>
+    <div className="flex-grow p-4">
+      <h1 className="text-xl font-bold"></h1>
+      <div className="mt-4"></div>
     </div>
   );
 };
