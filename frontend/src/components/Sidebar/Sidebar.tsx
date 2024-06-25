@@ -286,7 +286,7 @@ const Sidebar: React.FC = () => {
                   </div>
                 ))}
                 <button
-                  className="text-sm font-medium text-primary border border-dashed border-primary px-4 cursor-pointer w-full"
+                  className="w-2/3 ml-4 mt-2 px-2 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-700"
                   onClick={() => addNewTopic(weekIndex)}
                 >
                   Add Topic +
@@ -296,7 +296,7 @@ const Sidebar: React.FC = () => {
           </div>
         ))}
         <button
-          className="text-md font-medium text-primary border border-dashed border-primary py-1 px-4 mt-4 cursor-pointer w-full"
+          className="w-full mt-4 px-4 py-2 bg-green-500 text-white text-sm rounded hover:bg-green-700"
           onClick={addNewWeek}
         >
           Add Week +
