@@ -1,5 +1,5 @@
 import React from "react";
-import Sidebar from "@/components/Sidebar/Sidebar";
+import Sidebar from "@/components/Course/Sidebar/Sidebar";
 import { SelectedTopicProvider } from "@/contexts/SidebarContext";
 
 interface InnerLayoutProps {

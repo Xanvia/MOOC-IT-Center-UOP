@@ -1,13 +1,7 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { initialTopics } from "@/components/Sidebar/Sidebar";
-
-interface Item {
-  title: string;
-  content: JSX.Element | string;
-  type: "video" | "note" | "quiz";
-}
-
+import { initialTopics } from "@/data/coursedata";
+import { Item } from "@/components/Course/types";
 interface SelectedTopicContextType {
   selectedTopic: Item;
   setSelectedTopic: React.Dispatch<React.SetStateAction<Item>>;

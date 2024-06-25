@@ -1,127 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import CourseCard from "../Course/CourseCard/CourseCard";
-import CourseOutcomes from "../Course/CourseHome/CourseOutcomes";
 import { useSelectedTopic } from "@/contexts/SidebarContext";
-
-interface Item {
-  title: string;
-  content: JSX.Element | string;
-  type: "video" | "note" | "quiz";
-}
-
-interface Subtopic {
-  title: string;
-  items: Item[];
-}
-
-interface Topic {
-  category: string;
-  subtopics: Subtopic[];
-}
-
-export const initialTopics: Topic[] = [
-  {
-    category: "Week 1",
-    subtopics: [
-      {
-        title: "Introduction",
-        items: [
-          {
-            title: "Instructor introduction",
-            content: "Content for Instructor introduction",
-            type: "note",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    category: "Week 2",
-    subtopics: [
-      {
-        title: "Tools",
-        items: [
-          {
-            title: "Download Tools",
-            content: <CourseOutcomes />,
-            type: "video",
-          },
-          {
-            title: "Tools Installation",
-            content: <p>Content for tools installation</p>,
-            type: "note",
-          },
-          {
-            title: "Basic Usage Tools",
-            content: (
-              <CourseCard
-                title="Basic Usage Tools"
-                description="Learn how to install tools necessary for web development."
-                image="/images/course-header.jpg"
-              />
-            ),
-            type: "video",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    category: "Week 3",
-    subtopics: [
-      {
-        title: "HTML Basics",
-        items: [
-          {
-            title: "About HTML",
-            content: "Content for About HTML",
-            type: "note",
-          },
-          {
-            title: "Running Code",
-            content: "Content for Running Code",
-            type: "video",
-          },
-          { title: "Tag", content: "Content for Tag", type: "quiz" },
-          {
-            title: "Header and Paragraph",
-            content: "Content for Header and Paragraph",
-            type: "video",
-          },
-          { title: "List", content: "Content for List", type: "note" },
-          { title: "Table", content: "Content for Table", type: "quiz" },
-        ],
-      },
-      {
-        title: "Tools",
-        items: [
-          {
-            title: "Download Tools",
-            content: <CourseOutcomes />,
-            type: "video",
-          },
-          {
-            title: "Tools Installation",
-            content: <p>Content for tools installation</p>,
-            type: "note",
-          },
-          {
-            title: "Basic Usage Tools",
-            content: (
-              <CourseCard
-                title="Basic Usage Tools"
-                description="Learn how to install tools necessary for web development."
-                image="/images/course-header.jpg"
-              />
-            ),
-            type: "quiz",
-          },
-        ],
-      },
-    ],
-  },
-];
+import { initialTopics } from "@/data/coursedata";
+import { Topic } from "@/components/Course/types";
 
 const getIcon = (type: string) => {
   switch (type) {
@@ -185,7 +66,6 @@ const getIcon = (type: string) => {
 const Sidebar: React.FC = () => {
   const { selectedTopic, setSelectedTopic } = useSelectedTopic();
   const [topics, setTopics] = useState<Topic[]>(initialTopics);
-
   const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
   const [expandedSubtopics, setExpandedSubtopics] = useState<{
     [weekIndex: number]: { [subtopicIndex: number]: boolean };
