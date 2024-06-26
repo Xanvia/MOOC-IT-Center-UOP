@@ -5,17 +5,23 @@ import TextEditor from "../../CourseTextEditor";
 import SolidButton from "@/components/Buttons/SolidButton";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import classes from "./DescTab.module.css";
+import { addDescription, addSpecifications } from "@/services/course.service";
+import { toast } from "sonner";
 
 const headerImage = "/images/course-header.jpg";
 
 interface CourseDescProps {
+  courseId: number;
   isEdit: boolean;
   courseTitle: string;
   description: string;
   specifications: string;
+  relaodData: () => void;
 }
 
 const DescriptionTab: React.FC<CourseDescProps> = ({
+  relaodData,
+  courseId,
   isEdit,
   courseTitle,
   description,
@@ -32,6 +38,28 @@ const DescriptionTab: React.FC<CourseDescProps> = ({
     setEditSpecView(!editSpecView);
   };
 
+  const handleDescSave = async (descriptionValue: string) => {
+    try {
+      const response = await addDescription(courseId, descriptionValue);
+      toast.success(response.message);
+      setEditDescView(false);
+      relaodData();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleSpecSave = async (specificationsValue: string) => {
+    try {
+      const response = await addSpecifications(courseId, specificationsValue);
+      toast.success(response.message);
+      setEditSpecView(false);
+      relaodData();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <div className="lg:mx-32">
       <div className="py-14 px-3 sm:px-20 xl:mx-28  text-left bg-primary_light">
@@ -42,14 +70,11 @@ const DescriptionTab: React.FC<CourseDescProps> = ({
                 <h1 className="text-xl mb-6 font-semibold text-primary text-center">
                   Add Course Description
                 </h1>
-                <TextEditor initialValue={description} />
-                <div className="flex justify-end mt-8">
-                  <SolidButton
-                    type="submit"
-                    text="S A V E"
-                    onClick={toggleDescView}
-                  />
-                </div>
+                <TextEditor
+                  initialValue={description}
+                  onClick={handleDescSave}
+                />
+                
               </React.Fragment>
             ) : (
               <div>
@@ -85,14 +110,10 @@ const DescriptionTab: React.FC<CourseDescProps> = ({
             </div>
             {editSpecView ? (
               <div className="pt-8">
-                <TextEditor initialValue={specifications} />
-                <div className="flex justify-end mt-8">
-                  <SolidButton
-                    type="submit"
-                    text="S A V E"
-                    onClick={toggleSpecView}
-                  />
-                </div>
+                <TextEditor
+                  initialValue={specifications}
+                  onClick={handleSpecSave}
+                />
               </div>
             ) : (
               <>

@@ -9,10 +9,12 @@ const headerImage = "/images/course-header.jpg";
 
 interface CourseHeaderProps {
 courseData: CourseData
+reloadData: () => void;
 }
 
 const CourseHeader: React.FC<CourseHeaderProps> = ({
-  courseData
+  courseData,
+  reloadData
 }) => {
   const [isEdit, setIsEdit] = useState(true);
 
@@ -51,7 +53,7 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
           </div>
           <div className="relative mt-10 sm:mt-10 md:mt-14 sm:ml-20 ml-2">
             {isEdit ? (
-              <CourseDescEditModal courseData={courseData} />
+              <CourseDescEditModal courseData={courseData} reloadData={reloadData} />
             ) : (
               <PrimaryButton text="E N R O L" onClick={handleClick} />
             )}

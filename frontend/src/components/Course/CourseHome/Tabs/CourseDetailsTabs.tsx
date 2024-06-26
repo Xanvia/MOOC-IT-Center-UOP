@@ -13,9 +13,10 @@ const InstructorTab = lazy(() => import("./InstructorTab"));
 interface CourseDetailsTabsProps {
   courseData: CourseData;
   isEdit: boolean;
+  reloadData: () => void;
 }
 
-const CourseDetailsTabs = ({ courseData, isEdit }: CourseDetailsTabsProps) => {
+const CourseDetailsTabs = ({ courseData, isEdit,reloadData }: CourseDetailsTabsProps) => {
   const [activeTab, setActiveTab] = useState("Description");
 
   const tabs = ["Description", "Instructor", "Syllabus", "Outcomes"];
@@ -41,10 +42,12 @@ const CourseDetailsTabs = ({ courseData, isEdit }: CourseDetailsTabsProps) => {
       </div>
       {activeTab === "Description" && (
         <DescriptionTab
+          courseId={courseData.id}
           isEdit={isEdit}
           courseTitle={courseData.name}
           specifications={courseData.specifications}
           description={courseData.description}
+          relaodData={reloadData}
         />
       )}
       {activeTab === "Instructor" && <InstructorTab />}

@@ -16,6 +16,7 @@ import DropDownInterests from "@/components/DropDown/DropDownInterests";
 import { updateCourse, fetchCourseData } from "@/services/course.service";
 import { CourseData, UpdateCourseData } from "@/components/Course/course.types";
 import { toast } from "sonner";
+import { relative } from "path";
 
 const DefaultImage = "/images/course-header.jpg";
 
@@ -31,10 +32,11 @@ interface FromValues {
 
 interface Props{
   courseData: CourseData;
+  reloadData: () => void;
 }
 
 
-export default function CourseDescEditModal({courseData}:Props) {
+export default function CourseDescEditModal({courseData,reloadData}:Props) {
   const courseId = courseData.id;
   const [isOpen, setIsOpen] = useState(false);
   const [category, setCategory] = useState<Interest>(courseData.category);
@@ -46,7 +48,6 @@ export default function CourseDescEditModal({courseData}:Props) {
   const initialValues = {
     title: courseData.name || "",
     duration: courseData.duration || "",
-    description: courseData.description || "",
   };
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -64,8 +65,6 @@ export default function CourseDescEditModal({courseData}:Props) {
     setCategory(value);
   };
 
-
-  const handleDelete = () => {};
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -96,6 +95,7 @@ export default function CourseDescEditModal({courseData}:Props) {
     try {
       await updateCourse(courseId as number, data );
       toast.success("Course updated successfully!");
+      reloadData();
       setIsOpen(false);
     } catch (error: any) {
       const errorMessage = error.message ?? "Failed to edit course";
@@ -185,7 +185,6 @@ export default function CourseDescEditModal({courseData}:Props) {
               }
               validationSchema={Yup.object({
                 title: Yup.string().required("Course title is required"),
-                category: Yup.string().required("Course category is required"),
                 duration: Yup.string().required("Course duration is required"),
               })}
               onSubmit={handleSubmit}

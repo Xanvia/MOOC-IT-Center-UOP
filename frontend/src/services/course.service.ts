@@ -1,5 +1,8 @@
 import axiosInstance from "../lib/axiosInstance";
-import { CreateCourseData, UpdateCourseData } from "@/components/Course/course.types";
+import {
+  CreateCourseData,
+  UpdateCourseData,
+} from "@/components/Course/course.types";
 
 export const createCourse = async (values: CreateCourseData) => {
   try {
@@ -16,7 +19,10 @@ export const createCourse = async (values: CreateCourseData) => {
   }
 };
 
-export const updateCourse = async (courseId: number, values: UpdateCourseData) => {
+export const updateCourse = async (
+  courseId: number,
+  values: UpdateCourseData
+) => {
   const formData = new FormData();
   formData.append("name", values.name);
   formData.append("category", values.category.toString());
@@ -28,13 +34,12 @@ export const updateCourse = async (courseId: number, values: UpdateCourseData) =
   if (values.imageFile) {
     formData.append("header_image", values.imageFile);
   }
-  
+
   try {
     const response = await axiosInstance.put(`/course/${courseId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
-      
     });
 
     return response.data;
@@ -47,6 +52,31 @@ export const fetchCourseData = async (courseId: string) => {
   try {
     const response = await axiosInstance.get(`/course/${courseId}`);
     return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const addDescription = async (courseId: number, description: string) => {
+  try {
+    const response = await axiosInstance.patch(`/course/${courseId}`, {
+      description,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const addSpecifications = async (
+  courseId: number,
+  specifications: string
+) => {
+  try {
+    const response = await axiosInstance.patch(`/course/${courseId}`, {
+      specifications,
+    });
+    return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
   }
