@@ -25,3 +25,13 @@ export interface CourseData {
   course_creator: CourseCreator;
   category: string;
 }
+
+export interface UpdateCourseData {
+  name: string;
+  institution: string;
+  category: string;
+  duration: string;
+  description: string;
+  level: string;
+  image: string | File; 
+}
