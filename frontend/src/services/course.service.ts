@@ -17,15 +17,25 @@ export const createCourse = async (values: CreateCourseData) => {
 };
 
 export const updateCourse = async (courseId: number, values: UpdateCourseData) => {
+  const formData = new FormData();
+  formData.append("name", values.name);
+  formData.append("category", values.category.toString());
+  formData.append("duration", values.duration);
+  formData.append("description", values.description);
+  formData.append("difficulty", values.level);
+  if (values.institution) {
+    formData.append("institution", values.institution);
+  }
+  if (values.imageFile) {
+    formData.append("header_image", values.imageFile);
+  }
+  
   try {
-    const response = await axiosInstance.put(`/course/${courseId}`, {
-      name: values.name,
-      institution: values.institution,
-      category: values.category,
-      duration: values.duration,
-      description: values.description,
-      level: values.level,
-      header_image: null,
+    const response = await axiosInstance.put(`/course/${courseId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      
     });
 
     return response.data;
