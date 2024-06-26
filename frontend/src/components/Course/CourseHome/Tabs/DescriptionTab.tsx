@@ -8,14 +8,13 @@ import classes from "./DescTab.module.css";
 import { addDescription, addSpecifications } from "@/services/course.service";
 import { toast } from "sonner";
 
-const headerImage = "/images/course-header.jpg";
-
 interface CourseDescProps {
   courseId: number;
   isEdit: boolean;
   courseTitle: string;
   description: string;
   specifications: string;
+  headerImage: string;
   relaodData: () => void;
 }
 
@@ -26,6 +25,7 @@ const DescriptionTab: React.FC<CourseDescProps> = ({
   courseTitle,
   description,
   specifications,
+  headerImage,
 }) => {
   const [editDescView, setEditDescView] = useState(false);
   const [editSpecView, setEditSpecView] = useState(false);

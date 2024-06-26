@@ -44,6 +44,7 @@ const CourseDetailsTabs = ({ courseData, isEdit,reloadData }: CourseDetailsTabsP
         <DescriptionTab
           courseId={courseData.id}
           isEdit={isEdit}
+          headerImage={courseData.header_image}
           courseTitle={courseData.name}
           specifications={courseData.specifications}
           description={courseData.description}

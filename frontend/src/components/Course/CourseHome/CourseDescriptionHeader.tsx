@@ -24,7 +24,7 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
     <>
       <div className="bg-gradient-to-tl from-gray-600 to-gray-800 h-96 w-full relative">
         <Image
-          src={headerImage}
+          src={courseData.header_image}
           alt="Computer"
           layout="fil"
           width={2000}
