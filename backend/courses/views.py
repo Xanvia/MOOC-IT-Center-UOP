@@ -40,7 +40,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         return response
 
     def update(self, request, *args, **kwargs):
-
+        request.data._mutable = True
         request.data["course_creator"] = request.user.id
 
         response = super().update(request, partial=True, *args, **kwargs)

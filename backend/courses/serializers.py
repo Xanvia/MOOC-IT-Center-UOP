@@ -4,6 +4,7 @@ from .models import Course
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
 
+
 class CourseTeacherSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -21,6 +22,7 @@ class CourseTeacherSerializer(serializers.ModelSerializer):
 
 class CourseSerializer(serializers.ModelSerializer):
     institution = serializers.CharField()
+
     class Meta:
         model = Course
         fields = "__all__"
@@ -33,7 +35,6 @@ class CourseSerializer(serializers.ModelSerializer):
             # Filter the data to only include allowed fields
             data = {key: value for key, value in data.items() if key in allowed_fields}
         return data
-    
 
     def create(self, validated_data):
         institution_name = validated_data.pop("institution")
@@ -49,3 +50,9 @@ class CourseSerializer(serializers.ModelSerializer):
         representation["category"] = InterestSerializer(instance.category).data
         representation["institution"] = instance.institution.label
         return representation
+
+    def update(self, instance, validated_data):
+        institution_name = validated_data.pop("institution")
+        institution, _ = Institution.objects.get_or_create(label=institution_name)
+        validated_data["institution"] = institution
+        return super().update(instance, validated_data)
