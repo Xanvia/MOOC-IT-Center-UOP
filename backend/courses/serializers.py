@@ -30,17 +30,16 @@ class CourseSerializer(serializers.ModelSerializer):
     def validate(self, data):
         request = self.context.get("request")
 
+        if request and request.method == "POST" or request.method == "PUT":
+            institution_name = data.pop("institution")
+            institution, _ = Institution.objects.get_or_create(label=institution_name)
+            data["institution"] = institution
+
         if request and request.method == "PATCH":
             allowed_fields = {"outcomes", "specifications"}
             # Filter the data to only include allowed fields
             data = {key: value for key, value in data.items() if key in allowed_fields}
         return data
-
-    def create(self, validated_data):
-        institution_name = validated_data.pop("institution")
-        institution, _ = Institution.objects.get_or_create(label=institution_name)
-        validated_data["institution"] = institution
-        return super().create(validated_data)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -50,9 +49,3 @@ class CourseSerializer(serializers.ModelSerializer):
         representation["category"] = InterestSerializer(instance.category).data
         representation["institution"] = instance.institution.label
         return representation
-
-    def update(self, instance, validated_data):
-        institution_name = validated_data.pop("institution")
-        institution, _ = Institution.objects.get_or_create(label=institution_name)
-        validated_data["institution"] = institution
-        return super().update(instance, validated_data)
