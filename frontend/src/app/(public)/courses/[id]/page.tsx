@@ -8,6 +8,7 @@ import CourseDetailsTabs from "@/components/Course/CourseHome/Tabs/CourseDetails
 import Breadcrumb from "@/components/Course/CourseHome/Breadcrumb";
 import { CourseData } from "@/components/Course/course.types";
 import { fetchCourseData } from "@/services/course.service";
+import Loader from "@/components/Loarder/Loarder";
 
 interface BreadcrumbItem {
   breadcrumb: string;
@@ -41,40 +42,40 @@ export default function CoursesHome() {
     loadCourseData();
   }, [courseId]);
 
+  if (!courseData) {
+    return <Loader />;
+  }
+
   return (
     <>
-      {courseData && (
-        <>
-          <Breadcrumb breadcrumbs={breadcrumbs} />
-          <CourseHeader
+      <Breadcrumb breadcrumbs={breadcrumbs} />
+      <CourseHeader
+        courseTitle={courseData.name}
+        institutionName={courseData.institution}
+        instructorName={courseData.course_creator.full_name}
+        instructorDetails={courseData.course_creator.headline}
+      />
+      <CourseHStat
+        studentsEnrolled={"21.000+"}
+        duration={courseData.duration}
+        lessons={"30+"}
+        activities={"50+"}
+        ratings={4.5}
+        level={courseData.difficulty}
+      />
+
+      <div className="bg-white shadow-sm mt-10">
+        <div className="container mx-auto p-8">
+          <CourseDetailsTabs
             courseTitle={courseData.name}
-            institutionName={courseData.institution}
-            instructorName={courseData.course_creator.full_name}
-            instructorDetails={courseData.course_creator.headline}
+            description={courseData.description || ""}
+            outcomes={courseData.outcomes}
+            specifications={courseData.specifications || ""}
           />
-          <CourseHStat
-            studentsEnrolled={"21.000+"}
-            duration={courseData.duration}
-            lessons={"30+"}
-            activities={"50+"}
-            ratings={4.5}
-            level={courseData.difficulty}
-          />
+        </div>
+      </div>
 
-          <div className="bg-white shadow-sm mt-10">
-            <div className="container mx-auto p-8">
-              <CourseDetailsTabs
-                courseTitle={courseData.name}
-                description={courseData.description || ""}
-                outcomes={courseData.outcomes}
-                specifications={courseData.specifications || ""}
-              />
-            </div>
-          </div>
-
-          <ReccomendedCourses />
-        </>
-      )}
+      <ReccomendedCourses />
     </>
   );
 }
