@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Course
 from userprofiles.models import Institution
+from userprofiles.serializers import InterestSerializer
 
 class CourseTeacherSerializer(serializers.ModelSerializer):
 
@@ -45,6 +46,6 @@ class CourseSerializer(serializers.ModelSerializer):
         representation["course_creator"] = CourseTeacherSerializer(
             instance.course_creator
         ).data
-        representation["category"] = instance.category.label
+        representation["category"] = InterestSerializer(instance.category).data
         representation["institution"] = instance.institution.label
         return representation
