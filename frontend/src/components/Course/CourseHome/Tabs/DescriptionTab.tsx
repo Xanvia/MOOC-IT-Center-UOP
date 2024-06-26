@@ -1,34 +1,77 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import TextEditor from "../../CourseTextEditor";
-import CourseDescEditModal from "../CourseDescEditModal";
 import SolidButton from "@/components/Buttons/SolidButton";
-import classes from './DescTab.module.css';
-import { CourseData } from "../../course.types";
-
-
+import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
+import classes from "./DescTab.module.css";
 
 const headerImage = "/images/course-header.jpg";
 
 interface CourseDescProps {
-  courseData: CourseData
+  isEdit: boolean;
+  courseTitle: string;
+  description: string;
+  specifications: string;
 }
 
 const DescriptionTab: React.FC<CourseDescProps> = ({
-  courseData
+  isEdit,
+  courseTitle,
+  description,
+  specifications,
 }) => {
+  const [editDescView, setEditDescView] = useState(false);
+  const [editSpecView, setEditSpecView] = useState(false);
+
+  const toggleDescView = () => {
+    setEditDescView(!editDescView);
+  };
+
+  const toggleSpecView = () => {
+    setEditSpecView(!editSpecView);
+  };
+
   return (
     <div className="lg:mx-32">
       <div className="py-14 px-3 sm:px-20 xl:mx-28  text-left bg-primary_light">
-        <CourseDescEditModal courseData={courseData} />
         <div className="space-y-2">
           <div className="pt-4">
-            <h1 className="text-2xl font-semibold text-primary">
-              {courseData.name}
-            </h1>
-            <br />
-            <p>{courseData.description}</p>
+            {editDescView ? (
+              <React.Fragment>
+                <h1 className="text-xl mb-6 font-semibold text-primary text-center">
+                  Add Course Description
+                </h1>
+                <TextEditor initialValue={description} />
+                <div className="flex justify-end mt-8">
+                  <SolidButton
+                    type="submit"
+                    text="S A V E"
+                    onClick={toggleDescView}
+                  />
+                </div>
+              </React.Fragment>
+            ) : (
+              <div>
+                <h1 className="text-2xl font-semibold text-primary">
+                  {courseTitle}
+                </h1>
+                <div className="mt-6">
+                  {isEdit && (
+                    <EditButtonPrimary
+                      text="E D I T"
+                      onClick={toggleDescView}
+                    />
+                  )}
+                </div>
+
+                <br />
+                <div
+                  className={classes.specifications}
+                  dangerouslySetInnerHTML={{ __html: description }}
+                />
+              </div>
+            )}
             <div>
               <Image
                 src={headerImage}
@@ -40,17 +83,28 @@ const DescriptionTab: React.FC<CourseDescProps> = ({
                 priority
               />
             </div>
-            <div className={classes.specifications} dangerouslySetInnerHTML={{ __html: courseData.specifications }} />
-          </div>
-          <div className="pt-8">
-            <h1 className="text-2xl mb-6 font-semibold text-primary text-center">
-              Add More Informations
-            </h1>
-            <TextEditor />
-
-            <div className="flex justify-end mt-8 ">
-              <SolidButton type="submit" text="S A V E" onClick={() => {}} />
-            </div>
+            {editSpecView ? (
+              <div className="pt-8">
+                <TextEditor initialValue={specifications} />
+                <div className="flex justify-end mt-8">
+                  <SolidButton
+                    type="submit"
+                    text="S A V E"
+                    onClick={toggleSpecView}
+                  />
+                </div>
+              </div>
+            ) : (
+              <>
+                {isEdit && (
+                  <EditButtonPrimary text="E D I T" onClick={toggleSpecView} />
+                )}
+                <div
+                  className={classes.specifications}
+                  dangerouslySetInnerHTML={{ __html: specifications }}
+                />
+              </>
+            )}
           </div>
         </div>
       </div>

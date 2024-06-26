@@ -10,11 +10,6 @@ import {
 } from "@/components/components.styles";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import DropDownInstitution from "@/components/DropDown/DropDownUni";
-import {
-  InputFieldClasses,
-  InputInnerDiv,
-  InputOuterDiv,
-} from "@/components/components.styles";
 import Image from "next/image";
 import DropDownLevel from "@/components/DropDown/DropDownLevel";
 import DropDownInterests from "@/components/DropDown/DropDownInterests";
@@ -32,7 +27,6 @@ interface Interest {
 interface FromValues {
   title: string;
   duration: string;
-  description: string;
 }
 
 interface Props{
@@ -97,7 +91,6 @@ export default function CourseDescEditModal({courseData}:Props) {
       institution: selectedInstitution,
       level: selectedLevel,
       duration: values.duration,
-      description: values.description,
       imageFile: imageFile,
     };
     try {
@@ -194,7 +187,6 @@ export default function CourseDescEditModal({courseData}:Props) {
                 title: Yup.string().required("Course title is required"),
                 category: Yup.string().required("Course category is required"),
                 duration: Yup.string().required("Course duration is required"),
-                description: Yup.string().required("Description is required"),
               })}
               onSubmit={handleSubmit}
             >
@@ -231,7 +223,7 @@ export default function CourseDescEditModal({courseData}:Props) {
                       </label>
                       <DropDownInterests
                         addSelection={handleCategoryChange}
-                        value="Select Course Category"
+                        value={category.label}
                       />
                     </div>
                     <div>
@@ -244,7 +236,7 @@ export default function CourseDescEditModal({courseData}:Props) {
                       />
                     </div>
                     <div>
-                      <DropDownLevel setLevel={setSelectedLevel} />
+                      <DropDownLevel value={selectedLevel} setLevel={setSelectedLevel} />
                     </div>
                     <div>
                       <label htmlFor="duration" className={InputLabelClasses2}>
@@ -268,7 +260,7 @@ export default function CourseDescEditModal({courseData}:Props) {
                       />
                     </div>
 
-                    <div className="col-span-2">
+                    {/* <div className="col-span-2">
                       <div className={InputOuterDiv}>
                         <div className={`h-20 ${InputInnerDiv} `}>
                           <label
@@ -291,7 +283,7 @@ export default function CourseDescEditModal({courseData}:Props) {
                           />
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     <div className="flex justify-end mt-6 mb-2 col-span-2">
                       <SolidButton
                         type="submit"

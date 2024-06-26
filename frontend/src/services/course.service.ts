@@ -21,7 +21,6 @@ export const updateCourse = async (courseId: number, values: UpdateCourseData) =
   formData.append("name", values.name);
   formData.append("category", values.category.toString());
   formData.append("duration", values.duration);
-  formData.append("description", values.description);
   formData.append("difficulty", values.level);
   if (values.institution) {
     formData.append("institution", values.institution);

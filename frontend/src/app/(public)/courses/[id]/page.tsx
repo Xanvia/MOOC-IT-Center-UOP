@@ -22,6 +22,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function CoursesHome() {
+  const isEdit = true;
   const params = useParams();
   const [courseData, setCourseData] = useState<CourseData | undefined>(
     undefined
@@ -49,12 +50,7 @@ export default function CoursesHome() {
   return (
     <>
       <Breadcrumb breadcrumbs={breadcrumbs} />
-      <CourseHeader
-        courseTitle={courseData.name}
-        institutionName={courseData.institution}
-        instructorName={courseData.course_creator.full_name}
-        instructorDetails={courseData.course_creator.headline}
-      />
+      <CourseHeader courseData={courseData} />
       <CourseHStat
         studentsEnrolled={"21.000+"}
         duration={courseData.duration}
@@ -66,9 +62,7 @@ export default function CoursesHome() {
 
       <div className="bg-white shadow-sm mt-10">
         <div className="container mx-auto p-8">
-          <CourseDetailsTabs
-            courseData={courseData}
-          />
+          <CourseDetailsTabs isEdit={isEdit} courseData={courseData} />
         </div>
       </div>
 

@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 
 interface Props {
   setLevel(value: string): void;
+  value?: string;
 }
 
-const DropDownLevel = ({ setLevel }: Props) => {
+const DropDownLevel = ({ setLevel, value }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("Select");
+  const [selectedOption, setSelectedOption] = useState(value || "Select");
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -75,7 +76,9 @@ const DropDownLevel = ({ setLevel }: Props) => {
             }}
           >
             <div className="flex items-center text-primary justify-center">
-              <span className="font-normal  ml-3 block truncate ">Beginner</span>
+              <span className="font-normal  ml-3 block truncate ">
+                Beginner
+              </span>
             </div>
           </li>
           <li
@@ -90,7 +93,9 @@ const DropDownLevel = ({ setLevel }: Props) => {
             }}
           >
             <div className="flex items-center justify-center">
-              <span className="font-normal ml-3 block truncate">Intermediate</span>
+              <span className="font-normal ml-3 block truncate">
+                Intermediate
+              </span>
             </div>
           </li>
           <li
