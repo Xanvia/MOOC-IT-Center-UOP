@@ -22,10 +22,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function CoursesHome() {
+  const isEdit = true;
   const params = useParams();
   const [courseData, setCourseData] = useState<CourseData | undefined>(
     undefined
   );
+  const [reload, setReload] = useState(false);
   const courseId = params.id;
 
   useEffect(() => {
@@ -40,7 +42,11 @@ export default function CoursesHome() {
     };
 
     loadCourseData();
-  }, [courseId]);
+  }, [courseId,reload]);
+
+  const reloadData = () => {
+    setReload(!reload);
+  };
 
   if (!courseData) {
     return <Loader />;
@@ -49,12 +55,7 @@ export default function CoursesHome() {
   return (
     <>
       <Breadcrumb breadcrumbs={breadcrumbs} />
-      <CourseHeader
-        courseTitle={courseData.name}
-        institutionName={courseData.institution}
-        instructorName={courseData.course_creator.full_name}
-        instructorDetails={courseData.course_creator.headline}
-      />
+      <CourseHeader courseData={courseData}  reloadData={reloadData} />
       <CourseHStat
         studentsEnrolled={"21.000+"}
         duration={courseData.duration}
@@ -66,12 +67,7 @@ export default function CoursesHome() {
 
       <div className="bg-white shadow-sm mt-10">
         <div className="container mx-auto p-8">
-          <CourseDetailsTabs
-            courseTitle={courseData.name}
-            description={courseData.description || ""}
-            outcomes={courseData.outcomes}
-            specifications={courseData.specifications || ""}
-          />
+          <CourseDetailsTabs isEdit={isEdit} courseData={courseData}  reloadData={reloadData} />
         </div>
       </div>
 

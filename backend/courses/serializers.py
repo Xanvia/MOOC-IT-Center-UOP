@@ -2,6 +2,8 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Course
 from userprofiles.models import Institution
+from userprofiles.serializers import InterestSerializer
+
 
 class CourseTeacherSerializer(serializers.ModelSerializer):
 
@@ -20,6 +22,7 @@ class CourseTeacherSerializer(serializers.ModelSerializer):
 
 class CourseSerializer(serializers.ModelSerializer):
     institution = serializers.CharField()
+
     class Meta:
         model = Course
         fields = "__all__"
@@ -27,24 +30,22 @@ class CourseSerializer(serializers.ModelSerializer):
     def validate(self, data):
         request = self.context.get("request")
 
+        if request and request.method == "POST" or request.method == "PUT":
+            institution_name = data.pop("institution")
+            institution, _ = Institution.objects.get_or_create(label=institution_name)
+            data["institution"] = institution
+
         if request and request.method == "PATCH":
-            allowed_fields = {"outcomes", "specifications"}
+            allowed_fields = {"outcomes", "specifications","description"}
             # Filter the data to only include allowed fields
             data = {key: value for key, value in data.items() if key in allowed_fields}
         return data
-    
-
-    def create(self, validated_data):
-        institution_name = validated_data.pop("institution")
-        institution, _ = Institution.objects.get_or_create(label=institution_name)
-        validated_data["institution"] = institution
-        return super().create(validated_data)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation["course_creator"] = CourseTeacherSerializer(
             instance.course_creator
         ).data
-        representation["category"] = instance.category.label
+        representation["category"] = InterestSerializer(instance.category).data
         representation["institution"] = instance.institution.label
         return representation
