@@ -16,7 +16,7 @@ export const createCourse = async (values: CreateCourseData) => {
   }
 };
 
-export const updateCourse = async (courseId: string, values: UpdateCourseData) => {
+export const updateCourse = async (courseId: number, values: UpdateCourseData) => {
   try {
     const response = await axiosInstance.put(`/course/${courseId}`, {
       name: values.name,
@@ -25,7 +25,7 @@ export const updateCourse = async (courseId: string, values: UpdateCourseData) =
       duration: values.duration,
       description: values.description,
       level: values.level,
-      image: values.image,
+      header_image: null,
     });
 
     return response.data;

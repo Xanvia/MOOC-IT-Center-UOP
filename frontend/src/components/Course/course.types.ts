@@ -11,6 +11,11 @@ export interface CourseCreator {
   headline: string;
 }
 
+export interface Category{
+  id: number;
+  label: string;
+}
+
 export interface CourseData {
   id: number;
   institution: string;
@@ -23,15 +28,16 @@ export interface CourseData {
   difficulty: string;
   status: string;
   course_creator: CourseCreator;
-  category: string;
+  category: Category;
 }
 
 export interface UpdateCourseData {
   name: string;
-  institution: string;
-  category: string;
+  institution: string | null;
+  category: number;
   duration: string;
   description: string;
   level: string;
-  image: string | File; 
+  imageFile: File | null; 
 }
+

@@ -1,5 +1,6 @@
 "use client";
 import React, { lazy, useState } from "react";
+import { CourseData } from "../../course.types";
 const CourseContent = lazy(
   () => import("@/components/Course/CourseHome/CourseContent")
 );
@@ -10,17 +11,11 @@ const DescriptionTab = lazy(() => import("./DescriptionTab"));
 const InstructorTab = lazy(() => import("./InstructorTab"));
 
 interface CourseDetailsTabsProps {
-  courseTitle: string;
-  description: string;
-  outcomes: string[];
-  specifications: string;
+  courseData: CourseData
 }
 
 const CourseDetailsTabs = ({
-  courseTitle,
-  description,
-  outcomes,
-  specifications,
+  courseData,
 }: CourseDetailsTabsProps) => {
   const [activeTab, setActiveTab] = useState("Description");
 
@@ -45,10 +40,10 @@ const CourseDetailsTabs = ({
           ))}
         </div>
       </div>
-      {activeTab === "Description" && <DescriptionTab courseTitle={courseTitle} description={description} specifications={specifications} />}
+      {activeTab === "Description" && <DescriptionTab courseData={courseData} />}
       {activeTab === "Instructor" && <InstructorTab />}
       {activeTab !== "Outcomes" && <CourseContent />}
-      <CourseOutcomes outcomes={outcomes} />
+      <CourseOutcomes outcomes={courseData.outcomes} />
     </>
   );
 };

@@ -5,33 +5,30 @@ import TextEditor from "../../CourseTextEditor";
 import CourseDescEditModal from "../CourseDescEditModal";
 import SolidButton from "@/components/Buttons/SolidButton";
 import classes from './DescTab.module.css';
+import { CourseData } from "../../course.types";
 
 
 
 const headerImage = "/images/course-header.jpg";
 
 interface CourseDescProps {
-  courseTitle: string;
-  description: string;
-  specifications: string;
+  courseData: CourseData
 }
 
 const DescriptionTab: React.FC<CourseDescProps> = ({
-  courseTitle,
-  description,
-  specifications,
+  courseData
 }) => {
   return (
     <div className="lg:mx-32">
       <div className="py-14 px-3 sm:px-20 xl:mx-28  text-left bg-primary_light">
-        <CourseDescEditModal />
+        <CourseDescEditModal courseData={courseData} />
         <div className="space-y-2">
           <div className="pt-4">
             <h1 className="text-2xl font-semibold text-primary">
-              {courseTitle}
+              {courseData.name}
             </h1>
             <br />
-            <p>{description}</p>
+            <p>{courseData.description}</p>
             <div>
               <Image
                 src={headerImage}
@@ -43,7 +40,7 @@ const DescriptionTab: React.FC<CourseDescProps> = ({
                 priority
               />
             </div>
-            <div className={classes.specifications} dangerouslySetInnerHTML={{ __html: specifications }} />
+            <div className={classes.specifications} dangerouslySetInnerHTML={{ __html: courseData.specifications }} />
           </div>
           <div className="pt-8">
             <h1 className="text-2xl mb-6 font-semibold text-primary text-center">

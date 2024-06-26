@@ -18,6 +18,9 @@ import {
 import Image from "next/image";
 import DropDownLevel from "@/components/DropDown/DropDownLevel";
 import DropDownInterests from "@/components/DropDown/DropDownInterests";
+import { updateCourse, fetchCourseData } from "@/services/course.service";
+import { CourseData, UpdateCourseData } from "@/components/Course/course.types";
+import { toast } from "sonner";
 
 const DefaultImage = "/images/course-header.jpg";
 
@@ -26,16 +29,31 @@ interface Interest {
   label: string;
 }
 
+interface FromValues {
+  title: string;
+  duration: string;
+  description: string;
+}
 
-export default function CourseDescEditModal() {
+interface Props{
+  courseData: CourseData;
+}
+
+
+export default function CourseDescEditModal({courseData}:Props) {
+  const courseId = courseData.id;
   const [isOpen, setIsOpen] = useState(false);
-  const [category, setCategory] = useState<Interest>();
+  const [category, setCategory] = useState<Interest>(courseData.category);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(DefaultImage);
+  const [selectedLevel, setSelectedLevel] = useState<string>(courseData.difficulty);
+  const [selectedInstitution, setSelectedInstitution] = useState<string | null>(courseData.institution);
 
-  const [selectedInstitution, setSelectedInstitution] = useState<string | null>(
-    null
-  );
+  const initialValues = {
+    title: courseData.name || "",
+    duration: courseData.duration || "",
+    description: courseData.description || "",
+  };
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -62,8 +80,34 @@ export default function CourseDescEditModal() {
     }
   };
 
-  const handleSubmit = (values: any) => {
-    console.log(values);
+  const handleSubmit = async (values: FromValues) => {
+    if (selectedInstitution === "") {
+      toast.error("Please select an Institution");
+      return;
+    } else if (category === undefined) {
+      toast.error("Please select a category");
+      return;
+    } else if (selectedLevel === "") {
+      toast.error("Please select a difficulty");
+      return;
+    }
+    const data: UpdateCourseData = {
+      name: values.title,
+      category: category.id,
+      institution: selectedInstitution,
+      level: selectedLevel,
+      duration: values.duration,
+      description: values.description,
+      imageFile: imageFile,
+    };
+    try {
+      await updateCourse(courseId as number, data );
+      toast.success("Course updated successfully!");
+      setIsOpen(false);
+    } catch (error: any) {
+      const errorMessage = error.message ?? "Failed to edit course";
+      toast.error(errorMessage);
+    }
   };
 
   return (
@@ -144,12 +188,8 @@ export default function CourseDescEditModal() {
             </div>
 
             <Formik
-              initialValues={{
-                title: "",
-                category: "",
-                duration: "",
-                description: "",
-              }}
+              initialValues={initialValues
+              }
               validationSchema={Yup.object({
                 title: Yup.string().required("Course title is required"),
                 category: Yup.string().required("Course category is required"),
@@ -204,7 +244,7 @@ export default function CourseDescEditModal() {
                       />
                     </div>
                     <div>
-                      <DropDownLevel setLevel={(value: string) => {}} />
+                      <DropDownLevel setLevel={setSelectedLevel} />
                     </div>
                     <div>
                       <label htmlFor="duration" className={InputLabelClasses2}>

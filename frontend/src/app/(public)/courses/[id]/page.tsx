@@ -67,10 +67,7 @@ export default function CoursesHome() {
       <div className="bg-white shadow-sm mt-10">
         <div className="container mx-auto p-8">
           <CourseDetailsTabs
-            courseTitle={courseData.name}
-            description={courseData.description || ""}
-            outcomes={courseData.outcomes}
-            specifications={courseData.specifications || ""}
+            courseData={courseData}
           />
         </div>
       </div>
