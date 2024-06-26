@@ -182,10 +182,10 @@ export default function CourseDescEditModal() {
                         className="text-red-500 text-xs"
                       />
                     </div>
-                    <div>
+                    <div className = "">
                       <label
                         htmlFor="title"
-                        className=" text-sm font-bold text-primary"
+                        className=" text-sm font-semibold text-primary"
                       >
                         Course Category
                       </label>

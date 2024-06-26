@@ -30,7 +30,7 @@ const DropDownLevel = ({ setLevel }: Props) => {
       <span className="text-sm font-semibold text-primary pr-52">Level</span>
       <button
         type="button"
-        className="relative w-full mt-1 cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-primary shadow-sm ring-1 ring-inset ring-primary focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+        className="relative w-full cursor-default rounded-md bg-white p-2 pl-3 pr-10 text-left text-primary shadow-sm ring-1 ring-inset ring-primary focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
         aria-haspopup="listbox"
         aria-expanded="true"
         aria-labelledby="listbox-label"

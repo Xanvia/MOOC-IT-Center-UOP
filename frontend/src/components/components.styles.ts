@@ -538,7 +538,7 @@ export const SolidInputFieldClasses = clsx(
   "border-primary",
   "rounded-md",
   "shadow-sm",
-  "p-2 "
+  "p-2"
 );
 
 export const InputLabelClasses2 = clsx(
