@@ -10,14 +10,13 @@ import {
 } from "@/components/components.styles";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import DropDownInstitution from "@/components/DropDown/DropDownUni";
-import {
-  InputFieldClasses,
-  InputInnerDiv,
-  InputOuterDiv,
-} from "@/components/components.styles";
 import Image from "next/image";
 import DropDownLevel from "@/components/DropDown/DropDownLevel";
 import DropDownInterests from "@/components/DropDown/DropDownInterests";
+import { updateCourse, fetchCourseData } from "@/services/course.service";
+import { CourseData, UpdateCourseData } from "@/components/Course/course.types";
+import { toast } from "sonner";
+import { relative } from "path";
 
 const DefaultImage = "/images/course-header.jpg";
 
@@ -26,16 +25,30 @@ interface Interest {
   label: string;
 }
 
+interface FromValues {
+  title: string;
+  duration: string;
+}
 
-export default function CourseDescEditModal() {
+interface Props{
+  courseData: CourseData;
+  reloadData: () => void;
+}
+
+
+export default function CourseDescEditModal({courseData,reloadData}:Props) {
+  const courseId = courseData.id;
   const [isOpen, setIsOpen] = useState(false);
-  const [category, setCategory] = useState<Interest>();
+  const [category, setCategory] = useState<Interest>(courseData.category);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(DefaultImage);
+  const [selectedLevel, setSelectedLevel] = useState<string>(courseData.difficulty);
+  const [selectedInstitution, setSelectedInstitution] = useState<string | null>(courseData.institution);
 
-  const [selectedInstitution, setSelectedInstitution] = useState<string | null>(
-    null
-  );
+  const initialValues = {
+    title: courseData.name || "",
+    duration: courseData.duration || "",
+  };
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -53,8 +66,6 @@ export default function CourseDescEditModal() {
   };
 
 
-  const handleDelete = () => {};
-
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setImageFile(event.target.files[0]);
@@ -62,8 +73,34 @@ export default function CourseDescEditModal() {
     }
   };
 
-  const handleSubmit = (values: any) => {
-    console.log(values);
+  const handleSubmit = async (values: FromValues) => {
+    if (selectedInstitution === "") {
+      toast.error("Please select an Institution");
+      return;
+    } else if (category === undefined) {
+      toast.error("Please select a category");
+      return;
+    } else if (selectedLevel === "") {
+      toast.error("Please select a difficulty");
+      return;
+    }
+    const data: UpdateCourseData = {
+      name: values.title,
+      category: category.id,
+      institution: selectedInstitution,
+      level: selectedLevel,
+      duration: values.duration,
+      imageFile: imageFile,
+    };
+    try {
+      await updateCourse(courseId as number, data );
+      toast.success("Course updated successfully!");
+      reloadData();
+      setIsOpen(false);
+    } catch (error: any) {
+      const errorMessage = error.message ?? "Failed to edit course";
+      toast.error(errorMessage);
+    }
   };
 
   return (
@@ -144,17 +181,11 @@ export default function CourseDescEditModal() {
             </div>
 
             <Formik
-              initialValues={{
-                title: "",
-                category: "",
-                duration: "",
-                description: "",
-              }}
+              initialValues={initialValues
+              }
               validationSchema={Yup.object({
                 title: Yup.string().required("Course title is required"),
-                category: Yup.string().required("Course category is required"),
                 duration: Yup.string().required("Course duration is required"),
-                description: Yup.string().required("Description is required"),
               })}
               onSubmit={handleSubmit}
             >
@@ -182,16 +213,16 @@ export default function CourseDescEditModal() {
                         className="text-red-500 text-xs"
                       />
                     </div>
-                    <div>
+                    <div className = "">
                       <label
                         htmlFor="title"
-                        className=" text-sm font-bold text-primary"
+                        className=" text-sm font-semibold text-primary"
                       >
                         Course Category
                       </label>
                       <DropDownInterests
                         addSelection={handleCategoryChange}
-                        value="Select Course Category"
+                        value={category.label}
                       />
                     </div>
                     <div>
@@ -204,7 +235,7 @@ export default function CourseDescEditModal() {
                       />
                     </div>
                     <div>
-                      <DropDownLevel setLevel={(value: string) => {}} />
+                      <DropDownLevel value={selectedLevel} setLevel={setSelectedLevel} />
                     </div>
                     <div>
                       <label htmlFor="duration" className={InputLabelClasses2}>
@@ -228,7 +259,7 @@ export default function CourseDescEditModal() {
                       />
                     </div>
 
-                    <div className="col-span-2">
+                    {/* <div className="col-span-2">
                       <div className={InputOuterDiv}>
                         <div className={`h-20 ${InputInnerDiv} `}>
                           <label
@@ -251,7 +282,7 @@ export default function CourseDescEditModal() {
                           />
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     <div className="flex justify-end mt-6 mb-2 col-span-2">
                       <SolidButton
                         type="submit"

@@ -1,5 +1,6 @@
 "use client";
 import React, { lazy, useState } from "react";
+import { CourseData } from "../../course.types";
 const CourseContent = lazy(
   () => import("@/components/Course/CourseHome/CourseContent")
 );
@@ -10,18 +11,12 @@ const DescriptionTab = lazy(() => import("./DescriptionTab"));
 const InstructorTab = lazy(() => import("./InstructorTab"));
 
 interface CourseDetailsTabsProps {
-  courseTitle: string;
-  description: string;
-  outcomes: string[];
-  specifications: string;
+  courseData: CourseData;
+  isEdit: boolean;
+  reloadData: () => void;
 }
 
-const CourseDetailsTabs = ({
-  courseTitle,
-  description,
-  outcomes,
-  specifications,
-}: CourseDetailsTabsProps) => {
+const CourseDetailsTabs = ({ courseData, isEdit,reloadData }: CourseDetailsTabsProps) => {
   const [activeTab, setActiveTab] = useState("Description");
 
   const tabs = ["Description", "Instructor", "Syllabus", "Outcomes"];
@@ -45,10 +40,20 @@ const CourseDetailsTabs = ({
           ))}
         </div>
       </div>
-      {activeTab === "Description" && <DescriptionTab courseTitle={courseTitle} description={description} specifications={specifications} />}
+      {activeTab === "Description" && (
+        <DescriptionTab
+          courseId={courseData.id}
+          isEdit={isEdit}
+          headerImage={courseData.header_image}
+          courseTitle={courseData.name}
+          specifications={courseData.specifications}
+          description={courseData.description}
+          relaodData={reloadData}
+        />
+      )}
       {activeTab === "Instructor" && <InstructorTab />}
       {activeTab !== "Outcomes" && <CourseContent />}
-      <CourseOutcomes outcomes={outcomes} />
+      <CourseOutcomes outcomes={courseData.outcomes} />
     </>
   );
 };

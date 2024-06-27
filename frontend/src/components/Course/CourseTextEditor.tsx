@@ -2,12 +2,17 @@
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
+import SolidButton from "../Buttons/SolidButton";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
+interface Props {
+  initialValue?: string;
+  onClick: (value: string) => void;
+}
 
-const TextEditor: React.FC = () => {
-  const [value, setValue] = useState<string>("");
+const TextEditor: React.FC<Props> = ({ initialValue, onClick }) => {
+  const [value, setValue] = useState<string>(initialValue ?? "");
 
   const handleChange = (content: string, _: any, __: any, editor: any) => {
     setValue(content);
@@ -30,7 +35,6 @@ const TextEditor: React.FC = () => {
                 { indent: "-1" },
                 { indent: "+1" },
               ],
-              ["link", "image"],
               ["clean"],
             ],
           }}
@@ -47,10 +51,12 @@ const TextEditor: React.FC = () => {
             "bullet",
             "indent",
             "link",
-            "image",
           ]}
         />
       )}
+      <div className="flex justify-end mt-8">
+        <SolidButton type="button" text="S A V E" onClick={() => onClick(value)} />
+      </div>
     </div>
   );
 };
