@@ -18,10 +18,11 @@ from datetime import timedelta
 from django.conf.urls.static import static
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # stored files.
-MEDIA_URL = "/media/"
+MEDIA_URL = '/media/'
+
 
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -46,7 +47,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["mooc-it-center-uop-api.onrender.com", "127.0.0.1"]
+ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS"),"127.0.0.1"]
 
 
 # Application definition
@@ -104,7 +105,7 @@ WSGI_APPLICATION = "mooc.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DJANGO_ENV =os.getenv("DJANGO_ENV")
+# DJANGO_ENV =os.getenv("DJANGO_ENV") 
 DJANGO_ENV = "production"
 
 if DJANGO_ENV == "production":
