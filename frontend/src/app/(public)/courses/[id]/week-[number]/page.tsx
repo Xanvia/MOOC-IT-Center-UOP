@@ -1,10 +1,10 @@
 import React from "react";
+import Note from "@/components/Course/Note/Note";
 
 const Page: React.FC = () => {
   return (
     <div className="flex-grow p-4">
-      <h1 className="text-xl font-bold"></h1>
-      <div className="mt-4"></div>
+      <Note/>
     </div>
   );
 };
