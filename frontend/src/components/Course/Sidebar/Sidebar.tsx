@@ -68,10 +68,10 @@ const Sidebar: React.FC = () => {
         {weeks.map((week, weekIndex) => (
           <div
             key={weekIndex}
-            className="mb-8 mx-2 border-b pb-2 border-gray-200"
+            className="mb-8 mx-2 pb-2 "
           >
             <h4
-              className="text-md font-medium text-primary border-b pb-1 mb-2 border-gray-400 cursor-pointer"
+              className="text-md font-medium text-primary pb-1 mb-2 cursor-pointer"
               onClick={() => toggleWeek(weekIndex)}
             >
               {week.weekname}
