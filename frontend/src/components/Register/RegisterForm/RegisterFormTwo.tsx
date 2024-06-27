@@ -155,7 +155,7 @@ const RegistrationFormTwo: React.FC = () => {
             </div>
           </div>
           <br />
-          <div className="mt-6">
+          <div className="mt-6 w-80">
             <DropDownInterests
               addSelection={addItem}
               value="Choose Your Intereting Fields"

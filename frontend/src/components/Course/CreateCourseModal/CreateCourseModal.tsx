@@ -81,7 +81,7 @@ export default function CreateCourseModal() {
       {isOpen && (
         <div className={ModalClassesBG} onMouseDown={handleInsideClick}>
           <div
-            className="bg-white p-20 px-md rounded-lg shadow-lg relative max-w-3xl w-full"
+            className="bg-white py-10 px-5 sm:px-10 rounded-lg shadow-lg relative max-w-3xl w-full"
             onMouseDown={handleOutsideClick}
           >
             <CloseButton onClick={toggleModal} />
@@ -97,7 +97,7 @@ export default function CreateCourseModal() {
             >
               {(formik) => (
                 <Form>
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-2 sm:gap-2 md:gap-6">
                     <div className="col-span-2 mb-4 md:px-5 lg:px-10">
                       <label
                         htmlFor="title"
