@@ -110,7 +110,7 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
       {isOpen && (
         <div className={`${ModalClassesBG} flex justify-center items-center`} onMouseDown={handleInsideClick}>
           <div
-            className="relative bg-white ring-4 ring-primary_light p-6 md:p-10 grid rounded-lg shadow-lg max-w-3xl w-full mx-4 md:mx-auto overflow-auto"
+            className="relative bg-white ring-4 ring-primary_light p-6 md:p-10 grid rounded-lg shadow-lg max-w-3xl w-full h-full md:mx-4 lg:mx-auto overflow-auto"
             style={{ maxHeight: '95vh' }}
             onMouseDown={handleOutsideClick}
           >
@@ -195,7 +195,7 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
             >
               {(formik) => (
                 <Form>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 sm:mx-10">
                   <div className="col-span-1 md:col-span-2">
                     <label htmlFor="title" className={InputLabelClasses2}>
                       Course Title
