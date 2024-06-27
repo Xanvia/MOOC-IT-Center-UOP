@@ -37,7 +37,6 @@ urlpatterns = [
     path(
         "api/institutions/", InstitutionsListAPIView.as_view(), name="institutions-list"
     ),
-    path('api/', include('courses.urls')),
 ]
 
 
