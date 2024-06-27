@@ -5,16 +5,15 @@ import PrimaryButton from "@/components/Buttons/PrimaryButton";
 import CourseDescEditModal from "./CourseDescEditModal";
 import { CourseData } from "../course.types";
 
-const headerImage = "/images/course-header.jpg";
 
 interface CourseHeaderProps {
-courseData: CourseData
-reloadData: () => void;
+  courseData: CourseData;
+  reloadData: () => void;
 }
 
 const CourseHeader: React.FC<CourseHeaderProps> = ({
   courseData,
-  reloadData
+  reloadData,
 }) => {
   const [isEdit, setIsEdit] = useState(true);
 
@@ -24,7 +23,7 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
     <>
       <div className="bg-gradient-to-tl from-gray-600 to-gray-800 h-96 w-full relative">
         <Image
-          src={courseData.header_image}
+          src={courseData.header_image || ""}
           alt="Computer"
           layout="fil"
           width={2000}
@@ -44,7 +43,7 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
             </div>
             <div>
               <h2 className="text-white space-y-6 text-base sm:text-xl lg:text-2xl font-semibold ">
-              {courseData.course_creator.full_name}
+                {courseData.course_creator.full_name}
               </h2>
               <h2 className="text-white space-y-6 text-sm">
                 {courseData.course_creator.headline}
@@ -53,7 +52,10 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
           </div>
           <div className="relative mt-10 sm:mt-10 md:mt-14 sm:ml-20 ml-2">
             {isEdit ? (
-              <CourseDescEditModal courseData={courseData} reloadData={reloadData} />
+              <CourseDescEditModal
+                courseData={courseData}
+                reloadData={reloadData}
+              />
             ) : (
               <PrimaryButton text="E N R O L" onClick={handleClick} />
             )}

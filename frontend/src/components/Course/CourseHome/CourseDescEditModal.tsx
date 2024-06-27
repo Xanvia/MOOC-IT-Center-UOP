@@ -16,7 +16,6 @@ import DropDownInterests from "@/components/DropDown/DropDownInterests";
 import { updateCourse, fetchCourseData } from "@/services/course.service";
 import { CourseData, UpdateCourseData } from "@/components/Course/course.types";
 import { toast } from "sonner";
-import { relative } from "path";
 
 const DefaultImage = "/images/course-header.jpg";
 
@@ -30,20 +29,25 @@ interface FromValues {
   duration: string;
 }
 
-interface Props{
+interface Props {
   courseData: CourseData;
   reloadData: () => void;
 }
 
-
-export default function CourseDescEditModal({courseData,reloadData}:Props) {
+export default function CourseDescEditModal({ courseData, reloadData }: Props) {
   const courseId = courseData.id;
   const [isOpen, setIsOpen] = useState(false);
   const [category, setCategory] = useState<Interest>(courseData.category);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(courseData.header_image);
-  const [selectedLevel, setSelectedLevel] = useState<string>(courseData.difficulty);
-  const [selectedInstitution, setSelectedInstitution] = useState<string | null>(courseData.institution);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(
+    courseData.header_image
+  );
+  const [selectedLevel, setSelectedLevel] = useState<string>(
+    courseData.difficulty
+  );
+  const [selectedInstitution, setSelectedInstitution] = useState<string | null>(
+    courseData.institution
+  );
 
   const initialValues = {
     title: courseData.name || "",
@@ -64,7 +68,6 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
   const handleCategoryChange = (value: Interest) => {
     setCategory(value);
   };
-
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -93,7 +96,7 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
       imageFile: imageFile,
     };
     try {
-      await updateCourse(courseId as number, data );
+      await updateCourse(courseId as number, data);
       toast.success("Course updated successfully!");
       reloadData();
       setIsOpen(false);
@@ -108,21 +111,27 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
       <EditButtonPrimary text="E D I T" onClick={toggleModal} />
 
       {isOpen && (
-        <div className={`${ModalClassesBG} flex justify-center items-center`} onMouseDown={handleInsideClick}>
+        <div
+          className={`${ModalClassesBG} flex justify-center items-center`}
+          onMouseDown={handleInsideClick}
+        >
           <div
             className="relative bg-white ring-4 ring-primary_light p-6 md:p-10 grid rounded-lg shadow-lg max-w-3xl w-full h-full md:mx-4 lg:mx-auto overflow-auto"
-            style={{ maxHeight: '95vh' }}
+            style={{ maxHeight: "95vh" }}
             onMouseDown={handleOutsideClick}
           >
-            <h1 className=" text-center font-bold text-3xl pb-6 text-primary"> Edit Course Details</h1>
-            
-            <CloseButton onClick={toggleModal}  />
+            <h1 className=" text-center font-bold text-3xl pb-6 text-primary">
+              {" "}
+              Edit Course Details
+            </h1>
+
+            <CloseButton onClick={toggleModal} />
             <label
               htmlFor="profileImageUpload"
               className="cursor-pointer relative inline-block mx-auto"
             >
               <Image
-                src={imagePreviewUrl}
+                src={imagePreviewUrl || ""}
                 alt="Header image"
                 width={900}
                 height={300}
@@ -160,7 +169,6 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
             <div>
               <button
                 type="button"
-
                 className="absolute text-gray-400  top-32 right-14"
                 data-modal-hide="authentication-modal"
                 onClick={() => {}}
@@ -185,8 +193,7 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
             </div>
 
             <Formik
-              initialValues={initialValues
-              }
+              initialValues={initialValues}
               validationSchema={Yup.object({
                 title: Yup.string().required("Course title is required"),
                 duration: Yup.string().required("Course duration is required"),
@@ -195,67 +202,76 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
             >
               {(formik) => (
                 <Form>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 sm:mx-10">
-                  <div className="col-span-1 md:col-span-2">
-                    <label htmlFor="title" className={InputLabelClasses2}>
-                      Course Title
-                    </label>
-                    <Field
-                      type="text"
-                      id="title"
-                      name="title"
-                      className={`${SolidInputFieldClasses} ${
-                        formik.touched.title && formik.errors.title ? "border-primary" : ""
-                      }`}
-                      placeholder="Enter course title"
-                    />
-                    <ErrorMessage
-                      name="title"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
-                  </div>
-                  <div className="col-span-1">
-                    <label
-                      htmlFor="category"
-                      className="text-sm font-semibold text-primary"
-                    >
-                      Course Category
-                    </label>
-                    <DropDownInterests
-                      addSelection={handleCategoryChange}
-                      value={category.label}
-                    />
-                  </div>
-                  <div className="col-span-1">
-                    <DropDownInstitution
-                      label="Institution"
-                      addSelection={(value: string) => setSelectedInstitution(value)}
-                      selectedInstitution={selectedInstitution ?? ""}
-                    />
-                  </div>
-                  <div className="col-span-1">
-                    <DropDownLevel value={selectedLevel} setLevel={setSelectedLevel} />
-                  </div>
-                  <div className="col-span-1">
-                    <label htmlFor="duration" className={InputLabelClasses2}>
-                      Course Duration
-                    </label>
-                    <Field
-                      type="text"
-                      id="duration"
-                      name="duration"
-                      className={`${SolidInputFieldClasses} ${
-                        formik.touched.duration && formik.errors.duration ? "border-primary" : ""
-                      }`}
-                      placeholder="No of weeks"
-                    />
-                    <ErrorMessage
-                      name="duration"
-                      component="div"
-                      className="text-red-500 text-xs"
-                    />
-                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 sm:mx-10">
+                    <div className="col-span-1 md:col-span-2">
+                      <label htmlFor="title" className={InputLabelClasses2}>
+                        Course Title
+                      </label>
+                      <Field
+                        type="text"
+                        id="title"
+                        name="title"
+                        className={`${SolidInputFieldClasses} ${
+                          formik.touched.title && formik.errors.title
+                            ? "border-primary"
+                            : ""
+                        }`}
+                        placeholder="Enter course title"
+                      />
+                      <ErrorMessage
+                        name="title"
+                        component="div"
+                        className="text-red-500 text-xs"
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <label
+                        htmlFor="category"
+                        className="text-sm font-semibold text-primary"
+                      >
+                        Course Category
+                      </label>
+                      <DropDownInterests
+                        addSelection={handleCategoryChange}
+                        value={category.label}
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <DropDownInstitution
+                        label="Institution"
+                        addSelection={(value: string) =>
+                          setSelectedInstitution(value)
+                        }
+                        selectedInstitution={selectedInstitution ?? ""}
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <DropDownLevel
+                        value={selectedLevel}
+                        setLevel={setSelectedLevel}
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <label htmlFor="duration" className={InputLabelClasses2}>
+                        Course Duration
+                      </label>
+                      <Field
+                        type="text"
+                        id="duration"
+                        name="duration"
+                        className={`${SolidInputFieldClasses} ${
+                          formik.touched.duration && formik.errors.duration
+                            ? "border-primary"
+                            : ""
+                        }`}
+                        placeholder="No of weeks"
+                      />
+                      <ErrorMessage
+                        name="duration"
+                        component="div"
+                        className="text-red-500 text-xs"
+                      />
+                    </div>
 
                     {/* <div className="col-span-2">
                       <div className={InputOuterDiv}>

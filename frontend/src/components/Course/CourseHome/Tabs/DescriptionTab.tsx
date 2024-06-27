@@ -4,9 +4,9 @@ import Image from "next/image";
 import TextEditor from "../../CourseTextEditor";
 import "react-quill/dist/quill.snow.css";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
-import classes from "./DescTab.module.css";
 import { addDescription, addSpecifications } from "@/services/course.service";
 import { toast } from "sonner";
+const DefaultImage = "/images/course-header.jpg";
 
 interface CourseDescProps {
   courseId: number;
@@ -74,7 +74,6 @@ const DescriptionTab: React.FC<CourseDescProps> = ({
                   initialValue={description}
                   onClick={handleDescSave}
                 />
-                
               </React.Fragment>
             ) : (
               <div>
@@ -99,7 +98,7 @@ const DescriptionTab: React.FC<CourseDescProps> = ({
             )}
             <div>
               <Image
-                src={headerImage}
+                src={headerImage || ""}
                 alt="Computer"
                 layout="fil"
                 width={1000}
