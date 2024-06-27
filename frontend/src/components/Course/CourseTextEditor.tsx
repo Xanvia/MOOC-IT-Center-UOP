@@ -56,7 +56,11 @@ const TextEditor: React.FC<Props> = ({ initialValue, onClick }) => {
         />
       )}
       <div className="flex justify-end mt-8">
-        <SolidButton type="button" text="S A V E" onClick={() => onClick(value)} />
+        <SolidButton
+          type="button"
+          text="S A V E"
+          onClick={() => onClick(value)}
+        />
       </div>
     </div>
   );

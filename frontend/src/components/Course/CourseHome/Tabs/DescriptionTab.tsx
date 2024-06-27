@@ -6,7 +6,7 @@ import "react-quill/dist/quill.snow.css";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import { addDescription, addSpecifications } from "@/services/course.service";
 import { toast } from "sonner";
-const DefaultImage = "/images/course-header.jpg";
+import "react-quill/dist/quill.snow.css";
 
 interface CourseDescProps {
   courseId: number;
