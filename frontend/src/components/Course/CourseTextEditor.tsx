@@ -22,6 +22,7 @@ const TextEditor: React.FC<Props> = ({ initialValue, onClick }) => {
     <div>
       {ReactQuill && (
         <ReactQuill
+          
           value={value}
           onChange={handleChange}
           modules={{
