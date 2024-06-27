@@ -130,7 +130,7 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
               />
 
               <svg
-                className="w-12 h-12 text-white absolute top-24 right-80"
+                className="w-12 h-12 text-white absolute top-28 md:top-20 lg:top-28 right-10 md:right-60 lg:right-80"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -160,7 +160,8 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
             <div>
               <button
                 type="button"
-                className="absolute top-16 right-14"
+
+                className="absolute text-gray-400  top-32 right-14"
                 data-modal-hide="authentication-modal"
                 onClick={() => {}}
               >
