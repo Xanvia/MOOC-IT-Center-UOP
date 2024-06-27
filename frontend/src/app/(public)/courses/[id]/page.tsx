@@ -42,7 +42,7 @@ export default function CoursesHome() {
     };
 
     loadCourseData();
-  }, [courseId,reload]);
+  }, [courseId, reload]);
 
   const reloadData = () => {
     setReload(!reload);
@@ -55,10 +55,10 @@ export default function CoursesHome() {
   return (
     <>
       <Breadcrumb breadcrumbs={breadcrumbs} />
-      <CourseHeader courseData={courseData}  reloadData={reloadData} />
+      <CourseHeader courseData={courseData} reloadData={reloadData} />
       <CourseHStat
         studentsEnrolled={"21.000+"}
-        duration={courseData.duration}
+        duration={courseData.duration || ""}
         lessons={"30+"}
         activities={"50+"}
         ratings={4.5}
@@ -67,7 +67,11 @@ export default function CoursesHome() {
 
       <div className="bg-white shadow-sm mt-10">
         <div className="container mx-auto p-8">
-          <CourseDetailsTabs isEdit={isEdit} courseData={courseData}  reloadData={reloadData} />
+          <CourseDetailsTabs
+            isEdit={isEdit}
+            courseData={courseData}
+            reloadData={reloadData}
+          />
         </div>
       </div>
 
