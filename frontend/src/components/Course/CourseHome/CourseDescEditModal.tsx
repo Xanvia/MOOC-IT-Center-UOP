@@ -41,7 +41,7 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [category, setCategory] = useState<Interest>(courseData.category);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(DefaultImage);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(courseData.header_image);
   const [selectedLevel, setSelectedLevel] = useState<string>(courseData.difficulty);
   const [selectedInstitution, setSelectedInstitution] = useState<string | null>(courseData.institution);
 
@@ -108,12 +108,15 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
       <EditButtonPrimary text="E D I T" onClick={toggleModal} />
 
       {isOpen && (
-        <div className={ModalClassesBG} onMouseDown={handleInsideClick}>
+        <div className={`${ModalClassesBG} flex justify-center items-center`} onMouseDown={handleInsideClick}>
           <div
-            className="bg-white px-8 pt-6 pb-4 grid rounded-lg shadow-lg relative max-w-3xl w-full"
+            className="relative bg-white ring-4 ring-primary_light p-6 md:p-10 grid rounded-lg shadow-lg max-w-3xl w-full mx-4 md:mx-auto overflow-auto"
+            style={{ maxHeight: '95vh' }}
             onMouseDown={handleOutsideClick}
           >
-            <CloseButton onClick={toggleModal} />
+            <h1 className=" text-center font-bold text-3xl pb-6 text-primary"> Edit Course Details</h1>
+            
+            <CloseButton onClick={toggleModal}  />
             <label
               htmlFor="profileImageUpload"
               className="cursor-pointer relative inline-block mx-auto"
@@ -191,73 +194,67 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
             >
               {(formik) => (
                 <Form>
-                  <div className="grid grid-cols-2 gap-4 mt-6">
-                    <div className="col-span-2">
-                      <label htmlFor="title" className={InputLabelClasses2}>
-                        Course Title
-                      </label>
-                      <Field
-                        type="text"
-                        id="title"
-                        name="title"
-                        className={`${SolidInputFieldClasses} ${
-                          formik.touched.title && formik.errors.title
-                            ? "border-primary"
-                            : ""
-                        }`}
-                        placeholder="Enter course title"
-                      />
-                      <ErrorMessage
-                        name="title"
-                        component="div"
-                        className="text-red-500 text-xs"
-                      />
-                    </div>
-                    <div className = "">
-                      <label
-                        htmlFor="title"
-                        className=" text-sm font-semibold text-primary"
-                      >
-                        Course Category
-                      </label>
-                      <DropDownInterests
-                        addSelection={handleCategoryChange}
-                        value={category.label}
-                      />
-                    </div>
-                    <div>
-                      <DropDownInstitution
-                        label="Institution"
-                        addSelection={(value: string) =>
-                          setSelectedInstitution(value)
-                        }
-                        selectedInstitution={selectedInstitution ?? ""}
-                      />
-                    </div>
-                    <div>
-                      <DropDownLevel value={selectedLevel} setLevel={setSelectedLevel} />
-                    </div>
-                    <div>
-                      <label htmlFor="duration" className={InputLabelClasses2}>
-                        Course Duration
-                      </label>
-                      <Field
-                        type="text"
-                        id="duration"
-                        name="duration"
-                        className={`${SolidInputFieldClasses} ${
-                          formik.touched.duration && formik.errors.duration
-                            ? "border-primary"
-                            : ""
-                        }`}
-                        placeholder="No of weeks"
-                      />
-                      <ErrorMessage
-                        name="duration"
-                        component="div"
-                        className="text-red-500 text-xs"
-                      />
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                  <div className="col-span-1 md:col-span-2">
+                    <label htmlFor="title" className={InputLabelClasses2}>
+                      Course Title
+                    </label>
+                    <Field
+                      type="text"
+                      id="title"
+                      name="title"
+                      className={`${SolidInputFieldClasses} ${
+                        formik.touched.title && formik.errors.title ? "border-primary" : ""
+                      }`}
+                      placeholder="Enter course title"
+                    />
+                    <ErrorMessage
+                      name="title"
+                      component="div"
+                      className="text-red-500 text-xs"
+                    />
+                  </div>
+                  <div className="col-span-1">
+                    <label
+                      htmlFor="category"
+                      className="text-sm font-semibold text-primary"
+                    >
+                      Course Category
+                    </label>
+                    <DropDownInterests
+                      addSelection={handleCategoryChange}
+                      value={category.label}
+                    />
+                  </div>
+                  <div className="col-span-1">
+                    <DropDownInstitution
+                      label="Institution"
+                      addSelection={(value: string) => setSelectedInstitution(value)}
+                      selectedInstitution={selectedInstitution ?? ""}
+                    />
+                  </div>
+                  <div className="col-span-1">
+                    <DropDownLevel value={selectedLevel} setLevel={setSelectedLevel} />
+                  </div>
+                  <div className="col-span-1">
+                    <label htmlFor="duration" className={InputLabelClasses2}>
+                      Course Duration
+                    </label>
+                    <Field
+                      type="text"
+                      id="duration"
+                      name="duration"
+                      className={`${SolidInputFieldClasses} ${
+                        formik.touched.duration && formik.errors.duration ? "border-primary" : ""
+                      }`}
+                      placeholder="No of weeks"
+                    />
+                    <ErrorMessage
+                      name="duration"
+                      component="div"
+                      className="text-red-500 text-xs"
+                    />
+                  </div>
 
                     {/* <div className="col-span-2">
                       <div className={InputOuterDiv}>
@@ -283,7 +280,7 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
                         </div>
                       </div>
                     </div> */}
-                    <div className="flex justify-end mt-6 mb-2 col-span-2">
+                    <div className="flex justify-end mt-6 mb-2 col-span-1 md:col-span-2">
                       <SolidButton
                         type="submit"
                         text="S A V E"

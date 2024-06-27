@@ -81,7 +81,7 @@ export default function CreateCourseModal() {
       {isOpen && (
         <div className={ModalClassesBG} onMouseDown={handleInsideClick}>
           <div
-            className="bg-white p-10 px-md rounded-lg shadow-lg relative max-w-3xl w-full"
+            className="bg-white p-20 px-md rounded-lg shadow-lg relative max-w-3xl w-full"
             onMouseDown={handleOutsideClick}
           >
             <CloseButton onClick={toggleModal} />
