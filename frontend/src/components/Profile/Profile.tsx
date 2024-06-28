@@ -36,6 +36,10 @@ const Profile: React.FC<ProfileProps> = ({ profileData, reloadData }) => {
               {profileData.firstname} {profileData.lastname}
             </h1>
             <ProfileInfo
+              headline ={profileData.headline}
+            />
+
+            <ProfileInfo
               email={profileData.email}
               mobile_nubmer={profileData.mobile_number}
               birth_date={profileData.birth_date}

@@ -49,7 +49,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
   const initialValues = {
     firstName: userData.firstname || "",
     lastName: userData.lastname || "",
-    email: userData.email || "",
+    headline: userData.headline || "",
     phoneNumber: userData.mobile_number || "",
     description: userData.description || "",
   };
@@ -209,14 +209,14 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
             <div className={InputOuterDiv}>
               <div className={InputInnerDiv}>
                 <Field
-                  type="email"
-                  name="email"
+                  type="headline"
+                  name="headline"
                   className={InputFieldClasses}
                   placeholder=" "
                   disabled
                 />
                 <ErrorMessage
-                  name="email"
+                  name="headline"
                   component="div"
                   className="top-0 left-0 text-red-600 text-xs"
                 />
