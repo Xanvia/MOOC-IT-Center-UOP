@@ -9,9 +9,13 @@ interface InnerLayoutProps {
 const InnerLayout: React.FC<InnerLayoutProps> = ({ children }) => {
   return (
     <SelectedTopicProvider>
-      <div className="flex">
-        <Sidebar />
-        {children}
+      <div className="flex" style={{ height: '100%' }}>
+        <div style={{ flexShrink: 0 }}>
+          <Sidebar />
+        </div>
+        <div style={{ flexGrow: 1 }}>
+          {children}
+        </div>
       </div>
     </SelectedTopicProvider>
   );
