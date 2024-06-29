@@ -35,10 +35,10 @@ const Profile: React.FC<ProfileProps> = ({ profileData, reloadData }) => {
             <h1 className="text text-primary text-3xl pt-3">
               {profileData.firstname} {profileData.lastname}
             </h1>
-            <ProfileInfo
-              headline ={profileData.headline}
-            />
-
+            <h3>
+              headline
+              {profileData.headline}
+            </h3>
             <ProfileInfo
               email={profileData.email}
               mobile_nubmer={profileData.mobile_number}

@@ -17,11 +17,12 @@ import { toast } from "sonner";
 import { editUserProfile, deleteProfileImage } from "@/services/user.service";
 
 const DefaultProfileImage = "/images/52.jpg";
-
+const maxLength = 10;
 const validationSchema = Yup.object({
   firstName: Yup.string().required("First Name is Required"),
   lastName: Yup.string().required("Last Name is Required"),
   phoneNumber: Yup.string().required("Phone number is Required"),
+  headline :Yup.string().max(maxLength,"limit exist")
 });
 
 interface Props {
@@ -33,6 +34,7 @@ interface EditFromValues {
   lastName: string;
   phoneNumber: string;
   description: string;
+  headline : string;
 }
 
 const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
@@ -86,6 +88,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
         firstName: values.firstName,
         lastName: values.lastName,
         description: values.description,
+        headline: values.headline,
         phoneNumber: values.phoneNumber,
         country: country,
         birthDate: birthDate,
@@ -97,6 +100,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
     } catch (error: any) {
       toast.error(error.message);
     }
+    
   };
 
   return (
@@ -213,14 +217,15 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
                   name="headline"
                   className={InputFieldClasses}
                   placeholder=" "
-                  disabled
+                  maxLength="30"
+                
                 />
                 <ErrorMessage
                   name="headline"
                   component="div"
                   className="top-0 left-0 text-red-600 text-xs"
                 />
-                <label className={InputLabel}>Email</label>
+                <label className={InputLabel}>Headline</label>
               </div>
             </div>
             <div className={InputOuterDiv}>
@@ -264,6 +269,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
                   name="description"
                   className={InputFieldClasses}
                   placeholder=" "
+                  maxLength="10"
                 />
                 <ErrorMessage
                   name="description"

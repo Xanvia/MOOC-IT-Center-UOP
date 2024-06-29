@@ -55,6 +55,7 @@ export interface EditProfileData {
   firstName: string;
   lastName: string;
   description: string;
+  headline:string ;
   phoneNumber: string;
   country: { id: number; label: string };
   birthDate: Date | null;
