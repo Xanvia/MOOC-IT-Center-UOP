@@ -17,7 +17,9 @@ import { toast } from "sonner";
 import { editUserProfile, deleteProfileImage } from "@/services/user.service";
 
 const DefaultProfileImage = "/images/52.jpg";
-const maxLength = 10;
+
+const maxLength = 29;
+
 const validationSchema = Yup.object({
   firstName: Yup.string().required("First Name is Required"),
   lastName: Yup.string().required("Last Name is Required"),
@@ -43,6 +45,8 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(
     userData.profile_image || userData.profile_picture || DefaultProfileImage
   );
+
+  
 
   const [birthDate, setBirthDate] = useState<Date | null>(
     new Date(userData.birth_date)
@@ -235,6 +239,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
                   name="phoneNumber"
                   className={InputFieldClasses}
                   placeholder=" "
+                  maxLength="10"
                 />
                 <ErrorMessage
                   name="phoneNumber"
