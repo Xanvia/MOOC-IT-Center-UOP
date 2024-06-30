@@ -16,7 +16,6 @@ import DropDownInterests from "@/components/DropDown/DropDownInterests";
 import { updateCourse, fetchCourseData } from "@/services/course.service";
 import { CourseData, UpdateCourseData } from "@/components/Course/course.types";
 import { toast } from "sonner";
-import { relative } from "path";
 
 const DefaultImage = "/images/course-header.jpg";
 
@@ -30,20 +29,25 @@ interface FromValues {
   duration: string;
 }
 
-interface Props{
+interface Props {
   courseData: CourseData;
   reloadData: () => void;
 }
 
-
-export default function CourseDescEditModal({courseData,reloadData}:Props) {
+export default function CourseDescEditModal({ courseData, reloadData }: Props) {
   const courseId = courseData.id;
   const [isOpen, setIsOpen] = useState(false);
   const [category, setCategory] = useState<Interest>(courseData.category);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(DefaultImage);
-  const [selectedLevel, setSelectedLevel] = useState<string>(courseData.difficulty);
-  const [selectedInstitution, setSelectedInstitution] = useState<string | null>(courseData.institution);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(
+    courseData.header_image
+  );
+  const [selectedLevel, setSelectedLevel] = useState<string>(
+    courseData.difficulty
+  );
+  const [selectedInstitution, setSelectedInstitution] = useState<string | null>(
+    courseData.institution
+  );
 
   const initialValues = {
     title: courseData.name || "",
@@ -64,7 +68,6 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
   const handleCategoryChange = (value: Interest) => {
     setCategory(value);
   };
-
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -93,7 +96,7 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
       imageFile: imageFile,
     };
     try {
-      await updateCourse(courseId as number, data );
+      await updateCourse(courseId as number, data);
       toast.success("Course updated successfully!");
       reloadData();
       setIsOpen(false);
@@ -108,18 +111,27 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
       <EditButtonPrimary text="E D I T" onClick={toggleModal} />
 
       {isOpen && (
-        <div className={ModalClassesBG} onMouseDown={handleInsideClick}>
+        <div
+          className={`${ModalClassesBG} flex justify-center items-center`}
+          onMouseDown={handleInsideClick}
+        >
           <div
-            className="bg-white px-8 pt-6 pb-4 grid rounded-lg shadow-lg relative max-w-3xl w-full"
+            className="relative bg-white ring-4 ring-primary_light p-6 md:p-10 grid rounded-lg shadow-lg max-w-3xl w-full h-full md:mx-4 lg:mx-auto overflow-auto"
+            style={{ maxHeight: "95vh" }}
             onMouseDown={handleOutsideClick}
           >
+            <h1 className=" text-center font-bold text-3xl pb-6 text-primary">
+              {" "}
+              Edit Course Details
+            </h1>
+
             <CloseButton onClick={toggleModal} />
             <label
               htmlFor="profileImageUpload"
               className="cursor-pointer relative inline-block mx-auto"
             >
               <Image
-                src={imagePreviewUrl}
+                src={imagePreviewUrl || ""}
                 alt="Header image"
                 width={900}
                 height={300}
@@ -127,7 +139,7 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
               />
 
               <svg
-                className="w-12 h-12 text-white absolute top-24 right-80"
+                className="w-12 h-12 text-white absolute top-28 md:top-20 lg:top-28 right-10 md:right-60 lg:right-80"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -157,7 +169,7 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
             <div>
               <button
                 type="button"
-                className="absolute top-16 right-14"
+                className="absolute text-gray-400  top-32 right-14"
                 data-modal-hide="authentication-modal"
                 onClick={() => {}}
               >
@@ -181,8 +193,7 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
             </div>
 
             <Formik
-              initialValues={initialValues
-              }
+              initialValues={initialValues}
               validationSchema={Yup.object({
                 title: Yup.string().required("Course title is required"),
                 duration: Yup.string().required("Course duration is required"),
@@ -191,8 +202,8 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
             >
               {(formik) => (
                 <Form>
-                  <div className="grid grid-cols-2 gap-4 mt-6">
-                    <div className="col-span-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 sm:mx-10">
+                    <div className="col-span-1 md:col-span-2">
                       <label htmlFor="title" className={InputLabelClasses2}>
                         Course Title
                       </label>
@@ -213,10 +224,10 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
                         className="text-red-500 text-xs"
                       />
                     </div>
-                    <div className = "">
+                    <div className="col-span-1">
                       <label
-                        htmlFor="title"
-                        className=" text-sm font-semibold text-primary"
+                        htmlFor="category"
+                        className="text-sm font-semibold text-primary"
                       >
                         Course Category
                       </label>
@@ -225,7 +236,7 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
                         value={category.label}
                       />
                     </div>
-                    <div>
+                    <div className="col-span-1">
                       <DropDownInstitution
                         label="Institution"
                         addSelection={(value: string) =>
@@ -234,10 +245,13 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
                         selectedInstitution={selectedInstitution ?? ""}
                       />
                     </div>
-                    <div>
-                      <DropDownLevel value={selectedLevel} setLevel={setSelectedLevel} />
+                    <div className="col-span-1">
+                      <DropDownLevel
+                        value={selectedLevel}
+                        setLevel={setSelectedLevel}
+                      />
                     </div>
-                    <div>
+                    <div className="col-span-1">
                       <label htmlFor="duration" className={InputLabelClasses2}>
                         Course Duration
                       </label>
@@ -283,7 +297,7 @@ export default function CourseDescEditModal({courseData,reloadData}:Props) {
                         </div>
                       </div>
                     </div> */}
-                    <div className="flex justify-end mt-6 mb-2 col-span-2">
+                    <div className="flex justify-end mt-6 mb-2 col-span-1 md:col-span-2">
                       <SolidButton
                         type="submit"
                         text="S A V E"

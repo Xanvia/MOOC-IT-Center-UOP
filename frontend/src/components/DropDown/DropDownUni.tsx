@@ -71,7 +71,7 @@ const DropDownInstitution = ({
   return (
     <div className="relative" ref={dropdownRef}>
       <span className="text-sm font-semibold text-primary ">{label}</span>
-      <div className={InputOuterDiv}>
+      <div>
         <div className={InputInnerDiv}>
           <Field
             type="text"
@@ -101,7 +101,8 @@ const DropDownInstitution = ({
 
       {isOpen && institutions && Array.isArray(institutions) && (
         <ul
-          className="absolute z-20 mt-1 w-80 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+        className="absolute z-20 mt-1 max-h-48 w-80  overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+
           tabIndex={-1}
           role="listbox"
           aria-labelledby="listbox-label"
