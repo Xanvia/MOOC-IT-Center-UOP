@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Course
+from .models import Course,Week
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
 
@@ -49,3 +49,11 @@ class CourseSerializer(serializers.ModelSerializer):
         representation["category"] = InterestSerializer(instance.category).data
         representation["institution"] = instance.institution.label
         return representation
+    
+
+class WeekSerializer(serializers.ModelSerializer):
+    course_id = serializers.IntegerField
+
+    class Meta:
+        model = Week
+        fields = ["course_id","name"]

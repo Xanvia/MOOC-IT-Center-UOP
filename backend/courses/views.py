@@ -1,7 +1,9 @@
-from rest_framework import viewsets
-from .models import Course
-from .serializers import CourseSerializer
-
+from rest_framework import viewsets, generics
+from .models import Course, Week
+from .serializers import CourseSerializer, WeekSerializer
+from django.http import JsonResponse
+from rest_framework import status
+from rest_framework.response import Response
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
@@ -50,3 +52,20 @@ class CourseViewSet(viewsets.ModelViewSet):
             "message": "Course updated successfully",
         }
         return response
+    
+
+class WeekCreateView(generics.CreateAPIView):
+    queryset = Week.objects.all()
+    serializer_class = WeekSerializer
+
+    def perform_create(self, serializer):
+        course_id = self.request.data.get('course_id')
+        course = Course.objects.get(id=course_id)
+        serializer.save(course=course)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
