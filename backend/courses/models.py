@@ -37,7 +37,12 @@ class Week(models.Model):
             return 0
         total_progress = sum([chapter.get_progress(user) for chapter in chapters])
         return total_progress / len(chapters)
+    
+    def __str__(self):
+        return self.name
 
+    class Meta:
+        unique_together = ('name', 'course',)
 
 class Chapter(models.Model):
     name = models.CharField(max_length=255)
