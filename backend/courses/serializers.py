@@ -52,8 +52,7 @@ class CourseSerializer(serializers.ModelSerializer):
     
 
 class WeekSerializer(serializers.ModelSerializer):
-    course_id = serializers.IntegerField
 
     class Meta:
         model = Week
-        fields = ["course_id","name"]
+        fields = "__all__"

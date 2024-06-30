@@ -41,6 +41,9 @@ class Week(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        unique_together = ('name', 'course',)
+
 class Chapter(models.Model):
     name = models.CharField(max_length=255)
     week = models.ForeignKey(Week, related_name="chapters", on_delete=models.CASCADE)
