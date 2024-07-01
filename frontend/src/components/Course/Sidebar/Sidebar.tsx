@@ -2,7 +2,7 @@
 import React, { useState, useCallback } from "react";
 import { useSelectedTopic } from "@/contexts/SidebarContext";
 import { initialWeeks } from "@/data/coursedata";
-import { Week } from "@/components/Course/types";
+import { Week, Item, Chapter  } from "@/components/Course/types";
 import SideBarIcon from "@/icons/sideBarIcon";
 import { FaPlus } from "react-icons/fa";
 
@@ -57,7 +57,13 @@ const Sidebar: React.FC = () => {
     if (newItemName.trim() !== '') {
       setWeeks(prevWeeks => {
         const newWeeks = [...prevWeeks];
-        const newItems = [...newWeeks[weekIndex].chapters[chapterIndex].items, { title: newItemName, type: newItemType }];
+        const items = newWeeks[weekIndex].chapters[chapterIndex].items || [];
+        const newItem: Item = {
+          title: newItemName,
+          type: newItemType as "video" | "note" | "quiz", // Ensure type matches the Item type
+          content: ''  // Provide default content value
+        };
+        const newItems = [...items, newItem];
         newWeeks[weekIndex].chapters[chapterIndex] = { ...newWeeks[weekIndex].chapters[chapterIndex], items: newItems };
         return newWeeks;
       });
@@ -66,6 +72,7 @@ const Sidebar: React.FC = () => {
       setShowNewItemInput({ weekIndex: null, chapterIndex: null });
     }
   }, [newItemName, newItemType]);
+  
 
   const handleTopicKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, weekIndex: number) => {
     if (e.key === 'Enter') {
