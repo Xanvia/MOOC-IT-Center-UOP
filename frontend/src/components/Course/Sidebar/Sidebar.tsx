@@ -4,6 +4,7 @@ import { useSelectedTopic } from "@/contexts/SidebarContext";
 import { initialWeeks } from "@/data/coursedata";
 import { Week } from "@/components/Course/types";
 import SideBarIcon from "@/icons/sideBarIcon";
+import { FaPlus } from "react-icons/fa";
 
 const Sidebar: React.FC = () => {
   const { selectedTopic, setSelectedTopic } = useSelectedTopic();
@@ -12,6 +13,10 @@ const Sidebar: React.FC = () => {
   const [expandedSubtopics, setExpandedSubtopics] = useState<{
     [weekIndex: number]: { [subtopicIndex: number]: boolean };
   }>({});
+  const [newTopicName, setNewTopicName] = useState<string>("");
+  const [showNewTopicInput, setShowNewTopicInput] = useState<number | null>(
+    null
+  );
 
   const toggleWeek = (weekIndex: number) => {
     setExpandedWeek(expandedWeek === weekIndex ? null : weekIndex);
@@ -34,20 +39,33 @@ const Sidebar: React.FC = () => {
     ]);
   };
 
-  const addNewTopic = (weekIndex: number) => {
-    setWeeks((prevWeeks) => {
-      const newWeeks = [...prevWeeks];
-      const newChapters = [...newWeeks[weekIndex].chapters];
-      newChapters.push({
-        title: `New Topic ${newChapters.length + 1}`,
-        items: [],
+  const handleAddNewTopic = (weekIndex: number) => {
+    if (newTopicName.trim() !== "") {
+      setWeeks((prevWeeks) => {
+        const newWeeks = [...prevWeeks];
+        const newChapters = [...newWeeks[weekIndex].chapters];
+        newChapters.push({
+          title: newTopicName,
+          items: [],
+        });
+        newWeeks[weekIndex] = {
+          ...newWeeks[weekIndex],
+          chapters: newChapters,
+        };
+        return newWeeks;
       });
-      newWeeks[weekIndex] = {
-        ...newWeeks[weekIndex],
-        chapters: newChapters,
-      };
-      return newWeeks;
-    });
+      setNewTopicName("");
+      setShowNewTopicInput(null);
+    }
+  };
+
+  const handleKeyPress = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    weekIndex: number
+  ) => {
+    if (e.key === "Enter") {
+      handleAddNewTopic(weekIndex);
+    }
   };
 
   return (
@@ -66,10 +84,7 @@ const Sidebar: React.FC = () => {
           </p>
         </div>
         {weeks.map((week, weekIndex) => (
-          <div
-            key={weekIndex}
-            className="mb-8 mx-2 pb-2 "
-          >
+          <div key={weekIndex} className="mb-8 mx-2 pb-2">
             <h4
               className="text-md font-medium text-primary pb-1 mb-2 cursor-pointer"
               onClick={() => toggleWeek(weekIndex)}
@@ -81,7 +96,7 @@ const Sidebar: React.FC = () => {
                 {week.chapters.map((chapter, chapterIndex) => (
                   <div key={chapterIndex}>
                     <h5
-                      className="text-md font-medium ml-4 my-4 cursor-pointer"
+                      className="font-medium ml-4 my-4 cursor-pointer max-w-48 leading-tight"
                       onClick={() => toggleSubtopic(weekIndex, chapterIndex)}
                     >
                       {chapter.title}
@@ -96,7 +111,7 @@ const Sidebar: React.FC = () => {
                                 selectedTopic.title === item.title
                                   ? "font-semibold text-gray-800"
                                   : "text-gray-500"
-                              } transition transform hover:-translate-y-1`}
+                              } `}
                               onClick={() => setSelectedTopic(item)}
                             >
                               <SideBarIcon type={item.type} />
@@ -107,12 +122,31 @@ const Sidebar: React.FC = () => {
                       )}
                   </div>
                 ))}
-                <button
-                  className="w-2/3 ml-4 mt-4 px-2 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-700"
-                  onClick={() => addNewTopic(weekIndex)}
-                >
-                  Add Topic +
-                </button>
+                {showNewTopicInput === weekIndex ? (
+                  <div className="flex ml-4 mt-4">
+                    <input
+                      type="text"
+                      className="border rounded p-2 w-full"
+                      value={newTopicName}
+                      onChange={(e) => setNewTopicName(e.target.value)}
+                      onKeyPress={(e) => handleKeyPress(e, weekIndex)}
+                      placeholder="Enter topic name"
+                    />
+                    <button
+                      className="ml-2 bg-blue-500 text-white p-2 rounded"
+                      onClick={() => handleAddNewTopic(weekIndex)}
+                    >
+                      <FaPlus />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    className="ml-4 mt-4 text-blue-500"
+                    onClick={() => setShowNewTopicInput(weekIndex)}
+                  >
+                    Add Topic +
+                  </button>
+                )}
               </div>
             )}
           </div>
