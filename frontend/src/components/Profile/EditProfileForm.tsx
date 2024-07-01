@@ -18,10 +18,13 @@ import { editUserProfile, deleteProfileImage } from "@/services/user.service";
 
 const DefaultProfileImage = "/images/52.jpg";
 
+const maxLength = 60;
+
 const validationSchema = Yup.object({
   firstName: Yup.string().required("First Name is Required"),
   lastName: Yup.string().required("Last Name is Required"),
   phoneNumber: Yup.string().required("Phone number is Required"),
+  headline: Yup.string().max(maxLength, "Max characters allowed is 60"),
 });
 
 interface Props {
@@ -33,6 +36,7 @@ interface EditFromValues {
   lastName: string;
   phoneNumber: string;
   description: string;
+  headline: string;
 }
 
 const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
@@ -49,7 +53,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
   const initialValues = {
     firstName: userData.firstname || "",
     lastName: userData.lastname || "",
-    email: userData.email || "",
+    headline: userData.headline || "",
     phoneNumber: userData.mobile_number || "",
     description: userData.description || "",
   };
@@ -86,6 +90,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
         firstName: values.firstName,
         lastName: values.lastName,
         description: values.description,
+        headline: values.headline,
         phoneNumber: values.phoneNumber,
         country: country,
         birthDate: birthDate,
@@ -209,18 +214,18 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
             <div className={InputOuterDiv}>
               <div className={InputInnerDiv}>
                 <Field
-                  type="email"
-                  name="email"
+                  type="headline"
+                  name="headline"
                   className={InputFieldClasses}
                   placeholder=" "
-                  disabled
+                  maxLength="60"
                 />
                 <ErrorMessage
-                  name="email"
+                  name="headline"
                   component="div"
                   className="top-0 left-0 text-red-600 text-xs"
                 />
-                <label className={InputLabel}>Email</label>
+                <label className={InputLabel}>Headline</label>
               </div>
             </div>
             <div className={InputOuterDiv}>
@@ -230,6 +235,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
                   name="phoneNumber"
                   className={InputFieldClasses}
                   placeholder=" "
+                  maxLength="10"
                 />
                 <ErrorMessage
                   name="phoneNumber"
@@ -264,6 +270,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
                   name="description"
                   className={InputFieldClasses}
                   placeholder=" "
+                  maxLength="10"
                 />
                 <ErrorMessage
                   name="description"

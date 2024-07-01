@@ -36,6 +36,7 @@ export interface ProfileData {
   id: number;
   profile_picture: string | null;
   profile_image: string | null;
+  headline:string | null;
   description: string | null;
   birth_date: string;
   mobile_number: string;
@@ -54,6 +55,7 @@ export interface EditProfileData {
   firstName: string;
   lastName: string;
   description: string;
+  headline:string ;
   phoneNumber: string;
   country: { id: number; label: string };
   birthDate: Date | null;

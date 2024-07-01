@@ -20,6 +20,7 @@ export const editUserProfile = async (values: EditProfileData) => {
   formData.append("firstname", values.firstName);
   formData.append("lastname", values.lastName);
   formData.append("description", values.description);
+  formData.append("headline", values.headline);
   formData.append("mobile_number", values.phoneNumber);
   formData.append("country", values.country.id.toString());
   if (values.birthDate) {
