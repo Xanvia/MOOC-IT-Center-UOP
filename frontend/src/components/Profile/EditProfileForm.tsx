@@ -18,13 +18,13 @@ import { editUserProfile, deleteProfileImage } from "@/services/user.service";
 
 const DefaultProfileImage = "/images/52.jpg";
 
-const maxLength = 29;
+const maxLength = 60;
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("First Name is Required"),
   lastName: Yup.string().required("Last Name is Required"),
   phoneNumber: Yup.string().required("Phone number is Required"),
-  headline :Yup.string().max(maxLength,"limit exist")
+  headline: Yup.string().max(maxLength, "Max characters allowed is 60"),
 });
 
 interface Props {
@@ -36,7 +36,7 @@ interface EditFromValues {
   lastName: string;
   phoneNumber: string;
   description: string;
-  headline : string;
+  headline: string;
 }
 
 const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
@@ -45,8 +45,6 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>(
     userData.profile_image || userData.profile_picture || DefaultProfileImage
   );
-
-  
 
   const [birthDate, setBirthDate] = useState<Date | null>(
     new Date(userData.birth_date)
@@ -104,7 +102,6 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
     } catch (error: any) {
       toast.error(error.message);
     }
-    
   };
 
   return (
@@ -221,8 +218,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
                   name="headline"
                   className={InputFieldClasses}
                   placeholder=" "
-                  maxLength="30"
-                
+                  maxLength="60"
                 />
                 <ErrorMessage
                   name="headline"
