@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import { Toaster } from "sonner";
 import Navbar from "@/components/Navbar/Navbar";
 import clsx from "clsx";
+import Footer from "@/components/Footer/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
         <Toaster richColors closeButton position="top-right" />
         <Navbar />
         {children}
+        <Footer/>
       </body>
     </html>
   );
