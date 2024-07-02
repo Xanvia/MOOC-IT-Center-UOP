@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Search from "@/components/Search/Search";
 import CourseCard from "@/components/Course/CourseCard/CourseCard";
+import Footer from "@/components/Footer/Footer";
 
 const course1 = "/images/course1.png";
 const course2 = "/images/course2.png";
@@ -73,6 +74,7 @@ export default function Home() {
           image={course2}
         />
       </div>
+      <Footer/>
     </>
   );
 }
