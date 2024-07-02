@@ -166,7 +166,7 @@ const Sidebar: React.FC = () => {
                                 <option value="quiz">Quiz</option>
                               </select>
                               <button
-                                className="ml-2 bg-blue-500 text-white p-2 rounded"
+                                className="ml-2 bg-blue-600 text-white p-2 rounded hover:bg-blue-800"
                                 onClick={() => handleAddNewItem(weekIndex, chapterIndex)}
                               >
                                 <FaPlus />
