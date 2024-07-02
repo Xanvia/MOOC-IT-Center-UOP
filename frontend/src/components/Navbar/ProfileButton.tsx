@@ -4,21 +4,22 @@ import Link from "next/link";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import { API_URL, HOST } from "@/utils/constants";
+import { useGlobal } from "../../contexts/store";
+
 const DefaultProfileImage = "/images/defaultuser.png";
 interface ProfileButtonProps {
   isProfileMenuOpen: boolean;
   toggleProfileMenu: () => void;
   profileMenuRef: RefObject<HTMLDivElement>;
-  handleSignOut: () => void;
 }
 
 const ProfileButton = ({
   isProfileMenuOpen,
   toggleProfileMenu,
   profileMenuRef,
-  handleSignOut,
 }: ProfileButtonProps) => {
   const [ProfileImage, setProfileImage] = useState(DefaultProfileImage);
+  const { setIsLoggedIn, setLoading } = useGlobal();
 
   useEffect(() => {
     const user = Cookies.get("user");
@@ -32,6 +33,15 @@ const ProfileButton = ({
       }
     }
   }, []);
+
+  const onSignOut = () => {
+    Cookies.remove("token");
+    Cookies.remove("user");
+    setIsLoggedIn(false);
+    setLoading(false);
+    window.location.href = "/";
+  };
+
   return (
     <div className="relative ml-3">
       <div>
@@ -78,7 +88,7 @@ const ProfileButton = ({
           <Link
             href="#"
             className="block px-4 py-2 text-sm text-gray-700"
-            onClick={handleSignOut}
+            onClick={onSignOut}
           >
             Sign out
           </Link>

@@ -2,9 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ProfileButton from "./ProfileButton";
 import Link from "next/link";
-import Register from "../Register/Register";
-import Login from "../Login/Login";
-import Cookies from "js-cookie";
+import dynamic from 'next/dynamic';
 import {
   MobileLinkClasses,
   MobileMenuClasses,
@@ -17,8 +15,11 @@ import {
 import Loader from "../Loarder/Loarder";
 import { useGlobal } from "../../contexts/store";
 
+const Login = dynamic(() => import('../Login/Login'), { ssr: false });
+const Register = dynamic(() => import('../Register/Register'), { ssr: false });
+
 const Navbar = () => {
-  const { isLoggedIn, setIsLoggedIn, isLoading, setLoading } = useGlobal();
+  const { isLoggedIn, isLoading } = useGlobal();
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -31,14 +32,6 @@ const Navbar = () => {
     if (isLoggedIn) {
       setIsProfileMenuOpen(!isProfileMenuOpen);
     }
-  };
-
-  const onSignOut = () => {
-    Cookies.remove("token");
-    Cookies.remove("user");
-    setIsLoggedIn(false);
-    setLoading(false);
-    window.location.href = "/";
   };
 
   const handleDocumentClick = (event: MouseEvent) => {
@@ -167,7 +160,6 @@ const Navbar = () => {
                     isProfileMenuOpen={isProfileMenuOpen}
                     toggleProfileMenu={toggleProfileMenu}
                     profileMenuRef={profileMenuRef}
-                    handleSignOut={onSignOut}
                   />
                 </div>
               )}
@@ -197,7 +189,6 @@ const Navbar = () => {
                 isProfileMenuOpen={isProfileMenuOpen}
                 toggleProfileMenu={toggleProfileMenu}
                 profileMenuRef={profileMenuRef}
-                handleSignOut={onSignOut}
               />
             </div>
           </div>
