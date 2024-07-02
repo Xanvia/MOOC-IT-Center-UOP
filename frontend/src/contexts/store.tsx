@@ -33,6 +33,7 @@ export const GlobalContextProvider = ({
     const tokenFromCookie = Cookies.get("token");
     if (tokenFromCookie) {
       setIsLoggedIn(true);
+      setLoading(false);
     }
   }, []);
 
