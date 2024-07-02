@@ -18,6 +18,7 @@ const Sidebar: React.FC = () => {
   const [newItemName, setNewItemName] = useState<string>('');
   const [showNewItemInput, setShowNewItemInput] = useState<{ weekIndex: number | null, chapterIndex: number | null }>({ weekIndex: null, chapterIndex: null });
   const [newItemType, setNewItemType] = useState<string>('video');
+  
 
   const toggleWeek = useCallback((weekIndex: number) => {
     setExpandedWeek(expandedWeek === weekIndex ? null : weekIndex);
@@ -138,7 +139,7 @@ const Sidebar: React.FC = () => {
                             </div>
                           ))}
                           {showNewItemInput.weekIndex === weekIndex && showNewItemInput.chapterIndex === chapterIndex ? (
-                            <div className="flex items-center ml-8 mt-4">
+                            <div className="flex items-center ml-8 my-4">
                               <input
                                 type="text"
                                 className="border rounded p-2 w-full"
@@ -148,7 +149,7 @@ const Sidebar: React.FC = () => {
                                 placeholder="Enter item name"
                               />
                               <select
-                                className="border rounded ml-2 p-2"
+                                className="border rounded ml-2 text-sm p-2"
                                 value={newItemType}
                                 onChange={(e) => setNewItemType(e.target.value)}
                               >
@@ -165,10 +166,10 @@ const Sidebar: React.FC = () => {
                             </div>
                           ) : (
                             <button
-                              className="ml-8 mt-4 text-blue-500 hover:underline flex items-center"
+                              className="w-44 my-4 ml-8 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400"
                               onClick={() => setShowNewItemInput({ weekIndex, chapterIndex })}
                             >
-                              <FaPlus className="mr-1" /> Add Item
+                               Add Item +
                             </button>
                           )}
                         </div>
@@ -194,7 +195,7 @@ const Sidebar: React.FC = () => {
                   </div>
                 ) : (
                   <button
-                    className="ml-4 mt-4 text-blue-500 hover:underline"
+                    className="w-60 mt-4 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400"
                     onClick={() => setShowNewTopicInput(weekIndex)}
                   >
                     Add Topic +
@@ -205,7 +206,7 @@ const Sidebar: React.FC = () => {
           </div>
         ))}
         <button
-          className="w-full mt-4 px-4 py-2 bg-green-500 text-white text-sm rounded hover:bg-green-700"
+          className="w-full mt-4 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400"
           onClick={addNewWeek}
         >
           Add Week +
