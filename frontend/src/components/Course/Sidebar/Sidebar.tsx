@@ -2,9 +2,9 @@
 import React, { useState, useCallback } from "react";
 import { useSelectedTopic } from "@/contexts/SidebarContext";
 import { initialWeeks } from "@/data/coursedata";
-import { Week, Item, Chapter  } from "@/components/Course/types";
+import { Week, Item, Chapter } from "@/components/Course/types";
 import SideBarIcon from "@/icons/sideBarIcon";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaChevronRight, FaChevronDown } from "react-icons/fa";
 
 const Sidebar: React.FC = () => {
   const { selectedTopic, setSelectedTopic } = useSelectedTopic();
@@ -18,7 +18,6 @@ const Sidebar: React.FC = () => {
   const [newItemName, setNewItemName] = useState<string>('');
   const [showNewItemInput, setShowNewItemInput] = useState<{ weekIndex: number | null, chapterIndex: number | null }>({ weekIndex: null, chapterIndex: null });
   const [newItemType, setNewItemType] = useState<string>('video');
-  
 
   const toggleWeek = useCallback((weekIndex: number) => {
     setExpandedWeek(expandedWeek === weekIndex ? null : weekIndex);
@@ -73,7 +72,6 @@ const Sidebar: React.FC = () => {
       setShowNewItemInput({ weekIndex: null, chapterIndex: null });
     }
   }, [newItemName, newItemType]);
-  
 
   const handleTopicKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, weekIndex: number) => {
     if (e.key === 'Enter') {
@@ -105,9 +103,14 @@ const Sidebar: React.FC = () => {
         {weeks.map((week, weekIndex) => (
           <div key={weekIndex} className="mb-8 mx-2 pb-2">
             <h4
-              className="text-md font-medium text-primary pb-1 mb-2 cursor-pointer"
+              className="text-md font-medium text-primary pb-1 mb-2 cursor-pointer flex items-center"
               onClick={() => toggleWeek(weekIndex)}
             >
+              {expandedWeek === weekIndex ? (
+                <FaChevronDown className="mr-2" />
+              ) : (
+                <FaChevronRight className="mr-2" />
+              )}
               {week.weekname}
             </h4>
             {expandedWeek === weekIndex && (
@@ -115,9 +118,14 @@ const Sidebar: React.FC = () => {
                 {week.chapters.map((chapter, chapterIndex) => (
                   <div key={chapterIndex}>
                     <h5
-                      className="font-medium ml-4 my-4 cursor-pointer max-w-48 leading-tight"
+                      className="font-medium ml-4 my-4 cursor-pointer flex items-center max-w-48 leading-tight"
                       onClick={() => toggleSubtopic(weekIndex, chapterIndex)}
                     >
+                      {expandedSubtopics[weekIndex] && expandedSubtopics[weekIndex][chapterIndex] ? (
+                        <FaChevronDown className="mr-2" />
+                      ) : (
+                        <FaChevronRight className="mr-2" />
+                      )}
                       {chapter.title}
                     </h5>
                     {expandedSubtopics[weekIndex] &&
@@ -126,7 +134,7 @@ const Sidebar: React.FC = () => {
                           {chapter.items?.map((item, itemIndex) => (
                             <div key={itemIndex} className="flex items-center">
                               <p
-                                className={`mt-4 ml-8 cursor-pointer ${
+                                className={`my-2 ml-8 cursor-pointer ${
                                   selectedTopic.title === item.title
                                     ? "font-semibold text-gray-800"
                                     : "text-gray-500"
@@ -169,7 +177,7 @@ const Sidebar: React.FC = () => {
                               className="w-44 my-4 ml-8 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400"
                               onClick={() => setShowNewItemInput({ weekIndex, chapterIndex })}
                             >
-                               Add Item +
+                              Add Item +
                             </button>
                           )}
                         </div>
