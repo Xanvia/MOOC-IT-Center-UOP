@@ -1,7 +1,13 @@
 "use-client";
-import { useEffect, useState } from "react";
+import type { Metadata } from "next";
 import Search from "@/components/Search/Search";
 import CourseCard from "@/components/Course/CourseCard/CourseCard";
+
+export const metadata: Metadata = {
+  title: "OpenEd | Home",
+};
+
+
 
 const course1 = "/images/course1.png";
 const course2 = "/images/course2.png";
@@ -73,6 +79,7 @@ export default function Home() {
           image={course2}
         />
       </div>
+      
     </>
   );
 }
