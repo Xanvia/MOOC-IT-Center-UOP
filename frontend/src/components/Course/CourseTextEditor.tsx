@@ -59,7 +59,7 @@ const TextEditor: React.FC<Props> = ({ initialValue, onClick }) => {
         <SolidButton
           type="button"
           text="S A V E"
-          onClick={() =>{}}
+          onClick={()=>onClick(value)}
         />
       </div>
     </div>
