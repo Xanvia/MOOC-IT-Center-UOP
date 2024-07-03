@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-import SolidButton from "../Buttons/SolidButton";
+import SolidButton from "@/components/Buttons/SolidButton";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -11,7 +11,7 @@ interface Props {
   onClick: (value: string) => void;
 }
 
-const TextEditor: React.FC<Props> = ({ initialValue, onClick }) => {
+const NoteEditor: React.FC<Props> = ({ initialValue, onClick }) => {
   const [value, setValue] = useState<string>(initialValue ?? "");
 
   const handleChange = (content: string, _: any, __: any, editor: any) => {
@@ -22,7 +22,7 @@ const TextEditor: React.FC<Props> = ({ initialValue, onClick }) => {
     <div>
       {ReactQuill && (
         <ReactQuill
-          
+          style={{ minHeight: "400px" }}
           value={value}
           onChange={handleChange}
           modules={{
@@ -36,6 +36,7 @@ const TextEditor: React.FC<Props> = ({ initialValue, onClick }) => {
                 { indent: "-1" },
                 { indent: "+1" },
               ],
+              ["link", "image"],
               ["clean"],
             ],
           }}
@@ -52,6 +53,7 @@ const TextEditor: React.FC<Props> = ({ initialValue, onClick }) => {
             "bullet",
             "indent",
             "link",
+            "image",
           ]}
         />
       )}
@@ -59,11 +61,11 @@ const TextEditor: React.FC<Props> = ({ initialValue, onClick }) => {
         <SolidButton
           type="button"
           text="S A V E"
-          onClick={() =>{}}
+          onClick={() => onClick(value)}
         />
       </div>
     </div>
   );
 };
 
-export default TextEditor;
+export default NoteEditor;
