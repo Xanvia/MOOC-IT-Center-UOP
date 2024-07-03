@@ -2,7 +2,7 @@
 import React from "react";
 import NoteEditor from "./NoteEditor";
 
-
+const webimage = "/images/webimagee.jpg";
 
 const Note: React.FC = () => {
   return (
@@ -14,6 +14,7 @@ const Note: React.FC = () => {
         <p className ="mx-10">Web development is the process of creating websites and web applications. It involves various technologies and practices that allow developers to build and maintain web content that can be accessed through browsers. Here are some key subtopics to understand in an introduction to web development: Web development is the process of creating websites and web applications. It involves various technologies and practices that allow developers to build and maintain web content that can be accessed through browsers. Here are some key subtopics to understand in an introduction to web development:</p>
         <p className ="mx-10 m-4">Web development is the process of creating websites and web applications. It involves various technologies and practices that allow developers to build and maintain web content that can be accessed through browsers. Here are some key subtopics to understand in an introduction to web development: Web developmntroduction to web development</p>
         <div className="m-10 ml-16">
+        <img src={webimage} alt="Description of web development" className="w-full h-auto rounded-lg shadow-md mb-6" />
           <h2 className="text-lg text-primary font-semibold mb-4">Key Subtopics</h2>
           <ul className="mx-6 list-disc list-inside space-y-2">
             <li>HTML (HyperText Markup Language)</li>
