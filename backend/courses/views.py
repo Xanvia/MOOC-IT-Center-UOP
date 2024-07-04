@@ -54,7 +54,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         return response
 
 
-class WeekCreateView(viewsets.ModelViewSet):
+class WeekViewSet(viewsets.ModelViewSet):
     queryset = Week.objects.all()
     serializer_class = WeekSerializer
 

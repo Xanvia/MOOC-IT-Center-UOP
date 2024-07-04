@@ -19,12 +19,12 @@ from .models import (
 
 @admin.register(Chapter)
 class ChapterAdmin(admin.ModelAdmin):
-    list_display = ["name", "week"]
+    list_display = ["id", "name", "week"]
 
 
 @admin.register(Week)
 class WeekAdmin(admin.ModelAdmin):
-    list_display = ["name", "course"]
+    list_display = ["id", "name", "course"]
 
 
 @admin.register(Course)
@@ -34,4 +34,4 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Note)
 class NoteAdmin(admin.ModelAdmin):
-    list_display = ["chapter", "text"]
+    list_display = ["id", "chapter", "text"]

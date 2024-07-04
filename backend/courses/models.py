@@ -47,7 +47,6 @@ class  Week(models.Model):
 class Chapter(models.Model):
     name = models.CharField(max_length=255)
     week = models.ForeignKey(Week, related_name="chapters", on_delete=models.CASCADE)
-    content = models.TextField()
 
     def get_progress(self, user):
         components = self.components.all()
