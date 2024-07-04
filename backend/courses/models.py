@@ -27,7 +27,7 @@ class Course(models.Model):
         return total_progress / len(weeks)
 
 
-class Week(models.Model):
+class  Week(models.Model):
     name = models.CharField(max_length=255)
     course = models.ForeignKey(Course, related_name="weeks", on_delete=models.CASCADE)
 
@@ -47,6 +47,7 @@ class Week(models.Model):
 class Chapter(models.Model):
     name = models.CharField(max_length=255)
     week = models.ForeignKey(Week, related_name="chapters", on_delete=models.CASCADE)
+    content = models.TextField()
 
     def get_progress(self, user):
         components = self.components.all()
@@ -54,6 +55,10 @@ class Chapter(models.Model):
             return 0
         total_progress = sum([component.get_progress(user) for component in components])
         return total_progress / len(components)
+    
+    def __str__(self):
+        return self.name
+
 
 
 class Component(models.Model):

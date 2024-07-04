@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Course,Week
+from .models import Course,Week,Chapter
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
 
@@ -56,3 +56,10 @@ class WeekSerializer(serializers.ModelSerializer):
     class Meta:
         model = Week
         fields = "__all__"
+
+class ChapterSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Chapter
+        fields = "__all__"
+
