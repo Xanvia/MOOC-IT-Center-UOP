@@ -1,11 +1,12 @@
 from rest_framework import viewsets, generics
-from .models import Course, Week, Chapter, Note, Image
+from .models import Course, Week, Chapter, Note, Image,Video
 from .serializers import (
     CourseSerializer,
     WeekSerializer,
     ChapterSerializer,
     NoteSerializer,
     ImageSerializer,
+    VideoSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -172,5 +173,21 @@ class ImageUpload(generics.CreateAPIView):
                 "id": response.data["id"],
                 "url": response.data["image"],
             },
+        }
+        return response
+
+class VideoViewSet(viewsets.ModelViewSet):
+    queryset = Video.objects.all()
+    serializer_class = VideoSerializer
+
+
+    def create(self, request, *args, **kwargs):
+
+        request.data["week"] = kwargs["pk"]
+        response = super().create(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+                        "message": "Video created successfully",
         }
         return response
