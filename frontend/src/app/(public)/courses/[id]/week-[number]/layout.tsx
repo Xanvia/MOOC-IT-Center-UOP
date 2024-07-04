@@ -2,6 +2,7 @@ import React from "react";
 import Sidebar from "@/components/Course/Sidebar/Sidebar";
 import { SelectedTopicProvider } from "@/contexts/SidebarContext";
 import Breadcrumb from "@/components/Course/CourseHome/Breadcrumb";
+import Footer from "@/components/Footer/Footer";
 
 interface InnerLayoutProps {
   children: React.ReactNode;
@@ -22,15 +23,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 const InnerLayout: React.FC<InnerLayoutProps> = ({ children }) => {
   return (
     <>
-    <Breadcrumb breadcrumbs={breadcrumbs} />
+      <Breadcrumb breadcrumbs={breadcrumbs} />
       <SelectedTopicProvider>
-        <div className="flex" style={{ height: '100%' }}>
-          <div style={{ flexShrink: 0 }}>
-            <Sidebar />
-          </div>
-          <div style={{ flexGrow: 1 }}>
-            {children}
-          </div>
+        <div className="flex h-full">
+          <Sidebar />
+          <div className="ml-64 p-5 w-full">{children}</div>
         </div>
       </SelectedTopicProvider>
     </>

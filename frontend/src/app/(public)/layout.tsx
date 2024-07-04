@@ -24,7 +24,7 @@ export default function RootLayout({
           <Toaster richColors closeButton position="top-right" />
           <Navbar />
           <div className="flex-grow">{children}</div>
-          <Footer />
+          {/* <Footer /> */}
         </body>
       </html>
     </GlobalContextProvider>
