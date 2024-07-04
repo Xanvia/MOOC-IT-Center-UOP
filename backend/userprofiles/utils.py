@@ -17,7 +17,7 @@ def google_authenticate(code, redirect_uri):
     token_response = requests.post(token_url, data=token_data)
     token_response_data = token_response.json()
     access_token = token_response_data.get("access_token")
-
+   
     return get_user_info(access_token)
 
 def get_user_info(access_token):
@@ -25,6 +25,7 @@ def get_user_info(access_token):
     userinfo_url = "https://www.googleapis.com/oauth2/v2/userinfo"
     userinfo_response = requests.get(userinfo_url, headers={"Authorization": f"Bearer {access_token}"})
     userinfo = userinfo_response.json()
+    
 
     # Organize user info
     user_info = {

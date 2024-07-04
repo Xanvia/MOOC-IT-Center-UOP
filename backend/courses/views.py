@@ -1,6 +1,6 @@
 from rest_framework import viewsets, generics
-from .models import Course, Week
-from .serializers import CourseSerializer, WeekSerializer
+from .models import Course, Week, Chapter
+from .serializers import CourseSerializer, WeekSerializer, ChapterSerializer
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -54,7 +54,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         return response
 
 
-class WeekCreateView(viewsets.ModelViewSet):
+class WeekViewSet(viewsets.ModelViewSet):
     queryset = Week.objects.all()
     serializer_class = WeekSerializer
 
@@ -66,5 +66,20 @@ class WeekCreateView(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Week created successfully",
+        }
+        return response
+    
+class ChapterViewSet(viewsets.ModelViewSet):
+    queryset = Chapter.objects.all()
+    serializer_class = ChapterSerializer
+
+    def create(self, request, *args, **kwargs):
+
+        request.data["week"] = kwargs["pk"]
+        response = super().create(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Chapter created successfully",
         }
         return response
