@@ -1,0 +1,33 @@
+.note h2 {
+    font-size: 1.25rem; /* Equivalent to text-xl */
+    line-height: 1.75rem;
+    color: #007bff; /* Adjust the color as per your primary color */
+    font-weight: 600; /* Equivalent to font-semibold */
+    margin-left: 4rem; /* Equivalent to ml-16 */
+    margin-bottom: 2.5rem; /* Equivalent to mb-10 */
+}
+
+.note p {
+    margin-left: 2.5rem; /* Equivalent to mx-10 */
+    margin-right: 2.5rem; /* Equivalent to mx-10 */
+}
+
+.note div.image-container {
+    margin: 2.5rem; /* Equivalent to m-10 */
+    margin-left: 4rem; /* Equivalent to ml-16 */
+}
+
+.note img {
+    width: 100%; /* Equivalent to w-full */
+    height: auto; /* Equivalent to h-auto */
+    border-radius: 0.5rem; /* Equivalent to rounded-lg */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Equivalent to shadow-md */
+    margin-bottom: 1.5rem; /* Equivalent to mb-6 */
+}
+
+.note ul {
+    list-style-type: disc; /* Equivalent to list-disc */
+    padding-left: 1.5rem; /* Equivalent to list-inside */
+    line-height: 0.5rem;
+}
+
