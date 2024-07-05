@@ -66,10 +66,8 @@ class ChapterSerializer(serializers.ModelSerializer):
 
 
 
-class ComponentSerializer(serializers.ModelSerializer):
+class NoteSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Component
+        model = Note
         fields = "__all__"
-
-        
