@@ -23,11 +23,14 @@ const breadcrumbs: BreadcrumbItem[] = [
 const InnerLayout: React.FC<InnerLayoutProps> = ({ children }) => {
   return (
     <>
-      <Breadcrumb breadcrumbs={breadcrumbs} />
+      
       <SelectedTopicProvider>
         <div className="flex h-full">
-          <Sidebar />
-          <div className="ml-96 p-5 w-full">{children}</div>
+        <Breadcrumb breadcrumbs={breadcrumbs} />
+          <div className = "md:flex relative basis-4/12">
+            <Sidebar />
+          </div>
+          <div className=" p-5 w-full">{children}</div>
         </div>
       </SelectedTopicProvider>
       <div className= "ml"></div>
