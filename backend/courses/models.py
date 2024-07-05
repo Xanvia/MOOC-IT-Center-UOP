@@ -61,48 +61,36 @@ class Chapter(models.Model):
 
 
 class Component(models.Model):
-    name = models.CharField(max_length=255)
-    chapter = models.ForeignKey(
-        Chapter, related_name="components", on_delete=models.CASCADE
+    COMPONENT_TYPES = (
+        ('video', 'Video'),
+        ('note', 'Note'),
+        ('quiz', 'Quiz'),
+        ('coding_assignment', 'CodingAssignment'),
     )
+    name = models.CharField(max_length=255)
+    chapter = models.ForeignKey(Chapter, related_name='components', on_delete=models.CASCADE)
+    component_type = models.CharField(max_length=20, choices=COMPONENT_TYPES)
 
     class Meta:
-        abstract = True
-
-    def get_progress(self, user):
-        progress = self.progress_set.filter(user=user).first()
-        return progress.percentage if progress else 0
-
-
-class Note(Component):
-    text = models.TextField()
-    images = models.ManyToManyField("Image")
-    chapter = models.ForeignKey(Chapter, related_name="notes", on_delete=models.CASCADE)
+        unique_together = ('name', 'chapter', 'component_type')
 
 
 class Video(Component):
-    url = models.URLField()
-    duration = models.CharField(max_length=255)
-    chapter = models.ForeignKey(
-        Chapter, related_name="videos", on_delete=models.CASCADE
-    )
+    video_link = models.URLField()
+    duration = models.CharField(max_length=255, null=True, blank=True)
 
+class Note(Component):
+    content = models.TextField()
 
 class Quiz(Component):
     title = models.CharField(max_length=255)
     deadline = models.DateTimeField(default=timezone.now)
     full_grades = models.IntegerField(default=100)
-    chapter = models.ForeignKey(
-        Chapter, related_name="quizzes", on_delete=models.CASCADE
-    )
-
+    questions = models.JSONField()
 
 class CodingAssignment(Component):
     question = models.TextField()
-    test_cases = models.JSONField(default=list)
-    chapter = models.ForeignKey(
-        Chapter, related_name="coding_assignments", on_delete=models.CASCADE
-    )
+    test_cases = models.JSONField(default=list, blank=True, null=True)
 
 
 class Image(models.Model):
@@ -120,15 +108,13 @@ class Enrollment(models.Model):
 
 
 class Progress(models.Model):
-    enrollement = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    component = GenericForeignKey("content_type", "object_id")
-    percentage = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
+    component = models.ForeignKey(Component, on_delete=models.CASCADE)
+    completed = models.BooleanField(default=False)
 
 
 class Question(models.Model):
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions")
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="quiz_questions")
     text = models.TextField()
 
 

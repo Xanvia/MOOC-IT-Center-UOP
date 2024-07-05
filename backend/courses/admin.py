@@ -34,4 +34,4 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Note)
 class NoteAdmin(admin.ModelAdmin):
-    list_display = ["id", "chapter", "text"]
+    list_display = ["id","content"]
