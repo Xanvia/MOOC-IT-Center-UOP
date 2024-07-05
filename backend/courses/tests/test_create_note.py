@@ -86,3 +86,19 @@ class CreateCourseTest(APITestCase):
             ],
         }
         self.assertEqual(response.data, expected_data)
+
+
+    def test_edit_note(self):
+        note = Note.objects.create(name="test note", content="test content", chapter=self.chapter)
+        url = reverse("note-detail", args=[note.id])
+        data = {
+            "content": "edited content",
+        }
+        response = self.client.put(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        expected_data = {
+            "status": "success",
+            "message": "Note updated successfully",
+        }
+        self.assertEqual(response.data, expected_data)
