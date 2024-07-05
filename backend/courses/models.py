@@ -102,8 +102,8 @@ class CodingAssignment(Component):
 
 
 class Image(models.Model):
+    note = models.ForeignKey(Note, on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(upload_to="note_images/")
-    alt_text = models.CharField(max_length=255)
 
 
 class Enrollment(models.Model):

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Course,Week,Chapter, Component,Note
+from .models import Course,Week,Chapter, Component,Note,Image
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
 
@@ -70,4 +70,10 @@ class NoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Note
+        fields = "__all__"
+
+class ImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Image
         fields = "__all__"
