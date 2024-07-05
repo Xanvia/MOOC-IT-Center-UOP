@@ -103,6 +103,6 @@ class NoteViewSet(viewsets.ModelViewSet):
 
         response.data = {
             "status": "success",
-            "message": "note created successfully",
+            "message": "Note created successfully",
         }
         return response

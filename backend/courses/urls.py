@@ -28,7 +28,7 @@ urlpatterns = [
         name="chapter-list",
     ),
     path(
-        "week/<int:week_id>/chapter/<int:chapter_id>/note/",
+        "week/chapter/<int:chapter_id>/note/",
         NoteViewSet.as_view({"post": "create"}),
         name="note-list",
     ),
