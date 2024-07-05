@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CourseViewSet, WeekViewSet, ChapterViewSet, NoteViewSet
+from .views import CourseViewSet, WeekViewSet, ChapterViewSet
 
 urlpatterns = [
     path(
@@ -26,10 +26,5 @@ urlpatterns = [
         "week/<int:pk>/chapter/",
         ChapterViewSet.as_view({"post": "create"}),
         name="chapter-list",
-    ),
-    path(
-        "week/<int:pk>/chapter/<int:pk>/note",
-        NoteViewSet.as_view({"post": "create"}),
-        name="note-body",
     ),
 ]

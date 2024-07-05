@@ -64,10 +64,12 @@ class ChapterSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class NoteSerializer(serializers.ModelSerializer):
+
+
+class ComponentSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Note
+        model = Component
         fields = "__all__"
 
-
+        
