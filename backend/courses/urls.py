@@ -28,13 +28,13 @@ urlpatterns = [
         name="chapter-list",
     ),
     path(
+        "week/chapter/note/<int:pk>/",
+        NoteViewSet.as_view({"put": "update", "delete": "destroy"}),
+        name="note-detail",
+    ),
+    path(
         "week/chapter/<int:chapter_id>/note/",
         NoteViewSet.as_view({"post": "create"}),
         name="note-list",
-    ),
-    path(
-        "week/chapter/note/<int:pk>",
-        NoteViewSet.as_view({"patch": "update", "delete": "destroy"}),
-        name="note-detail",
     ),
 ]

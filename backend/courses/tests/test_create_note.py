@@ -83,7 +83,6 @@ class CreateCourseTest(APITestCase):
             "status": "fail",
             "message": [
                 ErrorDetail(string='name field is required.', code='required'),
-                ErrorDetail(string='content field is required.', code='required'),
             ],
         }
         self.assertEqual(response.data, expected_data)

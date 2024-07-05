@@ -70,4 +70,4 @@ class NoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Note
-        exclude = ["content"]
+        fields = "__all__"
