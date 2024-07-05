@@ -1,13 +1,12 @@
-import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import { Suspense } from "react";
 
-const Search = dynamic(() => import("@/components/Search/Search"), { ssr: false });
-const CourseCard = dynamic(() => import("@/components/Course/CourseCard/CourseCard"), { ssr: false });
-
-export const metadata: Metadata = {
-  title: "OpenEd | Home",
-};
+const Search = dynamic(() => import("@/components/Search/Search"), {
+  ssr: false,
+});
+const CourseCard = dynamic(
+  () => import("@/components/Course/CourseCard/CourseCard"),
+  { ssr: false }
+);
 
 const course1 = "/images/course1.png";
 const course2 = "/images/course2.png";

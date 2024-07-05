@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import { Toaster } from "sonner";
 import Navbar from "@/components/Navbar/Navbar";
-import Footer from "@/components/Footer/Footer";
 import { GlobalContextProvider } from "@/contexts/store";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -24,7 +23,6 @@ export default function RootLayout({
           <Toaster richColors closeButton position="top-right" />
           <Navbar />
           <div className="flex-grow">{children}</div>
-          {/* <Footer /> */}
         </body>
       </html>
     </GlobalContextProvider>
