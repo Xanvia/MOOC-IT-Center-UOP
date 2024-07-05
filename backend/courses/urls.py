@@ -32,4 +32,9 @@ urlpatterns = [
         NoteViewSet.as_view({"post": "create"}),
         name="note-list",
     ),
+    path(
+        "week/chapter/note/<int:pk>",
+        NoteViewSet.as_view({"patch": "update", "delete": "destroy"}),
+        name="note-detail",
+    ),
 ]

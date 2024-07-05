@@ -109,3 +109,11 @@ class NoteViewSet(viewsets.ModelViewSet):
             },
         }
         return response
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Note updated successfully",
+        }
