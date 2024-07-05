@@ -63,9 +63,11 @@ class ChapterSerializer(serializers.ModelSerializer):
         model = Chapter
         fields = "__all__"
 
+
 class NoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Note
         fields = "__all__"
+
 

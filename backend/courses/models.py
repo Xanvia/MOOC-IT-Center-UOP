@@ -75,27 +75,19 @@ class Component(models.Model):
 
 
 class Note(Component):
-    text = models.TextField()
-    images = models.ManyToManyField("Image")
-    chapter = models.ForeignKey(Chapter, related_name="notes", on_delete=models.CASCADE)
-
+    content = models.TextField()
+    
 
 class Video(Component):
     url = models.URLField()
     duration = models.CharField(max_length=255)
-    chapter = models.ForeignKey(
-        Chapter, related_name="videos", on_delete=models.CASCADE
-    )
-
+    
 
 class Quiz(Component):
     title = models.CharField(max_length=255)
     deadline = models.DateTimeField(default=timezone.now)
     full_grades = models.IntegerField(default=100)
-    chapter = models.ForeignKey(
-        Chapter, related_name="quizzes", on_delete=models.CASCADE
-    )
-
+   
 
 class CodingAssignment(Component):
     question = models.TextField()
