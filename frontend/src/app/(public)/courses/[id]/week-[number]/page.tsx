@@ -3,9 +3,13 @@ import Note from "@/components/Course/Note/Note";
 
 const Page: React.FC = () => {
   return (
-    <div className="flex-grow p-4">
-      <Note/>
-    </div>
+    <>
+      
+      
+      <div className="flex-grow p-4 mb-96">
+        <Note/>
+      </div>
+    </>
   );
 };
 

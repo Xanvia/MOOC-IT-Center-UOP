@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Footer from "@/components/Footer/Footer";
 
 export const metadata: Metadata = {
-  title: "OpenEd | Profile",
+  title: "OpenEd | Home",
 };
 
 export default function RootLayout({
