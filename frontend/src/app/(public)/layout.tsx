@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import { Toaster } from "sonner";
 import Navbar from "@/components/Navbar/Navbar";
 import { GlobalContextProvider } from "@/contexts/store";
+import Footer from "@/components/Footer/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +23,8 @@ export default function RootLayout({
         <body className={`${inter.className} min-h-screen flex flex-col`}>
           <Toaster richColors closeButton position="top-right" />
           <Navbar />
-          <div className="flex-grow">{children}</div>
+          <div className="flex-grow mt-16">{children}</div>
+        <Footer/>
         </body>
       </html>
     </GlobalContextProvider>

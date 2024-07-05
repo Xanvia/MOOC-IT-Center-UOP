@@ -13,7 +13,7 @@ export default function RootLayout({
   return (
     <>
       {children}
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

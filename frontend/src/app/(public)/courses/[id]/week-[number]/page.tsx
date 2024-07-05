@@ -6,7 +6,7 @@ const Page: React.FC = () => {
     <>
       
       
-      <div className="flex-grow p-4">
+      <div className="flex-grow p-4 mb-96">
         <Note/>
       </div>
     </>
