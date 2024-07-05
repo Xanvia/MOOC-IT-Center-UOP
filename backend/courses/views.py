@@ -104,5 +104,8 @@ class NoteViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Note created successfully",
+            "data": {
+                "id": response.data["id"],
+            },
         }
         return response

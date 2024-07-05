@@ -68,6 +68,9 @@ class CreateCourseTest(APITestCase):
         expected_data = {
             "status": "success",
             "message": "Note created successfully",
+            "data":{
+                "id": response.data["data"]["id"],
+            }
         }
         self.assertEqual(response.data, expected_data)
 
