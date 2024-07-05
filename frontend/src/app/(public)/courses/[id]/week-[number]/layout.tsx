@@ -27,9 +27,10 @@ const InnerLayout: React.FC<InnerLayoutProps> = ({ children }) => {
       <SelectedTopicProvider>
         <div className="flex h-full">
           <Sidebar />
-          <div className="ml-64 p-5 w-full">{children}</div>
+          <div className="ml-96 p-5 w-full">{children}</div>
         </div>
       </SelectedTopicProvider>
+      <div className= "ml"></div>
     </>
   );
 };

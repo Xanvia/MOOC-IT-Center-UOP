@@ -61,7 +61,7 @@ const Sidebar: React.FC = () => {
   );
 
   return (
-    <div className="fixed left-0 w-64 bg-gray-white h-full overflow-y-auto mb-96 ">
+    <div className="fixed left-0 w-3/12 bg-gray-white h-full overflow-y-auto mb-96 ">
       <div className="w-84 p-8 border-r bg-white border-gray-200 h-full pb-20 mb-96">
         <div className="mt-4 mb-10">
           <h3 className="text-lg font-semibold">Progress</h3>

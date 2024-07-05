@@ -11,9 +11,9 @@ const Breadcrumbs = ({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) => {
   if (!breadcrumbs || breadcrumbs.length === 0) return null;
 
   return (
-    <nav className="fixed ml-64 bg-primary_light z-40" aria-label="Breadcrumb">
+    <div className="fixed w-full bg-primary_light z-40" aria-label="Breadcrumb">
       <div className="mx-auto max-w-7xl  lg:px-8 p-1">
-        <ol className="inline-flex items-center justify-between md:space-x-3 text-xs text-gray-600">
+        <ol className="relative inline-flex items-center justify-between md:space-x-3 text-xs text-gray-600">
           {breadcrumbs.map((breadcrumb, index) => (
             <li key={breadcrumb.breadcrumb}>
               {breadcrumb.href ? (
@@ -25,7 +25,7 @@ const Breadcrumbs = ({ breadcrumbs }: { breadcrumbs: BreadcrumbItem[] }) => {
           ))}
         </ol>
       </div>
-    </nav>
+    </div>
   );
 };
 
