@@ -66,7 +66,7 @@ const Sidebar: React.FC = () => {
         <div className="mt-4 mb-10">
           <h3 className="text-lg font-semibold">Progress</h3>
           <div className="relative h-2 mt-2 bg-gray-300 rounded">
-            <div className="top-0 left-0 h-full bg-blue-600 rounded w-3/12"></div>
+            <div className="absolute top-0 left-0 h-full bg-blue-600 rounded w-3/12" style={{ width: "25%" }}></div>
           </div>
           <p className="my-2 text-sm text-gray-600">
             4 of the 20 videos have been completed

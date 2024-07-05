@@ -27,7 +27,7 @@ const InnerLayout: React.FC<InnerLayoutProps> = ({ children }) => {
       <SelectedTopicProvider>
         <div className="flex h-full">
         <Breadcrumb breadcrumbs={breadcrumbs} />
-          <div className = "md:flex relative basis-4/12">
+          <div className = " md:flex relative basis-4/12">
             <Sidebar />
           </div>
           <div className=" p-5 w-full">{children}</div>

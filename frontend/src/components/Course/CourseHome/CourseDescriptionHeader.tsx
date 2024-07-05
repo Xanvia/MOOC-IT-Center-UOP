@@ -22,7 +22,8 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
   return (
     <>
       <div className="bg-gradient-to-tl from-gray-600 to-gray-800 h-96 w-full relative">
-        <Image
+        <div className = "mt-8">
+          <Image
           src={courseData.header_image || ""}
           alt="Computer"
           layout="fil"
@@ -31,6 +32,7 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
           className="w-full h-full object-cover absolute mix-blend-overlay"
           priority
         />
+        </div>
         <div className="lg:p-24 sm:p-20 p-10 pb-10 lg:pb-8 sm:pb-8">
           <div className="grid grid-cols-1 md:grid-flow-col gap-6 sm:gap-10 md:gap-24 sm:mx-16 min-h-[150px]">
             <div>
