@@ -128,7 +128,6 @@ class ImageUpload(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         request.data["note"] = kwargs["note_id"]
         response = super().create(request, *args, **kwargs)
-        print(response.data)
 
         response.data = {
             "status": "success",
