@@ -26,16 +26,14 @@ const CourseVideo: React.FC = ({}) => {
                     type="video/mp4" />
             </video>
 
+
             <div className="absolute inset-0 flex justify-center items-center">
-                <button onClick={handlePlayPause} className="bg-yellow-500 p-4 rounded-full shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-16 w-16 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path fill-rule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clip-rule="evenodd" />
+                <button onClick={handlePlayPause} className=" shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out">
+                    <svg className="fill-yellow-400 w-20 h-20"
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 384 512">
+                            
+                        <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/>
                     </svg>
                 </button>
             </div>
