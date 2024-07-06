@@ -105,3 +105,28 @@ export const uploadImage = async (
     throw new Error("Failed to upload image");
   }
 };
+
+export const createNote = async (chapterId: number, content: string) => {
+  try {
+    const response = await axiosInstance.post(
+      `/course/chapter/${chapterId}/note`,
+      {
+        content,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const editNote = async (noteId: number, content: string) => {
+  try {
+    const response = await axiosInstance.put(`/course/note/${noteId}`, {
+      content,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};

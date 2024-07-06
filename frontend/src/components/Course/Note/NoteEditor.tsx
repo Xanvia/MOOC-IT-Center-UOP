@@ -2,12 +2,13 @@ import React, { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { TINY_API_KEY } from "@/utils/constants";
 import { uploadImage } from "@/services/course.service";
-
+import SolidButton from "@/components/Buttons/SolidButton";
 interface TextEditorProps {
   initialData: string;
+  onClick: (value: string) => void;
 }
 
-const TextEditor: React.FC<TextEditorProps> = ({ initialData }) => {
+const TextEditor: React.FC<TextEditorProps> = ({ initialData, onClick }) => {
   const editorRef = useRef<any>(null);
 
   const log = () => {
@@ -22,7 +23,6 @@ const TextEditor: React.FC<TextEditorProps> = ({ initialData }) => {
     failure: any,
     progress: any
   ) => {
-
     try {
       const file = new File([blobInfo.blob()], blobInfo.filename(), {
         type: blobInfo.blob().type,
@@ -31,7 +31,9 @@ const TextEditor: React.FC<TextEditorProps> = ({ initialData }) => {
       const imageUrl = await uploadImage(file, 1);
       if (typeof imageUrl === "string" && imageUrl.length > 0) {
         if (editorRef.current) {
-          editorRef.current.insertContent(`<img src="${imageUrl}" alt="Uploaded Image" />`);
+          editorRef.current.insertContent(
+            `<img src="${imageUrl}" alt="Uploaded Image" />`
+          );
           success(imageUrl as string);
         }
       } else {
@@ -50,7 +52,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ initialData }) => {
         onInit={(evt, editor) => (editorRef.current = editor)}
         initialValue={initialData}
         init={{
-          height: 500,
+          height: 800,
           menubar: true,
           plugins: [
             "advlist",
@@ -83,7 +85,13 @@ const TextEditor: React.FC<TextEditorProps> = ({ initialData }) => {
           file_picker_types: "image",
         }}
       />
-      <button onClick={log}>Log editor content</button>
+      <div className="flex justify-end mt-8">
+        <SolidButton
+          type="button"
+          text="S A V E"
+          onClick={() => onClick(editorRef.current.getContent())}
+        />
+      </div>
     </div>
   );
 };
