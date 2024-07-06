@@ -72,11 +72,15 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
   const customStyles: StylesConfig<OptionType, false> = {
     control: (provided) => ({
       ...provided,
-      display: 'flex',
+      minHeight: '30px',  // Adjust the minimum height
+      height: '36px', 
+      width: '36px',    // Adjust the height
+      padding: '0',       // Remove any extra padding
       alignItems: 'center',
     }),
     singleValue: (provided) => ({
       ...provided,
+      
       display: 'flex',
       alignItems: 'center',
     }),
