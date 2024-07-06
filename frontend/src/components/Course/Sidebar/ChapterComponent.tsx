@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { Chapter, Item } from '@/components/Course/types';
 import { FaChevronRight, FaChevronDown, FaPlus } from 'react-icons/fa';
+import Select, { SingleValueProps, StylesConfig, OptionProps } from 'react-select';
+import SideBarIcon from '@/icons/sideBarIcon';
 import ItemComponent from './ItemComponent';
 
 interface ChapterComponentProps {
@@ -12,6 +14,12 @@ interface ChapterComponentProps {
   addItem: (weekIndex: number, chapterIndex: number, item: Item) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
+}
+
+interface OptionType {
+  value: string;
+  label: string;
+  type: string;
 }
 
 const ChapterComponent: React.FC<ChapterComponentProps> = ({
@@ -28,6 +36,24 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
   const [showNewItemInput, setShowNewItemInput] = useState<boolean>(false);
   const [newItemType, setNewItemType] = useState<string>('video');
 
+  const options: OptionType[] = [
+    { value: 'video', label: 'Video', type: 'video' },
+    { value: 'note', label: 'Note', type: 'note' },
+    { value: 'quiz', label: 'Quiz', type: 'quiz' },
+  ];
+
+  const customSingleValue = ({ data }: SingleValueProps<OptionType>) => (
+    <div className="custom-single-value flex items-center">
+      <SideBarIcon type={data.type} />
+    </div>
+  );
+
+  const customOption = (props: OptionProps<OptionType, false>) => (
+    <div {...props.innerProps} className="custom-option flex items-center">
+      <SideBarIcon type={props.data.type} />
+    </div>
+  );
+
   const handleAddNewItem = useCallback(() => {
     if (newItemName.trim() !== '') {
       addItem(weekIndex, chapterIndex, { title: newItemName, type: newItemType as 'video' | 'note' | 'quiz', content: '' });
@@ -41,6 +67,24 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
     if (e.key === 'Enter') {
       handleAddNewItem();
     }
+  };
+
+  const customStyles: StylesConfig<OptionType, false> = {
+    control: (provided) => ({
+      ...provided,
+      display: 'flex',
+      alignItems: 'center',
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      display: 'flex',
+      alignItems: 'center',
+    }),
+    option: (provided) => ({
+      ...provided,
+      display: 'flex',
+      alignItems: 'center',
+    }),
   };
 
   return (
@@ -70,16 +114,17 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
                 value={newItemName}
                 onChange={(e) => setNewItemName(e.target.value)}
                 placeholder="Enter item name"
+                onKeyPress={handleItemKeyPress}
               />
-              <select
-                className="border rounded ml-2 text-sm p-2"
-                value={newItemType}
-                onChange={(e) => setNewItemType(e.target.value)}
-              >
-                <option value="video">Video</option>
-                <option value="note">Note</option>
-                <option value="quiz">Quiz</option>
-              </select>
+              <Select
+                className="ml-2 text-sm"
+                value={options.find((option) => option.value === newItemType)}
+                onChange={(selectedOption) => setNewItemType(selectedOption?.value || 'video')}
+                options={options}
+                styles={customStyles}
+                components={{ SingleValue: customSingleValue, Option: customOption }}
+                isSearchable={false}
+              />
               <button className="ml-2 bg-blue-600 text-white p-2 rounded hover:bg-blue-800" onClick={handleAddNewItem}>
                 <FaPlus />
               </button>
