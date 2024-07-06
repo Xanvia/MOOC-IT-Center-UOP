@@ -88,7 +88,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      padding: '5px 10px',
+      padding: '20px 10px',
     }),
     dropdownIndicator: (provided) => ({
       ...provided,
@@ -106,7 +106,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
     }),
     input: (provided) => ({
       ...provided,
-      padding: '0',
+      padding: '2px',
       margin: '0',
       display: 'flex',
       alignItems: 'center',
@@ -121,7 +121,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
       ...provided,
       display: 'flex',
       width: '36px',
-      
+      padding: '6px',
       justifyContent: 'center',
       alignItems: 'center',
     }),

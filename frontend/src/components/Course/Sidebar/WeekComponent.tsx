@@ -83,7 +83,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
                 onKeyPress={handleTopicKeyPress}
                 placeholder="Enter topic name"
               />
-              <button className="ml-2 bg-blue-500 text-white p-2 rounded" onClick={handleAddNewTopic}>
+              <button className="ml-2 bg-blue-600 text-white p-2 rounded hover:bg-blue-800" onClick={handleAddNewTopic}>
                 <FaPlus />
               </button>
             </div>
