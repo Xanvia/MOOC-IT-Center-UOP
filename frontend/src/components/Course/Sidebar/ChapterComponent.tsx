@@ -74,22 +74,59 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
       ...provided,
       minHeight: '30px',  // Adjust the minimum height
       height: '36px', 
-      width: '36px',    // Adjust the height
+      width: '72px',    // Adjust the height
       padding: '0',       // Remove any extra padding
       alignItems: 'center',
     }),
     singleValue: (provided) => ({
       ...provided,
-      
       display: 'flex',
       alignItems: 'center',
     }),
     option: (provided) => ({
       ...provided,
       display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: '5px 10px',
+    }),
+    dropdownIndicator: (provided) => ({
+      ...provided,
+      padding: '4px',
+    }),
+    clearIndicator: (provided) => ({
+      ...provided,
+      padding: '4px',
+    }),
+    valueContainer: (provided) => ({
+      ...provided,
+      padding: '0 6px',
+      display: 'flex',
+      alignItems: 'center',
+    }),
+    input: (provided) => ({
+      ...provided,
+      padding: '0',
+      margin: '0',
+      display: 'flex',
+      alignItems: 'center',
+    }),
+    indicatorsContainer: (provided) => ({
+      ...provided,
+      height: '30px',
+      display: 'flex',
+      alignItems: 'center',
+    }),
+    menu: (provided) => ({
+      ...provided,
+      display: 'flex',
+      width: '36px',
+      
+      justifyContent: 'center',
       alignItems: 'center',
     }),
   };
+  
 
   return (
     <div>
@@ -121,7 +158,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
                 onKeyPress={handleItemKeyPress}
               />
               <Select
-                className="ml-2 text-sm"
+                className="ml-2 text-sm mt-0"
                 value={options.find((option) => option.value === newItemType)}
                 onChange={(selectedOption) => setNewItemType(selectedOption?.value || 'video')}
                 options={options}
