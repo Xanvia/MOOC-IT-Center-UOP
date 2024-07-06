@@ -82,17 +82,24 @@ export const addSpecifications = async (
   }
 };
 
-export const uploadImage = async (file: File): Promise<string> => {
+export const uploadImage = async (
+  file: File,
+  noteId: number
+): Promise<string> => {
   const formData = new FormData();
   formData.append("image", file);
 
   try {
-    const response = await axiosInstance.post("/api/upload", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return response.data.url;
+    const response = await axiosInstance.post(
+      `/course/note/${noteId}/image/`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data.data.url;
   } catch (error) {
     console.error("Error uploading image: ", error);
     throw new Error("Failed to upload image");

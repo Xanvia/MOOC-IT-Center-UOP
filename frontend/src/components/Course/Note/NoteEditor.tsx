@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { TINY_API_KEY } from "@/utils/constants";
+import { uploadImage } from "@/services/course.service";
 
 interface TextEditorProps {
   initialData: string;
@@ -15,27 +16,33 @@ const TextEditor: React.FC<TextEditorProps> = ({ initialData }) => {
     }
   };
 
-  const exampleImageUploadHandler : any = (blobInfo: any, success: any, failure: any, progress: any) => {
-    console.log("Uploading image...");
-  
-    // Simulate progress (if provided)
-    if (progress) {
-      progress(50);
-    }
-  
-    // Simulate success after a delay
-    setTimeout(() => {
-      const fakeSuccess = true; // Simulate successful upload
-      if (fakeSuccess) {
-        console.log("Image upload successful!");
-        success("https://example.com/image.jpg"); // Replace with actual uploaded image URL
+  const exampleImageUploadHandler: any = async (
+    blobInfo: any,
+    success: any,
+    failure: any,
+    progress: any
+  ) => {
+
+    try {
+      const file = new File([blobInfo.blob()], blobInfo.filename(), {
+        type: blobInfo.blob().type,
+      });
+
+      const imageUrl = await uploadImage(file, 1);
+      if (typeof imageUrl === "string" && imageUrl.length > 0) {
+        if (editorRef.current) {
+          editorRef.current.insertContent(`<img src="${imageUrl}" alt="Uploaded Image" />`);
+          success(imageUrl as string);
+        }
       } else {
-        console.error("Image upload failed!");
-        failure("Image upload failed!"); // Replace with appropriate failure message
+        throw new Error("Invalid image URL");
       }
-    }, 2000);
+    } catch (error) {
+      console.error("Image upload failed!", error);
+      failure("Image upload failed!");
+    }
   };
-  
+
   return (
     <div>
       <Editor
@@ -72,6 +79,8 @@ const TextEditor: React.FC<TextEditorProps> = ({ initialData }) => {
           content_style:
             "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
           images_upload_handler: exampleImageUploadHandler,
+          automatic_uploads: true,
+          file_picker_types: "image",
         }}
       />
       <button onClick={log}>Log editor content</button>
