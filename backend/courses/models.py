@@ -27,7 +27,7 @@ class Course(models.Model):
         return total_progress / len(weeks)
 
 
-class  Week(models.Model):
+class Week(models.Model):
     name = models.CharField(max_length=255)
     course = models.ForeignKey(Course, related_name="weeks", on_delete=models.CASCADE)
 
@@ -37,12 +37,16 @@ class  Week(models.Model):
             return 0
         total_progress = sum([chapter.get_progress(user) for chapter in chapters])
         return total_progress / len(chapters)
-    
+
     def __str__(self):
         return self.name
 
     class Meta:
-        unique_together = ('name', 'course',)
+        unique_together = (
+            "name",
+            "course",
+        )
+
 
 class Chapter(models.Model):
     name = models.CharField(max_length=255)
@@ -54,33 +58,36 @@ class Chapter(models.Model):
             return 0
         total_progress = sum([component.get_progress(user) for component in components])
         return total_progress / len(components)
-    
+
     def __str__(self):
         return self.name
 
 
-
 class Component(models.Model):
     COMPONENT_TYPES = (
-        ('video', 'Video'),
-        ('note', 'Note'),
-        ('quiz', 'Quiz'),
-        ('coding_assignment', 'CodingAssignment'),
+        ("video", "Video"),
+        ("note", "Note"),
+        ("quiz", "Quiz"),
+        ("coding_assignment", "CodingAssignment"),
     )
     name = models.CharField(max_length=255)
-    chapter = models.ForeignKey(Chapter, related_name='components', on_delete=models.CASCADE)
+    chapter = models.ForeignKey(
+        Chapter, related_name="components", on_delete=models.CASCADE
+    )
     component_type = models.CharField(max_length=20, choices=COMPONENT_TYPES)
 
     class Meta:
-        unique_together = ('name', 'chapter', 'component_type')
+        unique_together = ("name", "chapter", "component_type")
 
 
 class Video(Component):
     video_link = models.URLField()
     duration = models.CharField(max_length=255, null=True, blank=True)
 
+
 class Note(Component):
-    content = models.TextField()
+    content = models.TextField(blank=True, null=True)
+
 
 class Quiz(Component):
     title = models.CharField(max_length=255)
@@ -88,14 +95,15 @@ class Quiz(Component):
     full_grades = models.IntegerField(default=100)
     questions = models.JSONField()
 
+
 class CodingAssignment(Component):
     question = models.TextField()
     test_cases = models.JSONField(default=list, blank=True, null=True)
 
 
 class Image(models.Model):
+    note = models.ForeignKey(Note, on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(upload_to="note_images/")
-    alt_text = models.CharField(max_length=255)
 
 
 class Enrollment(models.Model):
@@ -114,7 +122,9 @@ class Progress(models.Model):
 
 
 class Question(models.Model):
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="quiz_questions")
+    quiz = models.ForeignKey(
+        Quiz, on_delete=models.CASCADE, related_name="quiz_questions"
+    )
     text = models.TextField()
 
 

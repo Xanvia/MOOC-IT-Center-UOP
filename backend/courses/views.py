@@ -1,10 +1,11 @@
 from rest_framework import viewsets, generics
-from .models import Course, Week, Chapter, Note
+from .models import Course, Week, Chapter, Note, Image
 from .serializers import (
     CourseSerializer,
     WeekSerializer,
     ChapterSerializer,
     NoteSerializer,
+    ImageSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -104,5 +105,36 @@ class NoteViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Note created successfully",
+            "data": {
+                "id": response.data["id"],
+            },
+        }
+        return response
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, partial=True, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Note updated successfully",
+        }
+        return response
+
+
+class ImageUpload(generics.CreateAPIView):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+
+    def create(self, request, *args, **kwargs):
+        request.data["note"] = kwargs["note_id"]
+        response = super().create(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Image uploaded successfully",
+            "data": {
+                "id": response.data["id"],
+                "url": response.data["image"],
+            },
         }
         return response

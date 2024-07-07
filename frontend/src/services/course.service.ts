@@ -81,3 +81,55 @@ export const addSpecifications = async (
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const uploadImage = async (
+  file: File,
+  noteId: number
+): Promise<string> => {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  try {
+    const response = await axiosInstance.post(
+      `/course/note/${noteId}/image/`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data.data.url;
+  } catch (error) {
+    console.error("Error uploading image: ", error);
+    throw new Error("Failed to upload image");
+  }
+};
+
+export const createNote = async (chapterId: number, content: string) => {
+  try {
+    const response = await axiosInstance.post(
+      `/course/chapter/${chapterId}/note`,
+      {
+        content,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const editNote = async (noteId: number, content: string) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/week/chapter/note/${noteId}/`,
+      {
+        content,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};

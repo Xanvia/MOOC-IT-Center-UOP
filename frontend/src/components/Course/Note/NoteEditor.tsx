@@ -1,71 +1,99 @@
-"use client";
-import React, { useState } from "react";
-import dynamic from "next/dynamic";
-import "react-quill/dist/quill.snow.css";
+import React, { useRef } from "react";
+import { Editor } from "@tinymce/tinymce-react";
+import { TINY_API_KEY } from "@/utils/constants";
+import { uploadImage } from "@/services/course.service";
 import SolidButton from "@/components/Buttons/SolidButton";
-
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-
-interface Props {
-  initialValue?: string;
+interface TextEditorProps {
+  initialData: string;
   onClick: (value: string) => void;
 }
 
-const NoteEditor: React.FC<Props> = ({ initialValue, onClick }) => {
-  const [value, setValue] = useState<string>(initialValue ?? "");
+const TextEditor: React.FC<TextEditorProps> = ({ initialData, onClick }) => {
+  const editorRef = useRef<any>(null);
 
-  const handleChange = (content: string, _: any, __: any, editor: any) => {
-    setValue(content);
+  const log = () => {
+    if (editorRef.current) {
+      console.log(editorRef.current.getContent());
+    }
+  };
+
+  const exampleImageUploadHandler: any = async (
+    blobInfo: any,
+    success: any,
+    failure: any,
+    progress: any
+  ) => {
+    try {
+      const file = new File([blobInfo.blob()], blobInfo.filename(), {
+        type: blobInfo.blob().type,
+      });
+
+      const imageUrl = await uploadImage(file, 1);
+      if (typeof imageUrl === "string" && imageUrl.length > 0) {
+        if (editorRef.current) {
+          editorRef.current.insertContent(
+            `<img src="${imageUrl}" alt="Uploaded Image" />`
+          );
+          success(imageUrl as string);
+        }
+      } else {
+        throw new Error("Invalid image URL");
+      }
+    } catch (error) {
+      console.error("Image upload failed!", error);
+      failure("Image upload failed!");
+    }
   };
 
   return (
     <div>
-      {ReactQuill && (
-        <ReactQuill
-          style={{ minHeight: "400px" }}
-          value={value}
-          onChange={handleChange}
-          modules={{
-            toolbar: [
-              [{ header: "1" }, { header: "2" }, { font: [] }],
-              [{ size: [] }],
-              ["bold", "italic", "underline", "strike", "blockquote"],
-              [
-                { list: "ordered" },
-                { list: "bullet" },
-                { indent: "-1" },
-                { indent: "+1" },
-              ],
-              ["link", "image"],
-              ["clean"],
-            ],
-          }}
-          formats={[
-            "header",
-            "font",
-            "size",
-            "bold",
-            "italic",
-            "underline",
-            "strike",
-            "blockquote",
-            "list",
-            "bullet",
-            "indent",
+      <Editor
+        apiKey={TINY_API_KEY}
+        onInit={(evt, editor) => (editorRef.current = editor)}
+        initialValue={initialData}
+        init={{
+          height: 800,
+          menubar: true,
+          plugins: [
+            "advlist",
+            "autolink",
+            "lists",
             "link",
             "image",
-          ]}
-        />
-      )}
+            "charmap",
+            "preview",
+            "anchor",
+            "searchreplace",
+            "visualblocks",
+            "code",
+            "fullscreen",
+            "insertdatetime",
+            "media",
+            "table",
+            "code",
+            "help",
+            "wordcount",
+          ],
+          toolbar:
+            "undo redo | formatselect | bold italic backcolor | \
+            alignleft aligncenter alignright alignjustify | \
+            bullist numlist outdent indent | removeformat | help | image",
+          content_style:
+            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+          images_upload_handler: exampleImageUploadHandler,
+          automatic_uploads: true,
+          file_picker_types: "image",
+        }}
+      />
       <div className="flex justify-end mt-8">
         <SolidButton
           type="button"
           text="S A V E"
-          onClick={() => onClick(value)}
+          onClick={() => onClick(editorRef.current.getContent())}
         />
       </div>
     </div>
   );
 };
 
-export default NoteEditor;
+export default TextEditor;
