@@ -38,14 +38,14 @@ export default function Register() {
         <div
           id="authentication-modal"
           aria-hidden="true"
-          className={ModalClassesBG}
+          className={`${ModalClassesBG}  z-40`}
           onMouseDown={handleInsideClick}
         >
           <div
             onMouseDown={handleOutsideClick}
             className={RegisterModalClasses}
           >
-            <div className="hidden md:flex relative basis-4/12">
+            <div className="hidden md:flex  relative basis-4/12">
               <div className={RegisterBlueDiv}>
                 <div className="">
                   <h1 className="text-4xl lg:text-6xl font-bold mb-4">

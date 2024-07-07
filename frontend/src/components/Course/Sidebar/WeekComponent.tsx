@@ -33,6 +33,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
   const [newTopicName, setNewTopicName] = useState<string>('');
   const [showNewTopicInput, setShowNewTopicInput] = useState<boolean>(false);
   const [expandedSubtopics, setExpandedSubtopics] = useState<{ [subtopicIndex: number]: boolean }>({});
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const toggleSubtopic = useCallback(
     (chapterIndex: number) => {
@@ -58,6 +59,11 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
     }
   };
 
+  const handleDelete = () => {
+    removeWeek(weekIndex);
+    setShowModal(false);
+  };
+
   return (
     <div className="mb-8 mx-2 pb-2">
       <div className="flex items-center justify-between">
@@ -65,7 +71,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
           {expanded ? <FaChevronDown className="mr-2" /> : <FaChevronRight className="mr-2" />}
           {week.weekname}
         </h4>
-        <button className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600" onClick={() => removeWeek(weekIndex)}>
+        <button className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600" onClick={() => setShowModal(true)}>
           <FaTrash />
         </button>
       </div>
@@ -105,6 +111,17 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
               Add Topic +
             </button>
           )}
+        </div>
+      )}
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+          <div className="bg-white p-4 rounded shadow-lg">
+            <p>Are you sure you want to delete this week?</p>
+            <div className="mt-4 flex justify-end">
+              <button className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-800 mr-2" onClick={handleDelete}>Delete</button>
+              <button className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-800" onClick={() => setShowModal(false)}>Cancel</button>
+            </div>
+          </div>
         </div>
       )}
     </div>
