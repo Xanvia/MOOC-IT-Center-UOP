@@ -191,7 +191,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
               </button>
             </div>
           ) : (
-            <button className="mt-2 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400" onClick={() => setShowNewItemInput(true)}>
+            <button className="mt-2 ml-8 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400" onClick={() => setShowNewItemInput(true)}>
               Add Item +
             </button>
           )}

@@ -101,7 +101,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
               </button>
             </div>
           ) : (
-            <button className="w-60 mt-4 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400" onClick={() => setShowNewTopicInput(true)}>
+            <button className="w-60 mt-4 ml-5 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400" onClick={() => setShowNewTopicInput(true)}>
               Add Topic +
             </button>
           )}
