@@ -144,7 +144,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
   return (
     <div className="ml-4 mb-4">
       <div className="flex items-center justify-between">
-        <h5 className="text-sm font-medium text-secondary mb-2 cursor-pointer flex items-center" onClick={() => toggleSubtopic(weekIndex, chapterIndex)}>
+        <h5 className="font-medium ml-4 my-4 cursor-pointer flex items-center max-w-48 leading-tight" onClick={() => toggleSubtopic(weekIndex, chapterIndex)}>
           {expanded ? <FaChevronDown className="mr-2" /> : <FaChevronRight className="mr-2" />}
           {chapter.title}
         </h5>
