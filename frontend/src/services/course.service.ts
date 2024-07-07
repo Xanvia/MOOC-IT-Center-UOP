@@ -122,9 +122,12 @@ export const createNote = async (chapterId: number, content: string) => {
 
 export const editNote = async (noteId: number, content: string) => {
   try {
-    const response = await axiosInstance.put(`/course/note/${noteId}`, {
-      content,
-    });
+    const response = await axiosInstance.put(
+      `/course/week/chapter/note/${noteId}/`,
+      {
+        content,
+      }
+    );
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");

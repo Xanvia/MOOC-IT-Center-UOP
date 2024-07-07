@@ -4,6 +4,8 @@ import NoteEditor from "./NoteEditor";
 import classes from "./Note.module.css";
 import { useState } from "react";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
+import { editNote } from "@/services/course.service";
+import { toast } from "sonner";
 
 const content = `
     <h2 >What is Web Developing</h2>
@@ -34,8 +36,13 @@ const Note: React.FC = () => {
   const [editView, setEditView] = useState(false);
 
   const handleSave = async (value: string) => {
-    
-    setEditView(false);
+    try {
+      const response = await editNote(1, value);
+      toast.success(response.message);
+      setEditView(false);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   return (
