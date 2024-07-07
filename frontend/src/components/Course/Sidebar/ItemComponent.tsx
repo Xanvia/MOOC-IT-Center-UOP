@@ -34,7 +34,7 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
   };
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center justify-between">
       <p
         className={`my-2 ml-8 cursor-pointer ${isSelected ? 'font-semibold text-gray-800' : 'text-gray-500'} `}
         onClick={handleSelect}
@@ -43,7 +43,7 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
         {item.title}
       </p>
       <button
-        className="ml-7 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
+        className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
         onClick={handleRemove}
       >
         <FaTrash />
