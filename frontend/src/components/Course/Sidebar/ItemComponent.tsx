@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Item } from '@/components/Course/types';
 import SideBarIcon from '@/icons/sideBarIcon';
-import { FaChevronRight, FaChevronDown, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaTrash } from 'react-icons/fa';
 
 interface ItemComponentProps {
   weekIndex: number;
@@ -22,15 +22,16 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
   selectedTopic,
   setSelectedTopic,
 }) => {
+  const [showModal, setShowModal] = useState<boolean>(false);
   const isSelected = selectedTopic === item;
 
   const handleSelect = () => {
     setSelectedTopic(item);
   };
 
-  const handleRemove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
+  const handleRemove = () => {
     removeItem(weekIndex, chapterIndex, itemIndex);
+    setShowModal(false);
   };
 
   return (
@@ -44,10 +45,32 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
       </p>
       <button
         className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
-        onClick={handleRemove}
+        onClick={() => setShowModal(true)}
       >
         <FaTrash />
       </button>
+
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+          <div className="bg-white p-4 rounded shadow-lg">
+            <p>Are you sure you want to delete this item?</p>
+            <div className="mt-4 flex justify-end">
+              <button
+                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-800 mr-2"
+                onClick={handleRemove}
+              >
+                Delete
+              </button>
+              <button
+                className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-800"
+                onClick={() => setShowModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

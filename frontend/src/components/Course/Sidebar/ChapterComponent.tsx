@@ -39,6 +39,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
   const [newItemName, setNewItemName] = useState<string>('');
   const [showNewItemInput, setShowNewItemInput] = useState<boolean>(false);
   const [newItemType, setNewItemType] = useState<string>('video');
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const options: OptionType[] = [
     { value: 'video', label: 'Video', type: 'video' },
@@ -71,6 +72,11 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
     if (e.key === 'Enter') {
       handleAddNewItem();
     }
+  };
+
+  const handleDelete = () => {
+    removeTopic(weekIndex, chapterIndex);
+    setShowModal(false);
   };
 
   const customStyles: StylesConfig<OptionType, false> = {
@@ -148,7 +154,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
           {expanded ? <FaChevronDown className="mr-2" /> : <FaChevronRight className="mr-2" />}
           {chapter.title}
         </h5>
-        <button className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600" onClick={() => removeTopic(weekIndex, chapterIndex)}>
+        <button className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600" onClick={() => setShowModal(true)}>
           <FaTrash />
         </button>
       </div>
@@ -195,6 +201,17 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
               Add Item +
             </button>
           )}
+        </div>
+      )}
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+          <div className="bg-white p-4 rounded shadow-lg">
+            <p>Are you sure you want to delete this chapter?</p>
+            <div className="mt-4 flex justify-end">
+              <button className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-800 mr-2" onClick={handleDelete}>Delete</button>
+              <button className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-800" onClick={() => setShowModal(false)}>Cancel</button>
+            </div>
+          </div>
         </div>
       )}
     </div>
