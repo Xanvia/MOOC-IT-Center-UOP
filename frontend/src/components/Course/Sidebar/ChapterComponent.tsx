@@ -208,8 +208,8 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
           <div className="bg-white p-4 rounded shadow-lg">
             <p>Are you sure you want to delete this chapter?</p>
             <div className="mt-4 flex justify-end">
-              <button className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-800 mr-2" onClick={handleDelete}>Delete</button>
-              <button className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-800" onClick={() => setShowModal(false)}>Cancel</button>
+              <button className="bg-blue-300 text-black px-4 py-2 rounded hover:bg-blue-500 mr-2" onClick={handleDelete}>Delete</button>
+              <button className="bg-blue-200 text-black px-4 py-2 rounded hover:bg-blue-400" onClick={() => setShowModal(false)}>Cancel</button>
             </div>
           </div>
         </div>
