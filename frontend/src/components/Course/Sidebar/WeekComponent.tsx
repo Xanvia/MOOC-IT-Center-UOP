@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Week, Chapter, Item } from '@/components/Course/types';
+import { Week, Item } from '@/components/Course/types';
 import { FaChevronRight, FaChevronDown, FaPlus } from 'react-icons/fa';
 import ChapterComponent from './ChapterComponent';
 
@@ -10,6 +10,7 @@ interface WeekComponentProps {
   toggleWeek: (weekIndex: number) => void;
   addTopic: (weekIndex: number, topicName: string) => void;
   addItem: (weekIndex: number, chapterIndex: number, item: Item) => void;
+  removeItem: (weekIndex: number, chapterIndex: number, itemIndex: number) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
 }
@@ -21,6 +22,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
   toggleWeek,
   addTopic,
   addItem,
+  removeItem,
   selectedTopic,
   setSelectedTopic,
 }) => {
@@ -69,6 +71,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
               expanded={!!expandedSubtopics[chapterIndex]}
               toggleSubtopic={toggleSubtopic}
               addItem={addItem}
+              removeItem={removeItem}
               selectedTopic={selectedTopic}
               setSelectedTopic={setSelectedTopic}
             />

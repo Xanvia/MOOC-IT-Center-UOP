@@ -12,6 +12,7 @@ interface ChapterComponentProps {
   expanded: boolean;
   toggleSubtopic: (weekIndex: number, chapterIndex: number) => void;
   addItem: (weekIndex: number, chapterIndex: number, item: Item) => void;
+  removeItem: (weekIndex: number, chapterIndex: number, itemIndex: number) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
 }
@@ -29,6 +30,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
   expanded,
   toggleSubtopic,
   addItem,
+  removeItem,
   selectedTopic,
   setSelectedTopic,
 }) => {
@@ -67,6 +69,10 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
     if (e.key === 'Enter') {
       handleAddNewItem();
     }
+  };
+
+  const handleRemoveItem = (itemIndex: number) => {
+    removeItem(weekIndex, chapterIndex, itemIndex);
   };
 
   const customStyles: StylesConfig<OptionType, false> = {
@@ -145,6 +151,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
               item={item}
               isSelected={selectedTopic?.title === item.title}
               onSelect={() => setSelectedTopic(item)}
+              onRemove={() => handleRemoveItem(itemIndex)}
             />
           ))}
           {showNewItemInput ? (
