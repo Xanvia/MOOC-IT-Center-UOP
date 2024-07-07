@@ -60,8 +60,43 @@ const Sidebar: React.FC = () => {
     []
   );
 
+  const removeItem = useCallback(
+    (weekIndex: number, chapterIndex: number, itemIndex: number) => {
+      setWeeks((prevWeeks) => {
+        const newWeeks = [...prevWeeks];
+        newWeeks[weekIndex] = {
+          ...newWeeks[weekIndex],
+          chapters: newWeeks[weekIndex].chapters.map((chapter, cIdx) => {
+            if (cIdx !== chapterIndex) return chapter;
+            return {
+              ...chapter,
+              items: chapter.items ? chapter.items.filter((_, iIdx) => iIdx !== itemIndex) : [],
+            };
+          }),
+        };
+        return newWeeks;
+      });
+    },
+    []
+  );
+
+  const removeTopic = useCallback((weekIndex: number, chapterIndex: number) => {
+    setWeeks((prevWeeks) => {
+      const newWeeks = [...prevWeeks];
+      newWeeks[weekIndex] = {
+        ...newWeeks[weekIndex],
+        chapters: newWeeks[weekIndex].chapters.filter((_, cIdx) => cIdx !== chapterIndex),
+      };
+      return newWeeks;
+    });
+  }, []);
+
+  const removeWeek = useCallback((weekIndex: number) => {
+    setWeeks((prevWeeks) => prevWeeks.filter((_, wIdx) => wIdx !== weekIndex));
+  }, []);
+
   return (
-    <div className="fixed left-0 w-3/12 bg-gray-white h-full overflow-y-auto mb-96 ">
+    <div className="fixed left-0 w-3/12 bg-gray-white h-full overflow-y-auto mb-96">
       <div className="w-84 p-8 border-r bg-white border-gray-200 h-full pb-20 mb-96">
         <div className="mt-4 mb-10">
           <h3 className="text-lg font-semibold">Progress</h3>
@@ -81,6 +116,9 @@ const Sidebar: React.FC = () => {
             toggleWeek={toggleWeek}
             addTopic={addTopic}
             addItem={addItem}
+            removeItem={removeItem}
+            removeTopic={removeTopic}
+            removeWeek={removeWeek}
             selectedTopic={selectedTopic}
             setSelectedTopic={setSelectedTopic}
           />

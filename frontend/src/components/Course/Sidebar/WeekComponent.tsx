@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Week, Item } from '@/components/Course/types';
-import { FaChevronRight, FaChevronDown, FaPlus } from 'react-icons/fa';
+import { FaChevronRight, FaChevronDown, FaPlus, FaTrash } from 'react-icons/fa';
 import ChapterComponent from './ChapterComponent';
 
 interface WeekComponentProps {
@@ -11,6 +11,8 @@ interface WeekComponentProps {
   addTopic: (weekIndex: number, topicName: string) => void;
   addItem: (weekIndex: number, chapterIndex: number, item: Item) => void;
   removeItem: (weekIndex: number, chapterIndex: number, itemIndex: number) => void;
+  removeTopic: (weekIndex: number, chapterIndex: number) => void;
+  removeWeek: (weekIndex: number) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
 }
@@ -23,6 +25,8 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
   addTopic,
   addItem,
   removeItem,
+  removeTopic,
+  removeWeek,
   selectedTopic,
   setSelectedTopic,
 }) => {
@@ -56,10 +60,15 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
 
   return (
     <div className="mb-8 mx-2 pb-2">
-      <h4 className="text-md font-medium text-primary pb-1 mb-2 cursor-pointer flex items-center" onClick={() => toggleWeek(weekIndex)}>
-        {expanded ? <FaChevronDown className="mr-2" /> : <FaChevronRight className="mr-2" />}
-        {week.weekname}
-      </h4>
+      <div className="flex items-center justify-between">
+        <h4 className="text-md font-medium text-primary pb-1 mb-2 cursor-pointer flex items-center" onClick={() => toggleWeek(weekIndex)}>
+          {expanded ? <FaChevronDown className="mr-2" /> : <FaChevronRight className="mr-2" />}
+          {week.weekname}
+        </h4>
+        <button className="ml-2 bg-red-600 text-white p-2 rounded hover:bg-red-800" onClick={() => removeWeek(weekIndex)}>
+          <FaTrash />
+        </button>
+      </div>
       {expanded && (
         <div>
           {week.chapters.map((chapter, chapterIndex) => (
@@ -72,6 +81,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
               toggleSubtopic={toggleSubtopic}
               addItem={addItem}
               removeItem={removeItem}
+              removeTopic={removeTopic}
               selectedTopic={selectedTopic}
               setSelectedTopic={setSelectedTopic}
             />
