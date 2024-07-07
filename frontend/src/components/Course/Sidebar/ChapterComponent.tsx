@@ -148,7 +148,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
           {expanded ? <FaChevronDown className="mr-2" /> : <FaChevronRight className="mr-2" />}
           {chapter.title}
         </h5>
-        <button className="ml-2 bg-red-600 text-white p-2 rounded hover:bg-red-800" onClick={() => removeTopic(weekIndex, chapterIndex)}>
+        <button className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600" onClick={() => removeTopic(weekIndex, chapterIndex)}>
           <FaTrash />
         </button>
       </div>

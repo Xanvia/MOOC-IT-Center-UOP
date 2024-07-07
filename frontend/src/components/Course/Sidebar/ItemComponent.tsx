@@ -1,6 +1,7 @@
 import React from 'react';
 import { Item } from '@/components/Course/types';
 import SideBarIcon from '@/icons/sideBarIcon';
+import { FaChevronRight, FaChevronDown, FaPlus, FaTrash } from 'react-icons/fa';
 
 interface ItemComponentProps {
   weekIndex: number;
@@ -42,10 +43,10 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
         {item.title}
       </p>
       <button
-        className="ml-auto bg-red-600 text-white p-2 rounded hover:bg-red-800"
+        className="ml-7 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
         onClick={handleRemove}
       >
-        Remove
+        <FaTrash />
       </button>
     </div>
   );

@@ -65,7 +65,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
           {expanded ? <FaChevronDown className="mr-2" /> : <FaChevronRight className="mr-2" />}
           {week.weekname}
         </h4>
-        <button className="ml-2 bg-red-600 text-white p-2 rounded hover:bg-red-800" onClick={() => removeWeek(weekIndex)}>
+        <button className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600" onClick={() => removeWeek(weekIndex)}>
           <FaTrash />
         </button>
       </div>
