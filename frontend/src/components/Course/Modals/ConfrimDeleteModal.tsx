@@ -15,8 +15,10 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
 }) => {
   return (
     <div className={ModalClassesBG}>
-      <div className="bg-white p-10 rounded shadow-lg w-[600px] h-[150px]">
-        <p>Are you sure you want to delete this week?</p>
+      <div className="bg-white p-8 rounded shadow-lg w-[600px] h-[150px]">
+        <p className="text-primary text-lg">
+          Are you sure you want to delete this week?
+        </p>
         <div className="mt-4 flex justify-end gap-2">
           <DeleteButton text="D E L E T E" onClick={handleDelete} />
           <SolidButton
