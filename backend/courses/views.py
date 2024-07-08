@@ -181,11 +181,14 @@ class VideoViewSet(viewsets.ModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
 
+    def get_video_link(self, request, *args, **kwargs):
+        return "https://www.youtube.com/watch?v=ZbZSe6N_BXs"
+
     def create(self, request, *args, **kwargs):
 
         request.data["chapter"] = kwargs["chapter_id"]
         request.data["component_type"] = "video"
-        request.data["video_link"] = "https://www.youtube.com/watch?v=ZbZSe6N_BXs"
+        request.data["video_link"] = self.get_video_link(request, *args, **kwargs)
         response = super().create(request, *args, **kwargs)
 
         response.data = {
