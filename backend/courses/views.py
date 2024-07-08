@@ -6,7 +6,7 @@ from .serializers import (
     ChapterSerializer,
     NoteSerializer,
     ImageSerializer,
-    VideoSerializer,
+    # VideoSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -176,18 +176,18 @@ class ImageUpload(generics.CreateAPIView):
         }
         return response
 
-class VideoViewSet(viewsets.ModelViewSet):
-    queryset = Video.objects.all()
-    serializer_class = VideoSerializer
+# class VideoViewSet(viewsets.ModelViewSet):
+#     queryset = Video.objects.all()
+#     serializer_class = VideoSerializer
 
 
-    def create(self, request, *args, **kwargs):
+#     def create(self, request, *args, **kwargs):
 
-        request.data["week"] = kwargs["pk"]
-        response = super().create(request, *args, **kwargs)
+#         request.data["week"] = kwargs["pk"]
+#         response = super().create(request, *args, **kwargs)
 
-        response.data = {
-            "status": "success",
-                        "message": "Video created successfully",
-        }
-        return response
+#         response.data = {
+#             "status": "success",
+#                         "message": "Video created successfully",
+#         }
+#         return response
