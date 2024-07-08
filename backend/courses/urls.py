@@ -1,5 +1,12 @@
 from django.urls import path
-from .views import CourseViewSet, WeekViewSet, ChapterViewSet, NoteViewSet, ImageUpload
+from .views import (
+    CourseViewSet,
+    WeekViewSet,
+    ChapterViewSet,
+    NoteViewSet,
+    ImageUpload,
+    VideoViewSet,
+)
 
 urlpatterns = [
     path(
@@ -46,4 +53,9 @@ urlpatterns = [
         name="note-list",
     ),
     path("note/<int:note_id>/image/", ImageUpload.as_view(), name="image-upload"),
+    path(
+        "week/chapter/<int:chapter_id>/video/",
+        VideoViewSet.as_view({"post": "create"}),
+        name="video-list",
+    ),
 ]

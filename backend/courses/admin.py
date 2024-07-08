@@ -39,4 +39,4 @@ class NoteAdmin(admin.ModelAdmin):
 
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
-    list_display = ["id", "video_link"]
+    list_display = ["id", "name", "video_link"]
