@@ -10,7 +10,7 @@ export const ModalClassesBG = clsx(
   "w-full",
   "bg-black",
   "bg-opacity-50",
-  "z-10"
+  "z-30"
 );
 
 export const RegisterModalClasses = clsx(
@@ -21,7 +21,8 @@ export const RegisterModalClasses = clsx(
   "md:h-[700px]",
   "xl:w-[1150px]",
   "h-full",
-  "w-full"
+  "w-full",
+  "z-30"
 );
 
 export const LoginModalClasses = clsx(
@@ -34,6 +35,7 @@ export const LoginModalClasses = clsx(
   "sm:w-[450px]",
   "sm:h-[720px]",
   "px-16",
+  "z-30",
   "pt-4"
 );
 

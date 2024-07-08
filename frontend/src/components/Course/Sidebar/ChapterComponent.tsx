@@ -4,6 +4,7 @@ import { FaChevronRight, FaChevronDown, FaPlus, FaTrash } from 'react-icons/fa';
 import Select, { SingleValueProps, StylesConfig, OptionProps } from 'react-select';
 import SideBarIcon from '@/icons/sideBarIcon';
 import ItemComponent from './ItemComponent';
+import ConfirmDeleteModal from '../Modals/ConfrimDeleteModal';
 
 interface ChapterComponentProps {
   weekIndex: number;
@@ -204,15 +205,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
         </div>
       )}
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
-          <div className="bg-white p-4 rounded shadow-lg">
-            <p>Are you sure you want to delete this chapter?</p>
-            <div className="mt-4 flex justify-end">
-              <button className="bg-blue-300 text-black px-4 py-2 rounded hover:bg-blue-500 mr-2" onClick={handleDelete}>Delete</button>
-              <button className="bg-blue-200 text-black px-4 py-2 rounded hover:bg-blue-400" onClick={() => setShowModal(false)}>Cancel</button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDeleteModal setShowModal={setShowModal} handleDelete={handleDelete}/>
       )}
     </div>
   );

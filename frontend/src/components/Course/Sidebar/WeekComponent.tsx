@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Week, Item } from '@/components/Course/types';
 import { FaChevronRight, FaChevronDown, FaPlus, FaTrash } from 'react-icons/fa';
 import ChapterComponent from './ChapterComponent';
+import ConfirmDeleteModal from '../Modals/ConfrimDeleteModal';
 
 interface WeekComponentProps {
   weekIndex: number;
@@ -114,15 +115,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
         </div>
       )}
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
-          <div className="bg-white p-4 rounded shadow-lg">
-            <p>Are you sure you want to delete this week?</p>
-            <div className="mt-4 flex justify-end">
-              <button className="bg-blue-300 text-black px-4 py-2 rounded hover:bg-blue-500 mr-2" onClick={handleDelete}>Delete</button>
-              <button className="bg-blue-200 text-black px-4 py-2 rounded hover:bg-blue-400" onClick={() => setShowModal(false)}>Cancel</button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDeleteModal setShowModal={setShowModal} handleDelete={handleDelete}/>
       )}
     </div>
   );

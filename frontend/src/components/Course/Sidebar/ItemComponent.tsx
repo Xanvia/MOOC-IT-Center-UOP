@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
-import { Item } from '@/components/Course/types';
-import SideBarIcon from '@/icons/sideBarIcon';
-import { FaTrash } from 'react-icons/fa';
+import React, { useState } from "react";
+import { Item } from "@/components/Course/types";
+import SideBarIcon from "@/icons/sideBarIcon";
+import { FaTrash } from "react-icons/fa";
+import ConfirmDeleteModal from "../Modals/ConfrimDeleteModal";
 
 interface ItemComponentProps {
   weekIndex: number;
   chapterIndex: number;
   itemIndex: number;
   item: Item;
-  removeItem: (weekIndex: number, chapterIndex: number, itemIndex: number) => void;
+  removeItem: (
+    weekIndex: number,
+    chapterIndex: number,
+    itemIndex: number
+  ) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
 }
@@ -29,7 +34,7 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
     setSelectedTopic(item);
   };
 
-  const handleRemove = () => {
+  const handleDelete = () => {
     removeItem(weekIndex, chapterIndex, itemIndex);
     setShowModal(false);
   };
@@ -37,7 +42,9 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
   return (
     <div className="flex items-center justify-between">
       <p
-        className={`my-2 ml-8 cursor-pointer ${isSelected ? 'font-semibold text-gray-800' : 'text-gray-500'} `}
+        className={`my-2 ml-8 cursor-pointer ${
+          isSelected ? "font-semibold text-gray-800" : "text-gray-500"
+        } `}
         onClick={handleSelect}
       >
         <SideBarIcon type={item.type} />
@@ -51,25 +58,10 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
       </button>
 
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
-          <div className="bg-white p-4 rounded shadow-lg">
-            <p>Are you sure you want to delete this item?</p>
-            <div className="mt-4 flex justify-end">
-              <button
-                className="bg-blue-300 text-black px-4 py-2 rounded hover:bg-blue-500 mr-2"
-                onClick={handleRemove}
-              >
-                Delete
-              </button>
-              <button
-                className="bg-blue-200 text-black px-4 py-2 rounded hover:bg-blue-400"
-                onClick={() => setShowModal(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDeleteModal
+          setShowModal={setShowModal}
+          handleDelete={handleDelete}
+        />
       )}
     </div>
   );
