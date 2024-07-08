@@ -62,7 +62,7 @@ const Note: React.FC = () => {
           </h2>
 
           <div className="py-14 px-3 w-10/12 min-h-[600px] mx-auto text-left bg-primary_light">
-            <div className="mt-6 ml-12">
+            <div className="my-6 ml-12">
               {isEdit && (
                 <EditButtonPrimary
                   text="E D I T"
