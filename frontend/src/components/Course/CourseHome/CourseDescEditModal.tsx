@@ -112,7 +112,7 @@ export default function CourseDescEditModal({ courseData, reloadData }: Props) {
 
       {isOpen && (
         <div
-          className={`${ModalClassesBG} flex justify-center items-center`}
+          className={`${ModalClassesBG} flex justify-center items-center z-30`}
           onMouseDown={handleInsideClick}
         >
           <div

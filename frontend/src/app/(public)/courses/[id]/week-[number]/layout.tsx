@@ -25,9 +25,18 @@ const InnerLayout: React.FC<InnerLayoutProps> = ({ children }) => {
     <>
       <Breadcrumb breadcrumbs={breadcrumbs} />
       <SelectedTopicProvider>
-        <div className="flex h-full">
-          <Sidebar />
-          <div className="ml-64 p-5 w-full">{children}</div>
+        <div className="flex flex-col min-h-screen">
+          <div className="flex-grow p-8">
+            <div className="flex flex-1">
+              <div style={{ flexShrink: 0 }}>
+                <Sidebar />
+              </div>
+              <div style={{ flexGrow: 1 }}>
+                {children}
+              </div>
+            </div>
+          </div>
+          
         </div>
       </SelectedTopicProvider>
     </>

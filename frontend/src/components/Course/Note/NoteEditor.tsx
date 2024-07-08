@@ -46,7 +46,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ initialData, onClick }) => {
   };
 
   return (
-    <div>
+    <div >
       <Editor
         apiKey={TINY_API_KEY}
         onInit={(evt, editor) => (editorRef.current = editor)}

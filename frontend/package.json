@@ -31,6 +31,7 @@
     "react-icons": "^5.2.1",
     "react-quill": "^2.0.0",
     "react-quilljs": "^2.0.0",
+    "react-select": "^5.8.0",
     "sonner": "^1.4.41",
     "yup": "^1.4.0"
   },

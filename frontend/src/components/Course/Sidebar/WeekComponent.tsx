@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { Week, Chapter, Item } from '@/components/Course/types';
-import { FaChevronRight, FaChevronDown, FaPlus } from 'react-icons/fa';
+import { Week, Item } from '@/components/Course/types';
+import { FaChevronRight, FaChevronDown, FaPlus, FaTrash } from 'react-icons/fa';
 import ChapterComponent from './ChapterComponent';
+import ConfirmDeleteModal from '../Modals/ConfrimDeleteModal';
 
 interface WeekComponentProps {
   weekIndex: number;
@@ -10,6 +11,9 @@ interface WeekComponentProps {
   toggleWeek: (weekIndex: number) => void;
   addTopic: (weekIndex: number, topicName: string) => void;
   addItem: (weekIndex: number, chapterIndex: number, item: Item) => void;
+  removeItem: (weekIndex: number, chapterIndex: number, itemIndex: number) => void;
+  removeTopic: (weekIndex: number, chapterIndex: number) => void;
+  removeWeek: (weekIndex: number) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
 }
@@ -21,12 +25,16 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
   toggleWeek,
   addTopic,
   addItem,
+  removeItem,
+  removeTopic,
+  removeWeek,
   selectedTopic,
   setSelectedTopic,
 }) => {
   const [newTopicName, setNewTopicName] = useState<string>('');
   const [showNewTopicInput, setShowNewTopicInput] = useState<boolean>(false);
   const [expandedSubtopics, setExpandedSubtopics] = useState<{ [subtopicIndex: number]: boolean }>({});
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const toggleSubtopic = useCallback(
     (chapterIndex: number) => {
@@ -52,12 +60,22 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
     }
   };
 
+  const handleDelete = () => {
+    removeWeek(weekIndex);
+    setShowModal(false);
+  };
+
   return (
     <div className="mb-8 mx-2 pb-2">
-      <h4 className="text-md font-medium text-primary pb-1 mb-2 cursor-pointer flex items-center" onClick={() => toggleWeek(weekIndex)}>
-        {expanded ? <FaChevronDown className="mr-2" /> : <FaChevronRight className="mr-2" />}
-        {week.weekname}
-      </h4>
+      <div className="flex items-center justify-between">
+        <h4 className="text-md font-medium text-primary pb-1 mb-2 cursor-pointer flex items-center" onClick={() => toggleWeek(weekIndex)}>
+          {expanded ? <FaChevronDown className="mr-2" /> : <FaChevronRight className="mr-2" />}
+          {week.weekname}
+        </h4>
+        <button className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600" onClick={() => setShowModal(true)}>
+          <FaTrash />
+        </button>
+      </div>
       {expanded && (
         <div>
           {week.chapters.map((chapter, chapterIndex) => (
@@ -69,6 +87,8 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
               expanded={!!expandedSubtopics[chapterIndex]}
               toggleSubtopic={toggleSubtopic}
               addItem={addItem}
+              removeItem={removeItem}
+              removeTopic={removeTopic}
               selectedTopic={selectedTopic}
               setSelectedTopic={setSelectedTopic}
             />
@@ -83,16 +103,19 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
                 onKeyPress={handleTopicKeyPress}
                 placeholder="Enter topic name"
               />
-              <button className="ml-2 bg-blue-500 text-white p-2 rounded" onClick={handleAddNewTopic}>
+              <button className="ml-2 bg-blue-600 text-white p-2 rounded hover:bg-blue-800" onClick={handleAddNewTopic}>
                 <FaPlus />
               </button>
             </div>
           ) : (
-            <button className="w-60 mt-4 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400" onClick={() => setShowNewTopicInput(true)}>
+            <button className="w-60 mt-4 ml-5 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400" onClick={() => setShowNewTopicInput(true)}>
               Add Topic +
             </button>
           )}
         </div>
+      )}
+      {showModal && (
+        <ConfirmDeleteModal setShowModal={setShowModal} handleDelete={handleDelete}/>
       )}
     </div>
   );
