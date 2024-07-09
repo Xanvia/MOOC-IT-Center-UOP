@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Course,Week,Chapter, Component,Note,Image
+from .models import Course,Week,Chapter, Component,Note,Image,Video
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
 
@@ -57,14 +57,39 @@ class WeekSerializer(serializers.ModelSerializer):
         model = Week
         fields = "__all__"
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["topics"] = ChapterSerializer(instance.topics, many=True).data
+        return representation
+    
+
 class ChapterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Chapter
         fields = "__all__"
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["items"] = ItemSerializer(instance.items, many=True).data
+        return representation    
 
 
+class ItemSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Component
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        if instance.component_type == "note":
+            return NoteSerializer(instance.note).data
+        elif instance.component_type == "image":
+            return ImageSerializer(instance.image).data
+        elif instance.component_type == "video":
+            return VideoSerializer(instance.video).data
+        return super().to_representation(instance)
+        
 
 class NoteSerializer(serializers.ModelSerializer):
 
@@ -72,8 +97,36 @@ class NoteSerializer(serializers.ModelSerializer):
         model = Note
         fields = "__all__"
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["type"] = "note"
+        representation["content"] =  instance.content
+
 class ImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Image
         fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["type"] = "image"
+        representation["content"] = {
+            "note":NoteSerializer(instance.note),
+            "image": instance.image
+        }
+
+
+class VideoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Video
+        fields = "__all__"  
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["type"] = "video"
+        representation["content"] =  {
+            "url":instance.url,
+            "duration":instance.duration  
+        }         
