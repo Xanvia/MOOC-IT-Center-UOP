@@ -10,6 +10,8 @@ from .serializers import (
 )
 from rest_framework import status
 from rest_framework.response import Response
+from .utils import upload_video_to_youtube
+from rest_framework.exceptions import ValidationError
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -182,7 +184,9 @@ class VideoViewSet(viewsets.ModelViewSet):
     serializer_class = VideoSerializer
 
     def get_video_link(self, request, *args, **kwargs):
-        return "https://www.youtube.com/watch?v=ZbZSe6N_BXs"
+        if "video_file" not in request.data:
+            raise ValidationError({"video_file": "This field is required"})
+        return upload_video_to_youtube(request.data["video_file"])
 
     def create(self, request, *args, **kwargs):
 
