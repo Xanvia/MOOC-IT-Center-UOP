@@ -50,7 +50,7 @@ class Week(models.Model):
 
 class Chapter(models.Model):
     name = models.CharField(max_length=255)
-    week = models.ForeignKey(Week, related_name="chapters", on_delete=models.CASCADE)
+    week = models.ForeignKey(Week, related_name="chapters", on_delete=models.PROTECT)
 
     def get_progress(self, user):
         components = self.components.all()
@@ -72,7 +72,7 @@ class Component(models.Model):
     )
     name = models.CharField(max_length=255)
     chapter = models.ForeignKey(
-        Chapter, related_name="components", on_delete=models.CASCADE
+        Chapter, related_name="components", on_delete=models.PROTECT
     )
     component_type = models.CharField(max_length=20, choices=COMPONENT_TYPES)
 
@@ -90,7 +90,6 @@ class Note(Component):
 
 
 class Quiz(Component):
-    title = models.CharField(max_length=255)
     deadline = models.DateTimeField(default=timezone.now)
     full_grades = models.IntegerField(default=100)
     questions = models.JSONField()

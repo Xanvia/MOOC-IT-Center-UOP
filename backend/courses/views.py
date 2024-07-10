@@ -74,7 +74,15 @@ class WeekViewSet(viewsets.ModelViewSet):
             "message": "Week created successfully",
         }
         return response
+    
+    def destroy(self, request, *args, **kwargs):
+        response = super().destroy(request, *args, **kwargs)
 
+        response.data = {
+            "status": "success",
+            "message": "Week deleted successfully",
+        }
+        return response
 
 class ChapterViewSet(viewsets.ModelViewSet):
     queryset = Chapter.objects.all()
@@ -91,7 +99,14 @@ class ChapterViewSet(viewsets.ModelViewSet):
         }
         return response
 
+    def destroy(self, request, *args, **kwargs):
+        response = super().destroy(request, *args, **kwargs)
 
+        response.data = {
+            "status": "success",
+            "message": "Chapter deleted successfully",
+        }
+        return response
 class NoteViewSet(viewsets.ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
@@ -119,7 +134,15 @@ class NoteViewSet(viewsets.ModelViewSet):
             "message": "Note updated successfully",
         }
         return response
+    
+    def destroy(self, request, *args, **kwargs):
+        response = super().destroy(request, *args, **kwargs)
 
+        response.data = {
+            "status": "success",
+            "message": "Note deleted successfully",
+        }
+        return response
 
 class ImageUpload(generics.CreateAPIView):
     queryset = Image.objects.all()
