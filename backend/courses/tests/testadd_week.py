@@ -88,3 +88,25 @@ class CreateCourseTest(APITestCase):
         self.assertEqual(response.data["status"], "success")
         self.assertTrue(Chapter.objects.filter(week_id=1).exists())
         
+
+    def test_delete_week(self):
+        course_data = {
+            "name": "test course",
+            "category": 1,
+            "institution": 1,
+            "difficulty": "beginner",
+        }
+        url = reverse("course-list")
+        response = self.client.post(url, course_data, format="json")
+        
+        data = {
+            "name": "test week",
+        }
+
+        response = self.client.post(reverse("week-list", args=[1]), data, format="json")
+
+        response = self.client.delete(reverse("week-detail", args=[1]))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.data["status"], "success")
+        self.assertEqual(response.data["message"], "Week deleted successfully")
+        self.assertFalse(Week.objects.filter(course_id=1).exists())
