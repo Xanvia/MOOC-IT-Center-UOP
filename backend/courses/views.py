@@ -65,7 +65,7 @@ class WeekViewSet(viewsets.ModelViewSet):
     serializer_class = WeekSerializer
 
     def get_queryset(self):
-        return super().get_queryset().filter(course=self.kwargs["pk"])
+        return super().get_queryset().iflter(course=self.kwargs["pk"])
 
     def create(self, request, *args, **kwargs):
 
@@ -78,12 +78,8 @@ class WeekViewSet(viewsets.ModelViewSet):
         }
         return response
     
-<<<<<<< HEAD
     def destroy(self, request, *args, **kwargs):
         response = super().destroy(request, *args, **kwargs)
-=======
-    
->>>>>>> 0c8a055 (updated the serializers)
 
         response.data = {
             "status": "success",
