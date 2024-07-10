@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Course,Week,Chapter, Component,Note,Image,Video
+from .models import Course,Week,Chapter, Component,Note,Image,Video,Quiz
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
 
@@ -86,9 +86,9 @@ class ItemSerializer(serializers.ModelSerializer):
         # print(instance.component_type)
         if instance.component_type == "Note":
             return NoteSerializer(instance.note).data
-        elif instance.component_type == "image":
-            return ImageSerializer(instance.image).data
-        elif instance.component_type == "video":
+        elif instance.component_type == "Quiz":
+            return QuizSerializer(instance.quiz).data
+        elif instance.component_type == "Video":
             return VideoSerializer(instance.video).data
         return super().to_representation(instance)
         
@@ -101,7 +101,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["type"] = "note"
+        representation["type"] = "Note"
         representation["content"] =  instance.content
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -110,13 +110,20 @@ class ImageSerializer(serializers.ModelSerializer):
         model = Image
         fields = "__all__"
 
+class QuizSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Quiz
+        fields = "__all__"
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["type"] = "image"
-        representation["content"] = {
-            "note":NoteSerializer(instance.note),
-            "image": instance.image
-        }
+        representation["type"] = "Quiz"
+        representation["content"] =  {
+            "deadline":instance.deadline,
+            "full_grades":instance.full_grades, 
+            "questions":instance.questions 
+        }      
 
 
 class VideoSerializer(serializers.ModelSerializer):
@@ -127,7 +134,7 @@ class VideoSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["type"] = "video"
+        representation["type"] = "Video"
         representation["content"] =  {
             "url":instance.url,
             "duration":instance.duration  
