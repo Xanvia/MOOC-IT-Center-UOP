@@ -59,7 +59,7 @@ class WeekSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["topics"] = ChapterSerializer(instance.topics, many=True).data
+        representation["topics"] = ChapterSerializer(instance.chapters, many=True).data
         return representation
     
 
@@ -71,7 +71,8 @@ class ChapterSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["items"] = ItemSerializer(instance.items, many=True).data
+        representation["items"] = ItemSerializer(instance.components, many=True).data
+        print(instance.components)
         return representation    
 
 
@@ -82,7 +83,8 @@ class ItemSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_representation(self, instance):
-        if instance.component_type == "note":
+        # print(instance.component_type)
+        if instance.component_type == "Note":
             return NoteSerializer(instance.note).data
         elif instance.component_type == "image":
             return ImageSerializer(instance.image).data
