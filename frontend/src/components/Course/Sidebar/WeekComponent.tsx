@@ -70,7 +70,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
       <div className="flex items-center justify-between">
         <h4 className="text-md font-medium text-primary pb-1 mb-2 cursor-pointer flex items-center" onClick={() => toggleWeek(weekIndex)}>
           {expanded ? <FaChevronDown className="mr-2" /> : <FaChevronRight className="mr-2" />}
-          {week.weekname}
+          {week.name}
         </h4>
         <button className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600" onClick={() => setShowModal(true)}>
           <FaTrash />

@@ -62,7 +62,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
 
   const handleAddNewItem = useCallback(() => {
     if (newItemName.trim() !== '') {
-      addItem(weekIndex, chapterIndex, { title: newItemName, type: newItemType as 'video' | 'note' | 'quiz', content: '' });
+      addItem(weekIndex, chapterIndex, { name: newItemName, type: newItemType as 'video' | 'note' | 'quiz', content: '' });
       setNewItemName('');
       setNewItemType('video');
       setShowNewItemInput(false);
@@ -153,7 +153,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
       <div className="flex items-center justify-between">
         <h5 className="font-medium ml-4 my-4 cursor-pointer flex items-center max-w-48 leading-tight" onClick={() => toggleSubtopic(weekIndex, chapterIndex)}>
           {expanded ? <FaChevronDown className="mr-2" /> : <FaChevronRight className="mr-2" />}
-          {chapter.title}
+          {chapter.name}
         </h5>
         <button className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600" onClick={() => setShowModal(true)}>
           <FaTrash />
