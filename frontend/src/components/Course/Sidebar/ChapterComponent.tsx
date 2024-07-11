@@ -74,7 +74,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
 
   const handleAddNewItem = useCallback(() => {
     if (newItemName.trim() !== '') {
-      addItem(weekIndex, chapterIndex, { name: newItemName, type: newItemType as 'video' | 'note' | 'quiz', content: '' });
+      addItem(weekIndex, chapterIndex, { name: newItemName, type: newItemType as 'Video' | 'Note' | 'Quiz', content: '' });
       setNewItemName('');
       setNewItemType('video');
       setShowNewItemInput(false);

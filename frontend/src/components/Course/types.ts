@@ -1,8 +1,8 @@
 export interface Item {
   id?: number;
   name: string;
-  content: JSX.Element | string;
-  type: "video" | "note" | "quiz";
+  content: string;
+  type: "Video" | "Note" | "Quiz";
 }
 
 export interface Chapter {
