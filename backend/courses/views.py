@@ -128,7 +128,6 @@ class NoteViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
 
         request.data["chapter"] = kwargs["chapter_id"]
-        request.data["component_type"] = "note"
         response = super().create(request, *args, **kwargs)
 
         response.data = {

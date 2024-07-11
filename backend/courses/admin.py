@@ -34,4 +34,9 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Note)
 class NoteAdmin(admin.ModelAdmin):
-    list_display = ["id","content"]
+    list_display = ["id", "content"]
+
+
+@admin.register(Video)
+class VideoAdmin(admin.ModelAdmin):
+    list_display = ["id", "video_link"]

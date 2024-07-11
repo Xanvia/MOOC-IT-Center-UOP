@@ -64,20 +64,11 @@ class Chapter(models.Model):
 
 
 class Component(models.Model):
-    COMPONENT_TYPES = (
-        ("video", "Video"),
-        ("note", "Note"),
-        ("quiz", "Quiz"),
-        ("coding_assignment", "CodingAssignment"),
-    )
     name = models.CharField(max_length=255)
+    component_type = models.CharField(max_length=255)
     chapter = models.ForeignKey(
         Chapter, related_name="components", on_delete=models.PROTECT
     )
-    component_type = models.CharField(max_length=20, choices=COMPONENT_TYPES)
-
-    class Meta:
-        unique_together = ("name", "chapter", "component_type")
 
 
 class Video(Component):
