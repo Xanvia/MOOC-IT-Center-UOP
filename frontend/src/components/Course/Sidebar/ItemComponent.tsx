@@ -48,7 +48,7 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
         onClick={handleSelect}
       >
         <SideBarIcon type={item.type} />
-        {item.title}
+        {item.name}
       </p>
       <button
         className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"

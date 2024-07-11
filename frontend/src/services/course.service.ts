@@ -133,3 +133,12 @@ export const editNote = async (noteId: number, content: string) => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const fetchCourseContent = async (courseId: string) => {
+  try {
+    const response = await axiosInstance.get(`/course/${courseId}/week/`);
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};

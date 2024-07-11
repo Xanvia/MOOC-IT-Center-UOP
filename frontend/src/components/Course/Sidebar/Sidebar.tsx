@@ -1,14 +1,34 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useSelectedTopic } from "@/contexts/SidebarContext";
-import { initialWeeks } from "@/data/coursedata";
 import { Week, Item } from "@/components/Course/types";
 import WeekComponent from "./WeekComponent";
+import { fetchCourseContent } from "@/services/course.service";
+import { useParams } from "next/navigation";
+import Loader from "@/components/Loarder/Loarder";
 
 const Sidebar: React.FC = () => {
   const { selectedTopic, setSelectedTopic } = useSelectedTopic();
-  const [weeks, setWeeks] = useState<Week[]>(initialWeeks);
+  const [weeks, setWeeks] = useState<Week[]>([]);
   const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const params = useParams();
+
+  const courseId = params.id;
+
+  useEffect(() => {
+    const loadCourseContent = async () => {
+      if (!courseId) return;
+      try {
+        const data = await fetchCourseContent(courseId as string);
+        setWeeks(data.weeks);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    loadCourseContent();
+    setIsLoading(false);
+  }, [courseId]);
 
   const toggleWeek = useCallback(
     (weekIndex: number) => {
@@ -20,7 +40,7 @@ const Sidebar: React.FC = () => {
   const addNewWeek = useCallback(() => {
     setWeeks((prevWeeks) => [
       ...prevWeeks,
-      { weekname: `Week ${prevWeeks.length + 1}`, chapters: [] },
+      { name: `Week ${prevWeeks.length + 1}`, chapters: [] },
     ]);
   }, []);
 
@@ -31,7 +51,7 @@ const Sidebar: React.FC = () => {
         ...newWeeks[weekIndex],
         chapters: [
           ...newWeeks[weekIndex].chapters,
-          { title: topicName, items: [] },
+          { name: topicName, items: [] },
         ],
       };
       return newWeeks;
@@ -70,7 +90,9 @@ const Sidebar: React.FC = () => {
             if (cIdx !== chapterIndex) return chapter;
             return {
               ...chapter,
-              items: chapter.items ? chapter.items.filter((_, iIdx) => iIdx !== itemIndex) : [],
+              items: chapter.items
+                ? chapter.items.filter((_, iIdx) => iIdx !== itemIndex)
+                : [],
             };
           }),
         };
@@ -85,7 +107,9 @@ const Sidebar: React.FC = () => {
       const newWeeks = [...prevWeeks];
       newWeeks[weekIndex] = {
         ...newWeeks[weekIndex],
-        chapters: newWeeks[weekIndex].chapters.filter((_, cIdx) => cIdx !== chapterIndex),
+        chapters: newWeeks[weekIndex].chapters.filter(
+          (_, cIdx) => cIdx !== chapterIndex
+        ),
       };
       return newWeeks;
     });
@@ -95,19 +119,26 @@ const Sidebar: React.FC = () => {
     setWeeks((prevWeeks) => prevWeeks.filter((_, wIdx) => wIdx !== weekIndex));
   }, []);
 
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <div className="fixed left-0 w-3/12 bg-gray-white h-full overflow-y-auto mb-96">
       <div className="w-84 p-8 border-r bg-white border-gray-200 h-full pb-20 mb-96">
         <div className="mt-4 mb-10">
           <h3 className="text-lg font-semibold">Progress</h3>
           <div className="relative h-2 mt-2 bg-gray-300 rounded">
-            <div className="absolute top-0 left-0 h-full bg-blue-600 rounded w-3/12" style={{ width: "25%" }}></div>
+            <div
+              className="absolute top-0 left-0 h-full bg-blue-600 rounded w-3/12"
+              style={{ width: "25%" }}
+            ></div>
           </div>
           <p className="my-2 text-sm text-gray-600">
             4 of the 20 videos have been completed
           </p>
         </div>
-        {weeks.map((week, weekIndex) => (
+        {weeks && weeks.map((week, weekIndex) => (
           <WeekComponent
             key={weekIndex}
             weekIndex={weekIndex}
