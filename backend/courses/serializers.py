@@ -72,7 +72,6 @@ class ChapterSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation["items"] = ItemSerializer(instance.components, many=True).data
-        print(instance.components)
         return representation    
 
 
@@ -83,7 +82,6 @@ class ItemSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_representation(self, instance):
-        # print(instance.component_type)
         if instance.component_type == "Note":
             return NoteSerializer(instance.note).data
         elif instance.component_type == "Quiz":
@@ -103,6 +101,7 @@ class NoteSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation["type"] = "Note"
         representation["content"] =  instance.content
+        return representation
 
 class ImageSerializer(serializers.ModelSerializer):
 
@@ -124,6 +123,8 @@ class QuizSerializer(serializers.ModelSerializer):
             "full_grades":instance.full_grades, 
             "questions":instance.questions 
         }      
+        return representation
+
 
 
 class VideoSerializer(serializers.ModelSerializer):
@@ -139,3 +140,4 @@ class VideoSerializer(serializers.ModelSerializer):
             "url":instance.url,
             "duration":instance.duration  
         }         
+        return representation
