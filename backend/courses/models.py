@@ -65,7 +65,7 @@ class Chapter(models.Model):
 
 class Component(models.Model):
     name = models.CharField(max_length=255)
-    component_type = models.CharField(max_length=255,blank=True, null=True)
+    type = models.CharField(max_length=255, blank=True, null=True)
     chapter = models.ForeignKey(
         Chapter, related_name="components", on_delete=models.PROTECT
     )
