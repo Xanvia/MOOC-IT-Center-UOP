@@ -59,7 +59,7 @@ class WeekSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["topics"] = ChapterSerializer(instance.chapters, many=True).data
+        representation["chapters"] = ChapterSerializer(instance.chapters, many=True).data
         return representation
 
 
