@@ -64,6 +64,9 @@ class WeekViewSet(viewsets.ModelViewSet):
     queryset = Week.objects.all()
     serializer_class = WeekSerializer
 
+    def get_queryset(self):
+        return super().get_queryset().filter(course=self.kwargs["pk"])
+
     def create(self, request, *args, **kwargs):
 
         request.data["course"] = kwargs["pk"]
@@ -74,6 +77,17 @@ class WeekViewSet(viewsets.ModelViewSet):
             "message": "Week created successfully",
         }
         return response
+    
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "data": response.data
+        }
+        return response
+
+
     
     def destroy(self, request, *args, **kwargs):
         response = super().destroy(request, *args, **kwargs)
@@ -114,7 +128,6 @@ class NoteViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
 
         request.data["chapter"] = kwargs["chapter_id"]
-        request.data["component_type"] = "note"
         response = super().create(request, *args, **kwargs)
 
         response.data = {

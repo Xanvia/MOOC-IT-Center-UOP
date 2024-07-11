@@ -21,7 +21,7 @@ urlpatterns = [
         ),
         name="course-detail",
     ),
-    path("<int:pk>/week/", WeekViewSet.as_view({"post": "create"}), name="week-list"),
+    path("<int:pk>/week/", WeekViewSet.as_view({"post": "create", "get":"list"}), name="week-list"),
     path(
         "week/<int:pk>/", WeekViewSet.as_view({"delete": "destroy"}), name="week-detail"
     ),
