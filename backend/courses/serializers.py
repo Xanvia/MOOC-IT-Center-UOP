@@ -92,7 +92,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class NoteSerializer(serializers.ModelSerializer):
-    component_type = "Note"
+    component_type = serializers.CharField(default="Note")
 
     class Meta:
         model = Note
@@ -112,7 +112,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class QuizSerializer(serializers.ModelSerializer):
-    component_type = "Quiz"
+    component_type = serializers.CharField(default="Quiz")
 
     class Meta:
         model = Quiz
@@ -129,7 +129,7 @@ class QuizSerializer(serializers.ModelSerializer):
 
 
 class VideoSerializer(serializers.ModelSerializer):
-    component_type = "Video"
+    component_type = serializers.CharField(default="Video")
 
     class Meta:
         model = Video
@@ -137,5 +137,8 @@ class VideoSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["content"] = {"url": instance.url, "duration": instance.duration}
+        representation["content"] = {
+            "video_link": instance.video_link,
+            "duration": instance.duration,
+        }
         return representation
