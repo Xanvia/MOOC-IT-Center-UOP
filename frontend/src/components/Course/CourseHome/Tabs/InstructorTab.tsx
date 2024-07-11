@@ -19,6 +19,7 @@ const instructors: Instructor[] = [
     description: 'John Doe is a highly experienced instructor...',
   },
   
+  
 ];
 
 const Example: React.FC = () => {
