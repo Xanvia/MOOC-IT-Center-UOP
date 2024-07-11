@@ -31,12 +31,9 @@ const InnerLayout: React.FC<InnerLayoutProps> = ({ children }) => {
               <div style={{ flexShrink: 0 }}>
                 <Sidebar />
               </div>
-              <div style={{ flexGrow: 1 }}>
-                {children}
-              </div>
+              <div style={{ flexGrow: 1 }}>{children}</div>
             </div>
           </div>
-          
         </div>
       </SelectedTopicProvider>
     </>

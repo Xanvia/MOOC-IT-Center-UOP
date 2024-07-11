@@ -7,29 +7,12 @@ import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import { editNote } from "@/services/course.service";
 import { toast } from "sonner";
 
-const content = `
-    <h2 >What is Web Developing</h2>
-    <p>Web development is the process of creating websites and web applications. It involves various technologies and practices that allow developers to build and maintain web content that can be accessed through browsers. Here are some key subtopics to understand in an introduction to web development: Web development is the process of creating websites and web applications. It involves various technologies and practices that allow developers to build and maintain web content that can be accessed through browsers. Here are some key subtopics to understand in an introduction to web development:</p>
-    <p>Web development is the process of creating websites and web applications. It involves various technologies and practices that allow developers to build and maintain web content that can be accessed through browsers. Here are some key subtopics to understand in an introduction to web development: Web developmntroduction to web development</p>
-    <div>
-      <img src="/images/webimagee.jpg" alt="Description of web development"  />
-      <h2 >Key Subtopics</h2>
-      <ul>
-        <li>HTML (HyperText Markup Language)</li>
-        <li>CSS (Cascading Style Sheets)</li>
-        <li>JavaScript</li>
-        <li>Web Development Tools and Environments</li>
-        <li>Front-end Frameworks and Libraries</li>
-        <li>Back-end Development</li>
-        <li>Full-stack Development</li>
-        <li>Web Hosting and Deployment</li>
-        <li>Web Development Best Practices</li>
-      </ul>
-    </div>
-    <p >Web development is the process of creating websites and web applications. It involves various technologies and practices that allow developers to build and maintain web content that can be accessed through browsers. Here are some key subtopics to understand in an introduction to web development: Web development is the process of creating websites and web apply.</p>
-  `;
+interface NoteProps {
+  id?: number;
+  content: string;
+}
 
-const Note: React.FC = () => {
+const Note: React.FC<NoteProps> = ({id,content}) => {
   const isEdit = true;
   const noteId = 5;
 
@@ -37,7 +20,7 @@ const Note: React.FC = () => {
 
   const handleSave = async (value: string) => {
     try {
-      const response = await editNote(1, value);
+      const response = await editNote(10, value);
       toast.success(response.message);
       setEditView(false);
     } catch (error: any) {
