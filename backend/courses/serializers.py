@@ -1,6 +1,16 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Course, Week, Chapter, Component, Note, Image, Video, Quiz
+from .models import (
+    Course,
+    Week,
+    Chapter,
+    Component,
+    Note,
+    Image,
+    Video,
+    Quiz,
+    VideoFile,
+)
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
 
@@ -59,7 +69,9 @@ class WeekSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["chapters"] = ChapterSerializer(instance.chapters, many=True).data
+        representation["chapters"] = ChapterSerializer(
+            instance.chapters, many=True
+        ).data
         return representation
 
 
@@ -137,6 +149,9 @@ class VideoSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
+        representation.pop("video_link")
+        representation.pop("chapter")
+        representation.pop("video_id")
         representation["content"] = {
             "video_link": instance.video_link,
             "duration": instance.duration,
