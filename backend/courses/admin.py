@@ -14,6 +14,7 @@ from .models import (
     Answer,
     UserAnswer,
     UserCodingAnswer,
+    VideoFile,
 )
 
 
@@ -39,4 +40,9 @@ class NoteAdmin(admin.ModelAdmin):
 
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
-    list_display = ["id", "video_link"]
+    list_display = ["id", "name", "video_link"]
+
+
+@admin.register(VideoFile)
+class VideoFileAdmin(admin.ModelAdmin):
+    list_display = ["id"]

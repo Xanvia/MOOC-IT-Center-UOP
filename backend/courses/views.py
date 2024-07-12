@@ -1,14 +1,16 @@
 from rest_framework import viewsets, generics
-from .models import Course, Week, Chapter, Note, Image
+from .models import Course, Week, Chapter, Note, Image, Video, VideoFile
 from .serializers import (
     CourseSerializer,
     WeekSerializer,
     ChapterSerializer,
     NoteSerializer,
     ImageSerializer,
+    VideoSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -77,18 +79,13 @@ class WeekViewSet(viewsets.ModelViewSet):
             "message": "Week created successfully",
         }
         return response
-    
+
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
-        response.data = {
-            "status": "success",
-            "data": response.data
-        }
+        response.data = {"status": "success", "data": response.data}
         return response
 
-
-    
     def destroy(self, request, *args, **kwargs):
         response = super().destroy(request, *args, **kwargs)
 
@@ -97,6 +94,7 @@ class WeekViewSet(viewsets.ModelViewSet):
             "message": "Week deleted successfully",
         }
         return response
+
 
 class ChapterViewSet(viewsets.ModelViewSet):
     queryset = Chapter.objects.all()
@@ -121,6 +119,8 @@ class ChapterViewSet(viewsets.ModelViewSet):
             "message": "Chapter deleted successfully",
         }
         return response
+
+
 class NoteViewSet(viewsets.ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
@@ -147,7 +147,7 @@ class NoteViewSet(viewsets.ModelViewSet):
             "message": "Note updated successfully",
         }
         return response
-    
+
     def destroy(self, request, *args, **kwargs):
         response = super().destroy(request, *args, **kwargs)
 
@@ -156,6 +156,7 @@ class NoteViewSet(viewsets.ModelViewSet):
             "message": "Note deleted successfully",
         }
         return response
+
 
 class ImageUpload(generics.CreateAPIView):
     queryset = Image.objects.all()
@@ -172,5 +173,33 @@ class ImageUpload(generics.CreateAPIView):
                 "id": response.data["id"],
                 "url": response.data["image"],
             },
+        }
+        return response
+
+
+class VideoViewSet(viewsets.ModelViewSet):
+    queryset = Video.objects.all()
+    serializer_class = VideoSerializer
+
+    def get_video_link(self, request, *args, **kwargs):
+        if "video_file" not in request.data:
+            raise ValidationError({"video_file": "This field is required"})
+
+        video_file = request.data["video_file"]
+        saved_video_file = VideoFile.objects.create(file=video_file)
+        link = f"http://localhost:8000/media/{saved_video_file.file.url}"
+        return link, saved_video_file.id
+
+    def create(self, request, *args, **kwargs):
+
+        request.data["chapter"] = kwargs["chapter_id"]
+        link, id = self.get_video_link(request, *args, **kwargs)
+        request.data["video_link"] = link
+        request.data["video_id"] = id
+        response = super().create(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Video created successfully",
         }
         return response

@@ -72,7 +72,8 @@ class Component(models.Model):
 
 
 class Video(Component):
-    video_link = models.URLField()
+    video_id = models.CharField(max_length=255, blank=True, null=True)
+    video_link = models.URLField(blank=True, null=True)
     duration = models.CharField(max_length=255, null=True, blank=True)
 
 
@@ -138,3 +139,8 @@ class UserCodingAnswer(models.Model):
     code = models.TextField()
     result = models.TextField()
     grade = models.DecimalField(max_digits=5, decimal_places=2)
+
+
+class VideoFile(models.Model):
+    file = models.FileField(upload_to="videos/")
+    created_at = models.DateTimeField(auto_now_add=True)
