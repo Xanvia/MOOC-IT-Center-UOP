@@ -10,7 +10,6 @@ from .serializers import (
 )
 from rest_framework import status
 from rest_framework.response import Response
-from .utils import upload_video_to_youtube
 from rest_framework.exceptions import ValidationError
 
 
