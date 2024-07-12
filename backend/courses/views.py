@@ -83,7 +83,12 @@ class WeekViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
-        response.data = {"status": "success", "data": response.data}
+        response.data = {
+            "status": "success",
+            "data": {
+                "weeks": response.data,
+            },
+        }
         return response
 
     def destroy(self, request, *args, **kwargs):
