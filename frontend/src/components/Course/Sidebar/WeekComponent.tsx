@@ -1,17 +1,21 @@
-import React, { useState, useCallback } from 'react';
-import { Week, Item } from '@/components/Course/types';
-import { FaChevronRight, FaChevronDown, FaPlus, FaTrash } from 'react-icons/fa';
-import ChapterComponent from './ChapterComponent';
-import ConfirmDeleteModal from '../Modals/ConfrimDeleteModal';
+import React, { useState, useCallback } from "react";
+import { Week, Item } from "@/components/Course/types";
+import { FaChevronRight, FaChevronDown, FaPlus, FaTrash } from "react-icons/fa";
+import ChapterComponent from "./ChapterComponent";
+import ConfirmDeleteModal from "../Modals/ConfrimDeleteModal";
 
 interface WeekComponentProps {
   weekIndex: number;
   week: Week;
   expanded: boolean;
   toggleWeek: (weekIndex: number) => void;
-  addTopic: (weekIndex: number, topicName: string) => void;
-  addItem: (weekIndex: number, chapterIndex: number, item: Item) => void;
-  removeItem: (weekIndex: number, chapterIndex: number, itemIndex: number) => void;
+  addTopic: (weekIndex: number, topicName: string, weekId: string) => void;
+  addItem: (weekIndex: number, chapterIndex: number,chapterId: string ,item: Item) => void;
+  removeItem: (
+    weekIndex: number,
+    chapterIndex: number,
+    itemIndex: number
+  ) => void;
   removeTopic: (weekIndex: number, chapterIndex: number) => void;
   removeWeek: (weekIndex: number) => void;
   selectedTopic: Item | null;
@@ -31,31 +35,32 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
   selectedTopic,
   setSelectedTopic,
 }) => {
-  const [newTopicName, setNewTopicName] = useState<string>('');
+  const [newTopicName, setNewTopicName] = useState<string>("");
   const [showNewTopicInput, setShowNewTopicInput] = useState<boolean>(false);
-  const [expandedSubtopics, setExpandedSubtopics] = useState<{ [key: number]: boolean }>({});
+  const [expandedSubtopics, setExpandedSubtopics] = useState<{
+    [key: number]: boolean;
+  }>({});
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const toggleSubtopic = useCallback(
-    (chapterIndex: number) => {
-      setExpandedSubtopics((prev) => ({
-        ...prev,
-        [chapterIndex]: !prev[chapterIndex],
-      }));
-    },
-    []
-  );
+
+  const toggleSubtopic = useCallback((chapterIndex: number) => {
+    setExpandedSubtopics((prev) => ({
+      ...prev,
+      [chapterIndex]: !prev[chapterIndex],
+    }));
+  }, []);
 
   const handleAddNewTopic = useCallback(() => {
-    if (newTopicName.trim() !== '') {
-      addTopic(weekIndex, newTopicName);
-      setNewTopicName('');
+    const weekId = week.id || "";
+    if (newTopicName.trim() !== "") {
+      addTopic(weekIndex, newTopicName, weekId as string);
+      setNewTopicName("");
       setShowNewTopicInput(false);
     }
   }, [newTopicName, weekIndex, addTopic]);
 
   const handleTopicKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleAddNewTopic();
     }
   };
@@ -68,11 +73,21 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
   return (
     <div className="mb-8 mx-2 pb-2">
       <div className="flex items-center justify-between">
-        <h4 className="text-md font-medium text-primary pb-1 mb-2 cursor-pointer flex items-center" onClick={() => toggleWeek(weekIndex)}>
-          {expanded ? <FaChevronDown className="mr-2" /> : <FaChevronRight className="mr-2" />}
+        <h4
+          className="text-md font-medium text-primary pb-1 mb-2 cursor-pointer flex items-center"
+          onClick={() => toggleWeek(weekIndex)}
+        >
+          {expanded ? (
+            <FaChevronDown className="mr-2" />
+          ) : (
+            <FaChevronRight className="mr-2" />
+          )}
           {week.name}
         </h4>
-        <button className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600" onClick={() => setShowModal(true)}>
+        <button
+          className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
+          onClick={() => setShowModal(true)}
+        >
           <FaTrash />
         </button>
       </div>
@@ -103,19 +118,28 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
                 onKeyPress={handleTopicKeyPress}
                 placeholder="Enter topic name"
               />
-              <button className="ml-2 bg-blue-600 text-white p-2 rounded hover:bg-blue-800" onClick={handleAddNewTopic}>
+              <button
+                className="ml-2 bg-blue-600 text-white p-2 rounded hover:bg-blue-800"
+                onClick={handleAddNewTopic}
+              >
                 <FaPlus />
               </button>
             </div>
           ) : (
-            <button className="w-60 mt-4 ml-5 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400" onClick={() => setShowNewTopicInput(true)}>
+            <button
+              className="w-60 mt-4 ml-5 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400"
+              onClick={() => setShowNewTopicInput(true)}
+            >
               Add Topic +
             </button>
           )}
         </div>
       )}
       {showModal && (
-        <ConfirmDeleteModal setShowModal={setShowModal} handleDelete={handleDelete}/>
+        <ConfirmDeleteModal
+          setShowModal={setShowModal}
+          handleDelete={handleDelete}
+        />
       )}
     </div>
   );

@@ -16,7 +16,7 @@ interface ChapterComponentProps {
   chapter: Chapter;
   expanded: boolean;
   toggleSubtopic: (chapterIndex: number) => void;
-  addItem: (weekIndex: number, chapterIndex: number, item: Item) => void;
+  addItem: (weekIndex: number, chapterIndex: number,chapterId : string, item: Item) => void;
   removeItem: (
     weekIndex: number,
     chapterIndex: number,
@@ -73,8 +73,9 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
   );
 
   const handleAddNewItem = useCallback(() => {
+    const chapterId = chapter.id || "";
     if (newItemName.trim() !== "") {
-      addItem(weekIndex, chapterIndex, {
+      addItem(weekIndex, chapterIndex,chapterId as string,{
         name: newItemName,
         type: newItemType as "Video" | "Note" | "Quiz",
         content: "",

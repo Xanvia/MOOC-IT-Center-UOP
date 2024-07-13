@@ -57,11 +57,9 @@ const Sidebar: React.FC = () => {
     }
   }, [weeks, courseId]);
 
-  const addTopic = useCallback(async (weekIndex: number, topicName: string) => {
-    const parentId = weeks[weekIndex].id || "";
-    console.log(weeks)
+  const addTopic = useCallback(async (weekIndex: number, topicName: string,weekId : string) => {
     try {
-      const response = await createChapter(parentId as string, topicName);
+      const response = await createChapter(weekId as string, topicName);
       console.log(response)
       toast.success(response.message);
       setWeeks((prevWeeks) => {
@@ -81,14 +79,12 @@ const Sidebar: React.FC = () => {
   }, []);
 
   const addItem = useCallback(
-    async (weekIndex: number, chapterIndex: number, item: Item) => {
-      const parentId = weeks[weekIndex].chapters[chapterIndex].id || "";
+    async (weekIndex: number, chapterIndex: number,chapterId:string, item: Item) => {
       let response;
       try {
         switch (item.type) {
           case "Note":
-            console.log(item.name)
-            response = await createNote(parentId as string, item.name);
+            response = await createNote(chapterId as string, item.name);
             break;
           case "Video":
             break;
