@@ -1,32 +1,34 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Note from "@/components/Course/Note/Note";
 import CourseVideo from "@/components/Course/CourseVideo/CourseVideo";
 import { useSelectedTopic } from "@/contexts/SidebarContext";
+import { Item } from "@/components/Course/types";
 
 const Page: React.FC = () => {
-  const { selectedTopic, setSelectedTopic } = useSelectedTopic();
+  const { selectedTopic } = useSelectedTopic();
+  const [item, setItem] = useState<Item>({ ...selectedTopic });
 
-  const renderContent = () => {
-    switch (selectedTopic.type) {
-      case "Note":
-        return (
-          <div className="flex-grow p-4 mb-96 ml-96">
-            <Note selectedTopic={selectedTopic} />
-          </div>
-        );
-      case "Video":
-        return (
-          <div className="flex-grow p-4 mb-96 ml-96">
-            <CourseVideo videoURL={selectedTopic.content.video_link} title={selectedTopic.name} />
-          </div>
-        );
-      default:
-        return <div>No content available</div>;
-    }
-  };
+  useEffect(() => {
+    setItem({ ...selectedTopic });
+    console.log(selectedTopic.content);
+  }, [selectedTopic]);
 
-  return <>{renderContent()}</>;
+  return (
+    <>
+      {item.type === "Note" ? (
+        <div className="flex-grow p-4 mb-96 ml-96" key={item.id}>
+          <Note selectedTopic={item} />
+        </div>
+      ) : item.type === "Video" ? (
+        <div className="flex-grow p-4 mb-96 ml-96" key={item.id}>
+          <CourseVideo videoURL={item.content.video_link} title={item.name} />
+        </div>
+      ) : (
+        <div>No content available</div>
+      )}
+    </>
+  );
 };
 
 export default Page;
