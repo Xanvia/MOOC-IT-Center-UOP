@@ -1,51 +1,143 @@
 "use client";
-import React, { useRef } from 'react';
+import React, { useRef, useState } from "react";
 
-const CourseVideo: React.FC = ({}) => {
-    const videoRef = useRef<HTMLVideoElement>(null);
+interface CourseVideoProps {
+  videoURL: string;
+  title:string;
+}
 
-    const handlePlayPause = () => {
-      if (videoRef.current) {
-        if (videoRef.current.paused) {
-          videoRef.current.play();
-        } else {
-          videoRef.current.pause();
-        }
+const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL,title }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(1);
+  const [isEnded, setIsEnded] = useState(false);
+
+  const handlePlayPause = () => {
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play();
+        setIsPlaying(true);
+        setIsEnded(false);
+      } else {
+        videoRef.current.pause();
+        setIsPlaying(false);
       }
-    };
+    }
+  };
+
+  const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (videoRef.current) {
+      const newVolume = Number(event.target.value);
+      videoRef.current.volume = newVolume;
+      setVolume(newVolume);
+    }
+  };
+
+  const handleReplay = () => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play();
+      setIsPlaying(true);
+      setIsEnded(false);
+    }
+  };
+
+  const handleVideoEnd = () => {
+    setIsPlaying(false);
+    setIsEnded(true);
+  };
 
   return (
-  
     <div className="my-14 mx-12 p-3 border border-gray-200 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4">Web Programming</h2>
-        <h3 className="text-xl font-medium mb-4">Learn how to create and develop websites using HTML, CSS, and JavaScript.</h3>
-        <div className="relative my-4">
-            <video className="max-w-full w-full h-96 object-cover" poster="/images/course1.png">
-                <source 
-                    src="https://www.youtube.com/embed/tN6oJu2DqCM?si=-C7zktITm4PYG5Vd" 
-                    type="video/mp4" />
-            </video>
-
-
-            <div className="absolute inset-0 flex justify-center items-center">
-                <button onClick={handlePlayPause} className=" shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out">
-                    <svg className="fill-yellow-400 w-20 h-20"
-                        xmlns="http://www.w3.org/2000/svg" 
-                        viewBox="0 0 384 512">
-                            
-                        <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/>
-                    </svg>
-                </button>
-            </div>
-
-            
+      <h2 className="text-2xl font-semibold mb-4">{title}</h2>
+      {/* <h3 className="text-xl font-medium mb-4">Instalasi Tools</h3> */}
+      <div className="relative my-4 group">
+        <video
+          ref={videoRef}
+          className="w-full h-auto max-h-96 object-cover"
+          onEnded={handleVideoEnd}
+          controls={false}
+        >
+          <source src={videoURL} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 flex justify-center items-center">
+          {isPlaying && !isEnded && (
+            <button
+              onClick={handlePlayPause}
+              className="hidden group-hover:block shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out"
+            >
+              <svg
+                className="w-16 h-16 text-yellow-500"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 5.293a1 1 0 011.414 0L10 9.586l4.293-4.293a1 1 0 011.414 1.414L11.414 11l4.293 4.293a1 1 0 01-1.414 1.414L10 12.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 11 4.293 6.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          )}
+          {(!isPlaying || isEnded) && (
+            <button
+              onClick={handlePlayPause}
+              className="shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out"
+            >
+              <svg
+                className="w-16 h-16 text-yellow-500"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M6.293 4.293a1 1 0 011.414 0L13 9.586a1 1 0 010 1.414L7.707 16.707a1 1 0 01-1.414-1.414L10.586 11 6.293 6.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          )}
+          {isEnded && (
+            <button
+              onClick={handleReplay}
+              className="shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out"
+            >
+              <svg
+                className="w-16 h-16 text-yellow-500"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M6.293 4.293a1 1 0 011.414 0L13 9.586a1 1 0 010 1.414L7.707 16.707a1 1 0 01-1.414-1.414L10.586 11 6.293 6.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          )}
         </div>
-        <div className="flex justify-between">
-            <button className="bg-yellow-400 text-white py-2 px-4 rounded-lg shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out">Prev</button>
-            <button className="bg-yellow-400 text-white py-2 px-4 rounded-lg shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out">Mark as completed</button>
-        </div>       
+      </div>
+      <div className="flex justify-between items-center">
+        <button className="bg-yellow-500 text-white py-2 px-4 rounded">Prev</button>
+        <div className="flex items-center">
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={handleVolumeChange}
+            className="mr-2"
+          />
+          <span>{Math.round(volume * 100)}%</span>
+        </div>
+        <button className="bg-yellow-500 text-white py-2 px-4 rounded">Mark as completed</button>
+      </div>
     </div>
-);
+  );
 };
 
 export default CourseVideo;
