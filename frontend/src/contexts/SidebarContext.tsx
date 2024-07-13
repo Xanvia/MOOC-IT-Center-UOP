@@ -1,6 +1,5 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { initialWeeks } from "@/data/coursedata";
 import { Item } from "@/components/Course/types";
 interface SelectedTopicContextType {
   selectedTopic: Item;
@@ -18,9 +17,12 @@ interface SelectedTopicProviderProps {
 export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
   children,
 }) => {
-  const [selectedTopic, setSelectedTopic] = useState<Item>(
-    initialWeeks[0].chapters[0].items![0]
-  );
+  const [selectedTopic, setSelectedTopic] = useState<Item>({
+    id: 0,
+    name: "",
+    content: "",
+    type: "Note",
+  });
 
   return (
     <SelectedTopicContext.Provider value={{ selectedTopic, setSelectedTopic }}>
