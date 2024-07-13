@@ -22,6 +22,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     def filter_queryset(self, queryset):
         if self.action == "list":
             return super().filter_queryset(queryset).filter(status="published")
+        return super().filter_queryset(queryset)
 
     def retrieve(self, request, *args, **kwargs):
         response = super().retrieve(request, *args, **kwargs)
