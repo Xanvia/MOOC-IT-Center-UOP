@@ -112,7 +112,7 @@ class WeekViewSet(viewsets.ModelViewSet):
 
         response.data = {
             "status": "success",
-            "message": "Chapter deleted successfully",
+            "message": "Week deleted successfully",
         }
         return response
 
