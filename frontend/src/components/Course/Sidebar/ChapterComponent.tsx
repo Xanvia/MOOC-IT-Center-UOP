@@ -15,14 +15,24 @@ interface ChapterComponentProps {
   chapterIndex: number;
   chapter: Chapter;
   expanded: boolean;
-  toggleSubtopic: (weekIndex: number, chapterIndex: number) => void;
-  addItem: (weekIndex: number, chapterIndex: number, item: Item) => void;
+  toggleSubtopic: (chapterIndex: number) => void;
+  addItem: (
+    weekIndex: number,
+    chapterIndex: number,
+    chapterId: string,
+    item: Item
+  ) => void;
   removeItem: (
     weekIndex: number,
     chapterIndex: number,
-    itemIndex: number
+    itemIndex: number,
+    itemId: string
   ) => void;
-  removeTopic: (weekIndex: number, chapterIndex: number) => void;
+  removeTopic: (
+    weekIndex: number,
+    chapterIndex: number,
+    chapterId: string
+  ) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
 }
@@ -47,13 +57,13 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
 }) => {
   const [newItemName, setNewItemName] = useState<string>("");
   const [showNewItemInput, setShowNewItemInput] = useState<boolean>(false);
-  const [newItemType, setNewItemType] = useState<string>("video");
+  const [newItemType, setNewItemType] = useState<string>("Video");
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const options: OptionType[] = [
-    { value: "video", label: "Video", type: "video" },
-    { value: "note", label: "Note", type: "note" },
-    { value: "quiz", label: "Quiz", type: "quiz" },
+    { value: "Video", label: "Video", type: "Video" },
+    { value: "Note", label: "Note", type: "Note" },
+    { value: "Quiz", label: "Quiz", type: "Quiz" },
   ];
 
   const customSingleValue = ({ data }: SingleValueProps<OptionType>) => (
@@ -73,10 +83,11 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
   );
 
   const handleAddNewItem = useCallback(() => {
+    const chapterId = chapter.id || "";
     if (newItemName.trim() !== "") {
-      addItem(weekIndex, chapterIndex, {
-        title: newItemName,
-        type: newItemType as "video" | "note" | "quiz",
+      addItem(weekIndex, chapterIndex, chapterId as string, {
+        name: newItemName,
+        type: newItemType as "Video" | "Note" | "Quiz",
         content: "",
       });
       setNewItemName("");
@@ -92,7 +103,8 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
   };
 
   const handleDelete = () => {
-    removeTopic(weekIndex, chapterIndex);
+    const chapterId = chapter.id || "";
+    removeTopic(weekIndex, chapterIndex, chapterId as string);
     setShowModal(false);
   };
 
@@ -170,14 +182,14 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
       <div className="flex items-center justify-between">
         <h5
           className="font-medium ml-4 my-4 cursor-pointer flex items-center max-w-48 leading-tight"
-          onClick={() => toggleSubtopic(weekIndex, chapterIndex)}
+          onClick={() => toggleSubtopic(chapterIndex)}
         >
           {expanded ? (
             <FaChevronDown className="mr-2" />
           ) : (
             <FaChevronRight className="mr-2" />
           )}
-          {chapter.title}
+          {chapter.name}
         </h5>
         <button
           className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"

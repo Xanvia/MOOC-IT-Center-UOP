@@ -150,7 +150,6 @@ class VideoSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation.pop("video_link")
-        representation.pop("chapter")
         representation.pop("video_id")
         representation["content"] = {
             "video_link": instance.video_link,

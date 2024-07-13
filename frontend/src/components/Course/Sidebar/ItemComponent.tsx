@@ -12,7 +12,8 @@ interface ItemComponentProps {
   removeItem: (
     weekIndex: number,
     chapterIndex: number,
-    itemIndex: number
+    itemIndex: number,
+    itemId: string
   ) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
@@ -35,7 +36,8 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
   };
 
   const handleDelete = () => {
-    removeItem(weekIndex, chapterIndex, itemIndex);
+    const itemId = item.id || "";
+    removeItem(weekIndex, chapterIndex, itemIndex, itemId as string);
     setShowModal(false);
   };
 
@@ -48,7 +50,7 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
         onClick={handleSelect}
       >
         <SideBarIcon type={item.type} />
-        {item.title}
+        {item.name}
       </p>
       <button
         className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"

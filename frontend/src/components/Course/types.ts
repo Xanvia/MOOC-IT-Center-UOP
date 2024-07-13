@@ -1,15 +1,18 @@
 export interface Item {
-  title: string;
-  content: JSX.Element | string;
-  type: "video" | "note" | "quiz";
+  id?: number;
+  name: string;
+  content: string;
+  type: "Video" | "Note" | "Quiz";
 }
 
 export interface Chapter {
-  title: string;
+  id?: number;
+  name: string;
   items?: Item[];
 }
 
 export interface Week {
-  weekname: string;
+  id?: number;
+  name: string;
   chapters: Chapter[];
 }

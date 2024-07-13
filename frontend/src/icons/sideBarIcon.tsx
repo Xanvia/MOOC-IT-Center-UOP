@@ -6,7 +6,7 @@ interface SideBarIconProps {
 
 const SideBarIcon: React.FC<SideBarIconProps> = ({ type }) => {
   switch (type) {
-    case "video":
+    case "Video":
       return (
         <svg
           className="h-5 w-5 inline-block mr-2"
@@ -21,7 +21,7 @@ const SideBarIcon: React.FC<SideBarIconProps> = ({ type }) => {
           <polygon points="10 8 16 12 10 16 10 8" />
         </svg>
       );
-    case "note":
+    case "Note":
       return (
         <svg
           className="h-5 w-5 inline-block mr-2"
@@ -39,7 +39,7 @@ const SideBarIcon: React.FC<SideBarIconProps> = ({ type }) => {
           <polyline points="10 9 9 9 8 9" />
         </svg>
       );
-    case "quiz":
+    case "Quiz":
       return (
         <svg
           className="h-5 w-5 inline-block mr-2"

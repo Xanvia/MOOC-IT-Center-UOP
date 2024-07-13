@@ -11,6 +11,7 @@ from .serializers import (
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
+from django.db.models.deletion import ProtectedError
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -67,27 +68,47 @@ class WeekViewSet(viewsets.ModelViewSet):
     serializer_class = WeekSerializer
 
     def get_queryset(self):
-        return super().get_queryset().filter(course=self.kwargs["pk"])
+        if self.action == "destroy":
+            return super().get_queryset()
+        return super().get_queryset().filter(course=self.kwargs["course_id"])
 
     def create(self, request, *args, **kwargs):
 
-        request.data["course"] = kwargs["pk"]
+        request.data["course"] = kwargs["course_id"]
         response = super().create(request, *args, **kwargs)
 
         response.data = {
             "status": "success",
             "message": "Week created successfully",
+            "data": {"id": response.data["id"]},
         }
         return response
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
-        response.data = {"status": "success", "data": response.data}
+        response.data = {
+            "status": "success",
+            "data": {
+                "weeks": response.data,
+            },
+        }
         return response
 
     def destroy(self, request, *args, **kwargs):
-        response = super().destroy(request, *args, **kwargs)
+        try:
+            response = super().destroy(request, *args, **kwargs)
+        except ProtectedError:
+            return Response(
+                {"status": "error", "message": "Week is not empty"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except Exception as e:
+            print(e)
+            return Response(
+                {"status": "error", "message": "An unexpected error occurred"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
         response.data = {
             "status": "success",
@@ -108,11 +129,24 @@ class ChapterViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Chapter created successfully",
+            "data": {"id": response.data["id"]},
         }
         return response
 
     def destroy(self, request, *args, **kwargs):
-        response = super().destroy(request, *args, **kwargs)
+        try:
+            response = super().destroy(request, *args, **kwargs)
+        except ProtectedError:
+            return Response(
+                {"status": "error", "message": "Chapter is not empty"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except Exception as e:
+            print(e)
+            return Response(
+                {"status": "error", "message": "An unexpected error occurred"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
         response.data = {
             "status": "success",
@@ -145,15 +179,6 @@ class NoteViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Note updated successfully",
-        }
-        return response
-
-    def destroy(self, request, *args, **kwargs):
-        response = super().destroy(request, *args, **kwargs)
-
-        response.data = {
-            "status": "success",
-            "message": "Note deleted successfully",
         }
         return response
 

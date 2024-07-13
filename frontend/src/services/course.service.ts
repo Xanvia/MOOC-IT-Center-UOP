@@ -106,12 +106,37 @@ export const uploadImage = async (
   }
 };
 
-export const createNote = async (chapterId: number, content: string) => {
+export const createNote = async (chapterId: string, name: string) => {
   try {
     const response = await axiosInstance.post(
-      `/course/chapter/${chapterId}/note`,
+      `/course/week/chapter/${chapterId}/note/`,
       {
-        content,
+        name,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const createWeek = async (courseId: string, name: string) => {
+  try {
+    const response = await axiosInstance.post(`/course/${courseId}/week/`, {
+      name,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const createChapter = async (weekId: string, name: string) => {
+  try {
+    const response = await axiosInstance.post(
+      `/course/week/${weekId}/chapter/`,
+      {
+        name,
       }
     );
     return response.data;
@@ -128,6 +153,42 @@ export const editNote = async (noteId: number, content: string) => {
         content,
       }
     );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const fetchCourseContent = async (courseId: string) => {
+  try {
+    const response = await axiosInstance.get(`/course/${courseId}/week/`);
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const deleteComponent = async (
+  componentType: "Note" | "Chapter" | "Week",
+  componentId: string
+) => {
+  let url = `/course/week`;
+  switch (componentType) {
+    case "Note":
+      url += `/chapter/note/${componentId}/`;
+      break;
+    case "Chapter":
+      url += `/chapter/${componentId}/`;
+      break;
+    case "Week":
+      url += `/${componentId}/`;
+      break;
+    default:
+      throw new Error("Invalid component type");
+  }
+
+  try {
+    const response = await axiosInstance.delete(url);
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
