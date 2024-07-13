@@ -9,7 +9,7 @@ from .models import (
     Image,
     Video,
     Quiz,
-    VideoFile,
+    Enrollment,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -156,3 +156,14 @@ class VideoSerializer(serializers.ModelSerializer):
             "duration": instance.duration,
         }
         return representation
+
+
+class EnrollementSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Enrollment
+        fields = "__all__"
+
+    def validate(self, attrs):
+        # TODO: check if user has an payment object that has not linked with an enrollement object
+        return super().validate(attrs)

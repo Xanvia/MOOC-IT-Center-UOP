@@ -1,5 +1,5 @@
 from rest_framework import viewsets, generics
-from .models import Course, Week, Chapter, Note, Image, Video, VideoFile
+from .models import Course, Week, Chapter, Note, Image, Video, VideoFile,Enrollment
 from .serializers import (
     CourseSerializer,
     WeekSerializer,
@@ -7,6 +7,7 @@ from .serializers import (
     NoteSerializer,
     ImageSerializer,
     VideoSerializer,
+    EnrollementSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -226,5 +227,23 @@ class VideoViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Video created successfully",
+        }
+        return response
+
+
+class EnrollementViewSet(viewsets.ModelViewSet):
+    serializer_class = EnrollementSerializer
+    queryset = Enrollment.objects.all()
+
+    def enroll(self, request, *args, **kwargs):
+        student = request.user
+        request.data["course"] = kwargs["course_id"]
+        request.data["student"] = student.id
+
+        response = super().create(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Enrolled successfully",
         }
         return response

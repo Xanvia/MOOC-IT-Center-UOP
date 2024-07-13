@@ -18,7 +18,9 @@ from courses.models import (
     Progress,
     UserAnswer,
     UserCodingAnswer,
+    Enrollment,
 )
+
 
 @receiver(post_migrate)
 def assign_permissions(sender, **kwargs):
@@ -36,7 +38,7 @@ def assign_permissions(sender, **kwargs):
         Question,
         Answer,
     ]
-    student_models = [Progress, UserAnswer, UserCodingAnswer]
+    student_models = [Progress, UserAnswer, UserCodingAnswer, Enrollment]
 
     # Get the groups
     admin = Group.objects.get(name="admin")
@@ -61,4 +63,3 @@ def assign_permissions(sender, **kwargs):
         # Assign the permissions to the student group
         for permission in permissions:
             student.permissions.add(permission)
-
