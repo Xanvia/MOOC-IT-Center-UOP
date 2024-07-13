@@ -229,20 +229,28 @@ class VideoViewSet(viewsets.ModelViewSet):
 
         video_file = request.data["video_file"]
         saved_video_file = VideoFile.objects.create(file=video_file)
-        link = f"http://localhost:8000{saved_video_file.file.url}"
-        return link, saved_video_file.id
+        return saved_video_file.file.url, saved_video_file.id
 
     def create(self, request, *args, **kwargs):
 
         request.data["chapter"] = kwargs["chapter_id"]
-        link, id = self.get_video_link(request, *args, **kwargs)
-        request.data["video_link"] = link
-        request.data["video_id"] = id
         response = super().create(request, *args, **kwargs)
 
         response.data = {
             "status": "success",
             "message": "Video created successfully",
+        }
+        return response
+    
+    def update(self, request, *args, **kwargs):
+        link, id = self.get_video_link(request, *args, **kwargs)
+        request.data["video_link"] = link
+        request.data["video_id"] = id
+        response = super().update(request, partial=True, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Video updated successfully",
         }
         return response
 

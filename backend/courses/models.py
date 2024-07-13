@@ -73,7 +73,7 @@ class Component(models.Model):
 
 class Video(Component):
     video_id = models.CharField(max_length=255, blank=True, null=True)
-    video_link = models.URLField(blank=True, null=True)
+    video_link = models.CharField(max_length=1000, blank=True, null=True)
     duration = models.CharField(max_length=255, null=True, blank=True)
 
 
