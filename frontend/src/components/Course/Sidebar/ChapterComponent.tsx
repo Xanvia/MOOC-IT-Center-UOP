@@ -15,7 +15,7 @@ interface ChapterComponentProps {
   chapterIndex: number;
   chapter: Chapter;
   expanded: boolean;
-  toggleSubtopic: (weekIndex: number, chapterIndex: number) => void;
+  toggleSubtopic: (chapterIndex: number) => void;
   addItem: (weekIndex: number, chapterIndex: number, item: Item) => void;
   removeItem: (
     weekIndex: number,
@@ -164,7 +164,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
   return (
     <div className="ml-4 mb-4">
       <div className="flex items-center justify-between">
-        <h5 className="font-medium ml-4 my-4 cursor-pointer flex items-center max-w-48 leading-tight" onClick={() => toggleSubtopic(weekIndex, chapterIndex)}>
+        <h5 className="font-medium ml-4 my-4 cursor-pointer flex items-center max-w-48 leading-tight" onClick={() => toggleSubtopic(chapterIndex)}>
           {expanded ? <FaChevronDown className="mr-2" /> : <FaChevronRight className="mr-2" />}
           {chapter.name}
         </h5>

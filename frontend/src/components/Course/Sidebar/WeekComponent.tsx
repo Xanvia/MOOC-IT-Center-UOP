@@ -33,7 +33,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
 }) => {
   const [newTopicName, setNewTopicName] = useState<string>('');
   const [showNewTopicInput, setShowNewTopicInput] = useState<boolean>(false);
-  const [expandedSubtopics, setExpandedSubtopics] = useState<{ [subtopicIndex: number]: boolean }>({});
+  const [expandedSubtopics, setExpandedSubtopics] = useState<{ [key: number]: boolean }>({});
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const toggleSubtopic = useCallback(
