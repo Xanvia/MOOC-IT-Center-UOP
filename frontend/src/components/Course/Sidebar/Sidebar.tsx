@@ -13,13 +13,6 @@ import { useParams } from "next/navigation";
 import Loader from "@/components/Loarder/Loarder";
 import { toast } from "sonner";
 
-interface addData {
-  parentId: string;
-  name: string;
-  action: string;
-  type?: string;
-}
-
 const Sidebar: React.FC = () => {
   const { selectedTopic, setSelectedTopic } = useSelectedTopic();
   const [weeks, setWeeks] = useState<Week[]>([]);
@@ -28,39 +21,6 @@ const Sidebar: React.FC = () => {
   const params = useParams();
 
   const courseId = params.id;
-
-  const handleAdd = useCallback(async (data: addData) => {
-    let response;
-    try {
-      switch (data.action) {
-        case "week":
-          response = await createWeek(data.parentId, data.name);
-          break;
-        case "chapter":
-          response = await createChapter(data.parentId, data.name);
-          break;
-        case "item":
-          switch (data.type) {
-            case "Video":
-              // response = await createVideo(data.parentId, data.name);
-              break;
-            case "Note":
-              response = await createNote(data.parentId, data.name);
-              break;
-            case "Quiz":
-              // response = await createQuiz(data.parentId, data.name);
-              break;
-            default:
-          }
-          break;
-        default:
-          break;
-      }
-      toast.success(response.message);
-    } catch (error: any) {
-      toast.error(error.message);
-    }
-  }, []);
 
   useEffect(() => {
     const loadCourseContent = async () => {
@@ -83,50 +43,82 @@ const Sidebar: React.FC = () => {
     [expandedWeek]
   );
 
-  const addNewWeek = useCallback(() => {
+  const addNewWeek = useCallback(async () => {
     const weekName = `Week ${weeks.length + 1}`;
-    handleAdd({ parentId: courseId as string, name: weekName, action: "week" });
-    setWeeks((prevWeeks) => [
-      ...prevWeeks,
-      { name: `Week ${prevWeeks.length + 1}`, chapters: [] },
-    ]);
+    try {
+      const response = await createWeek(courseId as string, weekName); // Added await here
+      toast.success(response.message);
+      setWeeks((prevWeeks) => [
+        ...prevWeeks,
+        { id: response.data.id, name: weekName, chapters: [] }, 
+      ]);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }, [weeks, courseId]);
 
-  }, []);
-
-  const addTopic = useCallback((weekIndex: number, topicName: string) => {
-    setWeeks((prevWeeks) => {
-      const newWeeks = [...prevWeeks];
-      newWeeks[weekIndex] = {
-        ...newWeeks[weekIndex],
-        chapters: [
-          ...newWeeks[weekIndex].chapters,
-          { name: topicName, items: [] },
-        ],
-      };
-      return newWeeks;
-    });
+  const addTopic = useCallback(async (weekIndex: number, topicName: string) => {
+    const parentId = weeks[weekIndex].id || "";
+    console.log(weeks)
+    try {
+      const response = await createChapter(parentId as string, topicName);
+      console.log(response)
+      toast.success(response.message);
+      setWeeks((prevWeeks) => {
+        const newWeeks = [...prevWeeks];
+        newWeeks[weekIndex] = {
+          ...newWeeks[weekIndex],
+          chapters: [
+            ...newWeeks[weekIndex].chapters,
+            {id:response.data.id, name: topicName, items: [] },
+          ],
+        };
+        return newWeeks;
+      });
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   }, []);
 
   const addItem = useCallback(
-    (weekIndex: number, chapterIndex: number, item: Item) => {
-      setWeeks((prevWeeks) => {
-        const newWeeks = prevWeeks.map((week, wIdx) => {
-          if (wIdx !== weekIndex) return week;
-          return {
-            ...week,
-            chapters: week.chapters.map((chapter, cIdx) => {
-              if (cIdx !== chapterIndex) return chapter;
-              return {
-                ...chapter,
-                items: [...(chapter.items || []), item],
-              };
-            }),
-          };
+    async (weekIndex: number, chapterIndex: number, item: Item) => {
+      const parentId = weeks[weekIndex].chapters[chapterIndex].id || "";
+      let response;
+      try {
+        switch (item.type) {
+          case "Note":
+            console.log(item.name)
+            response = await createNote(parentId as string, item.name);
+            break;
+          case "Video":
+            break;
+          case "Quiz":
+            break;
+          default:
+            break;
+        }
+        toast.success(response.message);
+        setWeeks((prevWeeks) => {
+          const newWeeks = prevWeeks.map((week, wIdx) => {
+            if (wIdx !== weekIndex) return week;
+            return {
+              ...week,
+              chapters: week.chapters.map((chapter, cIdx) => {
+                if (cIdx !== chapterIndex) return chapter;
+                return {
+                  ...chapter,
+                  items: [...(chapter.items || []), item],
+                };
+              }),
+            };
+          });
+          return newWeeks;
         });
-        return newWeeks;
-      });
+      } catch (error: any) {
+        toast.error(error.message);
+      }
     },
-    []
+    [weeks]
   );
 
   const removeItem = useCallback(

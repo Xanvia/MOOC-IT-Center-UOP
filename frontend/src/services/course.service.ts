@@ -106,12 +106,12 @@ export const uploadImage = async (
   }
 };
 
-export const createNote = async (chapterId: string, content: string) => {
+export const createNote = async (chapterId: string, name: string) => {
   try {
     const response = await axiosInstance.post(
-      `/course/week/chapter/${chapterId}/note`,
+      `/course/week/chapter/${chapterId}/note/`,
       {
-        content,
+        name,
       }
     );
     return response.data;
