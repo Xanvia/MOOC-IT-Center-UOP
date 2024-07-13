@@ -3,9 +3,22 @@ import React, { useState, useCallback, useEffect } from "react";
 import { useSelectedTopic } from "@/contexts/SidebarContext";
 import { Week, Item } from "@/components/Course/types";
 import WeekComponent from "./WeekComponent";
-import { fetchCourseContent } from "@/services/course.service";
+import {
+  createChapter,
+  createNote,
+  createWeek,
+  fetchCourseContent,
+} from "@/services/course.service";
 import { useParams } from "next/navigation";
 import Loader from "@/components/Loarder/Loarder";
+import { toast } from "sonner";
+
+interface addData {
+  parentId: string;
+  name: string;
+  action: string;
+  type?: string;
+}
 
 const Sidebar: React.FC = () => {
   const { selectedTopic, setSelectedTopic } = useSelectedTopic();
@@ -15,6 +28,39 @@ const Sidebar: React.FC = () => {
   const params = useParams();
 
   const courseId = params.id;
+
+  const handleAdd = useCallback(async (data: addData) => {
+    let response;
+    try {
+      switch (data.action) {
+        case "week":
+          response = await createWeek(data.parentId, data.name);
+          break;
+        case "chapter":
+          response = await createChapter(data.parentId, data.name);
+          break;
+        case "item":
+          switch (data.type) {
+            case "Video":
+              // response = await createVideo(data.parentId, data.name);
+              break;
+            case "Note":
+              response = await createNote(data.parentId, data.name);
+              break;
+            case "Quiz":
+              // response = await createQuiz(data.parentId, data.name);
+              break;
+            default:
+          }
+          break;
+        default:
+          break;
+      }
+      toast.success(response.message);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }, []);
 
   useEffect(() => {
     const loadCourseContent = async () => {
@@ -38,10 +84,13 @@ const Sidebar: React.FC = () => {
   );
 
   const addNewWeek = useCallback(() => {
+    const weekName = `Week ${weeks.length + 1}`;
+    handleAdd({ parentId: courseId as string, name: weekName, action: "week" });
     setWeeks((prevWeeks) => [
       ...prevWeeks,
       { name: `Week ${prevWeeks.length + 1}`, chapters: [] },
     ]);
+
   }, []);
 
   const addTopic = useCallback((weekIndex: number, topicName: string) => {
@@ -138,22 +187,23 @@ const Sidebar: React.FC = () => {
             4 of the 20 videos have been completed
           </p>
         </div>
-        {weeks && weeks.map((week, weekIndex) => (
-          <WeekComponent
-            key={weekIndex}
-            weekIndex={weekIndex}
-            week={week}
-            expanded={expandedWeek === weekIndex}
-            toggleWeek={toggleWeek}
-            addTopic={addTopic}
-            addItem={addItem}
-            removeItem={removeItem}
-            removeTopic={removeTopic}
-            removeWeek={removeWeek}
-            selectedTopic={selectedTopic}
-            setSelectedTopic={setSelectedTopic}
-          />
-        ))}
+        {weeks &&
+          weeks.map((week, weekIndex) => (
+            <WeekComponent
+              key={weekIndex}
+              weekIndex={weekIndex}
+              week={week}
+              expanded={expandedWeek === weekIndex}
+              toggleWeek={toggleWeek}
+              addTopic={addTopic}
+              addItem={addItem}
+              removeItem={removeItem}
+              removeTopic={removeTopic}
+              removeWeek={removeWeek}
+              selectedTopic={selectedTopic}
+              setSelectedTopic={setSelectedTopic}
+            />
+          ))}
         <button
           className="w-full px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400"
           onClick={addNewWeek}

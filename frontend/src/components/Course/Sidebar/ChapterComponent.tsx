@@ -47,13 +47,13 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
 }) => {
   const [newItemName, setNewItemName] = useState<string>("");
   const [showNewItemInput, setShowNewItemInput] = useState<boolean>(false);
-  const [newItemType, setNewItemType] = useState<string>("video");
+  const [newItemType, setNewItemType] = useState<string>("Video");
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const options: OptionType[] = [
-    { value: "video", label: "Video", type: "video" },
-    { value: "note", label: "Note", type: "note" },
-    { value: "quiz", label: "Quiz", type: "quiz" },
+    { value: "Video", label: "Video", type: "Video" },
+    { value: "Note", label: "Note", type: "Note" },
+    { value: "Quiz", label: "Quiz", type: "Quiz" },
   ];
 
   const customSingleValue = ({ data }: SingleValueProps<OptionType>) => (

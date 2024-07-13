@@ -106,12 +106,37 @@ export const uploadImage = async (
   }
 };
 
-export const createNote = async (chapterId: number, content: string) => {
+export const createNote = async (chapterId: string, content: string) => {
   try {
     const response = await axiosInstance.post(
-      `/course/chapter/${chapterId}/note`,
+      `/course/week/chapter/${chapterId}/note`,
       {
         content,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const createWeek = async (courseId: string, name: string) => {
+  try {
+    const response = await axiosInstance.post(`/course/${courseId}/week/`, {
+      name,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const createChapter = async (weekId: string, name: string) => {
+  try {
+    const response = await axiosInstance.post(
+      `/course/week/${weekId}/chapter/`,
+      {
+        name,
       }
     );
     return response.data;

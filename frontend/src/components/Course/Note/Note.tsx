@@ -15,12 +15,14 @@ interface NoteProps {
 const Note: React.FC<NoteProps> = ({noteId,content}) => {
   const isEdit = true;
 
+  const [noteContent,setNoteContent] = useState(content);
   const [editView, setEditView] = useState(false);
 
   const handleSave = async (value: string) => {
     try {
       const response = await editNote(noteId, value);
       toast.success(response.message);
+      setNoteContent(value);
       setEditView(false);
     } catch (error: any) {
       toast.error(error.message);
@@ -54,7 +56,7 @@ const Note: React.FC<NoteProps> = ({noteId,content}) => {
             </div>
             <div
               className={`${classes.note} ql-editor`}
-              dangerouslySetInnerHTML={{ __html: content }}
+              dangerouslySetInnerHTML={{ __html: noteContent }}
             />
           </div>
         </>
