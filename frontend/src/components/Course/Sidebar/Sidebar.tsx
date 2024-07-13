@@ -6,6 +6,7 @@ import WeekComponent from "./WeekComponent";
 import {
   createChapter,
   createNote,
+  createVideo,
   createWeek,
   deleteComponent,
   fetchCourseContent,
@@ -97,6 +98,7 @@ const Sidebar: React.FC = () => {
             response = await createNote(chapterId as string, item.name);
             break;
           case "Video":
+            response = await createVideo(chapterId as string, item.name);
             break;
           case "Quiz":
             break;
