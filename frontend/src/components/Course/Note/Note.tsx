@@ -6,21 +6,21 @@ import { useState } from "react";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import { editNote } from "@/services/course.service";
 import { toast } from "sonner";
+import { Item } from "@/components/Course/types";
 
 interface NoteProps {
-  noteId: number;
-  content: string;
+  selectedTopic: Item;
 }
 
-const Note: React.FC<NoteProps> = ({noteId,content}) => {
+const Note: React.FC<NoteProps> = ({ selectedTopic }) => {
   const isEdit = true;
 
-  const [noteContent,setNoteContent] = useState(content);
+  const [noteContent, setNoteContent] = useState(selectedTopic.content);
   const [editView, setEditView] = useState(false);
 
   const handleSave = async (value: string) => {
     try {
-      const response = await editNote(noteId, value);
+      const response = await editNote(selectedTopic.id!, value);
       toast.success(response.message);
       setNoteContent(value);
       setEditView(false);
@@ -35,7 +35,7 @@ const Note: React.FC<NoteProps> = ({noteId,content}) => {
         <div className="py-14 px-3 w-10/12 min-h-[600px] mx-auto text-left bg-primary_light">
           <div className="space-y-2">
             <div className="pt-2">
-              <NoteEditor initialData={content} onClick={handleSave} />
+              <NoteEditor initialData={noteContent} onClick={handleSave} />
             </div>
           </div>
         </div>

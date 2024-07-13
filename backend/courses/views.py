@@ -229,7 +229,7 @@ class VideoViewSet(viewsets.ModelViewSet):
 
         video_file = request.data["video_file"]
         saved_video_file = VideoFile.objects.create(file=video_file)
-        link = f"http://localhost:8000/media/{saved_video_file.file.url}"
+        link = f"http://localhost:8000{saved_video_file.file.url}"
         return link, saved_video_file.id
 
     def create(self, request, *args, **kwargs):

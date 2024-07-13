@@ -1,7 +1,7 @@
 export interface Item {
   id?: number;
   name: string;
-  content: string;
+  content: any;
   type: "Video" | "Note" | "Quiz";
 }
 
