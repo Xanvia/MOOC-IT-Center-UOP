@@ -67,6 +67,17 @@ class CourseViewSet(viewsets.ModelViewSet):
         }
         return response
 
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "data": {
+                "courses": response.data,
+            },
+        }
+        return response
+
 
 class WeekViewSet(viewsets.ModelViewSet):
     queryset = Week.objects.all()
