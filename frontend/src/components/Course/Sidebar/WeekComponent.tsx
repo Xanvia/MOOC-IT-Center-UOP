@@ -10,14 +10,24 @@ interface WeekComponentProps {
   expanded: boolean;
   toggleWeek: (weekIndex: number) => void;
   addTopic: (weekIndex: number, topicName: string, weekId: string) => void;
-  addItem: (weekIndex: number, chapterIndex: number,chapterId: string ,item: Item) => void;
+  addItem: (
+    weekIndex: number,
+    chapterIndex: number,
+    chapterId: string,
+    item: Item
+  ) => void;
   removeItem: (
     weekIndex: number,
     chapterIndex: number,
-    itemIndex: number
+    itemIndex: number,
+    itemId: string
   ) => void;
-  removeTopic: (weekIndex: number, chapterIndex: number) => void;
-  removeWeek: (weekIndex: number) => void;
+  removeTopic: (
+    weekIndex: number,
+    chapterIndex: number,
+    chapterId: string
+  ) => void;
+  removeWeek: (weekIndex: number, weekId: string) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
 }
@@ -42,7 +52,6 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
   }>({});
   const [showModal, setShowModal] = useState<boolean>(false);
 
-
   const toggleSubtopic = useCallback((chapterIndex: number) => {
     setExpandedSubtopics((prev) => ({
       ...prev,
@@ -66,7 +75,8 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
   };
 
   const handleDelete = () => {
-    removeWeek(weekIndex);
+    const weekId = week.id || "";
+    removeWeek(weekIndex, weekId as string);
     setShowModal(false);
   };
 

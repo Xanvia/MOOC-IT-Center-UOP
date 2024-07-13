@@ -7,6 +7,7 @@ import {
   createChapter,
   createNote,
   createWeek,
+  deleteComponent,
   fetchCourseContent,
 } from "@/services/course.service";
 import { useParams } from "next/navigation";
@@ -50,36 +51,44 @@ const Sidebar: React.FC = () => {
       toast.success(response.message);
       setWeeks((prevWeeks) => [
         ...prevWeeks,
-        { id: response.data.id, name: weekName, chapters: [] }, 
+        { id: response.data.id, name: weekName, chapters: [] },
       ]);
     } catch (error: any) {
       toast.error(error.message);
     }
   }, [weeks, courseId]);
 
-  const addTopic = useCallback(async (weekIndex: number, topicName: string,weekId : string) => {
-    try {
-      const response = await createChapter(weekId as string, topicName);
-      console.log(response)
-      toast.success(response.message);
-      setWeeks((prevWeeks) => {
-        const newWeeks = [...prevWeeks];
-        newWeeks[weekIndex] = {
-          ...newWeeks[weekIndex],
-          chapters: [
-            ...newWeeks[weekIndex].chapters,
-            {id:response.data.id, name: topicName, items: [] },
-          ],
-        };
-        return newWeeks;
-      });
-    } catch (error: any) {
-      toast.error(error.message);
-    }
-  }, []);
+  const addTopic = useCallback(
+    async (weekIndex: number, topicName: string, weekId: string) => {
+      try {
+        const response = await createChapter(weekId as string, topicName);
+        console.log(response);
+        toast.success(response.message);
+        setWeeks((prevWeeks) => {
+          const newWeeks = [...prevWeeks];
+          newWeeks[weekIndex] = {
+            ...newWeeks[weekIndex],
+            chapters: [
+              ...newWeeks[weekIndex].chapters,
+              { id: response.data.id, name: topicName, items: [] },
+            ],
+          };
+          return newWeeks;
+        });
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    },
+    []
+  );
 
   const addItem = useCallback(
-    async (weekIndex: number, chapterIndex: number,chapterId:string, item: Item) => {
+    async (
+      weekIndex: number,
+      chapterIndex: number,
+      chapterId: string,
+      item: Item
+    ) => {
       let response;
       try {
         switch (item.type) {
@@ -118,42 +127,70 @@ const Sidebar: React.FC = () => {
   );
 
   const removeItem = useCallback(
-    (weekIndex: number, chapterIndex: number, itemIndex: number) => {
-      setWeeks((prevWeeks) => {
-        const newWeeks = [...prevWeeks];
-        newWeeks[weekIndex] = {
-          ...newWeeks[weekIndex],
-          chapters: newWeeks[weekIndex].chapters.map((chapter, cIdx) => {
-            if (cIdx !== chapterIndex) return chapter;
-            return {
-              ...chapter,
-              items: chapter.items
-                ? chapter.items.filter((_, iIdx) => iIdx !== itemIndex)
-                : [],
-            };
-          }),
-        };
-        return newWeeks;
-      });
+    async (
+      weekIndex: number,
+      chapterIndex: number,
+      itemIndex: number,
+      itemId: string
+    ) => {
+      try {
+        const response = await deleteComponent("Note", itemId);
+        setWeeks((prevWeeks) => {
+          const newWeeks = [...prevWeeks];
+          newWeeks[weekIndex] = {
+            ...newWeeks[weekIndex],
+            chapters: newWeeks[weekIndex].chapters.map((chapter, cIdx) => {
+              if (cIdx !== chapterIndex) return chapter;
+              return {
+                ...chapter,
+                items: chapter.items
+                  ? chapter.items.filter((_, iIdx) => iIdx !== itemIndex)
+                  : [],
+              };
+            }),
+          };
+          return newWeeks;
+        });
+        toast.success("Note deleted successfully");
+      } catch (error: any) {
+        toast.error(error.message);
+      }
     },
     []
   );
 
-  const removeTopic = useCallback((weekIndex: number, chapterIndex: number) => {
-    setWeeks((prevWeeks) => {
-      const newWeeks = [...prevWeeks];
-      newWeeks[weekIndex] = {
-        ...newWeeks[weekIndex],
-        chapters: newWeeks[weekIndex].chapters.filter(
-          (_, cIdx) => cIdx !== chapterIndex
-        ),
-      };
-      return newWeeks;
-    });
-  }, []);
+  const removeTopic = useCallback(
+    async (weekIndex: number, chapterIndex: number, chapterId: string) => {
+      try {
+        const response = await deleteComponent("Chapter", chapterId);
+        toast.success("Chapter deleted successfully");
+        setWeeks((prevWeeks) => {
+          const newWeeks = [...prevWeeks];
+          newWeeks[weekIndex] = {
+            ...newWeeks[weekIndex],
+            chapters: newWeeks[weekIndex].chapters.filter(
+              (_, cIdx) => cIdx !== chapterIndex
+            ),
+          };
+          return newWeeks;
+        });
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    },
+    []
+  );
 
-  const removeWeek = useCallback((weekIndex: number) => {
-    setWeeks((prevWeeks) => prevWeeks.filter((_, wIdx) => wIdx !== weekIndex));
+  const removeWeek = useCallback(async (weekIndex: number, weekId: string) => {
+    try {
+      const response = await deleteComponent("Week", weekId);
+      toast.success("Week deleted successfully");
+      setWeeks((prevWeeks) =>
+        prevWeeks.filter((_, wIdx) => wIdx !== weekIndex)
+      );
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   }, []);
 
   if (isLoading) {

@@ -16,13 +16,23 @@ interface ChapterComponentProps {
   chapter: Chapter;
   expanded: boolean;
   toggleSubtopic: (chapterIndex: number) => void;
-  addItem: (weekIndex: number, chapterIndex: number,chapterId : string, item: Item) => void;
+  addItem: (
+    weekIndex: number,
+    chapterIndex: number,
+    chapterId: string,
+    item: Item
+  ) => void;
   removeItem: (
     weekIndex: number,
     chapterIndex: number,
-    itemIndex: number
+    itemIndex: number,
+    itemId: string
   ) => void;
-  removeTopic: (weekIndex: number, chapterIndex: number) => void;
+  removeTopic: (
+    weekIndex: number,
+    chapterIndex: number,
+    chapterId: string
+  ) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
 }
@@ -75,7 +85,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
   const handleAddNewItem = useCallback(() => {
     const chapterId = chapter.id || "";
     if (newItemName.trim() !== "") {
-      addItem(weekIndex, chapterIndex,chapterId as string,{
+      addItem(weekIndex, chapterIndex, chapterId as string, {
         name: newItemName,
         type: newItemType as "Video" | "Note" | "Quiz",
         content: "",
@@ -93,7 +103,8 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
   };
 
   const handleDelete = () => {
-    removeTopic(weekIndex, chapterIndex);
+    const chapterId = chapter.id || "";
+    removeTopic(weekIndex, chapterIndex, chapterId as string);
     setShowModal(false);
   };
 

@@ -167,3 +167,30 @@ export const fetchCourseContent = async (courseId: string) => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const deleteComponent = async (
+  componentType: "Note" | "Chapter" | "Week",
+  componentId: string
+) => {
+  let url = `/course/week`;
+  switch (componentType) {
+    case "Note":
+      url += `/chapter/note/${componentId}/`;
+      break;
+    case "Chapter":
+      url += `/chapter/${componentId}/`;
+      break;
+    case "Week":
+      url += `/${componentId}/`;
+      break;
+    default:
+      throw new Error("Invalid component type");
+  }
+
+  try {
+    const response = await axiosInstance.delete(url);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
