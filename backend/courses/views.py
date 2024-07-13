@@ -1,5 +1,5 @@
 from rest_framework import viewsets, generics
-from .models import Course, Week, Chapter, Note, Image, Video, VideoFile,Enrollment
+from .models import Course, Week, Chapter, Note, Image, Video, VideoFile, Enrollment
 from .serializers import (
     CourseSerializer,
     WeekSerializer,
@@ -18,6 +18,11 @@ from django.db.models.deletion import ProtectedError
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+    def filter_queryset(self, queryset):
+        if self.action == "list":
+            return super().filter_queryset(queryset).filter(status="published")
+        return super().filter_queryset(queryset)
 
     def retrieve(self, request, *args, **kwargs):
         response = super().retrieve(request, *args, **kwargs)
@@ -60,6 +65,17 @@ class CourseViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Course updated successfully",
+        }
+        return response
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "data": {
+                "courses": response.data,
+            },
         }
         return response
 
