@@ -5,7 +5,6 @@ import { useSelectedTopic } from "@/contexts/SidebarContext";
 
 const Page: React.FC = () => {
   const { selectedTopic, setSelectedTopic } = useSelectedTopic();
-
   return (
     <>
       {selectedTopic.type === "Note" && (

@@ -29,6 +29,8 @@ const Sidebar: React.FC = () => {
       try {
         const data = await fetchCourseContent(courseId as string);
         setWeeks(data.weeks);
+        setSelectedTopic(data.weeks[0].chapters[0].items[0]);
+        console.log(data.weeks);
       } catch (error) {
         console.error(error);
       }
