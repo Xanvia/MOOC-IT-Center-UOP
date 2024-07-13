@@ -77,6 +77,7 @@ class WeekViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Week created successfully",
+            "data": {"id": response.data["id"]},
         }
         return response
 
@@ -113,6 +114,7 @@ class ChapterViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Chapter created successfully",
+            "data": {"id": response.data["id"]},
         }
         return response
 
