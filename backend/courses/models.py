@@ -105,6 +105,12 @@ class Enrollment(models.Model):
     def __str__(self):
         return self.student.username
 
+    class Meta:
+        unique_together = (
+            "course",
+            "student",
+        )
+
 
 class Progress(models.Model):
     enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)

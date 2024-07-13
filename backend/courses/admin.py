@@ -46,3 +46,8 @@ class VideoAdmin(admin.ModelAdmin):
 @admin.register(VideoFile)
 class VideoFileAdmin(admin.ModelAdmin):
     list_display = ["id"]
+
+
+@admin.register(Enrollment)
+class EnrollmentAdmin(admin.ModelAdmin):
+    list_display = ["id", "course", "student"]
