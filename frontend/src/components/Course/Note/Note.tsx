@@ -8,19 +8,18 @@ import { editNote } from "@/services/course.service";
 import { toast } from "sonner";
 
 interface NoteProps {
-  id?: number;
+  noteId: number;
   content: string;
 }
 
-const Note: React.FC<NoteProps> = ({id,content}) => {
+const Note: React.FC<NoteProps> = ({noteId,content}) => {
   const isEdit = true;
-  const noteId = 5;
 
   const [editView, setEditView] = useState(false);
 
   const handleSave = async (value: string) => {
     try {
-      const response = await editNote(10, value);
+      const response = await editNote(noteId, value);
       toast.success(response.message);
       setEditView(false);
     } catch (error: any) {

@@ -10,7 +10,10 @@ const Page: React.FC = () => {
     <>
       {selectedTopic.type === "Note" && (
         <div className="flex-grow p-4 mb-96 ml-96">
-          <Note content={selectedTopic.content} id={selectedTopic.id} />
+          <Note
+            content={selectedTopic.content}
+            noteId={selectedTopic.id || 0}
+          />
         </div>
       )}
     </>
