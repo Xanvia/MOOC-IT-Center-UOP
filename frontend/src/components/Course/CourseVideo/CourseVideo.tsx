@@ -1,16 +1,19 @@
 "use client";
 import React, { useRef, useState } from "react";
+import { HOST } from "@/utils/constants";
 
 interface CourseVideoProps {
   videoURL: string;
-  title:string;
+  title: string;
 }
 
-const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL,title }) => {
+const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const [isEnded, setIsEnded] = useState(false);
+
+  const VideoSource = `${HOST}${videoURL}`;
 
   const handlePlayPause = () => {
     if (videoRef.current) {
@@ -58,7 +61,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL,title }) => {
           onEnded={handleVideoEnd}
           controls={false}
         >
-          <source src={videoURL} type="video/mp4" />
+          <source src={VideoSource} type="video/mp4" />
         </video>
         <div className="absolute inset-0 flex justify-center items-center">
           {isPlaying && !isEnded && (
@@ -121,7 +124,9 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL,title }) => {
         </div>
       </div>
       <div className="flex justify-between items-center">
-        <button className="bg-yellow-500 text-white py-2 px-4 rounded">Prev</button>
+        <button className="bg-yellow-500 text-white py-2 px-4 rounded">
+          Prev
+        </button>
         <div className="flex items-center">
           <input
             type="range"
@@ -134,7 +139,9 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL,title }) => {
           />
           <span>{Math.round(volume * 100)}%</span>
         </div>
-        <button className="bg-yellow-500 text-white py-2 px-4 rounded">Mark as completed</button>
+        <button className="bg-yellow-500 text-white py-2 px-4 rounded">
+          Mark as completed
+        </button>
       </div>
     </div>
   );

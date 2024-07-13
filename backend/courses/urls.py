@@ -75,5 +75,11 @@ urlpatterns = [
         name="video-list",
     ),
     # enroll in course
-    path("<int:course_id>/enroll/", EnrollementViewSet.as_view({"post": "enroll"}),name="enroll-course"),
+    path(
+        "<int:course_id>/enroll/",
+        EnrollementViewSet.as_view({"post": "enroll"}),
+        name="enroll-course",
+    ),
+    # upload video file
+    path("video/<int:pk>/", VideoViewSet.as_view({"put": "update"}), name="video-file"),
 ]

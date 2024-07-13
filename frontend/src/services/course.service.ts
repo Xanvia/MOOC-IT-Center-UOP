@@ -129,6 +129,20 @@ export const createNote = async (chapterId: string, name: string) => {
   }
 };
 
+export const createVideo = async (chapterId: string, name: string) => {
+  try {
+    const response = await axiosInstance.post(
+      `/course/week/chapter/${chapterId}/video/`,
+      {
+        name,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
 export const createWeek = async (courseId: string, name: string) => {
   try {
     const response = await axiosInstance.post(`/course/${courseId}/week/`, {
@@ -201,5 +215,29 @@ export const deleteComponent = async (
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const uploadVideo = async (
+  file: File,
+  videoId: number
+): Promise<string> => {
+  const formData = new FormData();
+  formData.append("video_file", file);
+
+  try {
+    const response = await axiosInstance.put(
+      `/course/video/${videoId}/`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data.data.url;
+  } catch (error) {
+    console.error("Error uploading video: ", error);
+    throw new Error("Failed to upload video");
   }
 };
