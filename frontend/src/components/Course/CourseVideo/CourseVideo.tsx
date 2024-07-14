@@ -124,9 +124,6 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
         </div>
       </div>
       <div className="flex justify-between items-center">
-        <button className="bg-yellow-500 text-white py-2 px-4 rounded">
-          Prev
-        </button>
         <div className="flex items-center">
           <input
             type="range"
@@ -139,9 +136,6 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
           />
           <span>{Math.round(volume * 100)}%</span>
         </div>
-        <button className="bg-yellow-500 text-white py-2 px-4 rounded">
-          Mark as completed
-        </button>
       </div>
     </div>
   );
