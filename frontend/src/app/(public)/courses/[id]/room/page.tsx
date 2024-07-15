@@ -50,12 +50,13 @@ const Page: React.FC = () => {
   const handlePrev = () => {
     const currentIndex = findCurrentItemIndex(weeks, item);
     if (!currentIndex) return;
-  
+
     let { weekIndex, chapterIndex, itemIndex } = currentIndex;
-  
+
     if (itemIndex > 0) {
       setSelectedTopic(
-        weeks[weekIndex]?.chapters[chapterIndex]?.items?.[itemIndex - 1] ?? selectedTopic
+        weeks[weekIndex]?.chapters[chapterIndex]?.items?.[itemIndex - 1] ??
+          selectedTopic
       );
     } else if (chapterIndex > 0) {
       const prevChapter = weeks[weekIndex]?.chapters[chapterIndex - 1];
@@ -73,20 +74,25 @@ const Page: React.FC = () => {
       setExpandedSubtopics({ [prevWeek.chapters.length - 1]: true });
     }
   };
-  
+
   const handleNext = () => {
     const currentIndex = findCurrentItemIndex(weeks, item);
     if (!currentIndex) return;
-  
+
     let { weekIndex, chapterIndex, itemIndex } = currentIndex;
-  
-    if (itemIndex < (weeks[weekIndex]?.chapters[chapterIndex]?.items?.length ?? 0) - 1) {
+
+    if (
+      itemIndex <
+      (weeks[weekIndex]?.chapters[chapterIndex]?.items?.length ?? 0) - 1
+    ) {
       setSelectedTopic(
-        weeks[weekIndex]?.chapters[chapterIndex]?.items?.[itemIndex + 1] ?? selectedTopic
+        weeks[weekIndex]?.chapters[chapterIndex]?.items?.[itemIndex + 1] ??
+          selectedTopic
       );
     } else if (chapterIndex < (weeks[weekIndex]?.chapters?.length ?? 0) - 1) {
       setSelectedTopic(
-        weeks[weekIndex]?.chapters[chapterIndex + 1]?.items?.[0] ?? selectedTopic
+        weeks[weekIndex]?.chapters[chapterIndex + 1]?.items?.[0] ??
+          selectedTopic
       );
       setExpandedSubtopics((prev) => ({ ...prev, [chapterIndex + 1]: true }));
     } else if (weekIndex < weeks.length - 1) {
@@ -97,7 +103,7 @@ const Page: React.FC = () => {
       setExpandedSubtopics({ 0: true });
     }
   };
-  
+
   // const isLastItem = () => {
   //   const lastWeek = weeks[weeks.length - 1];
   //   const lastChapter = lastWeek?.chapters?.[lastWeek.chapters.length - 1];
@@ -111,6 +117,8 @@ const Page: React.FC = () => {
         <Note selectedTopic={item} />
       ) : item.type === "Video" ? (
         <CourseVideo videoURL={item.content.video_link} title={item.name} />
+      ) : item.type === "Quiz" ? (
+        <CreateQuiz />
       ) : (
         <div>No content available</div>
       )}
