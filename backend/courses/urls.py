@@ -89,4 +89,10 @@ urlpatterns = [
         QuizViewSet.as_view({"post": "create"}),
         name="quiz-list",
     ),
+    #update delete quiz
+    path(
+        "week/chapter/quiz/<int:pk>/",
+        QuizViewSet.as_view({"put": "update", "delete": "destroy"}),
+        name="quiz-detail",
+    ),
 ]

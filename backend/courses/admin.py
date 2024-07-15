@@ -12,8 +12,6 @@ from .models import (
     Progress,
     Question,
     Answer,
-    UserAnswer,
-    UserCodingAnswer,
     VideoFile,
 )
 

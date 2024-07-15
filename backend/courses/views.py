@@ -1,5 +1,15 @@
 from rest_framework import viewsets, generics
-from .models import Course, Week, Chapter, Note, Image, Video, Quiz, VideoFile, Enrollment
+from .models import (
+    Course,
+    Week,
+    Chapter,
+    Note,
+    Image,
+    Video,
+    Quiz,
+    VideoFile,
+    Enrollment,
+)
 from .serializers import (
     CourseSerializer,
     WeekSerializer,
@@ -242,7 +252,7 @@ class VideoViewSet(viewsets.ModelViewSet):
             "message": "Video created successfully",
         }
         return response
-    
+
     def update(self, request, *args, **kwargs):
         link, id = self.get_video_link(request, *args, **kwargs)
         request.data["video_link"] = link
@@ -272,7 +282,8 @@ class EnrollementViewSet(viewsets.ModelViewSet):
             "message": "Enrolled successfully",
         }
         return response
-    
+
+
 class QuizViewSet(viewsets.ModelViewSet):
     serializer_class = QuizSerializer
     queryset = Quiz.objects.all()
@@ -288,5 +299,14 @@ class QuizViewSet(viewsets.ModelViewSet):
             "data": {
                 "id": response.data["id"],
             },
+        }
+        return response
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, partial=True, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Quiz Details Added successfully",
         }
         return response

@@ -138,8 +138,7 @@ class QuizSerializer(serializers.ModelSerializer):
             "questions": instance.questions,
         }
         return representation
-
-
+    
 class VideoSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="Video")
 

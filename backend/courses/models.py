@@ -83,8 +83,8 @@ class Note(Component):
 
 class Quiz(Component):
     deadline = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    duration = models.DurationField()
     full_grades = models.IntegerField(default=100, blank=True, null=True)
-    questions = models.JSONField(blank=True, null=True)
 
 
 class CodingAssignment(Component):
@@ -119,27 +119,42 @@ class Progress(models.Model):
 
 
 class Question(models.Model):
-    quiz = models.ForeignKey(
-        Quiz, on_delete=models.CASCADE, related_name="quiz_questions"
-    )
+    SINGLE_CORRECT = 'SC'
+    MULTIPLE_CORRECT = 'MC'
+
+    QUESTION_TYPES = [
+        (SINGLE_CORRECT, 'Single Correct'),
+        (MULTIPLE_CORRECT, 'Multiple Correct'),
+    ]
+
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
     text = models.TextField()
+    question_type = models.CharField(max_length=2, choices=QUESTION_TYPES)
+
+    def __str__(self):
+        return self.text
 
 
 class Answer(models.Model):
-    question = models.ForeignKey(
-        Question, on_delete=models.CASCADE, related_name="answers"
-    )
-    text = models.TextField()
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+    text = models.CharField(max_length=255)
     is_correct = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.text
 
-class UserAnswer(models.Model):
+class StudentQuiz(models.Model):
     enrollement = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
-    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
-    grade = models.DecimalField(max_digits=5, decimal_places=2)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    score = models.IntegerField(default=0)
+    completed_at = models.DateTimeField(auto_now_add=True)
+    student_answers = models.JSONField(default=list)
+
+    def __str__(self):
+        return f"{self.student.username} - {self.quiz.name}"
 
 
-class UserCodingAnswer(models.Model):
+class StudentCodingAnswer(models.Model):
     enrollement = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
     coding_assignment = models.ForeignKey(CodingAssignment, on_delete=models.CASCADE)
     code = models.TextField()
