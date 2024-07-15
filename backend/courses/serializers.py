@@ -137,7 +137,7 @@ class QuizSerializer(serializers.ModelSerializer):
         representation["content"] = {
             "deadline": instance.deadline,
             "full_grades": instance.full_grades,
-            "questions": instance.questions,
+            "questions": QuestionSerializer(instance.questions, many=True).data,
         }
         return representation
     
@@ -182,7 +182,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ['text', 'question_type', 'answers']
+        fields ="__all__"
 
     def create(self, validated_data):
         answers_data = validated_data.pop('answers')

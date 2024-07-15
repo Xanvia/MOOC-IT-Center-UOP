@@ -313,6 +313,7 @@ class QuizViewSet(viewsets.ModelViewSet):
         }
         return response
 
+
 class AddQuestionsViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
@@ -330,5 +331,3 @@ class AddQuestionsViewSet(viewsets.ModelViewSet):
             },
         }
         return response
-    
-    

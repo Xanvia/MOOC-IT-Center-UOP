@@ -49,3 +49,18 @@ class VideoFileAdmin(admin.ModelAdmin):
 @admin.register(Enrollment)
 class EnrollmentAdmin(admin.ModelAdmin):
     list_display = ["id", "course", "student"]
+
+
+@admin.register(Quiz)
+class QuizAdmin(admin.ModelAdmin):
+    list_display = ["id", "name"]
+
+
+@admin.register(Question)
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ["id", "text"]
+
+
+@admin.register(Answer)
+class Answerdmin(admin.ModelAdmin):
+    list_display = ["id", "text", "is_correct"]
