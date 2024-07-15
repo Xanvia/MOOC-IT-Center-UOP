@@ -83,7 +83,7 @@ class Note(Component):
 
 class Quiz(Component):
     deadline = models.DateTimeField(default=timezone.now, blank=True, null=True)
-    duration = models.DurationField()
+    duration = models.DurationField(blank=True,null=True)
     full_grades = models.IntegerField(default=100, blank=True, null=True)
 
 

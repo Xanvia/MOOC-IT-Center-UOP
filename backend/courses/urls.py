@@ -8,6 +8,7 @@ from .views import (
     VideoViewSet,
     QuizViewSet,
     EnrollementViewSet,
+    AddQuestionsViewSet,
 )
 
 urlpatterns = [
@@ -95,4 +96,7 @@ urlpatterns = [
         QuizViewSet.as_view({"put": "update", "delete": "destroy"}),
         name="quiz-detail",
     ),
+    path(
+        "quiz/<int:pk>/questions",AddQuestionsViewSet.as_view({"post":"create"}),name="add-questions"
+    )
 ]

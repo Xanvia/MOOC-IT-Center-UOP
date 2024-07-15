@@ -10,6 +10,8 @@ from .models import (
     Video,
     Quiz,
     Enrollment,
+    Question,
+    Answer,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -166,3 +168,25 @@ class EnrollementSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         # TODO: check if user has an payment object that has not linked with an enrollement object
         return super().validate(attrs)
+
+
+
+
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = ['text', 'is_correct']
+
+class QuestionSerializer(serializers.ModelSerializer):
+    answers = AnswerSerializer(many=True)
+
+    class Meta:
+        model = Question
+        fields = ['text', 'question_type', 'answers']
+
+    def create(self, validated_data):
+        answers_data = validated_data.pop('answers')
+        question = Question.objects.create(**validated_data)
+        for answer_data in answers_data:
+            Answer.objects.create(question=question, **answer_data)
+        return question

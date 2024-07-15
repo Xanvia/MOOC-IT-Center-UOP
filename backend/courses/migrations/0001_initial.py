@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('component_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='courses.component')),
                 ('deadline', models.DateTimeField(blank=True, default=django.utils.timezone.now, null=True)),
-                ('duration', models.DurationField()),
+                ('duration', models.DurationField(blank=True,null=True)),
                 ('full_grades', models.IntegerField(blank=True, default=100, null=True)),
             ],
             bases=('courses.component',),

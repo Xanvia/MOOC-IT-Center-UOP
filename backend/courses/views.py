@@ -8,6 +8,7 @@ from .models import (
     Video,
     Quiz,
     VideoFile,
+    Question,
     Enrollment,
 )
 from .serializers import (
@@ -19,6 +20,7 @@ from .serializers import (
     ImageSerializer,
     VideoSerializer,
     EnrollementSerializer,
+    QuestionSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -310,3 +312,23 @@ class QuizViewSet(viewsets.ModelViewSet):
             "message": "Quiz Details Added successfully",
         }
         return response
+
+class AddQuestionsViewSet(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+
+    def create(self, request, *args, **kwargs):
+
+        request.data["quiz"] = kwargs["pk"]
+        response = super().create(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Questions added successfully",
+            "data": {
+                "id": response.data["id"],
+            },
+        }
+        return response
+    
+    
