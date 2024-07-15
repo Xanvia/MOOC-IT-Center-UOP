@@ -322,10 +322,9 @@ class AddQuestionsViewSet(viewsets.ModelViewSet):
 
         request.data["quiz"] = kwargs["pk"]
         response = super().create(request, *args, **kwargs)
-
         response.data = {
             "status": "success",
-            "message": "Questions added successfully",
+            "message": "Question added successfully",
             "data": {
                 "id": response.data["id"],
             },
