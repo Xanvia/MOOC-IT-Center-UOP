@@ -31,6 +31,7 @@ interface WeekComponentProps {
   removeWeek: (weekIndex: number, weekId: string) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
+  isLastWeek: boolean;
 }
 
 const WeekComponent: React.FC<WeekComponentProps> = ({
@@ -43,6 +44,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
   removeItem,
   removeTopic,
   removeWeek,
+  isLastWeek,
 }) => {
   const [newTopicName, setNewTopicName] = useState<string>("");
   const [showNewTopicInput, setShowNewTopicInput] = useState<boolean>(false);
@@ -53,7 +55,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
     setExpandedSubtopics,
     expandedSubtopics,
   } = useSelectedTopic();
-  
+
   const [showModal, setShowModal] = useState<boolean>(false);
   const toggleSubtopic = useCallback((chapterIndex: number) => {
     setExpandedSubtopics((prev) => ({
@@ -97,12 +99,14 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
           )}
           {week.name}
         </h4>
-        <button
-          className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
-          onClick={() => setShowModal(true)}
-        >
-          <FaTrash />
-        </button>
+        {isLastWeek && ( // Conditionally render the delete button
+          <button
+            className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
+            onClick={() => setShowModal(true)}
+          >
+            <FaTrash />
+          </button>
+        )}
       </div>
       {expanded && (
         <div>

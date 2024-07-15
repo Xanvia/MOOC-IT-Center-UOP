@@ -239,6 +239,7 @@ const Sidebar: React.FC = () => {
               removeWeek={removeWeek}
               selectedTopic={selectedTopic}
               setSelectedTopic={setSelectedTopic}
+              isLastWeek={weekIndex === weeks.length - 1}
             />
           ))}
         <button
