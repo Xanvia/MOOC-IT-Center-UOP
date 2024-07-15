@@ -143,6 +143,20 @@ export const createVideo = async (chapterId: string, name: string) => {
   }
 };
 
+export const createQuiz = async (chapterId: string, name: string) => {
+  try {
+    const response = await axiosInstance.post(
+      `/course/week/chapter/${chapterId}/quiz/`,
+      {
+        name,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
 export const createWeek = async (courseId: string, name: string) => {
   try {
     const response = await axiosInstance.post(`/course/${courseId}/week/`, {

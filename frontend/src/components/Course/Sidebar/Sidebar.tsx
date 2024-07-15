@@ -7,6 +7,7 @@ import {
   createChapter,
   createNote,
   createVideo,
+  createQuiz,
   createWeek,
   deleteComponent,
   fetchCourseContent,
@@ -107,6 +108,7 @@ const Sidebar: React.FC = () => {
             response = await createVideo(chapterId as string, item.name);
             break;
           case "Quiz":
+            response = await createQuiz(chapterId as string, item.name);
             break;
           default:
             break;

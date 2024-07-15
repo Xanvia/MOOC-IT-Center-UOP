@@ -1,10 +1,11 @@
 from rest_framework import viewsets, generics
-from .models import Course, Week, Chapter, Note, Image, Video, VideoFile, Enrollment
+from .models import Course, Week, Chapter, Note, Image, Video, Quiz, VideoFile, Enrollment
 from .serializers import (
     CourseSerializer,
     WeekSerializer,
     ChapterSerializer,
     NoteSerializer,
+    QuizSerializer,
     ImageSerializer,
     VideoSerializer,
     EnrollementSerializer,
@@ -269,5 +270,23 @@ class EnrollementViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Enrolled successfully",
+        }
+        return response
+    
+class QuizViewSet(viewsets.ModelViewSet):
+    serializer_class = QuizSerializer
+    queryset = Quiz.objects.all()
+
+    def create(self, request, *args, **kwargs):
+
+        request.data["chapter"] = kwargs["chapter_id"]
+        response = super().create(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Quiz created successfully",
+            "data": {
+                "id": response.data["id"],
+            },
         }
         return response

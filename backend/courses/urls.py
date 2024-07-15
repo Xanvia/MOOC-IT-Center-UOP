@@ -6,6 +6,7 @@ from .views import (
     NoteViewSet,
     ImageUpload,
     VideoViewSet,
+    QuizViewSet,
     EnrollementViewSet,
 )
 
@@ -82,4 +83,10 @@ urlpatterns = [
     ),
     # upload video file
     path("video/<int:pk>/", VideoViewSet.as_view({"put": "update"}), name="video-file"),
+    # create quiz
+    path(
+        "week/chapter/<int:chapter_id>/quiz/",
+        QuizViewSet.as_view({"post": "create"}),
+        name="quiz-list",
+    ),
 ]
