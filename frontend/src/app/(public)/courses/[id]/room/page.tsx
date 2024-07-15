@@ -5,6 +5,7 @@ import CourseVideo from "@/components/Course/CourseVideo/CourseVideo";
 import { useSelectedTopic } from "@/contexts/SidebarContext";
 import { Item, Week, Chapter } from "@/components/Course/types";
 import YellowButton from "@/components/Buttons/YellowButton";
+import CreateQuiz from "@/components/Course/Quiz/CreateQuiz";
 
 const Page: React.FC = () => {
   const {
