@@ -73,7 +73,7 @@ export const InputFieldClasses = clsx(
   "py-2.5",
   "rounded-[7px]",
   "border-primary",
-  "focus:border-primary",
+  "focus:border-primary"
 );
 
 const LabelbaseClasses = clsx(
@@ -117,8 +117,7 @@ const LabelbeforeClasses = clsx(
   "before:pointer-events-none",
   "before:transition-all",
   "before:border-primary",
-  "peer-focus:before:!border-gray-900",
-
+  "peer-focus:before:!border-gray-900"
 );
 
 const LabelafterClasses = clsx(
@@ -551,4 +550,30 @@ export const InputLabelClasses2 = clsx(
   "mb-1"
 );
 
-
+export const YellowButtonClasses = clsx(
+  "bg-button_yellow",
+  "px-5",
+  "min-w-64",
+  "hover:yellow-700",
+  "hover:text-white",
+  "align-middle",
+  "select-none",
+  "font-sans",
+  "font-bold",
+  "text-center",
+  "uppercase",
+  "transition-all",
+  "disabled:opacity-90",
+  "disabled:shadow-none",
+  "disabled:pointer-events-none",
+  "text-xs",
+  "py-3",
+  "px-16",
+  "rounded-lg",
+  "bg-accent",
+  "text-primary",
+  "shadow-md",
+  "shadow-gray-900/10",
+  "hover:shadow-lg",
+  "hover:shadow-gray-900/20"
+);

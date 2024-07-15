@@ -3,6 +3,7 @@ import { Week, Item } from "@/components/Course/types";
 import { FaChevronRight, FaChevronDown, FaPlus, FaTrash } from "react-icons/fa";
 import ChapterComponent from "./ChapterComponent";
 import ConfirmDeleteModal from "../Modals/ConfrimDeleteModal";
+import { useSelectedTopic } from "@/contexts/SidebarContext";
 
 interface WeekComponentProps {
   weekIndex: number;
@@ -42,16 +43,18 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
   removeItem,
   removeTopic,
   removeWeek,
-  selectedTopic,
-  setSelectedTopic,
 }) => {
   const [newTopicName, setNewTopicName] = useState<string>("");
   const [showNewTopicInput, setShowNewTopicInput] = useState<boolean>(false);
-  const [expandedSubtopics, setExpandedSubtopics] = useState<{
-    [key: number]: boolean;
-  }>({});
-  const [showModal, setShowModal] = useState<boolean>(false);
 
+  const {
+    selectedTopic,
+    setSelectedTopic,
+    setExpandedSubtopics,
+    expandedSubtopics,
+  } = useSelectedTopic();
+  
+  const [showModal, setShowModal] = useState<boolean>(false);
   const toggleSubtopic = useCallback((chapterIndex: number) => {
     setExpandedSubtopics((prev) => ({
       ...prev,
