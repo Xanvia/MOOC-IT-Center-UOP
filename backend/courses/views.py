@@ -1,5 +1,16 @@
 from rest_framework import viewsets, generics
-from .models import Course, Week, Chapter, Note, Image, Video, Quiz, VideoFile, Enrollment
+from .models import (
+    Course,
+    Week,
+    Chapter,
+    Note,
+    Image,
+    Video,
+    Quiz,
+    VideoFile,
+    Question,
+    Enrollment,
+)
 from .serializers import (
     CourseSerializer,
     WeekSerializer,
@@ -9,6 +20,7 @@ from .serializers import (
     ImageSerializer,
     VideoSerializer,
     EnrollementSerializer,
+    QuestionSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -242,7 +254,7 @@ class VideoViewSet(viewsets.ModelViewSet):
             "message": "Video created successfully",
         }
         return response
-    
+
     def update(self, request, *args, **kwargs):
         link, id = self.get_video_link(request, *args, **kwargs)
         request.data["video_link"] = link
@@ -272,7 +284,8 @@ class EnrollementViewSet(viewsets.ModelViewSet):
             "message": "Enrolled successfully",
         }
         return response
-    
+
+
 class QuizViewSet(viewsets.ModelViewSet):
     serializer_class = QuizSerializer
     queryset = Quiz.objects.all()
@@ -285,6 +298,33 @@ class QuizViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Quiz created successfully",
+            "data": {
+                "id": response.data["id"],
+            },
+        }
+        return response
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, partial=True, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Quiz Details Added successfully",
+        }
+        return response
+
+
+class AddQuestionsViewSet(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+
+    def create(self, request, *args, **kwargs):
+
+        request.data["quiz"] = kwargs["pk"]
+        response = super().create(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "message": "Question added successfully",
             "data": {
                 "id": response.data["id"],
             },

@@ -27,7 +27,6 @@ from userprofiles.views import (
 )
 
 
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/user/", include("userprofiles.urls")),

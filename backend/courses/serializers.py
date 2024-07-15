@@ -10,6 +10,8 @@ from .models import (
     Video,
     Quiz,
     Enrollment,
+    Question,
+    Answer,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -135,11 +137,10 @@ class QuizSerializer(serializers.ModelSerializer):
         representation["content"] = {
             "deadline": instance.deadline,
             "full_grades": instance.full_grades,
-            "questions": instance.questions,
+            "questions": QuestionSerializer(instance.questions, many=True).data,
         }
         return representation
-
-
+    
 class VideoSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="Video")
 
@@ -167,3 +168,25 @@ class EnrollementSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         # TODO: check if user has an payment object that has not linked with an enrollement object
         return super().validate(attrs)
+
+
+
+
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = ['text', 'is_correct']
+
+class QuestionSerializer(serializers.ModelSerializer):
+    answers = AnswerSerializer(many=True)
+
+    class Meta:
+        model = Question
+        fields ="__all__"
+
+    def create(self, validated_data):
+        answers_data = validated_data.pop('answers')
+        question = Question.objects.create(**validated_data)
+        for answer_data in answers_data:
+            Answer.objects.create(question=question, **answer_data)
+        return question

@@ -8,6 +8,7 @@ from .views import (
     VideoViewSet,
     QuizViewSet,
     EnrollementViewSet,
+    AddQuestionsViewSet,
 )
 
 urlpatterns = [
@@ -88,5 +89,16 @@ urlpatterns = [
         "week/chapter/<int:chapter_id>/quiz/",
         QuizViewSet.as_view({"post": "create"}),
         name="quiz-list",
+    ),
+    # update delete quiz
+    path(
+        "week/chapter/quiz/<int:pk>/",
+        QuizViewSet.as_view({"put": "update", "delete": "destroy"}),
+        name="quiz-detail",
+    ),
+    path(
+        "quiz/<int:pk>/questions/",
+        AddQuestionsViewSet.as_view({"post": "create"}),
+        name="add-questions",
     ),
 ]
