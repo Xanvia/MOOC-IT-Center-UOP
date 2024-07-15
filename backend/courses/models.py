@@ -82,9 +82,9 @@ class Note(Component):
 
 
 class Quiz(Component):
-    deadline = models.DateTimeField(default=timezone.now)
-    full_grades = models.IntegerField(default=100)
-    questions = models.JSONField()
+    deadline = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    full_grades = models.IntegerField(default=100, blank=True, null=True)
+    questions = models.JSONField(blank=True, null=True)
 
 
 class CodingAssignment(Component):
