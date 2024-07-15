@@ -16,10 +16,15 @@ import Loader from "@/components/Loarder/Loarder";
 import { toast } from "sonner";
 
 const Sidebar: React.FC = () => {
-  const { selectedTopic, setSelectedTopic, weeks, setWeeks } =
-    useSelectedTopic();
+  const {
+    selectedTopic,
+    setSelectedTopic,
+    weeks,
+    setWeeks,
+    expandedWeek,
+    setExpandedWeek,
+  } = useSelectedTopic();
 
-  const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const params = useParams();
 

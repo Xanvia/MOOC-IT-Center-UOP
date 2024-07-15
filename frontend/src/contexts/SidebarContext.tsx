@@ -6,6 +6,12 @@ interface SelectedTopicContextType {
   setSelectedTopic: React.Dispatch<React.SetStateAction<Item>>;
   weeks: Week[];
   setWeeks: React.Dispatch<React.SetStateAction<Week[]>>;
+  expandedWeek: number | null;
+  setExpandedWeek: React.Dispatch<React.SetStateAction<number | null>>;
+  expandedSubtopics: { [key: number]: boolean };
+  setExpandedSubtopics: React.Dispatch<
+    React.SetStateAction<{ [key: number]: boolean }>
+  >;
 }
 
 const SelectedTopicContext = createContext<SelectedTopicContextType | null>(
@@ -27,9 +33,23 @@ export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
   });
 
   const [weeks, setWeeks] = useState<Week[]>([]);
+  const [expandedWeek, setExpandedWeek] = useState<number | null>(0);
+  const [expandedSubtopics, setExpandedSubtopics] = useState<{
+    [key: number]: boolean;
+  }>({ 0: true });
+
   return (
     <SelectedTopicContext.Provider
-      value={{ selectedTopic, setSelectedTopic, weeks, setWeeks }}
+      value={{
+        selectedTopic,
+        setSelectedTopic,
+        weeks,
+        setWeeks,
+        expandedWeek,
+        setExpandedWeek,
+        expandedSubtopics,
+        setExpandedSubtopics,
+      }}
     >
       {children}
     </SelectedTopicContext.Provider>

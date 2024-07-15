@@ -7,7 +7,16 @@ import { Item, Week, Chapter } from "@/components/Course/types";
 import YellowButton from "@/components/Buttons/YellowButton";
 
 const Page: React.FC = () => {
-  const { selectedTopic, setSelectedTopic, weeks } = useSelectedTopic();
+  const {
+    selectedTopic,
+    setSelectedTopic,
+    weeks,
+    setWeeks,
+    expandedWeek,
+    setExpandedWeek,
+    setExpandedSubtopics,
+    expandedSubtopics,
+  } = useSelectedTopic();
   const [item, setItem] = useState<Item>({ ...selectedTopic });
 
   useEffect(() => {
@@ -19,10 +28,16 @@ const Page: React.FC = () => {
     for (let weekIndex = 0; weekIndex < weeks.length; weekIndex++) {
       const week = weeks[weekIndex];
       if (!week.chapters) continue;
-      for (let chapterIndex = 0; chapterIndex < week.chapters.length; chapterIndex++) {
+      for (
+        let chapterIndex = 0;
+        chapterIndex < week.chapters.length;
+        chapterIndex++
+      ) {
         const chapter = week.chapters[chapterIndex];
         if (!chapter.items) continue;
-        const itemIndex = chapter.items.findIndex(item => item.id === currentItem.id);
+        const itemIndex = chapter.items.findIndex(
+          (item) => item.id === currentItem.id
+        );
         if (itemIndex !== -1) {
           return { weekIndex, chapterIndex, itemIndex };
         }
@@ -34,36 +49,54 @@ const Page: React.FC = () => {
   const handlePrev = () => {
     const currentIndex = findCurrentItemIndex(weeks, item);
     if (!currentIndex) return;
-
+  
     let { weekIndex, chapterIndex, itemIndex } = currentIndex;
-
+  
     if (itemIndex > 0) {
-      setSelectedTopic(weeks[weekIndex]?.chapters[chapterIndex]?.items?.[itemIndex - 1] ?? selectedTopic);
+      setSelectedTopic(
+        weeks[weekIndex]?.chapters[chapterIndex]?.items?.[itemIndex - 1] ?? selectedTopic
+      );
     } else if (chapterIndex > 0) {
       const prevChapter = weeks[weekIndex]?.chapters[chapterIndex - 1];
-      setSelectedTopic(prevChapter?.items?.[prevChapter.items.length - 1] ?? selectedTopic);
+      setSelectedTopic(
+        prevChapter?.items?.[prevChapter.items.length - 1] ?? selectedTopic
+      );
+      setExpandedSubtopics((prev) => ({ ...prev, [chapterIndex - 1]: true }));
     } else if (weekIndex > 0) {
       const prevWeek = weeks[weekIndex - 1];
       const prevChapter = prevWeek?.chapters[prevWeek.chapters.length - 1];
-      setSelectedTopic(prevChapter?.items?.[prevChapter.items.length - 1] ?? selectedTopic);
+      setSelectedTopic(
+        prevChapter?.items?.[prevChapter.items.length - 1] ?? selectedTopic
+      );
+      setExpandedWeek(weekIndex - 1);
+      setExpandedSubtopics({ [prevWeek.chapters.length - 1]: true });
     }
   };
-
+  
   const handleNext = () => {
     const currentIndex = findCurrentItemIndex(weeks, item);
     if (!currentIndex) return;
-
+  
     let { weekIndex, chapterIndex, itemIndex } = currentIndex;
-
+  
     if (itemIndex < (weeks[weekIndex]?.chapters[chapterIndex]?.items?.length ?? 0) - 1) {
-      setSelectedTopic(weeks[weekIndex]?.chapters[chapterIndex]?.items?.[itemIndex + 1] ?? selectedTopic);
+      setSelectedTopic(
+        weeks[weekIndex]?.chapters[chapterIndex]?.items?.[itemIndex + 1] ?? selectedTopic
+      );
     } else if (chapterIndex < (weeks[weekIndex]?.chapters?.length ?? 0) - 1) {
-      setSelectedTopic(weeks[weekIndex]?.chapters[chapterIndex + 1]?.items?.[0] ?? selectedTopic);
+      setSelectedTopic(
+        weeks[weekIndex]?.chapters[chapterIndex + 1]?.items?.[0] ?? selectedTopic
+      );
+      setExpandedSubtopics((prev) => ({ ...prev, [chapterIndex + 1]: true }));
     } else if (weekIndex < weeks.length - 1) {
-      setSelectedTopic(weeks[weekIndex + 1]?.chapters?.[0]?.items?.[0] ?? selectedTopic);
+      setSelectedTopic(
+        weeks[weekIndex + 1]?.chapters?.[0]?.items?.[0] ?? selectedTopic
+      );
+      setExpandedWeek(weekIndex + 1);
+      setExpandedSubtopics({ 0: true });
     }
   };
-
+  
   // const isLastItem = () => {
   //   const lastWeek = weeks[weeks.length - 1];
   //   const lastChapter = lastWeek?.chapters?.[lastWeek.chapters.length - 1];
@@ -83,7 +116,6 @@ const Page: React.FC = () => {
       <div className="flex justify-between mt-12 mx-32">
         <YellowButton text="Prev" onClick={handlePrev} />
         <YellowButton text="Next" onClick={handleNext} />
-      
       </div>
     </div>
   );
