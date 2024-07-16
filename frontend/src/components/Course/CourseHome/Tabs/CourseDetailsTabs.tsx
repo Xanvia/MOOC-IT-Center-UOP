@@ -65,7 +65,7 @@ const CourseDetailsTabs = ({ courseData, isEdit,reloadData }: CourseDetailsTabsP
       {activeTab === "Instructor" && <InstructorTab />}
       {activeTab !== "Outcomes" && <CourseContent />}
       {/* <CourseOutcomes outcomes={courseData.outcomes} /> */}
-      {/* <CourseOutcomeComponent outcomes={outcomes} addOutcome={addOutcome} removeOutcome={handleRemoveOutcome}/> */}
+      <CourseOutcomeComponent outcomes={outcomes} addOutcome={addOutcome} removeOutcome={handleRemoveOutcome}/>
     </>
   );
 };
