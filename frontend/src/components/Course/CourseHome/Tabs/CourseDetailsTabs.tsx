@@ -1,6 +1,8 @@
 "use client";
 import React, { lazy, useState } from "react";
 import { CourseData } from "../../course.types";
+import CourseOutcomeComponent from "./CourseOutcomesTab";
+
 const CourseContent = lazy(
   () => import("@/components/Course/CourseHome/CourseContent")
 );
@@ -18,6 +20,15 @@ interface CourseDetailsTabsProps {
 
 const CourseDetailsTabs = ({ courseData, isEdit,reloadData }: CourseDetailsTabsProps) => {
   const [activeTab, setActiveTab] = useState("Description");
+  const [outcomes, setOutcomes] = useState(courseData.outcomes)
+
+  const addOutcome = (outcome:string) => {
+    setOutcomes([...outcomes, outcome]);
+  };
+  const handleRemoveOutcome = (index: number) => {
+    const newOutcomes = outcomes.filter((_, i) => i !== index);
+    setOutcomes(newOutcomes);
+  };
 
   const tabs = ["Description", "Instructor", "Syllabus", "Outcomes"];
 
@@ -53,7 +64,8 @@ const CourseDetailsTabs = ({ courseData, isEdit,reloadData }: CourseDetailsTabsP
       )}
       {activeTab === "Instructor" && <InstructorTab />}
       {activeTab !== "Outcomes" && <CourseContent />}
-      <CourseOutcomes outcomes={courseData.outcomes} />
+      {/* <CourseOutcomes outcomes={courseData.outcomes} /> */}
+      {/* <CourseOutcomeComponent outcomes={outcomes} addOutcome={addOutcome} removeOutcome={handleRemoveOutcome}/> */}
     </>
   );
 };

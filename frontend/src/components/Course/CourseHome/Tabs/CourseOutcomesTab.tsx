@@ -1,11 +1,11 @@
 
 import React, { useState, useCallback } from 'react';
-import { Outcome } from '@/components/Course/types';
 import { FaChevronRight, FaChevronDown, FaPlus, FaTrash } from 'react-icons/fa';
-import ConfirmDeleteModal from '@/components/Course/Modals/ConfirmDeleteModal';
+import ConfirmDeleteModal from '../../Modals/ConfrimDeleteModal';
+
 
 interface CourseOutcomeComponentProps {
-  outcomes: Outcome[];
+  outcomes: string[];
   addOutcome: (outcomeName: string) => void;
   removeOutcome: (outcomeIndex: number) => void;
 }
@@ -13,7 +13,7 @@ interface CourseOutcomeComponentProps {
 const CourseOutcomeComponent: React.FC<CourseOutcomeComponentProps> = ({
   outcomes,
   addOutcome,
-  removeOutcome,
+  removeOutcome
 }) => {
   const [newOutcomeName, setNewOutcomeName] = useState<string>('');
   const [showNewOutcomeInput, setShowNewOutcomeInput] = useState<boolean>(false);
@@ -48,7 +48,9 @@ const CourseOutcomeComponent: React.FC<CourseOutcomeComponentProps> = ({
       <div>
         {outcomes.map((outcome, index) => (
           <div key={index} className="flex items-center justify-between">
-            <span className="text-sm">{outcome.name}</span>
+            <span className="text-sm">
+                <p>{outcome}</p>
+                </span>
             <button className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600" onClick={() => { setSelectedOutcomeIndex(index); setShowModal(true); }}>
               <FaTrash />
             </button>
