@@ -101,7 +101,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
         </div>
       ) : (
         <>
-          <h2 className="text-2xl font-semibold mb-4">{title}</h2>
+          <h2 className="text-2xl ml-28 font-semibold my-4">{title}</h2>
           <div className="relative my-4 group">
             <video
               ref={videoRef}
