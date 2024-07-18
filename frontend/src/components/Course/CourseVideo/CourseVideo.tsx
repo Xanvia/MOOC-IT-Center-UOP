@@ -12,8 +12,9 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const [isEnded, setIsEnded] = useState(false);
+  const [uploadedVideoFile, setUploadedVideoFile] = useState<Blob | null>(null);
 
-  const VideoSource = `${HOST}${videoURL}`;
+  const VideoSource = uploadedVideoFile ? URL.createObjectURL(uploadedVideoFile) : `${HOST}${videoURL}`;
 
   const handlePlayPause = () => {
     if (videoRef.current) {
@@ -50,10 +51,16 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
     setIsEnded(true);
   };
 
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadedVideoFile(file);
+    }
+  };
+
   return (
     <div className="my-14 mx-12 p-3 border border-gray-200 shadow-lg rounded-lg">
       <h2 className="text-2xl font-semibold mb-4">{title}</h2>
-      {/* <h3 className="text-xl font-medium mb-4">Instalasi Tools</h3> */}
       <div className="relative my-4 group">
         <video
           ref={videoRef}
@@ -77,7 +84,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
               >
                 <path
                   fillRule="evenodd"
-                  d="M4.293 5.293a1 1 0 011.414 0L10 9.586l4.293-4.293a1 1 0 011.414 1.414L11.414 11l4.293 4.293a1 1 0 01-1.414 1.414L10 12.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 11 4.293 6.707a1 1 0 010-1.414z"
+                  d="M4.293 5.293a1 1 0 011.414 0L10 9.586l4.293-4.293a1 1 0 011.414 1.414L11.414 11l4.293 4.293a1 1 0 01-1.414 1.414L10 12.414l-4.293 4.293a1 1 0 01-1.414-1.414z"
                   clipRule="evenodd"
                 />
               </svg>
@@ -135,6 +142,21 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
             className="mr-2"
           />
           <span>{Math.round(volume * 100)}%</span>
+        </div>
+        <div>
+          <input
+            type="file"
+            accept="video/*"
+            onChange={handleFileUpload}
+            className="hidden"
+            id="file-upload"
+          />
+          <label
+            htmlFor="file-upload"
+            className="shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out bg-blue-500 text-white px-4 py-2 rounded cursor-pointer"
+          >
+            Upload Video
+          </label>
         </div>
       </div>
     </div>
