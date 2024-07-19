@@ -64,6 +64,13 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
     }
   };
 
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadedVideoFile(file);
+    }
+  };
+
   const handleUpload = async () => {
     if (!uploadedVideoFile) return;
 
@@ -101,120 +108,107 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
         </div>
       ) : (
         <>
-          <h2 className="text-2xl ml-28 font-semibold my-4">{title}</h2>
-          <div className="relative my-4 group">
-            <video
-              ref={videoRef}
-              className="w-full h-auto max-h-96 object-cover"
-              onEnded={handleVideoEnd}
-              controls={false}
-            >
-              <source src={VideoSource} type="video/mp4" />
-            </video>
-            <div className="absolute inset-0 flex justify-center items-center">
-              {isPlaying && !isEnded && (
-                <button
-                  onClick={handlePlayPause}
-                  className="hidden group-hover:block shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out"
-                >
-                  <svg
-                    className="w-16 h-16 text-yellow-500"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.293 5.293a1 1 0 011.414 0L10 9.586l4.293-4.293a1 1 0 011.414 1.414L11.414 11l4.293 4.293a1 1 0 01-1.414 1.414L10 12.414l-4.293 4.293a1 1 0 01-1.414-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              )}
-              {(!isPlaying || isEnded) && (
-                <button
-                  onClick={handlePlayPause}
-                  className="shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out"
-                >
-                  <svg
-                    className="w-16 h-16 text-yellow-500"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M6.293 4.293a1 1 0 011.414 0L13 9.586a1 1 0 010 1.414L7.707 16.707a1 1 0 01-1.414-1.414L10.586 11 6.293 6.707a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              )}
-              {isEnded && (
-                <button
-                  onClick={handleReplay}
-                  className="shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out"
-                >
-                  <svg
-                    className="w-16 h-16 text-yellow-500"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M6.293 4.293a1 1 0 011.414 0L13 9.586a1 1 0 010 1.414L7.707 16.707a1 1 0 01-1.414-1.414L10.586 11 6.293 6.707a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={volume}
-                onChange={handleVolumeChange}
-                className="mr-2"
-              />
-              <span>{Math.round(volume * 100)}%</span>
-            </div>
-            <div>
-              <input
-                type="file"
-                accept="video/*"
-                onChange={handleFileChange}
-                className="hidden"
-                id="file-upload"
-              />
-              <label
-                htmlFor="file-upload"
-                className="shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out bg-blue-500 text-white px-4 py-2 rounded cursor-pointer"
-              >
-                Select Video
-              </label>
-              <button
-                onClick={handleUpload}
-                className="ml-4 shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out bg-green-500 text-white px-4 py-2 rounded"
-              >
-                Upload Video
-              </button>
-              {uploadStatus && <p className="mt-2 text-sm">{uploadStatus}</p>}
-            </div>
-          </div>
-          <div className="flex justify-end mt-4">
+          <div className="my-14 mx-12 p-3 border bg-white border-gray-200 shadow-lg rounded-lg">
+      <h2 className="text-2xl font-semibold mx-20 mb-4">{title}</h2>
+      <div className="relative my-4 group">
+        <video
+          ref={videoRef}
+          className="w-full h-auto max-h-96 object-cover"
+          onEnded={handleVideoEnd}
+          controls={false}
+        >
+          <source src={VideoSource} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 flex justify-center items-center">
+          {isPlaying && !isEnded && (
             <button
-              onClick={() => setEditView(false)}
-              className="shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out bg-red-500 text-white px-4 py-2 rounded"
+              onClick={handlePlayPause}
+              className="hidden group-hover:block shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out"
             >
-              Cancel
+              <svg
+                className="w-16 h-16 text-yellow-500"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 5.293a1 1 0 011.414 0L10 9.586l4.293-4.293a1 1 0 011.414 1.414L11.414 11l4.293 4.293a1 1 0 01-1.414 1.414L10 12.414l-4.293 4.293a1 1 0 01-1.414-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
             </button>
-          </div>
+          )}
+          {(!isPlaying || isEnded) && (
+            <button
+              onClick={handlePlayPause}
+              className="shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out"
+            >
+              <svg
+                className="w-16 h-16 text-yellow-500"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M6.293 4.293a1 1 0 011.414 0L13 9.586a1 1 0 010 1.414L7.707 16.707a1 1 0 01-1.414-1.414L10.586 11 6.293 6.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          )}
+          {isEnded && (
+            <button
+              onClick={handleReplay}
+              className="shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out"
+            >
+              <svg
+                className="w-16 h-16 text-yellow-500"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M6.293 4.293a1 1 0 011.414 0L13 9.586a1 1 0 010 1.414L7.707 16.707a1 1 0 01-1.414-1.414L10.586 11 6.293 6.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          )}
+        </div>
+      </div>
+      <div className="flex justify-between items-center">
+        <div className="flex items-center">
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={handleVolumeChange}
+            className="mr-2"
+          />
+          <span>{Math.round(volume * 100)}%</span>
+        </div>
+        <div>
+          <input
+            type="file"
+            accept="video/*"
+            onChange={handleFileUpload}
+            className="hidden"
+            id="file-upload"
+          />
+          <label
+            htmlFor="file-upload"
+            className="shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out bg-blue-200 text-black text-sm font-semibold hover:bg-blue-400 px-4 py-2 rounded cursor-pointer"
+          >
+            Upload Video
+          </label>
+        </div>
+      </div>
+    </div>
         </>
       )}
     </div>
