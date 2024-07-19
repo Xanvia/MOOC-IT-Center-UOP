@@ -34,8 +34,8 @@ const CreateQuiz: React.FC = () => {
 
   return (
     <div className="quiz-creator-container p-10 bg-gray-100 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-bold allign-center mb-4">Create Quiz</h1>
-      <div className="m-10">
+      <h1 className="text-3xl font-bold text-center mb-8">Create Quiz</h1>
+      <div className="mb-6">
         <input
           type="text"
           placeholder="Enter question"
@@ -60,36 +60,39 @@ const CreateQuiz: React.FC = () => {
             Add Option
           </button>
         </div>
-        <div className="mb-4">
-          {currentOptions.map((option, index) => (
-            <div key={index} className="flex items-center mb-2">
-              <input
-                type="radio"
-                name="correct-answer"
-                value={option}
-                checked={correctAnswer === option}
-                onChange={() => setCorrectAnswer(option)}
-                className="form-radio text-indigo-600 mr-2"
-              />
-              <span>{option}</span>
-            </div>
-          ))}
-        </div>
-        <div className="flex p-4 justify-center">
-        <button
-          onClick={addQuestion}
-          className={`py-2 px-4  rounded-lg transition duration-300 ${currentOptions.length < 2 ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700'}`}
-          disabled={currentOptions.length < 2}
-        >
-          Add Question
-        </button>
+        {currentOptions.length > 0 && (
+          <div className="mb-4">
+            <p className="text-md font-semibold mb-2">Select the correct answer before add question:</p>
+            {currentOptions.map((option, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <input
+                  type="radio"
+                  name="correct-answer"
+                  value={option}
+                  checked={correctAnswer === option}
+                  onChange={() => setCorrectAnswer(option)}
+                  className="form-radio text-indigo-600 mr-2"
+                />
+                <span>{option}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="flex justify-center">
+          <button
+            onClick={addQuestion}
+            className={`py-2 px-4 rounded-lg transition duration-300 ${currentOptions.length < 2 ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700'}`}
+            disabled={currentOptions.length < 2}
+          >
+            Add Question
+          </button>
         </div>
       </div>
       <div className="questions-preview p-4 bg-blue-100 rounded-md">
-        <h2 className="text-2xl font-semibold p-4">Preview</h2>
+        <h2 className="text-2xl font-bold p-4 m-6">Preview</h2>
         {questions.map((q, index) => (
           <div key={index} className="question mb-6 px-4">
-            <h3 className="text-xl font-semibold mb-2">{q.question}</h3>
+            <h3 className="text-lg font-semibold mb-2">{q.question}</h3>
             <ul className="list-none">
               {q.options.map((option: string, i: number) => (
                 <li key={i} className="mb-2">
