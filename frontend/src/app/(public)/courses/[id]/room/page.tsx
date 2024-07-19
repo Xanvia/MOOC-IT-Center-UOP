@@ -117,7 +117,11 @@ const Page: React.FC = () => {
       {item.type === "Note" ? (
         <Note selectedTopic={item} />
       ) : item.type === "Video" ? (
-        <CourseVideo videoURL={item.content.video_link} title={item.name} />
+        <CourseVideo
+          videoURL={item.content.video_link}
+          title={item.name}
+          id={item.id}
+        />
       ) : item.type === "Quiz" ? (
         <>
           <Quiz item={item} />

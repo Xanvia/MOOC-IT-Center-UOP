@@ -36,7 +36,7 @@ const Sidebar: React.FC = () => {
       if (!courseId) return;
       try {
         const data = await fetchCourseContent(courseId as string);
-        console.log(data)
+        console.log(data);
         setWeeks(data.weeks);
         setSelectedTopic(data.weeks[0].chapters[0].items[0]);
       } catch (error) {
@@ -115,6 +115,7 @@ const Sidebar: React.FC = () => {
             break;
         }
         toast.success(response.message);
+        item.id = response.data.id;
         setWeeks((prevWeeks) => {
           const newWeeks = prevWeeks.map((week, wIdx) => {
             if (wIdx !== weekIndex) return week;

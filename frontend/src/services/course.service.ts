@@ -243,10 +243,7 @@ export const deleteComponent = async (
   }
 };
 
-export const uploadVideo = async (
-  file: File,
-  videoId: number
-): Promise<string> => {
+export const uploadVideo = async (file: File, videoId: number) => {
   const formData = new FormData();
   formData.append("video_file", file);
 
@@ -260,9 +257,9 @@ export const uploadVideo = async (
         },
       }
     );
-    return response.data.data.url;
-  } catch (error) {
-    console.error("Error uploading video: ", error);
-    throw new Error("Failed to upload video");
+    return response.data;
+  } catch (error: any) {
+    console.log(error);
+    throw new Error(error.response?.data.message ?? "Network error");
   }
 };
