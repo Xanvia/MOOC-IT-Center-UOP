@@ -11,6 +11,7 @@ const CreateQuiz: React.FC = () => {
   const [showResults, setShowResults] = useState<boolean>(false);
 
   const addQuestion = () => {
+    if (!currentQuestion) return;
     setQuestions([...questions, { question: currentQuestion, options: currentOptions, answer: correctAnswer }]);
     setCurrentQuestion("");
     setCurrentOptions([]);
@@ -18,6 +19,7 @@ const CreateQuiz: React.FC = () => {
   };
 
   const addOption = () => {
+    if (!currentQuestion || !currentAnswer) return;
     setCurrentOptions([...currentOptions, currentAnswer]);
     setCurrentAnswer("");
   };
@@ -31,7 +33,7 @@ const CreateQuiz: React.FC = () => {
   };
 
   return (
-    <div className="quiz-creator-container p-6 bg-blue-100 rounded-lg shadow-lg">
+    <div className="quiz-creator-container p-6 bg-gray-100 rounded-lg shadow-lg">
       <h1 className="text-3xl font-bold mb-4">Create Quiz</h1>
       <div className="mb-6">
         <input
@@ -47,10 +49,12 @@ const CreateQuiz: React.FC = () => {
           value={currentAnswer}
           onChange={(e) => setCurrentAnswer(e.target.value)}
           className="w-full p-2 mb-4 border rounded-lg"
+          disabled={!currentQuestion}
         />
         <button
           onClick={addOption}
-          className="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-300 mb-4"
+          className={`py-2 px-4 rounded-lg transition duration-300 mb-4 ${currentQuestion ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'bg-gray-400 text-gray-600 cursor-not-allowed'}`}
+          disabled={!currentQuestion || !currentAnswer}
         >
           Add Option
         </button>
