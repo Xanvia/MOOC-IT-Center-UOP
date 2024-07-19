@@ -11,7 +11,7 @@ const CreateQuiz: React.FC = () => {
   const [showResults, setShowResults] = useState<boolean>(false);
 
   const addQuestion = () => {
-    if (!currentQuestion) return;
+    if (!currentQuestion || currentOptions.length < 2) return;
     setQuestions([...questions, { question: currentQuestion, options: currentOptions, answer: correctAnswer }]);
     setCurrentQuestion("");
     setCurrentOptions([]);
@@ -75,7 +75,8 @@ const CreateQuiz: React.FC = () => {
         </div>
         <button
           onClick={addQuestion}
-          className="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300"
+          className={`py-2 px-4 rounded-lg transition duration-300 ${currentOptions.length < 2 ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700'}`}
+          disabled={currentOptions.length < 2}
         >
           Add Question
         </button>
