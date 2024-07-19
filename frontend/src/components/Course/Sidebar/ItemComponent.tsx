@@ -13,7 +13,8 @@ interface ItemComponentProps {
     weekIndex: number,
     chapterIndex: number,
     itemIndex: number,
-    itemId: string
+    itemId: string,
+    itemType: "Note" | "Video" | "Quiz"
   ) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
@@ -37,7 +38,7 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
 
   const handleDelete = () => {
     const itemId = item.id || "";
-    removeItem(weekIndex, chapterIndex, itemIndex, itemId as string);
+    removeItem(weekIndex, chapterIndex, itemIndex, itemId as string, item.type);
     setShowModal(false);
   };
 
