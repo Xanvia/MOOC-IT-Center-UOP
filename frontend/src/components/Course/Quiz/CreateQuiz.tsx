@@ -33,9 +33,9 @@ const CreateQuiz: React.FC = () => {
   };
 
   return (
-    <div className="quiz-creator-container p-6 bg-gray-100 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-bold mb-4">Create Quiz</h1>
-      <div className="mb-6">
+    <div className="quiz-creator-container p-10 bg-gray-100 rounded-lg shadow-lg">
+      <h1 className="text-3xl font-bold allign-center mb-4">Create Quiz</h1>
+      <div className="m-10">
         <input
           type="text"
           placeholder="Enter question"
@@ -43,21 +43,23 @@ const CreateQuiz: React.FC = () => {
           onChange={(e) => setCurrentQuestion(e.target.value)}
           className="w-full p-2 mb-4 border rounded-lg"
         />
-        <input
-          type="text"
-          placeholder="Enter answer option"
-          value={currentAnswer}
-          onChange={(e) => setCurrentAnswer(e.target.value)}
-          className="w-full p-2 mb-4 border rounded-lg"
-          disabled={!currentQuestion}
-        />
-        <button
-          onClick={addOption}
-          className={`py-2 px-4 rounded-lg transition duration-300 mb-4 ${currentQuestion ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'bg-gray-400 text-gray-600 cursor-not-allowed'}`}
-          disabled={!currentQuestion || !currentAnswer}
-        >
-          Add Option
-        </button>
+        <div className="flex items-center mb-4">
+          <input
+            type="text"
+            placeholder="Enter answer option"
+            value={currentAnswer}
+            onChange={(e) => setCurrentAnswer(e.target.value)}
+            className="flex-grow p-2 border rounded-lg mr-2"
+            disabled={!currentQuestion}
+          />
+          <button
+            onClick={addOption}
+            className={`py-2 px-4 rounded-lg transition duration-300 ${currentQuestion ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'bg-gray-400 text-gray-600 cursor-not-allowed'}`}
+            disabled={!currentQuestion || !currentAnswer}
+          >
+            Add Option
+          </button>
+        </div>
         <div className="mb-4">
           {currentOptions.map((option, index) => (
             <div key={index} className="flex items-center mb-2">
@@ -73,23 +75,25 @@ const CreateQuiz: React.FC = () => {
             </div>
           ))}
         </div>
+        <div className="flex p-4 justify-center">
         <button
           onClick={addQuestion}
-          className={`py-2 px-4 rounded-lg transition duration-300 ${currentOptions.length < 2 ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700'}`}
+          className={`py-2 px-4  rounded-lg transition duration-300 ${currentOptions.length < 2 ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700'}`}
           disabled={currentOptions.length < 2}
         >
           Add Question
         </button>
+        </div>
       </div>
-      <div className="questions-preview">
-        <h2 className="text-2xl font-semibold mb-4">Preview</h2>
+      <div className="questions-preview p-4 bg-blue-100 rounded-md">
+        <h2 className="text-2xl font-semibold p-4">Preview</h2>
         {questions.map((q, index) => (
-          <div key={index} className="question mb-6">
+          <div key={index} className="question mb-6 px-4">
             <h3 className="text-xl font-semibold mb-2">{q.question}</h3>
             <ul className="list-none">
               {q.options.map((option: string, i: number) => (
                 <li key={i} className="mb-2">
-                  <label className="inline-flex items-center">
+                  <label className="inline-flex px-5 items-center">
                     <input
                       type="radio"
                       name={`preview-question-${index}`}
@@ -110,12 +114,14 @@ const CreateQuiz: React.FC = () => {
             )}
           </div>
         ))}
-        <button
-          onClick={handleSubmit}
-          className="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-300"
-        >
-          Submit
-        </button>
+        <div className="flex p-4 justify-end">
+          <button
+            onClick={handleSubmit}
+            className="bg-primary text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-300"
+          >
+            Submit
+          </button>
+        </div>
       </div>
     </div>
   );
