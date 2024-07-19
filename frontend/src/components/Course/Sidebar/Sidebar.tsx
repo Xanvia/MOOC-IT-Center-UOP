@@ -144,10 +144,11 @@ const Sidebar: React.FC = () => {
       weekIndex: number,
       chapterIndex: number,
       itemIndex: number,
-      itemId: string
+      itemId: string,
+      itemType: "Note" | "Video" | "Quiz"
     ) => {
       try {
-        const response = await deleteComponent("Note", itemId);
+        const response = await deleteComponent(itemType, itemId);
         setWeeks((prevWeeks) => {
           const newWeeks = [...prevWeeks];
           newWeeks[weekIndex] = {

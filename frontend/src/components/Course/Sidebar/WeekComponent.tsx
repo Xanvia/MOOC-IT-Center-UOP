@@ -21,7 +21,8 @@ interface WeekComponentProps {
     weekIndex: number,
     chapterIndex: number,
     itemIndex: number,
-    itemId: string
+    itemId: string,
+    itemType: "Note" | "Video" | "Quiz"
   ) => void;
   removeTopic: (
     weekIndex: number,
