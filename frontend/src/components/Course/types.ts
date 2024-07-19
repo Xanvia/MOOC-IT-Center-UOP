@@ -1,5 +1,5 @@
 export interface Item {
-  id?: number;
+  id: number;
   name: string;
   content: any;
   type: "Video" | "Note" | "Quiz";

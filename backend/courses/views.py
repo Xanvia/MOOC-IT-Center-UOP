@@ -252,6 +252,9 @@ class VideoViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Video created successfully",
+            "data": {
+                "id": response.data["id"],
+            },
         }
         return response
 
@@ -264,6 +267,7 @@ class VideoViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Video updated successfully",
+            "data": {"url": link},
         }
         return response
 

@@ -1,26 +1,34 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState, useEffect } from "react";
 import { HOST } from "@/utils/constants";
 import { toast } from "sonner";
+import { uploadVideo } from "@/services/course.service";
 
 interface CourseVideoProps {
+  id: number;
   videoURL: string;
   title: string;
 }
 
-const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
+const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id }) => {
   const isEdit = true;
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const [isEnded, setIsEnded] = useState(false);
-  const [uploadedVideoFile, setUploadedVideoFile] = useState<Blob | null>(null);
   const [uploadedVideoURL, setUploadedVideoURL] = useState<string | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
 
   const VideoSource = uploadedVideoURL
-    ? uploadedVideoURL
+    ? `${HOST}${uploadedVideoURL}`
     : `${HOST}${videoURL}`;
+
+  useEffect(() => {
+    if (videoRef.current) {
+      console.log("reloaded");
+      videoRef.current.load();
+    }
+  }, [uploadedVideoURL, videoURL]);
 
   const handlePlayPause = () => {
     if (videoRef.current) {
@@ -57,46 +65,21 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
     setIsEnded(true);
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      setUploadedVideoFile(file);
-      setUploadedVideoURL(URL.createObjectURL(file));
-    }
-  };
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setUploadedVideoFile(file);
-    }
-  };
-
-  const handleUpload = async () => {
-    if (!uploadedVideoFile) return;
-
-    const formData = new FormData();
-    formData.append("video", uploadedVideoFile);
-
-    try {
-      setUploadStatus("Uploading...");
-      const response = await fetch(`${HOST}/upload`, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUploadStatus("Upload successful");
-        setUploadedVideoURL(data.videoURL); // Assuming the server returns the URL of the uploaded video
-      } else {
-        setUploadStatus("Upload failed");
+  const handleFileUpload = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        try {
+          const response = await uploadVideo(file, id);
+          setUploadedVideoURL(response.data.url);
+          toast.success(response.message);
+        } catch (error: any) {
+          toast.error(error.message);
+        }
       }
-    } catch (error) {
-      console.error("Upload error:", error);
-      setUploadStatus("Upload failed");
-    }
-  };
+    },
+    [id]
+  );
 
   return (
     <div className="my-14 mx-12 p-3 border  bg-blue-100 border-gray-200 shadow-lg rounded-lg">
@@ -126,7 +109,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
                   >
                     <path
                       fillRule="evenodd"
-                      d="M4.293 5.293a1 1 0 011.414 0L10 9.586l4.293-4.293a1 1 0 011.414 1.414L11.414 11l4.293 4.293a1 1 0 01-1.414 1.414L10 12.414l-4.293 4.293a1 1 0 01-1.414-1.414z"
+                      d="M4.293 5.293a1 1 0 011.414 0L10 9.586l4.293-4.293a1 1 0 011.414 1.414L11.414 11l4.293 4.293a1 1 0 01-1.414 1.414z"
                       clipRule="evenodd"
                     />
                   </svg>
