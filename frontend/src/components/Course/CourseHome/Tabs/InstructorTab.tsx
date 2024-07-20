@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 interface Props {
@@ -35,13 +36,14 @@ const Example: React.FC = () => {
           <figure className="mt-10">
             <blockquote className="text-center text-xl font-semibold leading-8 text-gray-900 sm:text-2xl sm:leading-9"></blockquote>
             <figcaption className="mt-10">
-              <img
+              <Image
                 alt=""
                 src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                 className="mx-auto h-10 w-10 rounded-full"
               />
+
               {instructors.map((instructor, index) => (
-                <div className="mt-4 flex items-center justify-center space-x-3 text-base">
+                <div key={index}  className="mt-4 flex items-center justify-center space-x-3 text-base">
                   <div className="font-semibold text-gray-900">
                     {" "}
                     {instructor.name}
