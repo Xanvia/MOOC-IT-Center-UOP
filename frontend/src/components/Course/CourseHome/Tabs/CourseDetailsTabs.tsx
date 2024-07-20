@@ -67,7 +67,11 @@ const CourseDetailsTabs = ({
       )}
       {activeTab === "Instructor" && <InstructorTab />}
       {activeTab !== "Outcomes" && <CourseContent />}
-      <CourseOutcomes outcomes={courseData.outcomes} />
+      <CourseOutcomes
+        outcomes={courseData.outcomes}
+        isEdit={isEdit}
+        courseId={courseData.id}
+      />
     </>
   );
 };
