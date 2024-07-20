@@ -330,3 +330,25 @@ class AddQuestionsViewSet(viewsets.ModelViewSet):
             },
         }
         return response
+    
+class ProgressTrackViewSet(viewsets.ModelViewSet):
+    def start_course(request, course_id):
+        course = get_object_or_404(Course, id=course_id)
+        enrollment, created = Enrollment.objects.get_or_create(course=course, student=request.user)
+
+        return Response({'message': 'Course started', 'enrollment_id': enrollment.id}, status=status.HTTP_201_CREATED)
+    
+    def mark_component_complete(request, component_id):
+        component = get_object_or_404(Component, id=component_id)
+        enrollment = get_object_or_404(Enrollment, course=component.chapter.week.course, student=request.user)
+        progress, created = Progress.objects.get_or_create(enrollment=enrollment, component=component)
+        progress.completed = True
+        progress.save()
+
+        return Response({'message': 'Component marked as complete'}, status=status.HTTP_200_OK)
+    
+    def get_progress(request, course_id):
+        course = get_object_or_404(Course, id=course_id)
+        progress = course.get_progress(request.user)
+        
+        return Response({'progress': progress}, status=status.HTTP_200_OK)

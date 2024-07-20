@@ -12,6 +12,7 @@ from .models import (
     Enrollment,
     Question,
     Answer,
+    Progress,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -191,3 +192,8 @@ class QuestionSerializer(serializers.ModelSerializer):
             for answer_data in answers_data:
                 Answer.objects.create(question=question, **answer_data)
         return question
+
+class ProgressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Progress
+        fields = '__all__'
