@@ -63,6 +63,7 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
         <ConfirmDeleteModal
           setShowModal={setShowModal}
           handleDelete={handleDelete}
+          
         />
       )}
     </div>
