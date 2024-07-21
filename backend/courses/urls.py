@@ -106,9 +106,9 @@ urlpatterns = [
     
     
     path(
-        'start-course/<int:course_id>/', 
+        '<int:course_id>/start-component/', 
          ProgressTrackViewSet.start_course, 
-         name='start_course'
+         name='start_component'
          ),
 
 
