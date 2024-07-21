@@ -26,6 +26,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
+from django.shortcuts import get_object_or_404
+
+
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -338,17 +341,17 @@ class ProgressTrackViewSet(viewsets.ModelViewSet):
 
         return Response({'message': 'Course started', 'enrollment_id': enrollment.id}, status=status.HTTP_201_CREATED)
     
-    def mark_component_complete(request, component_id):
-        component = get_object_or_404(Component, id=component_id)
-        enrollment = get_object_or_404(Enrollment, course=component.chapter.week.course, student=request.user)
-        progress, created = Progress.objects.get_or_create(enrollment=enrollment, component=component)
-        progress.completed = True
-        progress.save()
+    # def mark_component_complete(request, component_id):
+    #     component = get_object_or_404(Component, id=component_id)
+    #     enrollment = get_object_or_404(Enrollment, course=component.chapter.week.course, student=request.user)
+    #     progress, created = Progress.objects.get_or_create(enrollment=enrollment, component=component)
+    #     progress.completed = True
+    #     progress.save()
 
-        return Response({'message': 'Component marked as complete'}, status=status.HTTP_200_OK)
+    #     return Response({'message': 'Component marked as complete'}, status=status.HTTP_200_OK)
     
-    def get_progress(request, course_id):
-        course = get_object_or_404(Course, id=course_id)
-        progress = course.get_progress(request.user)
+    # def get_progress(request, course_id):
+    #     course = get_object_or_404(Course, id=course_id)
+    #     progress = course.get_progress(request.user)
         
-        return Response({'progress': progress}, status=status.HTTP_200_OK)
+    #     return Response({'progress': progress}, status=status.HTTP_200_OK)
