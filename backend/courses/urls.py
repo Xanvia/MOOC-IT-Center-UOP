@@ -111,16 +111,6 @@ urlpatterns = [
          name='start_course'
          ),
 
-    path(
-        'mark-component-complete/<int:component_id>/', 
-         ProgressTrackViewSet.mark_component_complete, 
-         name='mark_component_complete'
-         ),
 
-    path(
-        'get-progress/<int:course_id>/', 
-        ProgressTrackViewSet.get_progress, 
-        name='get_progress'
-        ),
 
 ]
