@@ -6,6 +6,7 @@ import QuizPreview from "./QuizPreview";
 
 const CreateQuiz: React.FC = () => {
   const [questions, setQuestions] = useState<any[]>([]);
+  const isEdit = true;  
 
   const addQuestion = (question: any) => {
     setQuestions([...questions, question]);
@@ -13,7 +14,7 @@ const CreateQuiz: React.FC = () => {
 
   return (
     <div className="quiz-container">
-      <QuizCreator addQuestion={addQuestion} />
+      {isEdit && <QuizCreator addQuestion={addQuestion} />}
       <QuizPreview questions={questions} />
     </div>
   );
