@@ -7,12 +7,12 @@ const CreateQuiz: React.FC = () => {
   const [currentAnswer, setCurrentAnswer] = useState<string>("");
   const [currentOptions, setCurrentOptions] = useState<string[]>([]);
   const [correctAnswers, setCorrectAnswers] = useState<Set<string>>(new Set());
-  const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: Set<string> }>({});
+  const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string | Set<string> }>({});
   const [showResults, setShowResults] = useState<boolean>(false);
   const [answerType, setAnswerType] = useState<string>("single");
 
   const addQuestion = () => {
-    if (!currentQuestion || currentOptions.length < 2) return;
+    if (!currentQuestion || currentOptions.length < 2 || correctAnswers.size === 0) return;
     setQuestions([...questions, { question: currentQuestion, options: currentOptions, answers: Array.from(correctAnswers), type: answerType }]);
     setCurrentQuestion("");
     setCurrentOptions([]);
@@ -28,13 +28,17 @@ const CreateQuiz: React.FC = () => {
 
   const handleOptionChange = (questionIndex: number, option: string) => {
     setSelectedAnswers(prev => {
-      const newSelectedAnswers = new Set(prev[questionIndex] || []);
-      if (newSelectedAnswers.has(option)) {
-        newSelectedAnswers.delete(option);
+      if (questions[questionIndex].type === "single") {
+        return { ...prev, [questionIndex]: option };
       } else {
-        newSelectedAnswers.add(option);
+        const newSelectedAnswers = new Set(prev[questionIndex] as Set<string> || []);
+        if (newSelectedAnswers.has(option)) {
+          newSelectedAnswers.delete(option);
+        } else {
+          newSelectedAnswers.add(option);
+        }
+        return { ...prev, [questionIndex]: newSelectedAnswers };
       }
-      return { ...prev, [questionIndex]: newSelectedAnswers };
     });
   };
 
@@ -93,7 +97,7 @@ const CreateQuiz: React.FC = () => {
         </div>
         {currentOptions.length > 0 && (
           <div className="mb-4 bg-blue-100 p-4 rounded-md">
-            <p className="text-lg font-semibold mb-2">Select the correct {answerType === "single" ? "answer" : "answers"} before add the question:</p>
+            <p className="text-lg font-semibold mb-2">Select the correct {answerType === "single" ? "answer" : "answers"} before adding the question:</p>
             {currentOptions.map((option, index) => (
               <div key={index} className="flex items-center mb-2 ml-4">
                 {answerType === "single" ? (
@@ -123,16 +127,15 @@ const CreateQuiz: React.FC = () => {
         <div className="flex justify-center">
           <button
             onClick={addQuestion}
-            className={`py-2 px-8 rounded-lg transition duration-300 ${currentOptions.length < 2 ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
-            disabled={currentOptions.length < 2}
+            className={`py-2 px-8 rounded-lg transition duration-300 ${currentOptions.length < 2 || correctAnswers.size === 0 ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
+            disabled={currentOptions.length < 2 || correctAnswers.size === 0}
           >
             Add Question
           </button>
         </div>
       </div>
       <h2 className="text-2xl font-semibold p-4 mb-6">Preview</h2>
-      <div className="questions-preview p-8 bg-blue-100 rounded-md ">
-        
+      <div className="questions-preview p-8 bg-blue-100 rounded-md">
         {questions.map((q, index) => (
           <div key={index} className="question mb-6 px-4">
             <h3 className="text-lg font-semibold mb-2">{q.question}</h3>
@@ -145,7 +148,7 @@ const CreateQuiz: React.FC = () => {
                         type="radio"
                         name={`preview-question-${index}`}
                         value={option}
-                        checked={selectedAnswers[index]?.has(option) || false}
+                        checked={selectedAnswers[index] === option}
                         onChange={() => handleOptionChange(index, option)}
                         className="form-radio text-indigo-600 mr-2"
                       />
@@ -154,7 +157,7 @@ const CreateQuiz: React.FC = () => {
                         type="checkbox"
                         name={`preview-question-${index}`}
                         value={option}
-                        checked={selectedAnswers[index]?.has(option) || false}
+                        checked={(selectedAnswers[index] as Set<string>)?.has(option) || false}
                         onChange={() => handleOptionChange(index, option)}
                         className="form-checkbox text-indigo-600 mr-2"
                       />
@@ -165,8 +168,8 @@ const CreateQuiz: React.FC = () => {
               ))}
             </ul>
             {showResults && (
-              <p className={`mt-2 ${Array.from(selectedAnswers[index] || []).every(ans => q.answers.includes(ans)) && Array.from(selectedAnswers[index] || []).length === q.answers.length ? 'text-green-500' : 'text-red-500'}`}>
-                {Array.from(selectedAnswers[index] || []).every(ans => q.answers.includes(ans)) && Array.from(selectedAnswers[index] || []).length === q.answers.length ? "Correct!" : `Incorrect! The correct answers are ${q.answers.join(", ")}`}
+              <p className={`mt-2 ${q.type === "single" ? (selectedAnswers[index] === q.answers[0] ? 'text-green-500' : 'text-red-500') : (Array.from(selectedAnswers[index] || []).every(ans => q.answers.includes(ans)) && Array.from(selectedAnswers[index] || []).length === q.answers.length ? 'text-green-500' : 'text-red-500')}`}>
+                {q.type === "single" ? (selectedAnswers[index] === q.answers[0] ? "Correct!" : `Incorrect! The correct answer is ${q.answers[0]}`) : (Array.from(selectedAnswers[index] || []).every(ans => q.answers.includes(ans)) && Array.from(selectedAnswers[index] || []).length === q.answers.length ? "Correct!" : `Incorrect! The correct answers are ${q.answers.join(", ")}`)}
               </p>
             )}
           </div>
