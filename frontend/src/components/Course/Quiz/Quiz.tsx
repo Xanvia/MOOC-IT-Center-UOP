@@ -1,8 +1,10 @@
 "use client";
 import React, { useState } from "react";
 
-const QuizDummy: React.FC = () => {
-  const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string }>({});
+const Quiz: React.FC = () => {
+  const [selectedAnswers, setSelectedAnswers] = useState<{
+    [key: number]: string;
+  }>({});
   const [results, setResults] = useState<{ [key: number]: boolean }>({});
 
   const questions = [
@@ -12,29 +14,19 @@ const QuizDummy: React.FC = () => {
         "A. Hyper Trainer Marking Language",
         "B. Hyper Text Marketing Language",
         "C. Hyper Text Markup Language",
-        "D. Hyper Text Marking Language"
+        "D. Hyper Text Marking Language",
       ],
-      answer: "C. Hyper Text Markup Language"
+      answer: "C. Hyper Text Markup Language",
     },
     {
       question: "Which HTML tag is used to define an internal style sheet?",
-      options: [
-        "A. <style>",
-        "B. <css>",
-        "C. <script>",
-        "D. <link>"
-      ],
-      answer: "A. <style>"
+      options: ["A. <style>", "B. <css>", "C. <script>", "D. <link>"],
+      answer: "A. <style>",
     },
     {
       question: "Which property is used to change the background color in CSS?",
-      options: [
-        "A. bgcolor",
-        "B. color",
-        "C. background-color",
-        "D. bg-color"
-      ],
-      answer: "C. background-color"
+      options: ["A. bgcolor", "B. color", "C. background-color", "D. bg-color"],
+      answer: "C. background-color",
     },
     {
       question: "How do you make a list that lists its items with squares?",
@@ -42,14 +34,14 @@ const QuizDummy: React.FC = () => {
         "A. list-style-type: square",
         "B. list-type: square",
         "C. list: square",
-        "D. list-square"
+        "D. list-square",
       ],
-      answer: "A. list-style-type: square"
-    }
+      answer: "A. list-style-type: square",
+    },
   ];
 
   const handleOptionChange = (questionIndex: number, option: string) => {
-    setSelectedAnswers(prev => ({ ...prev, [questionIndex]: option }));
+    setSelectedAnswers((prev) => ({ ...prev, [questionIndex]: option }));
   };
 
   const checkAnswers = () => {
@@ -84,8 +76,14 @@ const QuizDummy: React.FC = () => {
             ))}
           </ul>
           {results[index] !== undefined && (
-            <p className={`mt-2 ${results[index] ? 'text-green-500' : 'text-red-500'}`}>
-              {results[index] ? "Correct!" : `Incorrect! The correct answer is ${q.answer}`}
+            <p
+              className={`mt-2 ${
+                results[index] ? "text-green-500" : "text-red-500"
+              }`}
+            >
+              {results[index]
+                ? "Correct!"
+                : `Incorrect! The correct answer is ${q.answer}`}
             </p>
           )}
         </div>
@@ -100,4 +98,4 @@ const QuizDummy: React.FC = () => {
   );
 };
 
-export default QuizDummy;
+export default Quiz;
