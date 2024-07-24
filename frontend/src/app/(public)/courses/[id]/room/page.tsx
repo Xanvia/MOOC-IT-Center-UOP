@@ -6,8 +6,7 @@ import { useSelectedTopic } from "@/contexts/SidebarContext";
 import { Item, Week, Chapter } from "@/components/Course/types";
 import YellowButton from "@/components/Buttons/YellowButton";
 import CreateQuiz from "@/components/Course/Quiz/QuizCreator";
-import QuizCreator from "@/components/Course/Quiz/QuizCreator";
-import QuizPreview from "@/components/Course/Quiz/QuizPreview";
+import Quiz from "@/components/Course/Quiz/Quiz";
 
 const Page: React.FC = () => {
   const {
@@ -106,12 +105,6 @@ const Page: React.FC = () => {
     }
   };
 
-  const [questions, setQuestions] = useState<any[]>([]);
-
-  const addQuestion = (question: any) => {
-    setQuestions([...questions, question]);
-  };
-
   // const isLastItem = () => {
   //   const lastWeek = weeks[weeks.length - 1];
   //   const lastChapter = lastWeek?.chapters?.[lastWeek.chapters.length - 1];
@@ -127,8 +120,7 @@ const Page: React.FC = () => {
         <CourseVideo videoURL={item.content.video_link} title={item.name} />
       ) : item.type === "Quiz" ? (
         <>
-          <QuizCreator addQuestion={addQuestion} />
-          <QuizPreview questions={questions} />
+          <Quiz/>
         </>
       ) : (
         <div>No content available</div>
