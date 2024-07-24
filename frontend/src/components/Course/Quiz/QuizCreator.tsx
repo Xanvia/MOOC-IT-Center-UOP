@@ -1,19 +1,21 @@
+// QuizCreator.tsx
 "use client";
 import React, { useState } from "react";
 
-const CreateQuiz: React.FC = () => {
-  const [questions, setQuestions] = useState<any[]>([]);
+interface QuizCreatorProps {
+  addQuestion: (question: any) => void;
+}
+
+const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion }) => {
   const [currentQuestion, setCurrentQuestion] = useState<string>("");
   const [currentAnswer, setCurrentAnswer] = useState<string>("");
   const [currentOptions, setCurrentOptions] = useState<string[]>([]);
   const [correctAnswers, setCorrectAnswers] = useState<Set<string>>(new Set());
-  const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string | Set<string> }>({});
-  const [showResults, setShowResults] = useState<boolean>(false);
   const [answerType, setAnswerType] = useState<string>("single");
 
-  const addQuestion = () => {
+  const handleAddQuestion = () => {
     if (!currentQuestion || currentOptions.length < 2 || correctAnswers.size === 0) return;
-    setQuestions([...questions, { question: currentQuestion, options: currentOptions, answers: Array.from(correctAnswers), type: answerType }]);
+    addQuestion({ question: currentQuestion, options: currentOptions, answers: Array.from(correctAnswers), type: answerType });
     setCurrentQuestion("");
     setCurrentOptions([]);
     setCorrectAnswers(new Set());
@@ -24,22 +26,6 @@ const CreateQuiz: React.FC = () => {
     if (!currentQuestion || !currentAnswer) return;
     setCurrentOptions([...currentOptions, currentAnswer]);
     setCurrentAnswer("");
-  };
-
-  const handleOptionChange = (questionIndex: number, option: string) => {
-    setSelectedAnswers(prev => {
-      if (questions[questionIndex].type === "single") {
-        return { ...prev, [questionIndex]: option };
-      } else {
-        const newSelectedAnswers = new Set(prev[questionIndex] as Set<string> || []);
-        if (newSelectedAnswers.has(option)) {
-          newSelectedAnswers.delete(option);
-        } else {
-          newSelectedAnswers.add(option);
-        }
-        return { ...prev, [questionIndex]: newSelectedAnswers };
-      }
-    });
   };
 
   const handleCorrectAnswerChange = (option: string) => {
@@ -54,12 +40,8 @@ const CreateQuiz: React.FC = () => {
     });
   };
 
-  const handleSubmit = () => {
-    setShowResults(true);
-  };
-
   return (
-    <div className="quiz-creator-container p-10 bg-gray-100 rounded-lg shadow-lg">
+    <div className="quiz-creator p-10 bg-gray-100 rounded-lg shadow-lg">
       <h1 className="text-3xl font-bold text-center mb-4">Create Quiz</h1>
       <div className="mb-6">
         <input
@@ -126,7 +108,7 @@ const CreateQuiz: React.FC = () => {
         )}
         <div className="flex justify-center">
           <button
-            onClick={addQuestion}
+            onClick={handleAddQuestion}
             className={`py-2 px-8 rounded-lg transition duration-300 ${currentOptions.length < 2 || correctAnswers.size === 0 ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
             disabled={currentOptions.length < 2 || correctAnswers.size === 0}
           >
@@ -134,57 +116,8 @@ const CreateQuiz: React.FC = () => {
           </button>
         </div>
       </div>
-      <h2 className="text-2xl font-semibold p-4 mb-6">Preview</h2>
-      <div className="questions-preview p-8 bg-blue-100 rounded-md">
-        {questions.map((q, index) => (
-          <div key={index} className="question mb-6 px-4">
-            <h3 className="text-lg font-semibold mb-2">{q.question}</h3>
-            <ul className="list-none">
-              {q.options.map((option: string, i: number) => (
-                <li key={i} className="mb-2">
-                  <label className="inline-flex px-5 items-center">
-                    {q.type === "single" ? (
-                      <input
-                        type="radio"
-                        name={`preview-question-${index}`}
-                        value={option}
-                        checked={selectedAnswers[index] === option}
-                        onChange={() => handleOptionChange(index, option)}
-                        className="form-radio text-indigo-600 mr-2"
-                      />
-                    ) : (
-                      <input
-                        type="checkbox"
-                        name={`preview-question-${index}`}
-                        value={option}
-                        checked={(selectedAnswers[index] as Set<string>)?.has(option) || false}
-                        onChange={() => handleOptionChange(index, option)}
-                        className="form-checkbox text-indigo-600 mr-2"
-                      />
-                    )}
-                    {option}
-                  </label>
-                </li>
-              ))}
-            </ul>
-            {showResults && (
-              <p className={`mt-2 ${q.type === "single" ? (selectedAnswers[index] === q.answers[0] ? 'text-green-500' : 'text-red-500') : (Array.from(selectedAnswers[index] || []).every(ans => q.answers.includes(ans)) && Array.from(selectedAnswers[index] || []).length === q.answers.length ? 'text-green-500' : 'text-red-500')}`}>
-                {q.type === "single" ? (selectedAnswers[index] === q.answers[0] ? "Correct!" : `Incorrect! The correct answer is ${q.answers[0]}`) : (Array.from(selectedAnswers[index] || []).every(ans => q.answers.includes(ans)) && Array.from(selectedAnswers[index] || []).length === q.answers.length ? "Correct!" : `Incorrect! The correct answers are ${q.answers.join(", ")}`)}
-              </p>
-            )}
-          </div>
-        ))}
-        <div className="flex p-4 justify-end">
-          <button
-            onClick={handleSubmit}
-            className="bg-primary text-white font-semibold py-2 px-8 rounded-lg hover:bg-indigo-700 transition duration-300"
-          >
-            SUBMIT
-          </button>
-        </div>
-      </div>
     </div>
   );
 };
 
-export default CreateQuiz;
+export default QuizCreator;
