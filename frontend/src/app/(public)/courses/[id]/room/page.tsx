@@ -23,7 +23,7 @@ const Page: React.FC = () => {
 
   useEffect(() => {
     setItem({ ...selectedTopic });
-    console.log(selectedTopic.content);
+  
   }, [selectedTopic]);
 
   const findCurrentItemIndex = (weeks: Week[], currentItem: Item) => {
