@@ -1,4 +1,5 @@
-from django.urls import path
+from django.urls import path,include
+from rest_framework.routers import DefaultRouter
 from .views import (
     CourseViewSet,
     WeekViewSet,
@@ -12,6 +13,8 @@ from .views import (
     ProgressTrackViewSet
     
 )
+router = DefaultRouter()
+router.register(r'progress', ProgressTrackViewSet, basename='progress')
 
 urlpatterns = [
     # get course details, update course details, create course
@@ -106,8 +109,8 @@ urlpatterns = [
     
     
     path(
-        '<int:course_id>/start-component/', 
-         ProgressTrackViewSet.start_course, 
+        'component/<int:component_id>/start/', 
+         ProgressTrackViewSet.as_view({"post": "start_component"}), 
          name='start_component'
          ),
 

@@ -10,6 +10,8 @@ from .models import (
     VideoFile,
     Question,
     Enrollment,
+    Progress,
+    Component
 )
 from .serializers import (
     CourseSerializer,
@@ -21,6 +23,7 @@ from .serializers import (
     VideoSerializer,
     EnrollementSerializer,
     QuestionSerializer,
+    ProgressSerializer
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -335,11 +338,19 @@ class AddQuestionsViewSet(viewsets.ModelViewSet):
         return response
     
 class ProgressTrackViewSet(viewsets.ModelViewSet):
-    def start_course(request, course_id):
-        course = get_object_or_404(Course, id=course_id)
-        enrollment, created = Enrollment.objects.get_or_create(course=course, student=request.user)
+    queryset = Progress.objects.all()
+    serializer_class = ProgressSerializer
 
-        return Response({'message': 'Course started', 'enrollment_id': enrollment.id}, status=status.HTTP_201_CREATED)
+    def start_component(self, request, component_id):
+        component = get_object_or_404(Component, id=component_id)
+        try:
+            course = component.chapter.week.course
+            print(course.id)
+            enrollment = Enrollment.objects.get(course=course, student=request.user)
+            progress = Progress.objects.create(component_id=component.id, enrollment_id= enrollment.id)
+            return Response({'message': 'Course  started'}, status=status.HTTP_200_OK)
+        except Enrollment.DoesNotExist:
+            return Response({'error': 'Enrollment does not exist'}, status=status.HTTP_404_NOT_FOUND)
     
     # def mark_component_complete(request, component_id):
     #     component = get_object_or_404(Component, id=component_id)
