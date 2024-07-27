@@ -45,7 +45,7 @@ const Note: React.FC<NoteProps> = ({ selectedTopic }) => {
             Introduction to Web Developing
           </h2>
 
-          <div className="py-14 px-3 w-10/12 min-h-[600px] mx-auto text-left bg-primary_light">
+          <div className="py-14 px-3 w-10/12 min-h-[600px] mx-auto text-left bg-white">
             <div className="my-6 ml-12">
               {isEdit && (
                 <EditButtonPrimary
