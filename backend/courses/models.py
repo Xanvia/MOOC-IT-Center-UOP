@@ -121,10 +121,12 @@ class Progress(models.Model):
 class Question(models.Model):
     SINGLE_CORRECT = 'SC'
     MULTIPLE_CORRECT = 'MC'
+    OPENN_ENDED = 'OE'
 
     QUESTION_TYPES = [
         (SINGLE_CORRECT, 'Single Correct'),
         (MULTIPLE_CORRECT, 'Multiple Correct'),
+        (OPENN_ENDED, 'Open Ended')
     ]
 
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')

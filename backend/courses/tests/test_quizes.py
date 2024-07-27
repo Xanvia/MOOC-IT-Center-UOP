@@ -98,3 +98,26 @@ class CreateCourseTest(APITestCase):
             "data": {"id": 1},
         }
         self.assertEqual(response.data, expected_data)
+
+    def test_add_open_ended_question(self):
+
+        chapter = Chapter.objects.get(id=1)
+        quiz_data = {
+            "name": "test quiz",
+            "chapter": chapter,
+        }
+        quiz_object = Quiz.objects.create(**quiz_data)
+        data = {
+            "text": "What is the capital of India?",
+            "question_type": "OE",
+        }
+        response = self.client.post(
+            reverse("add-questions", args=[1]), data, format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        expected_data = {
+            "status": "success",
+            "message": "Question added successfully",
+            "data": {"id": 1},
+        }
+        self.assertEqual(response.data, expected_data)

@@ -178,15 +178,16 @@ class AnswerSerializer(serializers.ModelSerializer):
         fields = ['text', 'is_correct']
 
 class QuestionSerializer(serializers.ModelSerializer):
-    answers = AnswerSerializer(many=True)
+    answers = AnswerSerializer(many=True, required=False)
 
     class Meta:
         model = Question
         fields ="__all__"
 
     def create(self, validated_data):
-        answers_data = validated_data.pop('answers')
+        answers_data = validated_data.pop('answers', [])
         question = Question.objects.create(**validated_data)
-        for answer_data in answers_data:
-            Answer.objects.create(question=question, **answer_data)
+        if answers_data:
+            for answer_data in answers_data:
+                Answer.objects.create(question=question, **answer_data)
         return question
