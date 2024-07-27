@@ -120,7 +120,7 @@ const Page: React.FC = () => {
         <CourseVideo videoURL={item.content.video_link} title={item.name} />
       ) : item.type === "Quiz" ? (
         <>
-          <Quiz/>
+          <Quiz item={item} />
         </>
       ) : (
         <div>No content available</div>

@@ -1,4 +1,3 @@
-// QuizCreator.tsx
 "use client";
 import React, { useState } from "react";
 
@@ -14,8 +13,17 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion }) => {
   const [answerType, setAnswerType] = useState<string>("single");
 
   const handleAddQuestion = () => {
-    if (!currentQuestion || currentOptions.length < 2 || correctAnswers.size === 0) return;
-    addQuestion({ question: currentQuestion, options: currentOptions, answers: Array.from(correctAnswers), type: answerType });
+    if (
+      !currentQuestion ||
+      (answerType !== "open_ended" && correctAnswers.size === 0)
+    )
+      return;
+    addQuestion({
+      question: currentQuestion,
+      options: currentOptions,
+      answers: answerType === "open_ended" ? [] : Array.from(correctAnswers),
+      type: answerType,
+    });
     setCurrentQuestion("");
     setCurrentOptions([]);
     setCorrectAnswers(new Set());
@@ -29,14 +37,18 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion }) => {
   };
 
   const handleCorrectAnswerChange = (option: string) => {
-    setCorrectAnswers(prev => {
-      const newCorrectAnswers = new Set(prev);
-      if (newCorrectAnswers.has(option)) {
-        newCorrectAnswers.delete(option);
+    setCorrectAnswers((prev) => {
+      if (answerType === "single") {
+        return new Set([option]);
       } else {
-        newCorrectAnswers.add(option);
+        const newCorrectAnswers = new Set(prev);
+        if (newCorrectAnswers.has(option)) {
+          newCorrectAnswers.delete(option);
+        } else {
+          newCorrectAnswers.add(option);
+        }
+        return newCorrectAnswers;
       }
-      return newCorrectAnswers;
     });
   };
 
@@ -58,7 +70,7 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion }) => {
             value={currentAnswer}
             onChange={(e) => setCurrentAnswer(e.target.value)}
             className="flex-grow p-2 border rounded-lg"
-            disabled={!currentQuestion}
+            disabled={!currentQuestion || answerType === "open_ended"}
           />
           <select
             value={answerType}
@@ -68,18 +80,29 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion }) => {
           >
             <option value="single">Single Correct Answer</option>
             <option value="multiple">Multiple Correct Answers</option>
+            <option value="open_ended">Open Ended</option>
           </select>
           <button
             onClick={addOption}
-            className={`py-2 px-4 rounded-lg transition duration-300 ${currentQuestion ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'bg-gray-400 text-gray-600 cursor-not-allowed'}`}
-            disabled={!currentQuestion || !currentAnswer}
+            className={`py-2 px-4 rounded-lg transition duration-300 ${
+              currentQuestion && answerType !== "open_ended"
+                ? "bg-indigo-600 text-white hover:bg-indigo-700"
+                : "bg-gray-400 text-gray-600 cursor-not-allowed"
+            }`}
+            disabled={
+              !currentQuestion || !currentAnswer || answerType === "open_ended"
+            }
           >
             Add Option
           </button>
         </div>
-        {currentOptions.length > 0 && (
+        {currentOptions.length > 0 && answerType !== "open_ended" && (
           <div className="mb-4 bg-blue-100 p-4 rounded-md">
-            <p className="text-lg font-semibold mb-2">Select the correct {answerType === "single" ? "answer" : "answers"} before adding the question:</p>
+            <p className="text-lg font-semibold mb-2">
+              Select the correct{" "}
+              {answerType === "single" ? "answer" : "answers"} before adding the
+              question:
+            </p>
             {currentOptions.map((option, index) => (
               <div key={index} className="flex items-center mb-2 ml-4">
                 {answerType === "single" ? (
@@ -109,8 +132,7 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion }) => {
         <div className="flex justify-center">
           <button
             onClick={handleAddQuestion}
-            className={`py-2 px-8 rounded-lg transition duration-300 ${currentOptions.length < 2 || correctAnswers.size === 0 ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
-            disabled={currentOptions.length < 2 || correctAnswers.size === 0}
+            className={`py-2 px-8 rounded-lg transition duration-300 ${"bg-indigo-600 text-white hover:bg-indigo-700"}`}
           >
             Add Question
           </button>

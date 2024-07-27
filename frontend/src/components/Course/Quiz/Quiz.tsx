@@ -3,10 +3,15 @@
 import React, { useState } from "react";
 import QuizCreator from "./QuizCreator";
 import QuizPreview from "./QuizPreview";
+import { Item } from "../types";
 
-const CreateQuiz: React.FC = () => {
+interface Props {
+  item: Item;
+}
+
+const CreateQuiz: React.FC<Props> = ({ item }) => {
   const [questions, setQuestions] = useState<any[]>([]);
-  const isEdit = true;  
+  const isEdit = true;
 
   const addQuestion = (question: any) => {
     setQuestions([...questions, question]);
@@ -15,7 +20,7 @@ const CreateQuiz: React.FC = () => {
   return (
     <div className="quiz-container">
       {isEdit && <QuizCreator addQuestion={addQuestion} />}
-      <QuizPreview questions={questions} />
+      <QuizPreview questions={questions} quizTitle={item.name} isEdit={isEdit}/>
     </div>
   );
 };
