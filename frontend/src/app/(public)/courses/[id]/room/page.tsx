@@ -5,8 +5,8 @@ import CourseVideo from "@/components/Course/CourseVideo/CourseVideo";
 import { useSelectedTopic } from "@/contexts/SidebarContext";
 import { Item, Week, Chapter } from "@/components/Course/types";
 import YellowButton from "@/components/Buttons/YellowButton";
-import CreateQuiz from "@/components/Course/Quiz/CreateQuiz";
-import QuizDummy from "@/components/Course/Quiz/QuizDummy";
+import CreateQuiz from "@/components/Course/Quiz/QuizCreator";
+import Quiz from "@/components/Course/Quiz/Quiz";
 
 const Page: React.FC = () => {
   const {
@@ -120,9 +120,7 @@ const Page: React.FC = () => {
         <CourseVideo videoURL={item.content.video_link} title={item.name} />
       ) : item.type === "Quiz" ? (
         <>
-          <QuizDummy />
-          <br />
-          <CreateQuiz />
+          <Quiz item={item} />
         </>
       ) : (
         <div>No content available</div>
