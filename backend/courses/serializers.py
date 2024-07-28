@@ -199,19 +199,17 @@ class ProgressSerializer(serializers.ModelSerializer):
         model = Progress
         fields = "__all__"
 
-    def validate(self, attrs):
-        print(attrs)
-        return super().validate(attrs)
 
     def to_internal_value(self, data):
-        component_id = data.get("component")
-        component = Component.objects.get(id=component_id)
         request = self.context.get("request")
-        user = request.user
-        course = course = component.chapter.week.course
-        try:
-            enrollement = Enrollment.objects.get(student=user, course=course)
-        except Enrollment.DoesNotExist:
-            raise serializers.ValidationError("You are not enrolled in this course")
-        data["enrollment"] = enrollement.id
+        if request.method == "POST":
+            component_id = data.get("component")
+            component = Component.objects.get(id=component_id)
+            user = request.user
+            course = course = component.chapter.week.course
+            try:
+                enrollement = Enrollment.objects.get(student=user, course=course)
+            except Enrollment.DoesNotExist:
+                raise serializers.ValidationError("You are not enrolled in this course")
+            data["enrollment"] = enrollement.id
         return super().to_internal_value(data)

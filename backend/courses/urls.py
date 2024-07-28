@@ -1,4 +1,4 @@
-from django.urls import path,include
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
     CourseViewSet,
@@ -10,11 +10,11 @@ from .views import (
     QuizViewSet,
     EnrollementViewSet,
     AddQuestionsViewSet,
-    ProgressTrackViewSet
-    
+    ProgressTrackViewSet,
 )
+
 router = DefaultRouter()
-router.register(r'progress', ProgressTrackViewSet, basename='progress')
+router.register(r"progress", ProgressTrackViewSet, basename="progress")
 
 urlpatterns = [
     # get course details, update course details, create course
@@ -106,14 +106,14 @@ urlpatterns = [
         AddQuestionsViewSet.as_view({"post": "create"}),
         name="add-questions",
     ),
-    
-    
     path(
-        'component/<int:component_id>/start/', 
-         ProgressTrackViewSet.as_view({"post": "start_component"}), 
-         name='start_component'
-         ),
-
-
-
+        "component/<int:component_id>/start/",
+        ProgressTrackViewSet.as_view({"post": "start_component"}),
+        name="start_component",
+    ),
+    path(
+        "component/completed/<int:pk>/",
+        ProgressTrackViewSet.as_view({"patch": "mark_as_completed"}),
+        name="mark_as_completed",
+    ),
 ]
