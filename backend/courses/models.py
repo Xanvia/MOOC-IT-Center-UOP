@@ -83,7 +83,7 @@ class Note(Component):
 
 class Quiz(Component):
     deadline = models.DateTimeField(default=timezone.now, blank=True, null=True)
-    duration = models.DurationField(blank=True,null=True)
+    duration = models.DurationField(blank=True, null=True)
     full_grades = models.IntegerField(default=100, blank=True, null=True)
 
 
@@ -117,19 +117,25 @@ class Progress(models.Model):
     component = models.ForeignKey(Component, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = (
+            "enrollment",
+            "component",
+        )
+
 
 class Question(models.Model):
-    SINGLE_CORRECT = 'SC'
-    MULTIPLE_CORRECT = 'MC'
-    OPENN_ENDED = 'OE'
+    SINGLE_CORRECT = "SC"
+    MULTIPLE_CORRECT = "MC"
+    OPENN_ENDED = "OE"
 
     QUESTION_TYPES = [
-        (SINGLE_CORRECT, 'Single Correct'),
-        (MULTIPLE_CORRECT, 'Multiple Correct'),
-        (OPENN_ENDED, 'Open Ended')
+        (SINGLE_CORRECT, "Single Correct"),
+        (MULTIPLE_CORRECT, "Multiple Correct"),
+        (OPENN_ENDED, "Open Ended"),
     ]
 
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions")
     text = models.TextField()
     question_type = models.CharField(max_length=2, choices=QUESTION_TYPES)
 
@@ -138,12 +144,15 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+    question = models.ForeignKey(
+        Question, on_delete=models.CASCADE, related_name="answers"
+    )
     text = models.CharField(max_length=255)
     is_correct = models.BooleanField(default=False)
 
     def __str__(self):
         return self.text
+
 
 class StudentQuiz(models.Model):
     enrollement = models.ForeignKey(Enrollment, on_delete=models.CASCADE)

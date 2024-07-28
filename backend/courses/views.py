@@ -11,7 +11,7 @@ from .models import (
     Question,
     Enrollment,
     Progress,
-    Component
+    Component,
 )
 from .serializers import (
     CourseSerializer,
@@ -23,15 +23,13 @@ from .serializers import (
     VideoSerializer,
     EnrollementSerializer,
     QuestionSerializer,
-    ProgressSerializer
+    ProgressSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
 from django.shortcuts import get_object_or_404
-
-
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -336,22 +334,26 @@ class AddQuestionsViewSet(viewsets.ModelViewSet):
             },
         }
         return response
-    
+
+
 class ProgressTrackViewSet(viewsets.ModelViewSet):
     queryset = Progress.objects.all()
     serializer_class = ProgressSerializer
 
-    def start_component(self, request, component_id):
-        component = get_object_or_404(Component, id=component_id)
-        try:
-            course = component.chapter.week.course
-            print(course.id)
-            enrollment = Enrollment.objects.get(course=course, student=request.user)
-            progress = Progress.objects.create(component_id=component.id, enrollment_id= enrollment.id)
-            return Response({'message': 'Course  started'}, status=status.HTTP_200_OK)
-        except Enrollment.DoesNotExist:
-            return Response({'error': 'Enrollment does not exist'}, status=status.HTTP_404_NOT_FOUND)
-    
+    def start_component(self, request, component_id, *args, **kwargs):
+
+        request.data["component"] = component_id
+        response = super().create(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "message": "Component started successfully",
+            "data": {
+                "id": response.data["id"],
+            },
+        }
+
+        return response
+
     # def mark_component_complete(request, component_id):
     #     component = get_object_or_404(Component, id=component_id)
     #     enrollment = get_object_or_404(Enrollment, course=component.chapter.week.course, student=request.user)
@@ -360,9 +362,9 @@ class ProgressTrackViewSet(viewsets.ModelViewSet):
     #     progress.save()
 
     #     return Response({'message': 'Component marked as complete'}, status=status.HTTP_200_OK)
-    
+
     # def get_progress(request, course_id):
     #     course = get_object_or_404(Course, id=course_id)
     #     progress = course.get_progress(request.user)
-        
+
     #     return Response({'progress': progress}, status=status.HTTP_200_OK)
