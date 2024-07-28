@@ -360,7 +360,7 @@ class ProgressTrackViewSet(viewsets.ModelViewSet):
         response = super().update(request, partial=True, *args, **kwargs)
         response.data = {
             "status": "success",
-            "message": "Component completed successfully",
+            "message": "Component marked as completed successfully",
         }
 
         return response
