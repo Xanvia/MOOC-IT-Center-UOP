@@ -12,6 +12,7 @@ from .models import (
     Enrollment,
     Question,
     Answer,
+    Progress,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -140,7 +141,8 @@ class QuizSerializer(serializers.ModelSerializer):
             "questions": QuestionSerializer(instance.questions, many=True).data,
         }
         return representation
-    
+
+
 class VideoSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="Video")
 
@@ -170,24 +172,44 @@ class EnrollementSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
 
-
-
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ['text', 'is_correct']
+        fields = ["text", "is_correct"]
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True, required=False)
 
     class Meta:
         model = Question
-        fields ="__all__"
+        fields = "__all__"
 
     def create(self, validated_data):
-        answers_data = validated_data.pop('answers', [])
+        answers_data = validated_data.pop("answers", [])
         question = Question.objects.create(**validated_data)
         if answers_data:
             for answer_data in answers_data:
                 Answer.objects.create(question=question, **answer_data)
         return question
+
+
+class ProgressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Progress
+        fields = "__all__"
+
+
+    def to_internal_value(self, data):
+        request = self.context.get("request")
+        if request.method == "POST":
+            component_id = data.get("component")
+            component = Component.objects.get(id=component_id)
+            user = request.user
+            course = course = component.chapter.week.course
+            try:
+                enrollement = Enrollment.objects.get(student=user, course=course)
+            except Enrollment.DoesNotExist:
+                raise serializers.ValidationError("You are not enrolled in this course")
+            data["enrollment"] = enrollement.id
+        return super().to_internal_value(data)

@@ -10,6 +10,8 @@ from .models import (
     VideoFile,
     Question,
     Enrollment,
+    Progress,
+    Component,
 )
 from .serializers import (
     CourseSerializer,
@@ -21,11 +23,13 @@ from .serializers import (
     VideoSerializer,
     EnrollementSerializer,
     QuestionSerializer,
+    ProgressSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
+from django.shortcuts import get_object_or_404
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -329,4 +333,34 @@ class AddQuestionsViewSet(viewsets.ModelViewSet):
                 "id": response.data["id"],
             },
         }
+        return response
+
+
+class ProgressTrackViewSet(viewsets.ModelViewSet):
+    queryset = Progress.objects.all()
+    serializer_class = ProgressSerializer
+
+    def start_component(self, request, component_id, *args, **kwargs):
+
+        request.data["component"] = component_id
+        response = super().create(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "message": "Component started successfully",
+            "data": {
+                "id": response.data["id"],
+            },
+        }
+
+        return response
+
+    def mark_as_completed(self, request, *args, **kwargs):
+
+        request.data["completed"] = True
+        response = super().update(request, partial=True, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "message": "Component marked as completed successfully",
+        }
+
         return response

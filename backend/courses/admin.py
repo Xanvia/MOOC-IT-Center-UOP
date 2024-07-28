@@ -64,3 +64,7 @@ class QuestionAdmin(admin.ModelAdmin):
 @admin.register(Answer)
 class Answerdmin(admin.ModelAdmin):
     list_display = ["id", "text", "is_correct"]
+
+@admin.register(Progress)
+class ProgressAdmin(admin.ModelAdmin):
+    list_display = ["id","enrollment", "completed"]
