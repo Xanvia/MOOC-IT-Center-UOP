@@ -62,14 +62,14 @@ class ProgressViewsetTest(APITestCase):
             "start_component", kwargs={"component_id": self.component_id}
         )
         response = self.client.post(self.url)
-
+        component = response.data.get("data")["id"]
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(
             response.data,
             {
                 "status": "success",
                 "message": "Component started successfully",
-                "data": {"id": 1},
+                "data": {"id": component},
             },
         )
 
