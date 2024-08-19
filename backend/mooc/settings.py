@@ -102,6 +102,7 @@ WSGI_APPLICATION = "mooc.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+print(os.getenv("DJANGO_ENV"))
 if os.getenv("DJANGO_ENV") == "production":
     DATABASES = {
         "default": {
@@ -109,7 +110,7 @@ if os.getenv("DJANGO_ENV") == "production":
             "NAME": os.getenv("DB_NAME"),
             "USER": os.getenv("DB_USER"),
             "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": os.getenv("DB_HOST", "localhost"),
+            "HOST": os.getenv("DB_HOST", "postgres"),
             "PORT": os.getenv("DB_PORT", "5432"),
         }
     }
