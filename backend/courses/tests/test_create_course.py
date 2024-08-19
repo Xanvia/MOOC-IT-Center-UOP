@@ -50,11 +50,11 @@ class CreateCourseTest(APITestCase):
         }
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
+        course = Course.objects.get(name="test course")
         expected_data = {
             "status": "success",
             "message": "Course created successfully",
-            "data": {"id": 1},
+            "data": {"id": course.id},
         }
         self.assertEqual(response.data, expected_data)
 
@@ -110,11 +110,11 @@ class CreateCourseTest(APITestCase):
         }
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
+        course = Course.objects.get(name="test course")
         expected_data = {
             "status": "success",
             "message": "Course created successfully",
-            "data": {"id": 1},
+            "data": {"id": course.id},
         }
         self.assertEqual(response.data, expected_data)
 

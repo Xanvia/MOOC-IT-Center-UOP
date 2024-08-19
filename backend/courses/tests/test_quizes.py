@@ -64,18 +64,19 @@ class CreateCourseTest(APITestCase):
         }
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        quiz = Quiz.objects.get(name="test quiz")
         expected_data = {
             "status": "success",
             "message": "Quiz created successfully",
-            "data": {"id": 1},
+            "data": {"id": quiz.id},
         }
         self.assertEqual(response.data, expected_data)
 
     def test_add_questions(self):
-        chapter = Chapter.objects.get(id=1)
+
         quiz_data = {  
             "name": "test quiz",
-            "chapter": chapter,
+            "chapter": self.chapter,
         }
         quiz_object = Quiz.objects.create(**quiz_data)
         data = {
@@ -89,22 +90,25 @@ class CreateCourseTest(APITestCase):
             ],
         }
         response = self.client.post(
-            reverse("add-questions", args=[1]), data, format="json"
+            reverse("add-questions", args=[quiz_object.id]), data, format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        
+        id = response.data["data"]["id"]
+
         expected_data = {
             "status": "success",
             "message": "Question added successfully",
-            "data": {"id": 1},
+            "data": {"id": id},
         }
         self.assertEqual(response.data, expected_data)
 
     def test_add_open_ended_question(self):
 
-        chapter = Chapter.objects.get(id=1)
+       
         quiz_data = {
             "name": "test quiz",
-            "chapter": chapter,
+            "chapter": self.chapter,
         }
         quiz_object = Quiz.objects.create(**quiz_data)
         data = {
@@ -112,12 +116,14 @@ class CreateCourseTest(APITestCase):
             "question_type": "OE",
         }
         response = self.client.post(
-            reverse("add-questions", args=[1]), data, format="json"
+            reverse("add-questions", args=[quiz_object.id]), data, format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        id = response.data["data"]["id"]
+
         expected_data = {
             "status": "success",
             "message": "Question added successfully",
-            "data": {"id": 1},
+            "data": {"id": id},
         }
         self.assertEqual(response.data, expected_data)

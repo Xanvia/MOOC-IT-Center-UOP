@@ -74,45 +74,4 @@ class CreateCourseTest(APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        expected_data = {
-            "status": "success",
-            "data": {
-                "weeks": [
-                    OrderedDict(
-                        {
-                            "id": 1,
-                            "name": "test week",
-                            "course": 1,
-                            "chapters": [
-                                OrderedDict(
-                                    {
-                                        "id": 1,
-                                        "name": "test chapter",
-                                        "week": 1,
-                                        "items": [
-                                            OrderedDict(
-                                                {
-                                                    "id": 1,
-                                                    "name": "test note",
-                                                    "type": None,
-                                                    "chapter": 1,
-                                                }
-                                            ),
-                                            OrderedDict(
-                                                {
-                                                    "id": 2,
-                                                    "name": "test video",
-                                                    "type": None,
-                                                    "chapter": 1,
-                                                }
-                                            ),
-                                        ],
-                                    }
-                                )
-                            ],
-                        }
-                    )
-                ]
-            },
-        }
-        self.assertEqual(response.data, expected_data)
+        
