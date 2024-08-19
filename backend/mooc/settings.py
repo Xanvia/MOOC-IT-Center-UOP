@@ -109,7 +109,7 @@ if os.getenv("DJANGO_ENV") == "production":
             "NAME": os.getenv("DB_NAME"),
             "USER": os.getenv("DB_USER"),
             "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": os.getenv("DB_HOST", "localhost"),
+            "HOST": os.getenv("DB_HOST", "postgres"),
             "PORT": os.getenv("DB_PORT", "5432"),
         }
     }

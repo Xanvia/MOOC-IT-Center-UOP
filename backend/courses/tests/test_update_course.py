@@ -32,23 +32,23 @@ class CreateCourseTest(APITestCase):
         cls.group = Group.objects.get(name="teacher")
         cls.user.groups.add(cls.group)
         cls.user.save()
+        course_data = {
+            "name": "test course",
+            "category": Interest.objects.get(id=1),
+            "institution": Institution.objects.get(id=1),
+            "difficulty": "beginner",
+            "course_creator": cls.user,
+        }
+        cls.course = Course.objects.create(**course_data)
         cls.token = str(AccessToken.for_user(cls.user))
         cls.maxDiff = None
 
     def setUp(self):
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
-        self.url = reverse("course-detail", args=[1])
+        self.url = reverse("course-detail", args=[self.course.id])
 
     def test_patch_method(self):
-        course_data = {
-            "name": "test course",
-            "category": 1,
-            "institution": 1,
-            "difficulty": "beginner",
-        }
-        url = reverse("course-list")
-        response = self.client.post(url, course_data, format="json")
-        
+
 
         data = {
             "outcomes": "test outcomes",

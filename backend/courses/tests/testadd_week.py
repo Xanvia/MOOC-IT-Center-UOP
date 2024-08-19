@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import User, Group
 from userprofiles.models import UserProfile, Country
-from courses.models import Week,Chapter
+from courses.models import Week,Chapter,Course
 from rest_framework_simplejwt.tokens import AccessToken
 
 
@@ -48,17 +48,16 @@ class CreateCourseTest(APITestCase):
         }
         url = reverse("course-list")
         response = self.client.post(url, course_data, format="json")
-        
+        course = Course.objects.get(course_creator_id=self.user.id)
         data = {
             "name": "test week",
         }
 
-        response = self.client.post(reverse("week-list", args=[1]), data, format="json")
+        response = self.client.post(reverse("week-list", args=[course.id]), data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        
         self.assertEqual(response.data["status"], "success")
         self.assertEqual(response.data["message"], "Week created successfully")
-        self.assertTrue(Week.objects.filter(course_id=1).exists())
+        self.assertTrue(Week.objects.filter(course_id=course.id).exists())
 
 
     def test_add_chapter(self):
@@ -72,21 +71,19 @@ class CreateCourseTest(APITestCase):
         url = reverse("course-list")
         response = self.client.post(url, course_data, format="json")
         
-        data = {
-            "name": "test week",
-        }
+        
+        course = Course.objects.get(course_creator_id=self.user.id)
 
-        response = self.client.post(reverse("week-list", args=[1]), data, format="json")
 
         data ={
             "name": "test chapter",
         }
-
-        response = self.client.post(reverse("chapter-list", args=[1]), data, format="json")
-
+        week = Week.objects.create(name="test week", course_id=course.id)
+        response = self.client.post(reverse("chapter-list", args=[week.id]), data, format="json")
+        week = Week.objects.get(name="test week")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["status"], "success")
-        self.assertTrue(Chapter.objects.filter(week_id=1).exists())
+        self.assertTrue(Chapter.objects.filter(week_id=week.id).exists())
         
 
     def test_delete_week(self):
@@ -99,13 +96,9 @@ class CreateCourseTest(APITestCase):
         url = reverse("course-list")
         response = self.client.post(url, course_data, format="json")
         
-        data = {
-            "name": "test week",
-        }
-
-        response = self.client.post(reverse("week-list", args=[1]), data, format="json")
-
-        response = self.client.delete(reverse("week-detail", args=[1]))
+        course = Course.objects.get(course_creator_id=self.user.id)
+        week = Week.objects.create(name="test week", course_id=course.id)
+        response = self.client.delete(reverse("week-detail", args=[week.id]))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(response.data["status"], "success")
         self.assertEqual(response.data["message"], "Week deleted successfully")
