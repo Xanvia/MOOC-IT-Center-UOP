@@ -102,7 +102,6 @@ WSGI_APPLICATION = "mooc.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-print(os.getenv("DJANGO_ENV"))
 if os.getenv("DJANGO_ENV") == "production":
     DATABASES = {
         "default": {
