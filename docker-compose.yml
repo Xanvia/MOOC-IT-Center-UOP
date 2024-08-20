@@ -7,7 +7,7 @@ services:
     ports:
       - "5432:5432"
     env_file:
-      - /backend/.env
+      - backend/.env
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
@@ -19,7 +19,7 @@ services:
     depends_on:
       - postgres
     env_file:
-      - /backend/.env
+      - backend/.env
 
   frontend:
     container_name: nextjs-app
@@ -29,7 +29,7 @@ services:
     depends_on:
       - backend
     env_file:
-      - /frontend/.env
+      - .env
 
 volumes:
   postgres-data:
