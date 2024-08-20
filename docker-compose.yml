@@ -23,7 +23,7 @@ services:
 
   frontend:
     container_name: nextjs-app
-    image: sanjueranga/mooc-frontend:latest # Docker Compose will pull this automatically
+    image: sanjueranga/mooc-frontend:latest 
     ports:
       - "3000:3000"
     depends_on:
