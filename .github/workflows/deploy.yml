@@ -22,15 +22,15 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker images
-        run: |
-          docker build -t sanjueranga/mooc-backend:latest -f ./backend/Dockerfile .
-          docker build -t sanjueranga/mooc-frontend:latest -f ./frontend/Dockerfile .
+      # - name: Build Docker images
+      #   run: |
+      #     docker build -t sanjueranga/mooc-backend:latest -f ./backend/Dockerfile .
+      #     docker build -t sanjueranga/mooc-frontend:latest -f ./frontend/Dockerfile .
 
-      - name: Push Docker images
-        run: |
-          docker push sanjueranga/mooc-backend:latest
-          docker push sanjueranga/mooc-frontend:latest
+      # - name: Push Docker images
+      #   run: |
+      #     docker push sanjueranga/mooc-backend:latest
+      #     docker push sanjueranga/mooc-frontend:latest
 
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
@@ -39,6 +39,7 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no -p 222 github-user@$SERVER_IP 'bash /mooc/deploy.sh'
+          ssh -o StrictHostKeyChecking=no -p $SERVER_PORT github-user@$SERVER_IP 'bash /home/github-user/mooc/deploy.sh'
         env:
           SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
