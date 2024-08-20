@@ -7,35 +7,31 @@ services:
     ports:
       - "5432:5432"
     env_file:
-      - backend/.env
+      - /backend/.env  
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
   backend:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
     container_name: django-app
+    image: your_dockerhub_username/your_backend_image:latest  # Pull from Docker Hub
     ports:
       - "8000:8000"
     depends_on:
       - postgres
     env_file:
-      - backend/.env
+      - /backend/.env  # Update this path to the .env file on the server
     volumes:
-      - ./backend:/app
+      - /path/to/server/app/backend:/app 
 
   frontend:
     container_name: nextjs-app
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
+    image: your_dockerhub_username/your_frontend_image:latest  # Pull from Docker Hub
     ports:
       - "3000:3000"
     depends_on:
       - backend
     env_file:
-      - frontend/.env
+      - /path/to/your/server/frontend/.env  # Update this path to the .env file on the server
 
 volumes:
   postgres-data:
