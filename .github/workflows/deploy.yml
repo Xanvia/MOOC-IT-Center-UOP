@@ -24,8 +24,8 @@ jobs:
 
       - name: Build Docker images
         run: |
-          docker build -t sanjueranga/mooc-backend:latest -f /backend/Dockerfile .
-          docker build -t sanjueranga/mooc-frontend:latest -f /frontend/Dockerfile .
+          docker build -t sanjueranga/mooc-backend:latest -f ./backend/Dockerfile .
+          docker build -t sanjueranga/mooc-frontend:latest -f ./frontend/Dockerfile .
 
       - name: Push Docker images
         run: |
