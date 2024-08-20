@@ -20,6 +20,7 @@ jobs:
 
       - name: Test SSH Connection
         run: |
-          ssh -o StrictHostKeyChecking=no -p 222 github-user@$SERVER_IP 'echo "SSH connection successful!"'
+          ssh -o StrictHostKeyChecking=no -p $SERVER_PORT github-user@$SERVER_IP 'echo "SSH connection successful!"'
         env:
           SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
