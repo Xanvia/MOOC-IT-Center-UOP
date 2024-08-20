@@ -25,5 +25,17 @@ services:
     volumes:
       - ./backend:/app
 
+  frontend:
+    container_name: nextjs-app
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    env_file:
+      - frontend/.env
+
 volumes:
   postgres-data:
