@@ -7,31 +7,29 @@ services:
     ports:
       - "5432:5432"
     env_file:
-      - /backend/.env  
+      - /backend/.env
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
   backend:
     container_name: django-app
-    image: your_dockerhub_username/your_backend_image:latest  # Pull from Docker Hub
+    image: sanjueranga/mooc-backend:latest # Docker Compose will pull this automatically
     ports:
       - "8000:8000"
     depends_on:
       - postgres
     env_file:
-      - /backend/.env  # Update this path to the .env file on the server
-    volumes:
-      - /path/to/server/app/backend:/app 
+      - /backend/.env
 
   frontend:
     container_name: nextjs-app
-    image: your_dockerhub_username/your_frontend_image:latest  # Pull from Docker Hub
+    image: sanjueranga/mooc-frontend:latest # Docker Compose will pull this automatically
     ports:
       - "3000:3000"
     depends_on:
       - backend
     env_file:
-      - /path/to/your/server/frontend/.env  # Update this path to the .env file on the server
+      - /frontend/.env
 
 volumes:
   postgres-data:
