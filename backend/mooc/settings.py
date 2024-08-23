@@ -19,7 +19,6 @@ from django.conf.urls.static import static
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-# stored files.
 MEDIA_URL = "/media/"
 
 
