@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState, useEffect } from "react";
 import { HOST } from "@/utils/constants";
 import { toast } from "sonner";
 import { uploadVideo } from "@/services/course.service";
-import { Play, Pause, RefreshCw, Volume2, VolumeX } from "lucide-react";
+import { Play, Pause, RefreshCw, Volume2, VolumeX, Settings, Maximize } from "lucide-react";
 
 interface CourseVideoProps {
   id: number;
@@ -17,6 +17,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [uploadedVideoURL, setUploadedVideoURL] = useState<string | null>(null);
+  const [isHovering, setIsHovering] = useState(false);
 
   const videoSource = uploadedVideoURL
     ? `${HOST}${uploadedVideoURL}`
@@ -99,82 +100,84 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id }) => {
   };
 
   return (
-    <div className="my-14 mx-auto max-w-4xl p-6 bg-gray-100 rounded-xl shadow-2xl">
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">{title}</h2>
-      <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
+    <div className="max-w-4xl mx-auto my-8">
+      <div className="bg-black rounded-lg overflow-hidden relative"
+           onMouseEnter={() => setIsHovering(true)}
+           onMouseLeave={() => setIsHovering(false)}>
         <video
           ref={videoRef}
-          className="w-full h-full object-contain"
+          className="w-full h-auto"
           onTimeUpdate={handleTimeUpdate}
           onDurationChange={handleDurationChange}
           onEnded={() => setIsPlaying(false)}
+          onClick={handlePlayPause}
         >
           <source src={videoSource} type="video/mp4" />
         </video>
-        <div className="absolute inset-0 flex items-center justify-center">
-          {!isPlaying && (
-            <button
-              onClick={handlePlayPause}
-              className="bg-white/20 hover:bg-white/30 transition-colors p-4 rounded-full"
-            >
-              <Play className="w-12 h-12 text-white" />
-            </button>
-          )}
-        </div>
-      </div>
-      <div className="mt-4 space-y-4">
-        <input
-          type="range"
-          value={currentTime}
-          max={duration}
-          step={0.1}
-          onChange={handleSeek}
-          className="w-full"
-        />
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={handlePlayPause}
-              className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full transition-colors"
-            >
-              {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
-            </button>
-            <button
-              onClick={handleReplay}
-              className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full transition-colors"
-            >
-              <RefreshCw className="w-6 h-6" />
-            </button>
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={() => {
-                  const newVolume = volume === 0 ? 1 : 0;
-                  if (videoRef.current) {
-                    videoRef.current.volume = newVolume;
-                  }
-                  setVolume(newVolume);
-                }}
-                className="text-gray-600 hover:text-gray-800"
-              >
-                {volume === 0 ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+        {!isPlaying && (
+          <button
+            onClick={handlePlayPause}
+            className="absolute inset-0 w-full h-full flex items-center justify-center"
+          >
+            <Play className="w-20 h-20 text-white opacity-80" />
+          </button>
+        )}
+        <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 transition-opacity duration-300 ${isHovering || !isPlaying ? 'opacity-100' : 'opacity-0'}`}>
+          <input
+            type="range"
+            value={currentTime}
+            max={duration}
+            onChange={handleSeek}
+            className="w-full h-1 bg-gray-600 appearance-none rounded-full outline-none opacity-70 transition-opacity cursor-pointer"
+          />
+          <div className="flex items-center justify-between mt-2">
+            <div className="flex items-center space-x-4">
+              <button onClick={handlePlayPause} className="text-white hover:text-gray-300">
+                {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
               </button>
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={volume}
-                onChange={handleVolumeChange}
-                className="w-24"
-              />
+              <button onClick={handleReplay} className="text-white hover:text-gray-300">
+                <RefreshCw className="w-5 h-5" />
+              </button>
+              <div className="flex items-center space-x-2 group">
+                <button
+                  onClick={() => {
+                    const newVolume = volume === 0 ? 1 : 0;
+                    if (videoRef.current) {
+                      videoRef.current.volume = newVolume;
+                    }
+                    setVolume(newVolume);
+                  }}
+                  className="text-white hover:text-gray-300"
+                >
+                  {volume === 0 ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                </button>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={volume}
+                  onChange={handleVolumeChange}
+                  className="w-20 h-1 bg-white appearance-none rounded-full outline-none opacity-70 transition-opacity cursor-pointer hidden group-hover:block"
+                />
+              </div>
+              <span className="text-white text-sm">
+                {formatTime(currentTime)} / {formatTime(duration)}
+              </span>
+            </div>
+            <div className="flex items-center space-x-4">
+              <button className="text-white hover:text-gray-300">
+                <Settings className="w-5 h-5" />
+              </button>
+              <button className="text-white hover:text-gray-300">
+                <Maximize className="w-5 h-5" />
+              </button>
             </div>
           </div>
-          <div className="text-sm text-gray-600">
-            {formatTime(currentTime)} / {formatTime(duration)}
-          </div>
         </div>
       </div>
-      <div className="mt-6">
+      <h2 className="text-xl font-bold mt-4 mb-2">{title}</h2>
+      <div className="mt-4">
         <input
           type="file"
           accept="video/*"
@@ -184,7 +187,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id }) => {
         />
         <label
           htmlFor="file-upload"
-          className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-4 py-2 rounded cursor-pointer transition-colors"
+          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded cursor-pointer transition-colors inline-block"
         >
           Upload New Video
         </label>
