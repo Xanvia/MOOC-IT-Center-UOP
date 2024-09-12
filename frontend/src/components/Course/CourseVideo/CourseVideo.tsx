@@ -4,13 +4,21 @@ import { toast } from "sonner";
 import { uploadVideo } from "@/services/course.service";
 import { Play, Pause, RefreshCw, Volume2, VolumeX, Settings, Maximize } from "lucide-react";
 
+interface MCQ {
+  timestamp: number;
+  question: string;
+  options: string[];
+  correctAnswer: number;
+}
+
 interface CourseVideoProps {
   id: number;
   videoURL: string;
   title: string;
+  mcqs: MCQ[];
 }
 
-const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id }) => {
+const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id, mcqs }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
@@ -18,6 +26,9 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id }) => {
   const [duration, setDuration] = useState(0);
   const [uploadedVideoURL, setUploadedVideoURL] = useState<string | null>(null);
   const [isHovering, setIsHovering] = useState(false);
+  const [currentMCQ, setCurrentMCQ] = useState<MCQ | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [showResult, setShowResult] = useState(false);
 
   const videoSource = uploadedVideoURL
     ? `${HOST}${uploadedVideoURL}`
@@ -28,6 +39,21 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id }) => {
       videoRef.current.load();
     }
   }, [uploadedVideoURL, videoURL]);
+
+  useEffect(() => {
+    const checkForMCQ = () => {
+      const matchingMCQ = mcqs.find(mcq => Math.abs(mcq.timestamp - currentTime) < 0.5);
+      if (matchingMCQ && !currentMCQ) {
+        setCurrentMCQ(matchingMCQ);
+        if (videoRef.current) {
+          videoRef.current.pause();
+        }
+        setIsPlaying(false);
+      }
+    };
+
+    checkForMCQ();
+  }, [currentTime, mcqs, currentMCQ]);
 
   const handlePlayPause = () => {
     if (videoRef.current) {
@@ -99,6 +125,21 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id }) => {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
+  const handleAnswerSelect = (index: number) => {
+    setSelectedAnswer(index);
+    setShowResult(true);
+  };
+
+  const handleContinue = () => {
+    setCurrentMCQ(null);
+    setSelectedAnswer(null);
+    setShowResult(false);
+    if (videoRef.current) {
+      videoRef.current.play();
+    }
+    setIsPlaying(true);
+  };
+
   return (
     <div className="max-w-4xl mx-auto my-8">
       <div className="bg-black rounded-lg overflow-hidden relative"
@@ -114,13 +155,53 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id }) => {
         >
           <source src={videoSource} type="video/mp4" />
         </video>
-        {!isPlaying && (
+        {!isPlaying && !currentMCQ && (
           <button
             onClick={handlePlayPause}
             className="absolute inset-0 w-full h-full flex items-center justify-center"
           >
             <Play className="w-20 h-20 text-white opacity-80" />
           </button>
+        )}
+        {currentMCQ && (
+          <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg max-w-lg w-full">
+              <h3 className="text-xl font-bold mb-4">{currentMCQ.question}</h3>
+              <div className="space-y-2">
+                {currentMCQ.options.map((option, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleAnswerSelect(index)}
+                    className={`w-full p-2 rounded ${
+                      selectedAnswer === index
+                        ? showResult
+                          ? index === currentMCQ.correctAnswer
+                            ? 'bg-green-500 text-white'
+                            : 'bg-red-500 text-white'
+                          : 'bg-blue-500 text-white'
+                        : 'bg-gray-200 hover:bg-gray-300'
+                    }`}
+                    disabled={showResult}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+              {showResult && (
+                <div className="mt-4">
+                  <p className={`font-bold ${selectedAnswer === currentMCQ.correctAnswer ? 'text-green-500' : 'text-red-500'}`}>
+                    {selectedAnswer === currentMCQ.correctAnswer ? 'Correct!' : 'Incorrect. Try again!'}
+                  </p>
+                  <button
+                    onClick={handleContinue}
+                    className="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  >
+                    Continue Video
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         )}
         <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 transition-opacity duration-300 ${isHovering || !isPlaying ? 'opacity-100' : 'opacity-0'}`}>
           <input
