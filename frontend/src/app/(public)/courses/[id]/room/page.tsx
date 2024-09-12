@@ -137,6 +137,7 @@ const Page: React.FC = () => {
           title={item.name}
           id={item.id}
           mcqs={mcqs}
+          isEdit={true}
         />
       ) : item.type === "Quiz" ? (
         <>
