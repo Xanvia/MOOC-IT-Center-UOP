@@ -217,7 +217,7 @@ export const fetchCourseContent = async (courseId: string) => {
 };
 
 export const deleteComponent = async (
-  componentType: "Note" | "Chapter" | "Week",
+  componentType: "Note" | "Chapter" | "Week" | "Video" | "Quiz",
   componentId: string
 ) => {
   let url = `/course/week`;
@@ -231,6 +231,12 @@ export const deleteComponent = async (
     case "Week":
       url += `/${componentId}/`;
       break;
+    case "Quiz":
+      url += `/chapter/quiz/${componentId}/`;
+      break;
+    case "Video":
+      url += `/chapter/video/${componentId}/`;
+      break;
     default:
       throw new Error("Invalid component type");
   }
@@ -243,16 +249,13 @@ export const deleteComponent = async (
   }
 };
 
-export const uploadVideo = async (
-  file: File,
-  videoId: number
-): Promise<string> => {
+export const uploadVideo = async (file: File, videoId: number) => {
   const formData = new FormData();
   formData.append("video_file", file);
 
   try {
     const response = await axiosInstance.put(
-      `/course/video/${videoId}/`,
+      `/course/week/chapter/video/${videoId}/`,
       formData,
       {
         headers: {
@@ -260,9 +263,9 @@ export const uploadVideo = async (
         },
       }
     );
-    return response.data.data.url;
-  } catch (error) {
-    console.error("Error uploading video: ", error);
-    throw new Error("Failed to upload video");
+    return response.data;
+  } catch (error: any) {
+    console.log(error);
+    throw new Error(error.response?.data.message ?? "Network error");
   }
 };

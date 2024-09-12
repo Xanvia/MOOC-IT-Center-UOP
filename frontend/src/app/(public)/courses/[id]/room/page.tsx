@@ -23,7 +23,6 @@ const Page: React.FC = () => {
 
   useEffect(() => {
     setItem({ ...selectedTopic });
-    console.log(selectedTopic.content);
   }, [selectedTopic]);
 
   const findCurrentItemIndex = (weeks: Week[], currentItem: Item) => {
@@ -111,13 +110,35 @@ const Page: React.FC = () => {
   //   const lastItem = lastChapter?.items?.[lastChapter.items.length - 1];
   //   return item.id === lastItem?.id;
   // };
+  const mcqs = [
+    {
+      timestamp: 10, // Show this question 30 seconds into the video
+      question: "What is the capital of France?",
+      options: ["London", "Berlin", "Paris", "Madrid"],
+      correctAnswer: 2, // Index of the correct answer (Paris)
+      isDone:false,
+    },
+    {
+      timestamp: 20, // Show this question 60 seconds into the video
+      question: "Who painted the Mona Lisa?",
+      options: ["Van Gogh", "Da Vinci", "Picasso", "Rembrandt"],
+      correctAnswer: 1, 
+      isDone:false,
+    },
+  ];
 
   return (
     <div className="flex-grow p-4 mb-96 ml-96" key={item.id}>
       {item.type === "Note" ? (
         <Note selectedTopic={item} />
       ) : item.type === "Video" ? (
-        <CourseVideo videoURL={item.content.video_link} title={item.name} />
+        <CourseVideo
+          videoURL={item.content.video_link}
+          title={item.name}
+          id={item.id}
+          mcqs={mcqs}
+          isEdit={true}
+        />
       ) : item.type === "Quiz" ? (
         <>
           <Quiz item={item} />

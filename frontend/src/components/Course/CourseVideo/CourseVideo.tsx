@@ -1,26 +1,99 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState, useEffect } from "react";
 import { HOST } from "@/utils/constants";
+import { toast } from "sonner";
+import { uploadVideo } from "@/services/course.service";
+import {
+  Play,
+  Pause,
+  RefreshCw,
+  Volume2,
+  VolumeX,
+  Settings,
+  Maximize,
+  Edit,
+  Trash,
+} from "lucide-react";
 
-interface CourseVideoProps {
-  videoURL: string;
-  title: string;
+interface MCQ {
+  timestamp: number;
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  isDone: boolean;
 }
 
-const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
+interface CourseVideoProps {
+  id: number;
+  videoURL: string;
+  title: string;
+  mcqs: MCQ[];
+  isEdit: boolean; // New flag to differentiate Teacher/Student mode
+}
+
+const CourseVideo: React.FC<CourseVideoProps> = ({
+  videoURL,
+  title,
+  id,
+  mcqs,
+  isEdit, // teacher mode enabled if true
+}) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
-  const [isEnded, setIsEnded] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [uploadedVideoURL, setUploadedVideoURL] = useState<string | null>(null);
+  const [isHovering, setIsHovering] = useState(false);
+  const [currentMCQ, setCurrentMCQ] = useState<MCQ | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [showResult, setShowResult] = useState(false);
+  const [answeredMCQs, setAnsweredMCQs] = useState<Set<number>>(new Set());
 
-  const VideoSource = `${HOST}${videoURL}`;
+  // Teacher mode variables
+  const [editMCQs, setEditMCQs] = useState<MCQ[]>(mcqs); // editable list of MCQs
+  const [newQuestion, setNewQuestion] = useState<string>("");
+  const [newOptions, setNewOptions] = useState<string[]>([""]);
+  const [newCorrectAnswer, setNewCorrectAnswer] = useState<number>(0);
+  const [editingMCQ, setEditingMCQ] = useState<MCQ | null>(null); // MCQ being edited
+
+  const videoSource = uploadedVideoURL
+    ? `${HOST}${uploadedVideoURL}`
+    : `${HOST}${videoURL}`;
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load();
+    }
+  }, [uploadedVideoURL, videoURL]);
+
+  useEffect(() => {
+    if (!isEdit) {
+      // Only check MCQs in student mode
+      const checkForMCQ = () => {
+        const matchingMCQ = mcqs.find(
+          (mcq) =>
+            Math.abs(mcq.timestamp - currentTime) < 0.5 &&
+            !mcq.isDone &&
+            !answeredMCQs.has(mcq.timestamp)
+        );
+        if (matchingMCQ && !currentMCQ) {
+          setCurrentMCQ(matchingMCQ);
+          if (videoRef.current) {
+            videoRef.current.pause();
+          }
+          setIsPlaying(false);
+        }
+      };
+      checkForMCQ();
+    }
+  }, [currentTime, mcqs, currentMCQ, answeredMCQs, isEdit]);
 
   const handlePlayPause = () => {
     if (videoRef.current) {
       if (videoRef.current.paused) {
         videoRef.current.play();
         setIsPlaying(true);
-        setIsEnded(false);
       } else {
         videoRef.current.pause();
         setIsPlaying(false);
@@ -28,11 +101,31 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
     }
   };
 
-  const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value);
     if (videoRef.current) {
-      const newVolume = Number(event.target.value);
       videoRef.current.volume = newVolume;
       setVolume(newVolume);
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      setCurrentTime(videoRef.current.currentTime);
+    }
+  };
+
+  const handleDurationChange = () => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration);
+    }
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTime = parseFloat(e.target.value);
+    if (videoRef.current) {
+      videoRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
     }
   };
 
@@ -41,102 +134,379 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title }) => {
       videoRef.current.currentTime = 0;
       videoRef.current.play();
       setIsPlaying(true);
-      setIsEnded(false);
     }
   };
 
-  const handleVideoEnd = () => {
-    setIsPlaying(false);
-    setIsEnded(true);
+  const handleFileUpload = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        try {
+          const response = await uploadVideo(file, id);
+          setUploadedVideoURL(response.data.url);
+          toast.success(response.message);
+        } catch (error: any) {
+          toast.error(error.message);
+        }
+      }
+    },
+    [id]
+  );
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
+  const handleAnswerSelect = (index: number) => {
+    setSelectedAnswer(index);
+    setShowResult(true);
+  };
+
+  const handleContinue = () => {
+    if (currentMCQ) {
+      setAnsweredMCQs((prev) => new Set(prev).add(currentMCQ.timestamp));
+      currentMCQ.isDone = true;
+    }
+    setCurrentMCQ(null);
+    setSelectedAnswer(null);
+    setShowResult(false);
+    if (videoRef.current) {
+      videoRef.current.play();
+    }
+    setIsPlaying(true);
+  };
+
+  // Teacher Mode: Adding MCQ handling
+  const addNewOption = () => setNewOptions([...newOptions, ""]);
+
+  const handleNewOptionChange = (index: number, value: string) => {
+    const updatedOptions = [...newOptions];
+    updatedOptions[index] = value;
+    setNewOptions(updatedOptions);
+  };
+
+  const saveMCQ = () => {
+    const newMCQ: MCQ = {
+      timestamp: currentTime,
+      question: newQuestion,
+      options: newOptions,
+      correctAnswer: newCorrectAnswer,
+      isDone: false,
+    };
+    setEditMCQs([...editMCQs, newMCQ]);
+    setNewQuestion("");
+    setNewOptions([""]);
+    setNewCorrectAnswer(0);
+    toast.success("MCQ added successfully!");
+  };
+
+  const handleEditMCQ = (mcq: MCQ) => {
+    setEditingMCQ(mcq);
+    setNewQuestion(mcq.question);
+    setNewOptions(mcq.options);
+    setNewCorrectAnswer(mcq.correctAnswer);
+  };
+
+  const handleDeleteMCQ = (timestamp: number) => {
+    setEditMCQs(editMCQs.filter((mcq) => mcq.timestamp !== timestamp));
+    toast.success("MCQ deleted successfully!");
+  };
+
+  const handleUpdateMCQ = () => {
+    if (editingMCQ) {
+      const updatedMCQs = editMCQs.map((mcq) =>
+        mcq.timestamp === editingMCQ.timestamp
+          ? {
+              ...mcq,
+              question: newQuestion,
+              options: newOptions,
+              correctAnswer: newCorrectAnswer,
+            }
+          : mcq
+      );
+      setEditMCQs(updatedMCQs);
+      setEditingMCQ(null);
+      setNewQuestion("");
+      setNewOptions([""]);
+      setNewCorrectAnswer(0);
+      toast.success("MCQ updated successfully!");
+    }
   };
 
   return (
-    <div className="my-14 mx-12 p-3 border border-gray-200 shadow-lg rounded-lg">
-      <h2 className="text-2xl font-semibold mb-4">{title}</h2>
-      {/* <h3 className="text-xl font-medium mb-4">Instalasi Tools</h3> */}
-      <div className="relative my-4 group">
+    <div className="max-w-4xl mx-auto my-8">
+      <div
+        className="bg-black rounded-lg overflow-hidden relative"
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+      >
         <video
           ref={videoRef}
-          className="w-full h-auto max-h-96 object-cover"
-          onEnded={handleVideoEnd}
-          controls={false}
+          className="w-full h-auto"
+          onTimeUpdate={handleTimeUpdate}
+          onDurationChange={handleDurationChange}
+          onEnded={() => setIsPlaying(false)}
+          onClick={handlePlayPause}
         >
-          <source src={VideoSource} type="video/mp4" />
+          <source src={videoSource} type="video/mp4" />
         </video>
-        <div className="absolute inset-0 flex justify-center items-center">
-          {isPlaying && !isEnded && (
-            <button
-              onClick={handlePlayPause}
-              className="hidden group-hover:block shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out"
-            >
-              <svg
-                className="w-16 h-16 text-yellow-500"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M4.293 5.293a1 1 0 011.414 0L10 9.586l4.293-4.293a1 1 0 011.414 1.414L11.414 11l4.293 4.293a1 1 0 01-1.414 1.414L10 12.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 11 4.293 6.707a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-          )}
-          {(!isPlaying || isEnded) && (
-            <button
-              onClick={handlePlayPause}
-              className="shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out"
-            >
-              <svg
-                className="w-16 h-16 text-yellow-500"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M6.293 4.293a1 1 0 011.414 0L13 9.586a1 1 0 010 1.414L7.707 16.707a1 1 0 01-1.414-1.414L10.586 11 6.293 6.707a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-          )}
-          {isEnded && (
-            <button
-              onClick={handleReplay}
-              className="shadow-lg transform hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out"
-            >
-              <svg
-                className="w-16 h-16 text-yellow-500"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M6.293 4.293a1 1 0 011.414 0L13 9.586a1 1 0 010 1.414L7.707 16.707a1 1 0 01-1.414-1.414L10.586 11 6.293 6.707a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-          )}
-        </div>
-      </div>
-      <div className="flex justify-between items-center">
-        <div className="flex items-center">
+        {!isPlaying && !currentMCQ && (
+          <button
+            onClick={handlePlayPause}
+            className="absolute inset-0 w-full h-full flex items-center justify-center"
+          >
+            <Play className="w-20 h-20 text-white opacity-80" />
+          </button>
+        )}
+
+        <div
+          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 transition-opacity duration-300 ${
+            isHovering || !isPlaying ? "opacity-100" : "opacity-0"
+          }`}
+        >
           <input
             type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={volume}
-            onChange={handleVolumeChange}
-            className="mr-2"
+            value={currentTime}
+            max={duration}
+            onChange={handleSeek}
+            className="w-full h-1 bg-gray-600 appearance-none rounded-full outline-none opacity-70 transition-opacity cursor-pointer"
+            disabled={
+              !isEdit &&
+              !!currentMCQ &&
+              !currentMCQ.isDone &&
+              selectedAnswer === null
+            } // Disable in student mode during MCQs
           />
-          <span>{Math.round(volume * 100)}%</span>
+          <div className="flex justify-between items-center mt-2">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={handlePlayPause}
+                className="text-white hover:text-gray-300"
+              >
+                {isPlaying ? (
+                  <Pause className="w-5 h-5" />
+                ) : (
+                  <Play className="w-5 h-5" />
+                )}
+              </button>
+              <button
+                onClick={handleReplay}
+                className="text-white hover:text-gray-300"
+              >
+                <RefreshCw className="w-5 h-5" />
+              </button>
+              <div className="flex items-center space-x-2 group">
+                <button
+                  onClick={() => {
+                    const newVolume = volume === 0 ? 1 : 0;
+                    if (videoRef.current) {
+                      videoRef.current.volume = newVolume;
+                    }
+                    setVolume(newVolume);
+                  }}
+                  className="text-white hover:text-gray-300"
+                >
+                  {volume === 0 ? (
+                    <VolumeX className="w-5 h-5" />
+                  ) : (
+                    <Volume2 className="w-5 h-5" />
+                  )}
+                </button>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={volume}
+                  onChange={handleVolumeChange}
+                  className="w-20 h-1 bg-white appearance-none rounded-full outline-none opacity-70 transition-opacity cursor-pointer hidden group-hover:block"
+                />
+              </div>
+              <span className="text-white text-sm">
+                {formatTime(currentTime)} / {formatTime(duration)}
+              </span>
+            </div>
+            <div className="flex items-center space-x-4">
+              <button className="text-white hover:text-gray-300">
+                <Settings className="w-5 h-5" />
+              </button>
+              <button className="text-white hover:text-gray-300">
+                <Maximize className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+
+      <h2 className="text-xl font-bold mt-4 mb-2">{title}</h2>
+      <div className="mt-4">
+        <input
+          type="file"
+          accept="video/*"
+          onChange={handleFileUpload}
+          className="hidden"
+          id="file-upload"
+        />
+        <label
+          htmlFor="file-upload"
+          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded cursor-pointer transition-colors inline-block"
+        >
+          Upload New Video
+        </label>
+      </div>
+
+      {/* Teacher Mode: Add/Edit MCQs */}
+      {isEdit && (
+        <div className="mt-8">
+          <p>Select timestamp using video slider</p>
+          <h3 className="text-lg font-semibold mb-4">Add/Edit MCQs</h3>
+          <div className="mb-4">
+            <label className="block font-medium mb-1">Question:</label>
+            <input
+              type="text"
+              value={newQuestion}
+              onChange={(e) => setNewQuestion(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block font-medium mb-1">Options:</label>
+            {newOptions.map((option, index) => (
+              <div key={index} className="flex space-x-2 mb-2">
+                <input
+                  type="text"
+                  value={option}
+                  onChange={(e) => handleNewOptionChange(index, e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+                {index === newOptions.length - 1 && (
+                  <button
+                    onClick={addNewOption}
+                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                  >
+                    Add Option
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="mb-4">
+            <label className="block font-medium mb-1">Correct Answer:</label>
+            <input
+              type="number"
+              value={newCorrectAnswer}
+              onChange={(e) => setNewCorrectAnswer(parseInt(e.target.value))}
+              className="w-20 p-2 border border-gray-300 rounded"
+              min={0}
+              max={newOptions.length - 1}
+            />
+          </div>
+          {editingMCQ ? (
+            <button
+              onClick={handleUpdateMCQ}
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            >
+              Update MCQ
+            </button>
+          ) : (
+            <button
+              onClick={saveMCQ}
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            >
+              Save MCQ
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* MCQ List for Teacher */}
+      {isEdit && (
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold mb-4">MCQs List</h3>
+          <ul className="space-y-4">
+            {editMCQs.map((mcq) => (
+              <li
+                key={mcq.timestamp}
+                className="flex items-center justify-between p-4 border rounded"
+              >
+                <div>
+                  <p className="font-medium">{mcq.question}</p>
+                  <p className="text-sm text-gray-500">
+                    Timestamp: {formatTime(mcq.timestamp)}
+                  </p>
+                </div>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => handleEditMCQ(mcq)}
+                    className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+                  >
+                    <Edit className="w-5 h-5 inline" /> Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteMCQ(mcq.timestamp)}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                  >
+                    <Trash className="w-5 h-5 inline" /> Delete
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* MCQ View for students */}
+      {currentMCQ && !isEdit && (
+        <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg max-w-lg w-full">
+            <h3 className="text-xl font-bold mb-4">{currentMCQ.question}</h3>
+            <div className="space-y-2">
+              {currentMCQ.options.map((option, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleAnswerSelect(index)}
+                  className={`w-full p-2 rounded ${
+                    selectedAnswer === index
+                      ? showResult
+                        ? index === currentMCQ.correctAnswer
+                          ? "bg-green-500 text-white"
+                          : "bg-red-500 text-white"
+                        : "bg-blue-500 text-white"
+                      : "bg-gray-200 hover:bg-gray-300"
+                  }`}
+                  disabled={showResult}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+            {showResult && (
+              <div className="mt-4">
+                <p
+                  className={`font-bold ${
+                    selectedAnswer === currentMCQ.correctAnswer
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }`}
+                >
+                  {selectedAnswer === currentMCQ.correctAnswer
+                    ? "Correct!"
+                    : "Incorrect. The correct answer was: " +
+                      currentMCQ.options[currentMCQ.correctAnswer]}
+                </p>
+                <button
+                  onClick={handleContinue}
+                  className="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                  Continue Video
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

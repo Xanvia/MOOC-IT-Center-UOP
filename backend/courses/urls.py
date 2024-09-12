@@ -88,7 +88,7 @@ urlpatterns = [
         name="enroll-course",
     ),
     # upload video file
-    path("video/<int:pk>/", VideoViewSet.as_view({"put": "update"}), name="video-file"),
+    path("week/chapter/video/<int:pk>/", VideoViewSet.as_view({"put": "update","delete": "destroy"}), name="video-file"),
     # create quiz
     path(
         "week/chapter/<int:chapter_id>/quiz/",

@@ -35,7 +35,7 @@ const Note: React.FC<NoteProps> = ({ selectedTopic }) => {
         <div className="py-14 px-3 w-10/12 min-h-[600px] mx-auto text-left bg-primary_light">
           <div className="space-y-2">
             <div className="pt-2">
-              <NoteEditor initialData={noteContent} onClick={handleSave} />
+              <NoteEditor id={selectedTopic.id} initialData={noteContent} onClick={handleSave} />
             </div>
           </div>
         </div>

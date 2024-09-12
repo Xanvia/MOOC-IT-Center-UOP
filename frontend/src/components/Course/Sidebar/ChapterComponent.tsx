@@ -26,7 +26,9 @@ interface ChapterComponentProps {
     weekIndex: number,
     chapterIndex: number,
     itemIndex: number,
-    itemId: string
+    itemId: string,
+    itemType: "Note" | "Video" | "Quiz"
+
   ) => void;
   removeTopic: (
     weekIndex: number,
@@ -86,6 +88,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
     const chapterId = chapter.id || "";
     if (newItemName.trim() !== "") {
       addItem(weekIndex, chapterIndex, chapterId as string, {
+        id: 0,
         name: newItemName,
         type: newItemType as "Video" | "Note" | "Quiz",
         content: "",

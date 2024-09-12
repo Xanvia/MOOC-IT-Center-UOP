@@ -6,9 +6,10 @@ import SolidButton from "@/components/Buttons/SolidButton";
 interface TextEditorProps {
   initialData: string;
   onClick: (value: string) => void;
+  id: number;
 }
 
-const TextEditor: React.FC<TextEditorProps> = ({ initialData, onClick }) => {
+const TextEditor: React.FC<TextEditorProps> = ({ initialData, onClick,id }) => {
   const editorRef = useRef<any>(null);
 
   const log = () => {
@@ -23,30 +24,25 @@ const TextEditor: React.FC<TextEditorProps> = ({ initialData, onClick }) => {
     failure: any,
     progress: any
   ) => {
-    try {
-      const file = new File([blobInfo.blob()], blobInfo.filename(), {
-        type: blobInfo.blob().type,
-      });
+    const file = new File([blobInfo.blob()], blobInfo.filename(), {
+      type: blobInfo.blob().type,
+    });
 
-      const imageUrl = await uploadImage(file, 1);
-      if (typeof imageUrl === "string" && imageUrl.length > 0) {
-        if (editorRef.current) {
-          editorRef.current.insertContent(
-            `<img src="${imageUrl}" alt="Uploaded Image" />`
-          );
-          success(imageUrl as string);
-        }
-      } else {
-        throw new Error("Invalid image URL");
+    const imageUrl = await uploadImage(file, id);
+    if (typeof imageUrl === "string" && imageUrl.length > 0) {
+      if (editorRef.current) {
+        editorRef.current.insertContent(
+          `<img src="${imageUrl}" alt="Uploaded Image" />`
+        );
+        success(imageUrl as string);
       }
-    } catch (error) {
-      console.error("Image upload failed!", error);
-      failure("Image upload failed!");
+    } else {
+      throw new Error("Invalid image URL");
     }
   };
 
   return (
-    <div >
+    <div>
       <Editor
         apiKey={TINY_API_KEY}
         onInit={(evt, editor) => (editorRef.current = editor)}
