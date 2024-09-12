@@ -16,8 +16,9 @@ jobs:
           node-version: "21"
 
       - name: Install dependencies
-        run: cd frontend 
-            npm ci
+        run: |
+          cd frontend \
+          npm ci
 
       - name: Run Next.js build
         run: npm run build
