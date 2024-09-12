@@ -19,6 +19,7 @@ from courses.models import (
     StudentCodingAnswer,
     StudentQuiz,
     Enrollment,
+    VideoQuiz,
 )
 
 
@@ -37,6 +38,7 @@ def assign_permissions(sender, **kwargs):
         Image,
         Question,
         Answer,
+        VideoQuiz,
     ]
     student_models = [Progress, StudentQuiz, StudentCodingAnswer, Enrollment]
 

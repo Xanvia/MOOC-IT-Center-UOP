@@ -71,11 +71,18 @@ class Component(models.Model):
     )
 
 
+class VideoQuiz(models.Model):
+    question = models.TextField()
+    options = models.JSONField(default=list)
+    correct_option = models.IntegerField()
+    time_stamp = models.CharField(max_length=255, blank=True, null=True)
+
 class Video(Component):
     video_id = models.CharField(max_length=255, blank=True, null=True)
     video_link = models.CharField(max_length=1000, blank=True, null=True)
     duration = models.CharField(max_length=255, null=True, blank=True)
-
+    quizzes = models.JSONField(default=list, blank=True, null=True)
+    
 
 class Note(Component):
     content = models.TextField(blank=True, null=True)
