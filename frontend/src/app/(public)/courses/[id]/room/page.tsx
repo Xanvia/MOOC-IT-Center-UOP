@@ -116,12 +116,14 @@ const Page: React.FC = () => {
       question: "What is the capital of France?",
       options: ["London", "Berlin", "Paris", "Madrid"],
       correctAnswer: 2, // Index of the correct answer (Paris)
+      isDone:false,
     },
     {
       timestamp: 20, // Show this question 60 seconds into the video
       question: "Who painted the Mona Lisa?",
       options: ["Van Gogh", "Da Vinci", "Picasso", "Rembrandt"],
-      correctAnswer: 1, // Index of the correct answer (Da Vinci)
+      correctAnswer: 1, 
+      isDone:false,
     },
   ];
 

@@ -1,14 +1,24 @@
+"use client";
 import React, { useCallback, useRef, useState, useEffect } from "react";
 import { HOST } from "@/utils/constants";
 import { toast } from "sonner";
 import { uploadVideo } from "@/services/course.service";
-import { Play, Pause, RefreshCw, Volume2, VolumeX, Settings, Maximize } from "lucide-react";
+import {
+  Play,
+  Pause,
+  RefreshCw,
+  Volume2,
+  VolumeX,
+  Settings,
+  Maximize,
+} from "lucide-react";
 
 interface MCQ {
   timestamp: number;
   question: string;
   options: string[];
   correctAnswer: number;
+  isDone: boolean; // Add isDone to track if MCQ is completed
 }
 
 interface CourseVideoProps {
@@ -18,7 +28,12 @@ interface CourseVideoProps {
   mcqs: MCQ[];
 }
 
-const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id, mcqs }) => {
+const CourseVideo: React.FC<CourseVideoProps> = ({
+  videoURL,
+  title,
+  id,
+  mcqs,
+}) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
@@ -29,6 +44,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id, mcqs }) 
   const [currentMCQ, setCurrentMCQ] = useState<MCQ | null>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
+  const [answeredMCQs, setAnsweredMCQs] = useState<Set<number>>(new Set());
 
   const videoSource = uploadedVideoURL
     ? `${HOST}${uploadedVideoURL}`
@@ -42,7 +58,12 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id, mcqs }) 
 
   useEffect(() => {
     const checkForMCQ = () => {
-      const matchingMCQ = mcqs.find(mcq => Math.abs(mcq.timestamp - currentTime) < 0.5);
+      const matchingMCQ = mcqs.find(
+        (mcq) =>
+          Math.abs(mcq.timestamp - currentTime) < 0.5 &&
+          !mcq.isDone && // Only trigger if the MCQ is not done
+          !answeredMCQs.has(mcq.timestamp)
+      );
       if (matchingMCQ && !currentMCQ) {
         setCurrentMCQ(matchingMCQ);
         if (videoRef.current) {
@@ -53,7 +74,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id, mcqs }) 
     };
 
     checkForMCQ();
-  }, [currentTime, mcqs, currentMCQ]);
+  }, [currentTime, mcqs, currentMCQ, answeredMCQs]);
 
   const handlePlayPause = () => {
     if (videoRef.current) {
@@ -122,7 +143,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id, mcqs }) 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
   const handleAnswerSelect = (index: number) => {
@@ -131,6 +152,11 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id, mcqs }) 
   };
 
   const handleContinue = () => {
+    if (currentMCQ) {
+      // Mark the MCQ as done
+      setAnsweredMCQs((prev) => new Set(prev).add(currentMCQ.timestamp));
+      currentMCQ.isDone = true; // Mark the MCQ as done once answered
+    }
     setCurrentMCQ(null);
     setSelectedAnswer(null);
     setShowResult(false);
@@ -142,9 +168,11 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id, mcqs }) 
 
   return (
     <div className="max-w-4xl mx-auto my-8">
-      <div className="bg-black rounded-lg overflow-hidden relative"
-           onMouseEnter={() => setIsHovering(true)}
-           onMouseLeave={() => setIsHovering(false)}>
+      <div
+        className="bg-black rounded-lg overflow-hidden relative"
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+      >
         <video
           ref={videoRef}
           className="w-full h-auto"
@@ -176,10 +204,10 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id, mcqs }) 
                       selectedAnswer === index
                         ? showResult
                           ? index === currentMCQ.correctAnswer
-                            ? 'bg-green-500 text-white'
-                            : 'bg-red-500 text-white'
-                          : 'bg-blue-500 text-white'
-                        : 'bg-gray-200 hover:bg-gray-300'
+                            ? "bg-green-500 text-white"
+                            : "bg-red-500 text-white"
+                          : "bg-blue-500 text-white"
+                        : "bg-gray-200 hover:bg-gray-300"
                     }`}
                     disabled={showResult}
                   >
@@ -189,8 +217,17 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id, mcqs }) 
               </div>
               {showResult && (
                 <div className="mt-4">
-                  <p className={`font-bold ${selectedAnswer === currentMCQ.correctAnswer ? 'text-green-500' : 'text-red-500'}`}>
-                    {selectedAnswer === currentMCQ.correctAnswer ? 'Correct!' : 'Incorrect. Try again!'}
+                  <p
+                    className={`font-bold ${
+                      selectedAnswer === currentMCQ.correctAnswer
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {selectedAnswer === currentMCQ.correctAnswer
+                      ? "Correct!"
+                      : "Incorrect. The correct answer was: " +
+                        currentMCQ.options[currentMCQ.correctAnswer]}
                   </p>
                   <button
                     onClick={handleContinue}
@@ -203,20 +240,35 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id, mcqs }) 
             </div>
           </div>
         )}
-        <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 transition-opacity duration-300 ${isHovering || !isPlaying ? 'opacity-100' : 'opacity-0'}`}>
+        <div
+          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 transition-opacity duration-300 ${
+            isHovering || !isPlaying ? "opacity-100" : "opacity-0"
+          }`}
+        >
           <input
             type="range"
             value={currentTime}
             max={duration}
             onChange={handleSeek}
             className="w-full h-1 bg-gray-600 appearance-none rounded-full outline-none opacity-70 transition-opacity cursor-pointer"
+            disabled={!!currentMCQ && !currentMCQ.isDone && selectedAnswer === null} // Disable only if MCQ isn't done
           />
-          <div className="flex items-center justify-between mt-2">
+          <div className="flex justify-between items-center mt-2">
             <div className="flex items-center space-x-4">
-              <button onClick={handlePlayPause} className="text-white hover:text-gray-300">
-                {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
+              <button
+                onClick={handlePlayPause}
+                className="text-white hover:text-gray-300"
+              >
+                {isPlaying ? (
+                  <Pause className="w-5 h-5" />
+                ) : (
+                  <Play className="w-5 h-5" />
+                )}
               </button>
-              <button onClick={handleReplay} className="text-white hover:text-gray-300">
+              <button
+                onClick={handleReplay}
+                className="text-white hover:text-gray-300"
+              >
                 <RefreshCw className="w-5 h-5" />
               </button>
               <div className="flex items-center space-x-2 group">
@@ -230,7 +282,11 @@ const CourseVideo: React.FC<CourseVideoProps> = ({ videoURL, title, id, mcqs }) 
                   }}
                   className="text-white hover:text-gray-300"
                 >
-                  {volume === 0 ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                  {volume === 0 ? (
+                    <VolumeX className="w-5 h-5" />
+                  ) : (
+                    <Volume2 className="w-5 h-5" />
+                  )}
                 </button>
                 <input
                   type="range"
