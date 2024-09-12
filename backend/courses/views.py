@@ -241,8 +241,9 @@ class VideoViewSet(viewsets.ModelViewSet):
     serializer_class = VideoSerializer
 
     def get_video_link(self, request, *args, **kwargs):
+        print(request.data)
         if "video_file" not in request.data:
-            raise ValidationError({"video_file": "This field is required"})
+            raise ValidationError({"video_file": "Video file is required"})
 
         video_file = request.data["video_file"]
         saved_video_file = VideoFile.objects.create(file=video_file)
@@ -272,6 +273,15 @@ class VideoViewSet(viewsets.ModelViewSet):
             "status": "success",
             "message": "Video updated successfully",
             "data": {"url": link},
+        }
+        return response
+
+    def edit_quiz(self, request, *args, **kwargs):
+        response = super().update(request, partial=True, *args, **kwargs)
+        
+        response.data = {
+            "status": "success",
+            "message": "Quiz updated successfully",
         }
         return response
 
