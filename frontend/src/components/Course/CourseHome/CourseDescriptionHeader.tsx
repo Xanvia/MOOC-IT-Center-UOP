@@ -4,7 +4,8 @@ import Image from "next/image";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
 import CourseDescEditModal from "./CourseDescEditModal";
 import { CourseData } from "../course.types";
-
+import { enrollCourse } from "@/services/course.service";
+import { toast } from "sonner";
 
 interface CourseHeaderProps {
   courseData: CourseData;
@@ -17,22 +18,28 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
   reloadData,
   isEdit,
 }) => {
-
-  const handleClick = () => {};
+  const handleEnroll = () => {
+    try {
+      enrollCourse(courseData.id);
+      toast.success("Enrolled in course successfully");
+    } catch (error: any) {
+      toast.error("Error enrolling in course:", error);
+    }
+  };
 
   return (
     <>
       <div className="bg-gradient-to-tl from-gray-600 to-gray-800 h-96 w-full relative">
-        <div className = "mt-8">
+        <div className="mt-8">
           <Image
-          src={courseData.header_image || ""}
-          alt="Computer"
-          layout="fil"
-          width={2000}
-          height={500}
-          className="w-full h-full object-cover absolute mix-blend-overlay"
-          priority
-        />
+            src={courseData.header_image || ""}
+            alt="Computer"
+            layout="fil"
+            width={2000}
+            height={500}
+            className="w-full h-full object-cover absolute mix-blend-overlay"
+            priority
+          />
         </div>
         <div className="lg:p-24 sm:p-20 p-10 pb-10 lg:pb-8 sm:pb-8">
           <div className="grid grid-cols-1 md:grid-flow-col gap-6 sm:gap-10 md:gap-24 sm:mx-16 min-h-[150px]">
@@ -60,7 +67,7 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
                 reloadData={reloadData}
               />
             ) : (
-              <PrimaryButton text="E N R O L" onClick={handleClick} />
+              <PrimaryButton text="E N R O L" onClick={handleEnroll} />
             )}
           </div>
         </div>
