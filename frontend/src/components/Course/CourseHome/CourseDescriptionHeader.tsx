@@ -6,6 +6,7 @@ import CourseDescEditModal from "./CourseDescEditModal";
 import { CourseData } from "../course.types";
 import { enrollCourse } from "@/services/course.service";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface CourseHeaderProps {
   courseData: CourseData;
@@ -26,6 +27,7 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
       toast.error("Error enrolling in course");
     }
   };
+  const router = useRouter();
 
   return (
     <>
@@ -67,7 +69,18 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
                 reloadData={reloadData}
               />
             ) : (
-              <PrimaryButton text="E N R O L" onClick={handleEnroll} />
+              <>
+                {courseData.isEnrolled ? (
+                  <PrimaryButton
+                    text="R E S U M E"
+                    onClick={() =>
+                      router.push(`/courses/${courseData.id}/room`)
+                    }
+                  />
+                ) : (
+                  <PrimaryButton text="E N R O L" onClick={handleEnroll} />
+                )}
+              </>
             )}
           </div>
         </div>

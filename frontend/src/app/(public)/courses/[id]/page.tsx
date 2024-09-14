@@ -24,6 +24,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function CoursesHome() {
   const params = useParams();
+
   const { userRole } = useGlobal();
   const [courseData, setCourseData] = useState<CourseData | undefined>(
     undefined
