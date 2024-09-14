@@ -20,7 +20,7 @@ const CreateQuiz: React.FC<Props> = ({ item }) => {
   return (
     <div className="quiz-container">
       {isEdit && <QuizCreator addQuestion={addQuestion} />}
-      <QuizPreview questions={questions} quizTitle={item.name} isEdit={isEdit}/>
+      <QuizPreview questions={questions} quizTitle={item.name} />
     </div>
   );
 };

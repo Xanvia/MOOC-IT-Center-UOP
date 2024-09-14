@@ -1,5 +1,7 @@
 "use client";
+import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import React, { useState } from "react";
+import { toast } from "sonner";
 
 interface QuizCreatorProps {
   addQuestion: (question: any) => void;
@@ -13,23 +15,36 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion }) => {
   const [answerType, setAnswerType] = useState<string>("single");
 
   const handleAddQuestion = () => {
-    if (
-      !currentQuestion ||
-      (answerType !== "open_ended" && correctAnswers.size === 0)
-    )
+    if (!currentQuestion) {
+      toast.warning("Please enter a question.");
       return;
+    }
+
+    if (answerType !== "open_ended") {
+      if (currentOptions.length < 2) {
+        toast.warning("Please add at least two answer options.");
+        return;
+      }
+
+      if (correctAnswers.size === 0) {
+        toast.warning("Please select at least one correct answer.");
+        return;
+      }
+    }
+
     addQuestion({
       question: currentQuestion,
       options: currentOptions,
       answers: answerType === "open_ended" ? [] : Array.from(correctAnswers),
       type: answerType,
     });
+
+    // Reset form after adding question
     setCurrentQuestion("");
     setCurrentOptions([]);
     setCorrectAnswers(new Set());
     setAnswerType("single");
   };
-
   const addOption = () => {
     if (!currentQuestion || !currentAnswer) return;
     setCurrentOptions([...currentOptions, currentAnswer]);
@@ -86,8 +101,8 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion }) => {
             onClick={addOption}
             className={`py-2 px-4 rounded-lg transition duration-300 ${
               currentQuestion && answerType !== "open_ended"
-                ? "bg-indigo-600 text-white hover:bg-indigo-700"
-                : "bg-gray-400 text-gray-600 cursor-not-allowed"
+                ? "bg-primary text-white hover:bg-primary_test"
+                : "bg-gray-300 text-gray-600 cursor-not-allowed"
             }`}
             disabled={
               !currentQuestion || !currentAnswer || answerType === "open_ended"
@@ -130,12 +145,7 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion }) => {
           </div>
         )}
         <div className="flex justify-center">
-          <button
-            onClick={handleAddQuestion}
-            className={`py-2 px-8 rounded-lg transition duration-300 ${"bg-indigo-600 text-white hover:bg-indigo-700"}`}
-          >
-            Add Question
-          </button>
+          <SecondaryButton text="Add Question" onClick={handleAddQuestion} />
         </div>
       </div>
     </div>

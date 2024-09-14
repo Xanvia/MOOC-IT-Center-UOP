@@ -4,7 +4,6 @@ import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import React, { useState } from "react";
 
 interface QuizPreviewProps {
-  isEdit: boolean;
   questions: any[];
   quizTitle: string;
 }
@@ -12,7 +11,6 @@ interface QuizPreviewProps {
 const QuizPreview: React.FC<QuizPreviewProps> = ({
   questions,
   quizTitle,
-  isEdit,
 }) => {
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string | Set<string> | any;
@@ -129,11 +127,8 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
         </div>
       ))}
       <div className="flex p-4 justify-end">
-        {isEdit ? (
-         <SecondaryButton text="Save" onClick={handleSave} />
-        ) : (
+      
         <SecondaryButton text="Submit" onClick={handleSubmit} />
-        )}
       </div>
     </div>
   );
