@@ -19,8 +19,8 @@ const CreateQuiz: React.FC<Props> = ({ item }) => {
 
   return (
     <div className="quiz-container">
-      {isEdit && <QuizCreator addQuestion={addQuestion} />}
-      <QuizPreview questions={questions} quizTitle={item.name} />
+      {isEdit && <QuizCreator addQuestion={setQuestions} quizId={item.id} />}
+      {/* <QuizPreview questions={questions} quizTitle={item.name} /> */}
     </div>
   );
 };

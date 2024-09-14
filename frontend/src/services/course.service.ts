@@ -269,3 +269,21 @@ export const uploadVideo = async (file: File, videoId: number) => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const createQuizQuestion = async (
+  quizId: number,
+  text: string,
+  questionType: string,
+  answers: { text: string; is_correct?: string }[]
+) => {
+  try {
+    const response = await axiosInstance.post(`/course/quiz/${quizId}/questions/`, {
+      text,
+      question_type: questionType,
+      answers,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};

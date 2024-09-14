@@ -8,10 +8,7 @@ interface QuizPreviewProps {
   quizTitle: string;
 }
 
-const QuizPreview: React.FC<QuizPreviewProps> = ({
-  questions,
-  quizTitle,
-}) => {
+const QuizPreview: React.FC<QuizPreviewProps> = ({ questions, quizTitle }) => {
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string | Set<string> | any;
   }>({});
@@ -43,7 +40,7 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
 
   const handleSave = () => {
     console.log(selectedAnswers);
-  }
+  };
 
   return (
     <div className="questions-preview p-8 bg-white rounded-md">
@@ -127,7 +124,6 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
         </div>
       ))}
       <div className="flex p-4 justify-end">
-      
         <SecondaryButton text="Submit" onClick={handleSubmit} />
       </div>
     </div>
