@@ -168,6 +168,15 @@ class EnrollementSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def validate(self, attrs):
+        # check if user has an enrollement with this course already
+        request = self.context.get("request")
+        user = request.user
+        course = attrs.get("course")
+        try:
+            Enrollment.objects.get(student=user, course=course)
+            raise serializers.ValidationError("You are already enrolled in this course")
+        except Enrollment.DoesNotExist:
+            pass
         # TODO: check if user has an payment object that has not linked with an enrollement object
         return super().validate(attrs)
 
@@ -198,7 +207,6 @@ class ProgressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Progress
         fields = "__all__"
-
 
     def to_internal_value(self, data):
         request = self.context.get("request")
