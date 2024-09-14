@@ -57,13 +57,7 @@ class CourseSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         # if request.user is a student and if student has an enrollement with this course set isEnrolled to True
         request = self.context.get("request")
-        if request:
-            user = request.user
-            try:
-                Enrollment.objects.get(student=user, course=instance)
-                instance.isEnrolled = "true"
-            except Enrollment.DoesNotExist:
-                instance.isEnrolled = "false"
+        
 
         representation = super().to_representation(instance)
         representation["course_creator"] = CourseTeacherSerializer(
@@ -71,6 +65,14 @@ class CourseSerializer(serializers.ModelSerializer):
         ).data
         representation["category"] = InterestSerializer(instance.category).data
         representation["institution"] = instance.institution.label
+
+        if request:
+            user = request.user
+            try:
+                Enrollment.objects.get(student=user, course=instance)
+                representation["isEnrolled"] = "true"
+            except Enrollment.DoesNotExist:
+                representation["isEnrolled"] = "false"
         return representation
 
 
