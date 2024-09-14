@@ -30,7 +30,6 @@ export interface CourseData {
   course_creator: CourseCreator;
   category: Category;
   isEnrolled?: boolean;
-  isEdit: boolean;
 }
 
 export interface UpdateCourseData {

@@ -9,6 +9,7 @@ import Breadcrumb from "@/components/Course/CourseHome/Breadcrumb";
 import { CourseData } from "@/components/Course/course.types";
 import { fetchCourseData } from "@/services/course.service";
 import Loader from "@/components/Loarder/Loarder";
+import { useGlobal } from "@/contexts/store";
 
 interface BreadcrumbItem {
   breadcrumb: string;
@@ -23,10 +24,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function CoursesHome() {
   const params = useParams();
+  const { userRole } = useGlobal();
   const [courseData, setCourseData] = useState<CourseData | undefined>(
     undefined
   );
   const [reload, setReload] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+
   const courseId = params.id;
 
   useEffect(() => {
@@ -43,6 +47,13 @@ export default function CoursesHome() {
     loadCourseData();
   }, [courseId, reload]);
 
+  useEffect(() => {
+    if (userRole === "teacher") {
+      setIsEdit(true);
+    } else if (userRole === "student") {
+      setIsEdit(false);
+    }
+  }, [userRole]);
 
   const reloadData = () => {
     setReload(!reload);
@@ -72,7 +83,7 @@ export default function CoursesHome() {
       <div className="bg-white shadow-sm mt-10">
         <div className="container mx-auto p-8">
           <CourseDetailsTabs
-            isEdit={courseData.isEdit}
+            isEdit={isEdit}
             courseData={courseData}
             reloadData={reloadData}
           />
