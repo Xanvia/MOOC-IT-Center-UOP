@@ -50,7 +50,7 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({ questions, quizTitle }) => {
           <h3 className="text-lg font-semibold mb-2">{q.question}</h3>
           {q.type === "single" || q.type === "multiple" ? (
             <ul className="list-none">
-              {q.options.map((option: string, i: number) => (
+              {q.answers.map((option: string, i: number) => (
                 <li key={i} className="mb-2">
                   <label className="inline-flex px-5 items-center">
                     {q.type === "single" ? (
