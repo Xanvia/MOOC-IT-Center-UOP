@@ -1,33 +1,67 @@
 "use client";
+import SecondaryButton from "@/components/Buttons/SecondaryButton";
+import { createQuizQuestion } from "@/services/course.service";
 import React, { useState } from "react";
+import { toast } from "sonner";
 
 interface QuizCreatorProps {
   addQuestion: (question: any) => void;
+  quizId: number;
 }
 
-const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion }) => {
+const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion, quizId }) => {
   const [currentQuestion, setCurrentQuestion] = useState<string>("");
   const [currentAnswer, setCurrentAnswer] = useState<string>("");
   const [currentOptions, setCurrentOptions] = useState<string[]>([]);
   const [correctAnswers, setCorrectAnswers] = useState<Set<string>>(new Set());
-  const [answerType, setAnswerType] = useState<string>("single");
+  const [answerType, setAnswerType] = useState<string>("SC");
 
-  const handleAddQuestion = () => {
-    if (
-      !currentQuestion ||
-      (answerType !== "open_ended" && correctAnswers.size === 0)
-    )
+  const handleAddQuestion = async () => {
+    if (!currentQuestion) {
+      toast.warning("Please enter a question.");
       return;
-    addQuestion({
-      question: currentQuestion,
-      options: currentOptions,
-      answers: answerType === "open_ended" ? [] : Array.from(correctAnswers),
-      type: answerType,
-    });
+    }
+
+    if (answerType !== "OE") {
+      if (currentOptions.length < 2) {
+        toast.warning("Please add at least two answer options.");
+        return;
+      }
+
+      if (correctAnswers.size === 0) {
+        toast.warning("Please select at least one correct answer.");
+        return;
+      }
+    }
+
+    const formattedAnswers = currentOptions.map((option) => ({
+      text: option,
+      is_correct: correctAnswers.has(option) ? "True" : "False",
+    }));
+
+    // Prepare data to be sent
+    const questionData = {
+      text: currentQuestion,
+      question_type: answerType,
+      answers: formattedAnswers,
+    };
+    try {
+      await createQuizQuestion(
+        quizId,
+        questionData.text,
+        questionData.question_type,
+        questionData.answers
+      );
+      toast.success("Question added successfully!");
+    } catch (error) {
+      toast.error("Failed to add question.");
+    }
+
     setCurrentQuestion("");
     setCurrentOptions([]);
     setCorrectAnswers(new Set());
-    setAnswerType("single");
+    setAnswerType("SC");
+    addQuestion(questionData);
   };
 
   const addOption = () => {
@@ -38,7 +72,7 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion }) => {
 
   const handleCorrectAnswerChange = (option: string) => {
     setCorrectAnswers((prev) => {
-      if (answerType === "single") {
+      if (answerType === "SC") {
         return new Set([option]);
       } else {
         const newCorrectAnswers = new Set(prev);
@@ -78,16 +112,16 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion }) => {
             className="p-2 border rounded-lg"
             disabled={!currentQuestion}
           >
-            <option value="single">Single Correct Answer</option>
-            <option value="multiple">Multiple Correct Answers</option>
-            <option value="open_ended">Open Ended</option>
+            <option value="SC">Single Correct Answer</option>
+            <option value="MC">Multiple Correct Answers</option>
+            <option value="OE">Open Ended</option>
           </select>
           <button
             onClick={addOption}
             className={`py-2 px-4 rounded-lg transition duration-300 ${
               currentQuestion && answerType !== "open_ended"
-                ? "bg-indigo-600 text-white hover:bg-indigo-700"
-                : "bg-gray-400 text-gray-600 cursor-not-allowed"
+                ? "bg-primary text-white hover:bg-primary_test"
+                : "bg-gray-300 text-gray-600 cursor-not-allowed"
             }`}
             disabled={
               !currentQuestion || !currentAnswer || answerType === "open_ended"
@@ -100,12 +134,12 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion }) => {
           <div className="mb-4 bg-blue-100 p-4 rounded-md">
             <p className="text-lg font-semibold mb-2">
               Select the correct{" "}
-              {answerType === "single" ? "answer" : "answers"} before adding the
+              {answerType === "SC" ? "answer" : "answers"} before adding the
               question:
             </p>
             {currentOptions.map((option, index) => (
               <div key={index} className="flex items-center mb-2 ml-4">
-                {answerType === "single" ? (
+                {answerType === "SC" ? (
                   <input
                     type="radio"
                     name="correct-answer"
@@ -130,12 +164,7 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion }) => {
           </div>
         )}
         <div className="flex justify-center">
-          <button
-            onClick={handleAddQuestion}
-            className={`py-2 px-8 rounded-lg transition duration-300 ${"bg-indigo-600 text-white hover:bg-indigo-700"}`}
-          >
-            Add Question
-          </button>
+          <SecondaryButton text="Add Question" onClick={handleAddQuestion} />
         </div>
       </div>
     </div>

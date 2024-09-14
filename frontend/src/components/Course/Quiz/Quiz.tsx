@@ -10,7 +10,7 @@ interface Props {
 }
 
 const CreateQuiz: React.FC<Props> = ({ item }) => {
-  const [questions, setQuestions] = useState<any[]>([]);
+  const [questions, setQuestions] = useState<any[]>(item.content.questions);
   const isEdit = true;
 
   const addQuestion = (question: any) => {
@@ -19,8 +19,8 @@ const CreateQuiz: React.FC<Props> = ({ item }) => {
 
   return (
     <div className="quiz-container">
-      {isEdit && <QuizCreator addQuestion={addQuestion} />}
-      <QuizPreview questions={questions} quizTitle={item.name} isEdit={isEdit}/>
+      {isEdit && <QuizCreator addQuestion={addQuestion} quizId={item.id} />}
+      <QuizPreview questions={questions} quizTitle={item.name} />
     </div>
   );
 };

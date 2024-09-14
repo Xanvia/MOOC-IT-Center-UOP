@@ -1,29 +1,33 @@
-// QuizPreview.tsx
-"use client";
-import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import React, { useState } from "react";
+import SecondaryButton from "@/components/Buttons/SecondaryButton";
+
+interface Answer {
+  text: string;
+  is_correct: boolean;
+}
+
+interface Question {
+  text: string;
+  question_type: string;
+  answers: Answer[];
+}
 
 interface QuizPreviewProps {
-  isEdit: boolean;
-  questions: any[];
+  questions: Question[];
   quizTitle: string;
 }
 
-const QuizPreview: React.FC<QuizPreviewProps> = ({
-  questions,
-  quizTitle,
-  isEdit,
-}) => {
+const QuizPreview: React.FC<QuizPreviewProps> = ({ questions, quizTitle }) => {
   const [selectedAnswers, setSelectedAnswers] = useState<{
-    [key: number]: string | Set<string> | any;
+    [key: number]: string | Set<string>;
   }>({});
   const [showResults, setShowResults] = useState<boolean>(false);
 
   const handleOptionChange = (questionIndex: number, option: string) => {
     setSelectedAnswers((prev) => {
-      if (questions[questionIndex].type === "single") {
+      if (questions[questionIndex].question_type === "SC") {
         return { ...prev, [questionIndex]: option };
-      } else if (questions[questionIndex].type === "multiple") {
+      } else if (questions[questionIndex].question_type === "MC") {
         const newSelectedAnswers = new Set(
           (prev[questionIndex] as Set<string>) || []
         );
@@ -43,97 +47,101 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
     setShowResults(true);
   };
 
-  const handleSave = () => {
-    console.log(selectedAnswers);
-  }
+  const getAnswerStyle = (questionIndex: number, answer: Answer) => {
+    if (!showResults) return "";
+    
+    const isSelected = questions[questionIndex].question_type === "SC"
+      ? selectedAnswers[questionIndex] === answer.text
+      : (selectedAnswers[questionIndex] as Set<string>)?.has(answer.text);
+
+    if (answer.is_correct) {
+      return "bg-green-100 border-green-500 text-green-700";
+    } else if (isSelected && !answer.is_correct) {
+      return "bg-red-100 border-red-500 text-red-700";
+    }
+    return "";
+  };
 
   return (
     <div className="questions-preview p-8 bg-white rounded-md">
       <h2 className="text-2xl font-semibold p-4 mb-6">{quizTitle}</h2>
       {questions.map((q, index) => (
         <div key={index} className="question mb-6 px-4">
-          <h3 className="text-lg font-semibold mb-2">{q.question}</h3>
-          {q.type === "single" || q.type === "multiple" ? (
+          <h3 className="text-lg font-semibold mb-2">{q.text}</h3>
+          {q.question_type === "SC" || q.question_type === "MC" ? (
             <ul className="list-none">
-              {q.options.map((option: string, i: number) => (
+              {q.answers.map((answer, i) => (
                 <li key={i} className="mb-2">
-                  <label className="inline-flex px-5 items-center">
-                    {q.type === "single" ? (
+                  <label className={`inline-flex px-5 py-2 items-center border rounded-md ${getAnswerStyle(index, answer)}`}>
+                    {q.question_type === "SC" ? (
                       <input
                         type="radio"
                         name={`preview-question-${index}`}
-                        value={option}
-                        checked={selectedAnswers[index] === option}
-                        onChange={() => handleOptionChange(index, option)}
+                        value={answer.text}
+                        checked={selectedAnswers[index] === answer.text}
+                        onChange={() => handleOptionChange(index, answer.text)}
                         className="form-radio text-indigo-600 mr-2"
+                        disabled={showResults}
                       />
                     ) : (
                       <input
                         type="checkbox"
                         name={`preview-question-${index}`}
-                        value={option}
+                        value={answer.text}
                         checked={
                           (selectedAnswers[index] as Set<string>)?.has(
-                            option
+                            answer.text
                           ) || false
                         }
-                        onChange={() => handleOptionChange(index, option)}
+                        onChange={() => handleOptionChange(index, answer.text)}
                         className="form-checkbox text-indigo-600 mr-2"
+                        disabled={showResults}
                       />
                     )}
-                    {option}
+                    {answer.text}
+                    {showResults && answer.is_correct && (
+                      <span className="ml-2 text-green-600">✓</span>
+                    )}
                   </label>
                 </li>
               ))}
             </ul>
-          ) : q.type === "open_ended" ? (
+          ) : q.question_type === "OE" ? (
             <div>
-              <input
-                type="textarea"
+              <textarea
                 name={`preview-question-${index}`}
-                value={selectedAnswers[index] || ""}
+                value={(selectedAnswers[index] as string) || ""}
                 onChange={(e) => handleOptionChange(index, e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                rows={4}
+                disabled={showResults}
               />
             </div>
           ) : null}
-          {showResults && q.type !== "open_ended" && (
-            <p
-              className={`mt-2 ${
-                q.type === "single"
-                  ? selectedAnswers[index] === q.answers[0]
-                    ? "text-green-500"
-                    : "text-red-500"
-                  : Array.from(selectedAnswers[index] || []).every((ans) =>
-                      q.answers.includes(ans)
-                    ) &&
-                    Array.from(selectedAnswers[index] || []).length ===
-                      q.answers.length
-                  ? "text-green-500"
-                  : "text-red-500"
-              }`}
-            >
-              {q.type === "single"
-                ? selectedAnswers[index] === q.answers[0]
+          {showResults && q.question_type !== "OE" && (
+            <p className="mt-2 font-semibold">
+              {q.question_type === "SC"
+                ? q.answers.find((ans) => ans.is_correct)?.text ===
+                  selectedAnswers[index]
                   ? "Correct!"
-                  : `Incorrect! The correct answer is ${q.answers[0]}`
-                : Array.from(selectedAnswers[index] || []).every((ans) =>
-                    q.answers.includes(ans)
+                  : "Incorrect!"
+                : Array.from(
+                    (selectedAnswers[index] as Set<string>) || []
+                  ).every((ans) =>
+                    q.answers.some(
+                      (answer) => answer.is_correct && answer.text === ans
+                    )
                   ) &&
-                  Array.from(selectedAnswers[index] || []).length ===
-                    q.answers.length
+                  Array.from((selectedAnswers[index] as Set<string>) || [])
+                    .length === q.answers.filter((ans) => ans.is_correct).length
                 ? "Correct!"
-                : `Incorrect! The correct answers are ${q.answers.join(", ")}`}
+                : "Incorrect!"}
             </p>
           )}
         </div>
       ))}
       <div className="flex p-4 justify-end">
-        {isEdit ? (
-         <SecondaryButton text="Save" onClick={handleSave} />
-        ) : (
-        <SecondaryButton text="Submit" onClick={handleSubmit} />
-        )}
+        <SecondaryButton text={showResults ? "Reset" : "Submit"} onClick={showResults ? () => { setShowResults(false); setSelectedAnswers({}); } : handleSubmit} />
       </div>
     </div>
   );
