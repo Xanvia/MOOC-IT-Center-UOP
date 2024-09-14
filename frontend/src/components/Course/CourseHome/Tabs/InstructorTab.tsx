@@ -38,12 +38,17 @@ const Example: React.FC = () => {
             <figcaption className="mt-10">
               <Image
                 alt=""
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                src="https://ui-avatars.com/api/?name=john doe&color=ffffff&background=008080"
                 className="mx-auto h-10 w-10 rounded-full"
+                width={40}
+                height={40}
               />
 
               {instructors.map((instructor, index) => (
-                <div key={index}  className="mt-4 flex items-center justify-center space-x-3 text-base">
+                <div
+                  key={index}
+                  className="mt-4 flex items-center justify-center space-x-3 text-base"
+                >
                   <div className="font-semibold text-gray-900">
                     {" "}
                     {instructor.name}

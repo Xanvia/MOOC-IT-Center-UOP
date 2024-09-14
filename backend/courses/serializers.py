@@ -55,12 +55,23 @@ class CourseSerializer(serializers.ModelSerializer):
         return data
 
     def to_representation(self, instance):
+        # if request.user is a student and if student has an enrollement with this course set isEnrolled to True
+        request = self.context.get("request")
+
         representation = super().to_representation(instance)
         representation["course_creator"] = CourseTeacherSerializer(
             instance.course_creator
         ).data
         representation["category"] = InterestSerializer(instance.category).data
         representation["institution"] = instance.institution.label
+
+        if request and request.user.is_authenticated:
+            user = request.user
+            try:
+                Enrollment.objects.get(student=user, course=instance)
+                representation["isEnrolled"] = "true"
+            except Enrollment.DoesNotExist:
+                representation["isEnrolled"] = "false"
         return representation
 
 
@@ -168,6 +179,15 @@ class EnrollementSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def validate(self, attrs):
+        # check if user has an enrollement with this course already
+        request = self.context.get("request")
+        user = request.user
+        course = attrs.get("course")
+        try:
+            Enrollment.objects.get(student=user, course=course)
+            raise serializers.ValidationError("You are already enrolled in this course")
+        except Enrollment.DoesNotExist:
+            pass
         # TODO: check if user has an payment object that has not linked with an enrollement object
         return super().validate(attrs)
 
@@ -198,7 +218,6 @@ class ProgressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Progress
         fields = "__all__"
-
 
     def to_internal_value(self, data):
         request = self.context.get("request")

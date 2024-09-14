@@ -29,6 +29,7 @@ export interface CourseData {
   status: string;
   course_creator: CourseCreator;
   category: Category;
+  isEnrolled?: boolean;
 }
 
 export interface UpdateCourseData {

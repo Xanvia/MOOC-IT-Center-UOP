@@ -277,11 +277,23 @@ export const createQuizQuestion = async (
   answers: { text: string; is_correct?: string }[]
 ) => {
   try {
-    const response = await axiosInstance.post(`/course/quiz/${quizId}/questions/`, {
-      text,
-      question_type: questionType,
-      answers,
-    });
+    const response = await axiosInstance.post(
+      `/course/quiz/${quizId}/questions/`,
+      {
+        text,
+        question_type: questionType,
+        answers,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const enrollCourse = async (courseId: number) => {
+  try {
+    const response = await axiosInstance.post(`/course/${courseId}/enroll/`);
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
