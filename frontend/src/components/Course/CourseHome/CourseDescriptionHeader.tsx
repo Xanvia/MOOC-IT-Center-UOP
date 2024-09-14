@@ -18,12 +18,12 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
   reloadData,
   isEdit,
 }) => {
-  const handleEnroll = () => {
+  const handleEnroll = async () => {
     try {
-      enrollCourse(courseData.id);
+      await enrollCourse(courseData.id);
       toast.success("Enrolled in course successfully");
     } catch (error: any) {
-      toast.error("Error enrolling in course:", error);
+      toast.error("Error enrolling in course");
     }
   };
 
