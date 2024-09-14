@@ -9,13 +9,14 @@ import { CourseData } from "../course.types";
 interface CourseHeaderProps {
   courseData: CourseData;
   reloadData: () => void;
+  isEdit: boolean;
 }
 
 const CourseHeader: React.FC<CourseHeaderProps> = ({
   courseData,
   reloadData,
+  isEdit,
 }) => {
-  const [isEdit, setIsEdit] = useState(true);
 
   const handleClick = () => {};
 
