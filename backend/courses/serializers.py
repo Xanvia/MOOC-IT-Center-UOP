@@ -248,9 +248,9 @@ class ProgressTrackSerializer(serializers.ModelSerializer):
         try:
             enrollement = Enrollment.objects.get(student=user.id, course=instance.id)
             completed_components = components.filter(
-                progress__isCompleted=True, progress__enrollment=enrollement.id
+                progress__completed=True, progress__enrollment=enrollement.id
             )
-            progress_percentage = (
+            progress_percentage = round(
                 (completed_components.count() / components.count()) * 100
                 if components.count() > 0
                 else 0
@@ -258,10 +258,9 @@ class ProgressTrackSerializer(serializers.ModelSerializer):
 
             # Identify the current component
             current_component = components.filter(
-                progress__isCompleted=False, progress__enrollment=instance.enrollment
+                progress__completed=False, progress__enrollment__student=user
             ).first()
 
-            representation["components"] = components.values("id", "name")
             representation["progress"] = progress_percentage
             if current_component:
                 representation["current_component"] = {
@@ -271,6 +270,6 @@ class ProgressTrackSerializer(serializers.ModelSerializer):
             return representation
 
         except Enrollment.DoesNotExist:
-            raise serializers.ValidationError({"error": "You are not enrolled in this course"})
-
-
+            raise serializers.ValidationError(
+                {"error": "You are not enrolled in this course"}
+            )
