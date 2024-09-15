@@ -232,3 +232,45 @@ class ProgressSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("You are not enrolled in this course")
             data["enrollment"] = enrollement.id
         return super().to_internal_value(data)
+
+
+class ProgressTrackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ["id"]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        components = Component.objects.filter(chapter__week__course=instance)
+
+        request = self.context.get("request")
+        user = request.user
+        try:
+            enrollement = Enrollment.objects.get(student=user.id, course=instance.id)
+            completed_components = components.filter(
+                progress__isCompleted=True, progress__enrollment=enrollement.id
+            )
+            progress_percentage = (
+                (completed_components.count() / components.count()) * 100
+                if components.count() > 0
+                else 0
+            )
+
+            # Identify the current component
+            current_component = components.filter(
+                progress__isCompleted=False, progress__enrollment=instance.enrollment
+            ).first()
+
+            representation["components"] = components.values("id", "name")
+            representation["progress"] = progress_percentage
+            if current_component:
+                representation["current_component"] = {
+                    "id": current_component.id,
+                    "name": current_component.name,
+                }
+            return representation
+
+        except Enrollment.DoesNotExist:
+            raise serializers.ValidationError({"error": "You are not enrolled in this course"})
+
+

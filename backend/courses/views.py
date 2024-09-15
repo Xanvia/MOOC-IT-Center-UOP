@@ -24,6 +24,7 @@ from .serializers import (
     EnrollementSerializer,
     QuestionSerializer,
     ProgressSerializer,
+    ProgressTrackSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -278,7 +279,7 @@ class VideoViewSet(viewsets.ModelViewSet):
 
     def edit_quiz(self, request, *args, **kwargs):
         response = super().update(request, partial=True, *args, **kwargs)
-        
+
         response.data = {
             "status": "success",
             "message": "Quiz updated successfully",
@@ -354,6 +355,15 @@ class ProgressTrackViewSet(viewsets.ModelViewSet):
     queryset = Progress.objects.all()
     serializer_class = ProgressSerializer
 
+    def get_object(self):
+        if self.action == "mark_as_completed":
+            progress = get_object_or_404(
+                Progress.objects.filter(enrollment__student=self.request.user),
+                component=self.kwargs["pk"],
+            )
+            return progress
+        return super().get_object()
+
     def start_component(self, request, component_id, *args, **kwargs):
 
         request.data["component"] = component_id
@@ -377,4 +387,15 @@ class ProgressTrackViewSet(viewsets.ModelViewSet):
             "message": "Component marked as completed successfully",
         }
 
+        return response
+
+
+class GetProgressAPIView(generics.RetrieveAPIView):
+    serializer_class = ProgressTrackSerializer
+    queryset = Course.objects.all()
+
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+
+        response.data = {"status": "success", "data": response.data}
         return response
