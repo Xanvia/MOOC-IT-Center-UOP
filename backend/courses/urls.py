@@ -11,6 +11,7 @@ from .views import (
     EnrollementViewSet,
     AddQuestionsViewSet,
     ProgressTrackViewSet,
+    GetProgressAPIView,
 )
 
 router = DefaultRouter()
@@ -121,5 +122,11 @@ urlpatterns = [
         "component/completed/<int:pk>/",
         ProgressTrackViewSet.as_view({"patch": "mark_as_completed"}),
         name="mark_as_completed",
+    ),
+    # get progress
+    path(
+        "<int:pk>/progress/",
+        GetProgressAPIView.as_view(),
+        name="get_progress",
     ),
 ]

@@ -75,7 +75,9 @@ class ProgressViewsetTest(APITestCase):
 
     def test_mark_as_completed(self):
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
-        self.url = reverse("start_component", kwargs={"component_id": self.component_id})
+        self.url = reverse(
+            "start_component", kwargs={"component_id": self.component_id}
+        )
         self.client.post(self.url)
         self.url = reverse("mark_as_completed", kwargs={"pk": 1})
         response = self.client.patch(self.url)
@@ -88,3 +90,40 @@ class ProgressViewsetTest(APITestCase):
                 "message": "Component marked as completed successfully",
             },
         )
+
+    def test_get_progress(self):
+        # create more notes to the chapter
+        week = Week.objects.get(id=1)
+        chapter = Chapter.objects.get(id=1)
+
+        note = Note.objects.create(chapter=chapter, content="note content")
+        note2 = Note.objects.create(chapter=chapter, content="note content")
+        note3 = Note.objects.create(chapter=chapter, content="note content")
+
+        # start all notes and complete only 2
+
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
+        self.url = reverse("start_component", kwargs={"component_id": 1})
+        self.client.post(self.url)
+        self.url = reverse("start_component", kwargs={"component_id": 2})
+        self.client.post(self.url)
+        self.url = reverse("start_component", kwargs={"component_id": 3})
+        self.client.post(self.url)
+        self.url = reverse("mark_as_completed", kwargs={"pk": 1})
+        self.client.patch(self.url)
+        self.url = reverse("mark_as_completed", kwargs={"pk": 2})
+        self.client.patch(self.url)
+
+        self.url = reverse("get_progress", kwargs={"pk": 1})
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        expected_data = {
+            "status": "success",
+            "data": {
+                "id": 1,
+                "progress": 50,
+                "current_component": {"id": 3, "name": ""},
+            },
+        }
+        self.assertEqual(response.data, expected_data)

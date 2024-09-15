@@ -19,24 +19,10 @@ class Course(models.Model):
     difficulty = models.CharField(max_length=255)
     status = models.CharField(max_length=255, default="unpublished")
 
-    def get_progress(self, user):
-        weeks = self.weeks.all()
-        if not weeks:
-            return 0
-        total_progress = sum([week.get_progress(user) for week in weeks])
-        return total_progress / len(weeks)
-
 
 class Week(models.Model):
     name = models.CharField(max_length=255)
     course = models.ForeignKey(Course, related_name="weeks", on_delete=models.CASCADE)
-
-    def get_progress(self, user):
-        chapters = self.chapters.all()
-        if not chapters:
-            return 0
-        total_progress = sum([chapter.get_progress(user) for chapter in chapters])
-        return total_progress / len(chapters)
 
     def __str__(self):
         return self.name
