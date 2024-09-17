@@ -11,6 +11,7 @@ import {
   createWeek,
   deleteComponent,
   fetchCourseContent,
+  getProgress,
 } from "@/services/course.service";
 import { useParams, useRouter } from "next/navigation";
 import Loader from "@/components/Loarder/Loarder";
@@ -32,6 +33,8 @@ const Sidebar: React.FC = () => {
   const router = useRouter();
   const courseId = params.id;
   const { userRole } = useGlobal();
+  const [progress, setProgress] = useState<number>(0);
+  const [progressLoaded, setProgressLoaded] = useState<boolean>(false);
 
   useEffect(() => {
     const loadCourseContent = async () => {
@@ -39,21 +42,60 @@ const Sidebar: React.FC = () => {
       try {
         const data = await fetchCourseContent(courseId as string);
         setWeeks(data.weeks);
-        setSelectedTopic(data.weeks[0].chapters[0].items[0]);
+        setIsLoading(false);
       } catch (error: any) {
         if (
           error == "Error: You do not have permission to perform this action."
         ) {
-          // toast.warning("ENROLL TO ACCESS COURSE CONTENT");
+          setIsLoading(false);
           router.push(`/courses/${courseId}`);
         }
       }
     };
 
-     
     loadCourseContent();
-    setIsLoading(false);
-  }, [courseId]);
+  }, [courseId, router]);
+
+  // Fetch progress after weeks is loaded
+  useEffect(() => {
+    const loadProgress = async () => {
+      if (!courseId || weeks.length === 0) return;
+
+      try {
+        const progress = await getProgress(courseId as string);
+        setProgress(progress.progress);
+        if (progress?.current_component) {
+          const {
+            week: weekId,
+            chapter: chapterId,
+            id: itemId,
+          } = progress.current_component;
+          // Find the week with the matching ID
+          const week = weeks.find((week) => week.id === weekId);
+          if (week) {
+            const chapter = week.chapters.find(
+              (chapter) => chapter.id === chapterId
+            );
+            if (chapter) {
+              const foundItem = chapter.items?.find(
+                (item) => item.id === itemId
+              );
+              if (foundItem) {
+                setSelectedTopic(foundItem);
+              }
+            }
+          }
+        }
+        setProgressLoaded(true);
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    };
+
+    if (weeks.length > 0 && !progressLoaded) {
+      loadProgress();
+    }
+  }, [courseId, weeks, progressLoaded]);
 
   const toggleWeek = useCallback(
     (weekIndex: number) => {
@@ -227,11 +269,11 @@ const Sidebar: React.FC = () => {
           <div className="relative h-2 mt-2 bg-gray-300 rounded">
             <div
               className="absolute top-0 left-0 h-full bg-blue-600 rounded w-3/12"
-              style={{ width: "25%" }}
+              style={{ width: `${progress}%` }}
             ></div>
           </div>
           <p className="my-2 text-sm text-gray-600">
-            4 of the 20 videos have been completed
+            {progress}% of the course is completed
           </p>
         </div>
         {weeks &&

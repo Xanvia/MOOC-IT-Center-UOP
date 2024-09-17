@@ -300,7 +300,7 @@ export const enrollCourse = async (courseId: number) => {
   }
 };
 
-export const getProgress = async (courseId: number) => {
+export const getProgress = async (courseId: string) => {
   try {
     const response = await axiosInstance.get(`/course/${courseId}/progress/`);
     return response.data.data;
