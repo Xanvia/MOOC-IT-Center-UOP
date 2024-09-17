@@ -3,6 +3,7 @@ import { Item } from "@/components/Course/types";
 import SideBarIcon from "@/icons/sideBarIcon";
 import { FaTrash } from "react-icons/fa";
 import ConfirmDeleteModal from "../Modals/ConfrimDeleteModal";
+import { useGlobal } from "@/contexts/store";
 
 interface ItemComponentProps {
   weekIndex: number;
@@ -31,6 +32,7 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
 }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const isSelected = selectedTopic === item;
+  const { userRole } = useGlobal();
 
   const handleSelect = () => {
     setSelectedTopic(item);
@@ -53,18 +55,18 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
         <SideBarIcon type={item.type} />
         {item.name}
       </p>
-      <button
-        className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
-        onClick={() => setShowModal(true)}
-      >
-        <FaTrash />
-      </button>
-
+      {userRole === "teacher" && (
+        <button
+          className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
+          onClick={() => setShowModal(true)}
+        >
+          <FaTrash />
+        </button>
+      )}
       {showModal && (
         <ConfirmDeleteModal
           setShowModal={setShowModal}
           handleDelete={handleDelete}
-          
         />
       )}
     </div>
