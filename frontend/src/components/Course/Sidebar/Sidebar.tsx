@@ -32,11 +32,12 @@ const Sidebar: React.FC = () => {
   const params = useParams();
   const router = useRouter();
   const courseId = params.id;
-  const { userRole } = useGlobal();
+  const { userRole,isLoggedIn } = useGlobal();
   const [progress, setProgress] = useState<number>(0);
   const [progressLoaded, setProgressLoaded] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log(isLoggedIn)
     const loadCourseContent = async () => {
       if (!courseId) return;
       try {
@@ -88,7 +89,9 @@ const Sidebar: React.FC = () => {
         }
         setProgressLoaded(true);
       } catch (error: any) {
-        toast.error(error.message);
+        if (userRole === "student") {
+          toast.error(error.message);
+        }
       }
     };
 

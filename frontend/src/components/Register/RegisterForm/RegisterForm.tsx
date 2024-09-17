@@ -15,6 +15,9 @@ import {
   InputOuterDiv,
 } from "../../components.styles";
 import { registerUser, registerWithGoogle } from "@/services/auth.service";
+import Cookies from "js-cookie";
+import { useGlobal } from "@/contexts/store";
+
 export interface RegistrationFormValues {
   firstName: string;
   lastName: string;
@@ -67,10 +70,16 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
   setStep,
   setResetForm,
 }) => {
+  const { setIsLoggedIn, setUserRole } = useGlobal();
+
   const handleSubmit = async (values: RegistrationFormValues) => {
     setResetForm();
     try {
       const res = await registerUser(values);
+      Cookies.set("token", res.data.access_token);
+      Cookies.set("user", JSON.stringify(res.data.user));
+      setIsLoggedIn(true);
+      setUserRole(res.data.user.userRole);
       toast.success(res.message);
       setStep("Two");
     } catch (error: any) {
@@ -87,6 +96,10 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
       const code = await getGoogleCode();
       if (code !== null) {
         const res = await registerWithGoogle(code, userRole);
+        Cookies.set("token", res.data.access_token);
+        Cookies.set("user", JSON.stringify(res.data.user));
+        setIsLoggedIn(true);
+        setUserRole(res.data.user.userRole);
         toast.success(res.message);
         setStep("Two");
       }
