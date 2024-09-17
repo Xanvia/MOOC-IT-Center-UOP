@@ -23,7 +23,7 @@ export default function RootLayout({
         <body className={`${inter.className} min-h-screen flex flex-col`}>
           <Toaster richColors closeButton position="top-right" />
           <Navbar />
-          {/* Wrap main content and Footer inside a div to control layout */}
+         
           <div className="flex flex-col flex-grow">
             <div className="flex-grow mt-16 min-h-screen">{children}</div>
             <Footer />

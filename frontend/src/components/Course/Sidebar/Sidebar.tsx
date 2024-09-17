@@ -32,12 +32,11 @@ const Sidebar: React.FC = () => {
   const params = useParams();
   const router = useRouter();
   const courseId = params.id;
-  const { userRole,isLoggedIn } = useGlobal();
+  const { userRole, isLoggedIn } = useGlobal();
   const [progress, setProgress] = useState<number>(0);
   const [progressLoaded, setProgressLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log(isLoggedIn)
     const loadCourseContent = async () => {
       if (!courseId) return;
       try {
@@ -59,6 +58,7 @@ const Sidebar: React.FC = () => {
 
   // Fetch progress after weeks is loaded
   useEffect(() => {
+    if (userRole === "teacher") return;
     const loadProgress = async () => {
       if (!courseId || weeks.length === 0) return;
 

@@ -54,7 +54,7 @@ export const GlobalContextProvider = ({
         isInitialized,
       }}
     >
-      {isInitialized ? children : null}
+      {children}
     </GlobalContext.Provider>
   );
 };
@@ -67,7 +67,6 @@ export const useGlobal = () => {
   return context;
 };
 
-// Custom hook for authentication
 export const useAuth = () => {
   const { isLoggedIn, setIsLoggedIn, userRole, setUserRole, isInitialized } = useGlobal();
 
