@@ -31,6 +31,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
 from django.shortcuts import get_object_or_404
+from .permissons import hasCourseListPermissions
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -101,6 +102,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 class WeekViewSet(viewsets.ModelViewSet):
     queryset = Week.objects.all()
     serializer_class = WeekSerializer
+    permission_classes = [hasCourseListPermissions]
 
     def get_queryset(self):
         if self.action == "destroy":
