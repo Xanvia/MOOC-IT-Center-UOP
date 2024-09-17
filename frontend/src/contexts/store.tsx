@@ -1,13 +1,6 @@
 "use client";
-import React, {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-} from "react"; // Add useEffect to the import
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import Cookies from "js-cookie";
-import { set } from "jodit/types/core/helpers";
 
 interface GlobalContextType {
   isLoggedIn: boolean;
@@ -16,6 +9,7 @@ interface GlobalContextType {
   setLoading: (isLoading: boolean) => void;
   userRole: string | null;
   setUserRole: (userRole: string | null) => void;
+  isInitialized: boolean;
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -26,15 +20,26 @@ export const GlobalContextProvider = ({
   children: ReactNode;
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    const tokenFromCookie = Cookies.get("token");
-    if (tokenFromCookie) {
-      setIsLoggedIn(true);
+    const initializeAuth = () => {
+      const tokenFromCookie = Cookies.get("token");
+      if (tokenFromCookie) {
+        setIsLoggedIn(true);
+        const userFromCookie = Cookies.get("user");
+        if (userFromCookie) {
+          const parsedUser = JSON.parse(userFromCookie);
+          setUserRole(parsedUser.userRole);
+        }
+      }
       setLoading(false);
-    }
+      setIsInitialized(true);
+    };
+
+    initializeAuth();
   }, []);
 
   return (
@@ -46,6 +51,7 @@ export const GlobalContextProvider = ({
         setLoading,
         userRole,
         setUserRole,
+        isInitialized,
       }}
     >
       {children}
@@ -59,4 +65,24 @@ export const useGlobal = () => {
     throw new Error("useGlobal must be used within a GlobalContextProvider");
   }
   return context;
+};
+
+export const useAuth = () => {
+  const { isLoggedIn, setIsLoggedIn, userRole, setUserRole, isInitialized } = useGlobal();
+
+  const login = (token: string, user: { userRole: string }) => {
+    Cookies.set("token", token);
+    Cookies.set("user", JSON.stringify(user));
+    setIsLoggedIn(true);
+    setUserRole(user.userRole);
+  };
+
+  const logout = () => {
+    Cookies.remove("token");
+    Cookies.remove("user");
+    setIsLoggedIn(false);
+    setUserRole(null);
+  };
+
+  return { isLoggedIn, userRole, login, logout, isInitialized };
 };

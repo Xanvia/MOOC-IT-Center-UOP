@@ -110,7 +110,7 @@ class WeekViewSet(viewsets.ModelViewSet):
         if self.action == "list":
             # Students can list weeks if they are enrolled
             permission_classes = [CourseContentListAccess]
-        if self.action == "destroy":
+        elif self.action == "destroy":
             # Only course creators can delete weeks
             permission_classes = [CousrseContentDeleteAccess]
         else:
@@ -136,7 +136,6 @@ class WeekViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
-
         response.data = {
             "status": "success",
             "data": {

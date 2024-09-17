@@ -13,7 +13,6 @@ class CourseContentListAccess(permissions.BasePermission):
     def has_permission(self, request, view):
         course_id = view.kwargs["course_id"]
         user = request.user
-
         # Allow course creator (teacher)
         if (
             self.is_in_group(user, "teacher")

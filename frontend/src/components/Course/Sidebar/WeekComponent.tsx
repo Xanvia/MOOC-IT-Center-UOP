@@ -4,6 +4,7 @@ import { FaChevronRight, FaChevronDown, FaPlus, FaTrash } from "react-icons/fa";
 import ChapterComponent from "./ChapterComponent";
 import ConfirmDeleteModal from "../Modals/ConfrimDeleteModal";
 import { useSelectedTopic } from "@/contexts/SidebarContext";
+import { useGlobal } from "@/contexts/store";
 
 interface WeekComponentProps {
   weekIndex: number;
@@ -49,6 +50,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
 }) => {
   const [newTopicName, setNewTopicName] = useState<string>("");
   const [showNewTopicInput, setShowNewTopicInput] = useState<boolean>(false);
+  const { userRole } = useGlobal();
 
   const {
     selectedTopic,
@@ -100,7 +102,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
           )}
           {week.name}
         </h4>
-        {isLastWeek && ( // Conditionally render the delete button
+        {isLastWeek && userRole=="teacher" &&( // Conditionally render the delete button
           <button
             className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
             onClick={() => setShowModal(true)}
@@ -144,12 +146,14 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
               </button>
             </div>
           ) : (
-            <button
-              className="w-60 mt-4 ml-5 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400"
-              onClick={() => setShowNewTopicInput(true)}
-            >
-              Add Topic +
-            </button>
+            userRole === "teacher" && (
+              <button
+                className="w-60 mt-4 ml-5 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400"
+                onClick={() => setShowNewTopicInput(true)}
+              >
+                Add Topic +
+              </button>
+            )
           )}
         </div>
       )}

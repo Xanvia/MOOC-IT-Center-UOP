@@ -9,7 +9,6 @@ import CloseButton from "../Buttons/CloseButton";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Cookies from "js-cookie";
-import { CALLBACK_URL } from "@/utils/constants";
 import { login, loginWithGoogle } from "@/services/auth.service";
 
 import {
@@ -21,6 +20,8 @@ import {
   InputOuterDiv,
 } from "../components.styles";
 import { toast } from "sonner";
+import { useGlobal } from "@/contexts/store";
+import { set } from "jodit/types/core/helpers";
 
 export interface LoginFormValues {
   email: string;
@@ -49,10 +50,15 @@ export default function Login() {
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
+  const { setIsLoggedIn, setUserRole } = useGlobal();
 
   const handleSubmit = async (values: LoginFormValues) => {
     try {
       const res = await login(values.email, values.password);
+      Cookies.set("token", res.data.access_token);
+      Cookies.set("user", JSON.stringify(res.data.user));
+      setIsLoggedIn(true);
+      setUserRole(res.data.user.userRole);
       toast.success(res.message);
       window.location.reload();
     } catch (error: any) {
@@ -65,6 +71,10 @@ export default function Login() {
       const code = await getGoogleCode();
       if (code !== null) {
         const res = await loginWithGoogle(code);
+        Cookies.set("token", res.data.access_token);
+        Cookies.set("user", JSON.stringify(res.data.user));
+        setIsLoggedIn(true);
+        setUserRole(res.data.user.userRole);
         toast.success(res.message);
         window.location.reload();
       }

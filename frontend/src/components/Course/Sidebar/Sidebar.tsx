@@ -11,10 +11,12 @@ import {
   createWeek,
   deleteComponent,
   fetchCourseContent,
+  getProgress,
 } from "@/services/course.service";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Loader from "@/components/Loarder/Loarder";
 import { toast } from "sonner";
+import { useGlobal } from "@/contexts/store";
 
 const Sidebar: React.FC = () => {
   const {
@@ -28,8 +30,11 @@ const Sidebar: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const params = useParams();
-
+  const router = useRouter();
   const courseId = params.id;
+  const { userRole, isLoggedIn } = useGlobal();
+  const [progress, setProgress] = useState<number>(0);
+  const [progressLoaded, setProgressLoaded] = useState<boolean>(false);
 
   useEffect(() => {
     const loadCourseContent = async () => {
@@ -37,14 +42,63 @@ const Sidebar: React.FC = () => {
       try {
         const data = await fetchCourseContent(courseId as string);
         setWeeks(data.weeks);
-        setSelectedTopic(data.weeks[0].chapters[0].items[0]);
-      } catch (error) {
-        console.error(error);
+        setIsLoading(false);
+      } catch (error: any) {
+        if (
+          error == "Error: You do not have permission to perform this action."
+        ) {
+          setIsLoading(false);
+          router.push(`/courses/${courseId}`);
+        }
       }
     };
+
     loadCourseContent();
-    setIsLoading(false);
-  }, [courseId]);
+  }, [courseId, router]);
+
+  // Fetch progress after weeks is loaded
+  useEffect(() => {
+    if (userRole === "teacher") return;
+    const loadProgress = async () => {
+      if (!courseId || weeks.length === 0) return;
+
+      try {
+        const progress = await getProgress(courseId as string);
+        setProgress(progress.progress);
+        if (progress?.current_component) {
+          const {
+            week: weekId,
+            chapter: chapterId,
+            id: itemId,
+          } = progress.current_component;
+          // Find the week with the matching ID
+          const week = weeks.find((week) => week.id === weekId);
+          if (week) {
+            const chapter = week.chapters.find(
+              (chapter) => chapter.id === chapterId
+            );
+            if (chapter) {
+              const foundItem = chapter.items?.find(
+                (item) => item.id === itemId
+              );
+              if (foundItem) {
+                setSelectedTopic(foundItem);
+              }
+            }
+          }
+        }
+        setProgressLoaded(true);
+      } catch (error: any) {
+        if (userRole === "student") {
+          toast.error(error.message);
+        }
+      }
+    };
+
+    if (weeks.length > 0 && !progressLoaded) {
+      loadProgress();
+    }
+  }, [courseId, weeks, progressLoaded]);
 
   const toggleWeek = useCallback(
     (weekIndex: number) => {
@@ -211,18 +265,18 @@ const Sidebar: React.FC = () => {
   }
 
   return (
-    <div className="fixed left-0 w-3/12 bg-gray-white h-full overflow-y-auto mb-96">
-      <div className="w-84 p-8 border-r bg-primary_light border-gray-200 h-full pb-20 mb-96">
+    <div className="fixed left-0 w-3/12 bg-gray-white min-h-screen overflow-y-auto  mb-96">
+      <div className="w-84 p-8 border-r bg-primary_light min-h-screen h-full border-gray-200  pb-20 mb-96 ">
         <div className="mt-4 mb-10">
           <h3 className="text-lg font-semibold">Progress</h3>
           <div className="relative h-2 mt-2 bg-gray-300 rounded">
             <div
               className="absolute top-0 left-0 h-full bg-blue-600 rounded w-3/12"
-              style={{ width: "25%" }}
+              style={{ width: `${progress}%` }}
             ></div>
           </div>
           <p className="my-2 text-sm text-gray-600">
-            4 of the 20 videos have been completed
+            {progress}% of the course is completed
           </p>
         </div>
         {weeks &&
@@ -243,12 +297,14 @@ const Sidebar: React.FC = () => {
               isLastWeek={weekIndex === weeks.length - 1}
             />
           ))}
-        <button
-          className="w-full px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400"
-          onClick={addNewWeek}
-        >
-          Add Week +
-        </button>
+        {userRole === "teacher" ? (
+          <button
+            className="w-full px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400"
+            onClick={addNewWeek}
+          >
+            Add Week +
+          </button>
+        ) : null}
       </div>
     </div>
   );

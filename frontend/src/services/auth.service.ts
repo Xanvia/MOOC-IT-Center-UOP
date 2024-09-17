@@ -1,5 +1,4 @@
 import axiosInstance from "../lib/axiosInstance";
-import Cookies from "js-cookie";
 import { CALLBACK_URL } from "@/utils/constants";
 
 interface userData {
@@ -17,8 +16,6 @@ export const login = async (email: string, password: string) => {
       email,
       password,
     });
-    Cookies.set("token", response.data.data.access_token);
-    Cookies.set("user", JSON.stringify(response.data.data.user));
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data.message ?? "Network error";
@@ -32,8 +29,6 @@ export const loginWithGoogle = async (code: string) => {
       code,
       redirect_uri: CALLBACK_URL || "",
     });
-    Cookies.set("token", response.data.data.access_token);
-    Cookies.set("user", JSON.stringify(response.data.data.user));
     return response.data;
   } catch (error: any) {
     const errorMessage = error.response?.data.message ?? "Network error";
@@ -51,8 +46,6 @@ export const registerUser = async (values: userData) => {
       password: values.password,
       user_type: values.userRole,
     });
-    Cookies.set("token", response.data.data.access_token);
-    Cookies.set("user", JSON.stringify(response.data.data.user));
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
@@ -66,8 +59,6 @@ export const registerWithGoogle = async (code: string, userRole: string) => {
       user_type: userRole,
       redirect_uri: CALLBACK_URL || "",
     });
-    Cookies.set("token", response.data.data.access_token);
-    Cookies.set("user", JSON.stringify(response.data.data.user));
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");

@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Sidebar from "@/components/Course/Sidebar/Sidebar";
 import { SelectedTopicProvider } from "@/contexts/SidebarContext";
 import Breadcrumb from "@/components/Course/CourseHome/Breadcrumb";
-import Footer from "@/components/Footer/Footer";
 
 interface InnerLayoutProps {
   children: React.ReactNode;

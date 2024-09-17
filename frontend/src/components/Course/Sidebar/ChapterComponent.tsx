@@ -9,6 +9,7 @@ import Select, {
 import SideBarIcon from "@/icons/sideBarIcon";
 import ItemComponent from "./ItemComponent";
 import ConfirmDeleteModal from "../Modals/ConfrimDeleteModal";
+import { useGlobal } from "@/contexts/store";
 
 interface ChapterComponentProps {
   weekIndex: number;
@@ -28,7 +29,6 @@ interface ChapterComponentProps {
     itemIndex: number,
     itemId: string,
     itemType: "Note" | "Video" | "Quiz"
-
   ) => void;
   removeTopic: (
     weekIndex: number,
@@ -61,6 +61,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
   const [showNewItemInput, setShowNewItemInput] = useState<boolean>(false);
   const [newItemType, setNewItemType] = useState<string>("Video");
   const [showModal, setShowModal] = useState<boolean>(false);
+  const { userRole } = useGlobal();
 
   const options: OptionType[] = [
     { value: "Video", label: "Video", type: "Video" },
@@ -194,12 +195,14 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
           )}
           {chapter.name}
         </h5>
-        <button
-          className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
-          onClick={() => setShowModal(true)}
-        >
-          <FaTrash />
-        </button>
+        {userRole === "teacher" && (
+          <button
+            className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
+            onClick={() => setShowModal(true)}
+          >
+            <FaTrash />
+          </button>
+        )}
       </div>
       {expanded && (
         <div>
@@ -247,12 +250,14 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
               </button>
             </div>
           ) : (
-            <button
-              className="mt-2 ml-8 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400"
-              onClick={() => setShowNewItemInput(true)}
-            >
-              Add Item +
-            </button>
+            userRole === "teacher" && (
+              <button
+                className="mt-2 ml-8 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400"
+                onClick={() => setShowNewItemInput(true)}
+              >
+                Add Item +
+              </button>
+            )
           )}
         </div>
       )}

@@ -264,6 +264,8 @@ class ProgressTrackSerializer(serializers.ModelSerializer):
             representation["progress"] = progress_percentage
             if current_component:
                 representation["current_component"] = {
+                    "week": current_component.chapter.week.id,
+                    "chapter": current_component.chapter.id,
                     "id": current_component.id,
                     "name": current_component.name,
                 }
