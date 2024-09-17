@@ -1,39 +1,51 @@
 from rest_framework import permissions
-from .models import Enrollment, Course
-from django.contrib.auth.models import Group
+from .models import Enrollment, Course, Week
 
 
-class hasCourseListPermissions(permissions.BasePermission):
+class CourseContentListAccess(permissions.BasePermission):
     """
-    Custom permission to check if a student is enrolled in the course.
-    Teachers always pass this permission check.
+    Custom permission to allow students (if enrolled) and course creators to list weeks.
     """
 
     def is_in_group(self, user, group_name):
-        """
-        Check if a user is in a given group.
-        """
         return user.groups.filter(name=group_name).exists()
 
     def has_permission(self, request, view):
         course_id = view.kwargs["course_id"]
         user = request.user
 
-        # Check if the user is in teacher gorup
+        # Allow course creator (teacher)
         if (
             self.is_in_group(user, "teacher")
             and Course.objects.filter(id=course_id, course_creator=user).exists()
         ):
             return True
 
-        # Check if the user is a student and enrolled in the course
-        if self.is_in_group(user, "student"):
-            try:
-                enrollment = Enrollment.objects.get(
-                    course_id=course_id, student_id=user.id
-                )
-                return True
-            except Course.DoesNotExist:
-                return False
+        # Allow enrolled students
+        if (
+            self.is_in_group(user, "student")
+            and Enrollment.objects.filter(
+                course_id=course_id, student_id=user.id
+            ).exists()
+        ):
+            return True
 
         return False
+
+
+class CousrseContentDeleteAccess(permissions.BasePermission):
+    """
+    Custom permission to allow only course creators to delete weeks.
+    """
+
+    def is_in_group(self, user, group_name):
+        return user.groups.filter(name=group_name).exists()
+
+    def has_permission(self, request, view):
+        week_id = view.kwargs["pk"]
+        user = request.user
+
+        # Only allow course creators (teachers) to delete
+        week = Week.objects.get(pk=week_id)
+        course = week.course
+        return self.is_in_group(user, "teacher") and course.course_creator == user

@@ -31,7 +31,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
 from django.shortcuts import get_object_or_404
-from .permissons import hasCourseListPermissions
+from .permissons import CourseContentListAccess, CousrseContentDeleteAccess
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -102,7 +102,20 @@ class CourseViewSet(viewsets.ModelViewSet):
 class WeekViewSet(viewsets.ModelViewSet):
     queryset = Week.objects.all()
     serializer_class = WeekSerializer
-    permission_classes = [hasCourseListPermissions]
+
+    def get_permissions(self):
+        """
+        Return different permission classes based on the action.
+        """
+        if self.action == "list":
+            # Students can list weeks if they are enrolled
+            permission_classes = [CourseContentListAccess]
+        if self.action == "destroy":
+            # Only course creators can delete weeks
+            permission_classes = [CousrseContentDeleteAccess]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         if self.action == "destroy":
