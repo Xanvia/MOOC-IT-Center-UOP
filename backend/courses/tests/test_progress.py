@@ -123,7 +123,7 @@ class ProgressViewsetTest(APITestCase):
             "data": {
                 "id": 1,
                 "progress": 50,
-                "current_component": {"id": 3, "name": ""},
+                "current_component": {"week": 1, "chapter": 1, "id": 3, "name": ""},
             },
         }
         self.assertEqual(response.data, expected_data)
