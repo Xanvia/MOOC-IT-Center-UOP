@@ -93,6 +93,8 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
         name: newItemName,
         type: newItemType as "Video" | "Note" | "Quiz",
         content: "",
+        has_started: false,
+        completed: false,
       });
       setNewItemName("");
       setNewItemType("video");

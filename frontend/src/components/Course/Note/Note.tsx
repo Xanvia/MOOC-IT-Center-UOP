@@ -7,6 +7,7 @@ import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import { editNote } from "@/services/course.service";
 import { toast } from "sonner";
 import { Item } from "@/components/Course/types";
+import { useGlobal } from "@/contexts/store";
 
 interface NoteProps {
   selectedTopic: Item;
@@ -14,6 +15,7 @@ interface NoteProps {
 
 const Note: React.FC<NoteProps> = ({ selectedTopic }) => {
   const isEdit = true;
+  const { userRole } = useGlobal();
 
   const [noteContent, setNoteContent] = useState(selectedTopic.content);
   const [editView, setEditView] = useState(false);
@@ -35,7 +37,11 @@ const Note: React.FC<NoteProps> = ({ selectedTopic }) => {
         <div className="py-14 px-3 w-10/12 min-h-[600px] mx-auto text-left bg-primary_light">
           <div className="space-y-2">
             <div className="pt-2">
-              <NoteEditor id={selectedTopic.id} initialData={noteContent} onClick={handleSave} />
+              <NoteEditor
+                id={selectedTopic.id}
+                initialData={noteContent}
+                onClick={handleSave}
+              />
             </div>
           </div>
         </div>
@@ -47,7 +53,7 @@ const Note: React.FC<NoteProps> = ({ selectedTopic }) => {
 
           <div className="py-14 px-3 w-10/12 min-h-[600px] mx-auto text-left bg-white">
             <div className="my-6 ml-12">
-              {isEdit && (
+              {isEdit && userRole === "teacher" && (
                 <EditButtonPrimary
                   text="E D I T"
                   onClick={() => setEditView(true)}

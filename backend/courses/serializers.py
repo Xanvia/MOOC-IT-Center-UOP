@@ -82,9 +82,10 @@ class WeekSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_representation(self, instance):
+
         representation = super().to_representation(instance)
         representation["chapters"] = ChapterSerializer(
-            instance.chapters, many=True
+            instance.chapters, many=True, context=self.context
         ).data
         return representation
 
@@ -97,7 +98,9 @@ class ChapterSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["items"] = ItemSerializer(instance.components, many=True).data
+        representation["items"] = ItemSerializer(
+            instance.components, many=True, context=self.context
+        ).data
         return representation
 
 
@@ -108,13 +111,28 @@ class ItemSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_representation(self, instance):
+        request = self.context.get("request")
+        student = request.user
+        progress = Progress.objects.filter(
+            component=instance, enrollment__student=student
+        ).first()
         if instance.type == "Note":
-            return NoteSerializer(instance.note).data
+            representation = NoteSerializer(instance.note).data
         elif instance.type == "Quiz":
-            return QuizSerializer(instance.quiz).data
+            representation = QuizSerializer(instance.quiz).data
         elif instance.type == "Video":
-            return VideoSerializer(instance.video).data
-        return super().to_representation(instance)
+            representation = VideoSerializer(instance.video).data
+        else:
+            return super().to_representation(instance)
+
+        representation["has_started"] = False
+        representation["completed"] = False
+        if progress:
+            representation["has_started"] = True
+            if progress.completed:
+                representation["completed"] = True
+
+        return representation
 
 
 class NoteSerializer(serializers.ModelSerializer):

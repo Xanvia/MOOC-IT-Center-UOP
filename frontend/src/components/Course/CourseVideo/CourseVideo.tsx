@@ -14,6 +14,7 @@ import {
   Edit,
   Trash,
 } from "lucide-react";
+import { useGlobal } from "@/contexts/store";
 
 interface MCQ {
   timestamp: number;
@@ -38,6 +39,8 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   mcqs,
   isEdit, // teacher mode enabled if true
 }) => {
+  const {userRole} = useGlobal();
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);

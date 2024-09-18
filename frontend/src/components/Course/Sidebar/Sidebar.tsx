@@ -17,6 +17,7 @@ import { useParams, useRouter } from "next/navigation";
 import Loader from "@/components/Loarder/Loarder";
 import { toast } from "sonner";
 import { useGlobal } from "@/contexts/store";
+import { set } from "jodit/types/core/helpers";
 
 const Sidebar: React.FC = () => {
   const {
@@ -58,11 +59,26 @@ const Sidebar: React.FC = () => {
 
   // Fetch progress after weeks is loaded
   useEffect(() => {
-    if (userRole === "teacher") return;
+    if (userRole === "teacher") {
+      const lastWeek = weeks[weeks.length - 1];
+      if (lastWeek.chapters && lastWeek.chapters.length > 0) {
+        const lastChapter = lastWeek.chapters[lastWeek.chapters.length - 1];
+        if (lastChapter.items && lastChapter.items.length > 0) {
+          const lastItem = lastChapter.items[lastChapter.items.length - 1];
+          setSelectedTopic(lastItem);
+          setExpandedWeek(weeks.length - 1);
+          console.log(lastItem);
+          return;
+        }
+      }
+      setExpandedWeek(weeks.length - 1);
+      return;
+    }
     const loadProgress = async () => {
       if (!courseId || weeks.length === 0) return;
-
       try {
+        console.log(userRole);
+
         const progress = await getProgress(courseId as string);
         setProgress(progress.progress);
         if (progress?.current_component) {
@@ -83,6 +99,7 @@ const Sidebar: React.FC = () => {
               );
               if (foundItem) {
                 setSelectedTopic(foundItem);
+                setExpandedWeek(weeks.indexOf(week));
               }
             }
           }
@@ -125,7 +142,6 @@ const Sidebar: React.FC = () => {
     async (weekIndex: number, topicName: string, weekId: string) => {
       try {
         const response = await createChapter(weekId as string, topicName);
-        console.log(response);
         toast.success(response.message);
         setWeeks((prevWeeks) => {
           const newWeeks = [...prevWeeks];

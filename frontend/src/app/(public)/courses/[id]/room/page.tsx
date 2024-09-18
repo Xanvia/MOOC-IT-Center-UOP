@@ -5,8 +5,11 @@ import CourseVideo from "@/components/Course/CourseVideo/CourseVideo";
 import { useSelectedTopic } from "@/contexts/SidebarContext";
 import { Item, Week, Chapter } from "@/components/Course/types";
 import YellowButton from "@/components/Buttons/YellowButton";
-import CreateQuiz from "@/components/Course/Quiz/QuizCreator";
 import Quiz from "@/components/Course/Quiz/Quiz";
+import {  startComponent } from "@/services/course.service";
+import { toast } from "sonner";
+import { useGlobal } from "@/contexts/store";
+import { markAsComplete } from "@/services/course.service";
 
 const Page: React.FC = () => {
   const {
@@ -18,12 +21,26 @@ const Page: React.FC = () => {
     setExpandedWeek,
     setExpandedSubtopics,
     expandedSubtopics,
+    updateItemStatus,
   } = useSelectedTopic();
   const [item, setItem] = useState<Item>({ ...selectedTopic });
+  const [isFinished, setIsFinished] = useState<boolean>(true);
+  const { userRole } = useGlobal();
 
   useEffect(() => {
     setItem({ ...selectedTopic });
   }, [selectedTopic]);
+
+  useEffect(() => {
+    if (!item.has_started && item.id !== 0 && userRole === "student") {
+      try {
+        startComponent(String(item.id));
+        updateItemStatus(item.id, { has_started: true });
+      } catch {
+        console.log("Starting Component");
+      }
+    }
+  }, [item]);
 
   const findCurrentItemIndex = (weeks: Week[], currentItem: Item) => {
     for (let weekIndex = 0; weekIndex < weeks.length; weekIndex++) {
@@ -76,6 +93,19 @@ const Page: React.FC = () => {
   };
 
   const handleNext = () => {
+    if (!isFinished && userRole === "student") return;
+
+    if (item.completed == false && userRole === "student") {
+      try {
+        console.log(item.id);
+        markAsComplete(String(item.id));
+        updateItemStatus(item.id, { completed: true });
+        toast.success("Marked as completed");
+      } catch {
+        toast.error("Error marking as completed");
+      }
+    }
+
     const currentIndex = findCurrentItemIndex(weeks, item);
     if (!currentIndex) return;
 
@@ -116,14 +146,14 @@ const Page: React.FC = () => {
       question: "What is the capital of France?",
       options: ["London", "Berlin", "Paris", "Madrid"],
       correctAnswer: 2, // Index of the correct answer (Paris)
-      isDone:false,
+      isDone: false,
     },
     {
       timestamp: 20, // Show this question 60 seconds into the video
       question: "Who painted the Mona Lisa?",
       options: ["Van Gogh", "Da Vinci", "Picasso", "Rembrandt"],
-      correctAnswer: 1, 
-      isDone:false,
+      correctAnswer: 1,
+      isDone: false,
     },
   ];
 

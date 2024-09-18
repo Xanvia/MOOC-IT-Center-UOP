@@ -308,3 +308,25 @@ export const getProgress = async (courseId: string) => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const markAsComplete = async (itemId: string) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/course/component/completed/${itemId}/`
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const startComponent = async (componentId: string) => {
+  try {
+    const response = await axiosInstance.post(
+      `/course/component/${componentId}/start/`
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
