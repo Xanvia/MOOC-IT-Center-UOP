@@ -31,6 +31,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/user/", include("userprofiles.urls")),
     path("api/course/", include("courses.urls")),
+    path("api/course/manage/", include("coursemanagement.urls")),
     path("api/interests/", InterestListAPIView.as_view(), name="interests-list"),
     path("api/countries/", CountryListAPIView.as_view(), name="countries-list"),
     path(
