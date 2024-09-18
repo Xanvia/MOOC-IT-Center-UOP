@@ -36,7 +36,7 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
   const { userRole } = useGlobal();
 
   const handleSelect = () => {
-    if (item.has_started) {
+    if (item.has_started || userRole === "teacher") {
       setSelectedTopic(item);
     }
   };

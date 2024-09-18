@@ -5,10 +5,10 @@ import CourseVideo from "@/components/Course/CourseVideo/CourseVideo";
 import { useSelectedTopic } from "@/contexts/SidebarContext";
 import { Item, Week, Chapter } from "@/components/Course/types";
 import YellowButton from "@/components/Buttons/YellowButton";
-import CreateQuiz from "@/components/Course/Quiz/QuizCreator";
 import Quiz from "@/components/Course/Quiz/Quiz";
-import { markAsComplete, startComponent } from "@/services/course.service";
+import {  startComponent } from "@/services/course.service";
 import { toast } from "sonner";
+import { useGlobal } from "@/contexts/store";
 
 const Page: React.FC = () => {
   const {
@@ -24,13 +24,14 @@ const Page: React.FC = () => {
   } = useSelectedTopic();
   const [item, setItem] = useState<Item>({ ...selectedTopic });
   const [isFinished, setIsFinished] = useState<boolean>(true);
+  const { userRole } = useGlobal();
 
   useEffect(() => {
     setItem({ ...selectedTopic });
   }, [selectedTopic]);
 
   useEffect(() => {
-    if (!item.has_started && item.id !== 0) {
+    if (!item.has_started && item.id !== 0 && userRole === "student") {
       try {
         startComponent(String(item.id));
         updateItemStatus(item.id, { has_started: true });
@@ -91,7 +92,7 @@ const Page: React.FC = () => {
   };
 
   const handleNext = () => {
-    if (!isFinished) return;
+    if (!isFinished && userRole === "student") return;
 
     if (item.completed == false) {
       try {
