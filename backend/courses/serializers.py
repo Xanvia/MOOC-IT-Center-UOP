@@ -125,12 +125,13 @@ class ItemSerializer(serializers.ModelSerializer):
         else:
             return super().to_representation(instance)
 
+        representation["has_started"] = False
+        representation["completed"] = False
         if progress:
-            representation["has_started"] = "true"
+            representation["has_started"] = True
             if progress.completed:
-                representation["completed"] = "true"
-        representation["has_started"] = "false"
-        representation["completed"] = "false"
+                representation["completed"] = True
+
         return representation
 
 
