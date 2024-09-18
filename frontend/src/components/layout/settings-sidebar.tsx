@@ -23,7 +23,7 @@ const Sidebar = ({ isOpen, toggleSidebar, navItems }: SidebarProps) => {
           {!isOpen && <h2 className="text-xl font-bold">OpenEd</h2>}
           <button
             onClick={toggleSidebar} // Use toggleSidebar function passed from parent
-            className="p-2 rounded-full hover:bg-gray-700 transition-colors duration-200"
+            className="p-2 rounded-full hover:bg-blue-800 transition-colors duration-200"
           >
             {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
           </button>
@@ -36,8 +36,8 @@ const Sidebar = ({ isOpen, toggleSidebar, navItems }: SidebarProps) => {
                   <div
                     className={`flex items-center p-3 ${
                       pathname === item.href
-                        ? "bg-gray-700"
-                        : "hover:bg-gray-700"
+                        ? "bg-blue-900"
+                        : "hover:bg-blue-800"
                     } rounded-lg transition-colors duration-200`}
                   >
                     <item.icon size={20} />
