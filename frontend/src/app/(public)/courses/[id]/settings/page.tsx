@@ -4,7 +4,7 @@ const CourseSettingsPage: React.FC = () => {
   return (
     <div>
       <h1>Course Settings</h1>
-      <p>Welcome to the course settings page.</p>
+      <p>Manage your course settings here.</p>
     </div>
   );
 };
