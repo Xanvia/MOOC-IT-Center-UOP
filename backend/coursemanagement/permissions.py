@@ -10,7 +10,7 @@ class IsCourseCreator(permissions.BasePermission):
     def has_permission(self, request, view):
         course_id = view.kwargs["course_id"]
         user = request.user
-
+            
         # Only allow course creators (teachers) to edit
         course = Course.objects.get(pk=course_id)
         return course.course_creator == user

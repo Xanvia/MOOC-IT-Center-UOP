@@ -1,4 +1,9 @@
 from django.urls import path
-from . import views
+from .views import CourseTeacherViewSet
 
-urlpatterns = []
+
+urlpatterns = [
+    path(
+        "<int:course_id>/add-teacher/", CourseTeacherViewSet.as_view({"post": "create"})
+    ),
+]
