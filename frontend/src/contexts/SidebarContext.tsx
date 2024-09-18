@@ -12,6 +12,7 @@ interface SelectedTopicContextType {
   setExpandedSubtopics: React.Dispatch<
     React.SetStateAction<{ [key: number]: boolean }>
   >;
+  updateItemStatus: (itemId: number, updates: Partial<Item>) => void;
 }
 
 const SelectedTopicContext = createContext<SelectedTopicContextType | null>(
@@ -30,6 +31,8 @@ export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
     name: "",
     content: "",
     type: "Note",
+    has_started: false,
+    completed: false,
   });
 
   const [weeks, setWeeks] = useState<Week[]>([]);
@@ -37,6 +40,20 @@ export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
   const [expandedSubtopics, setExpandedSubtopics] = useState<{
     [key: number]: boolean;
   }>({ 0: true });
+
+  const updateItemStatus = (itemId: number, updates: Partial<Item>) => {
+    setWeeks(prevWeeks => 
+      prevWeeks.map(week => ({
+        ...week,
+        chapters: week.chapters?.map(chapter => ({
+          ...chapter,
+          items: chapter.items?.map(item => 
+            item.id === itemId ? { ...item, ...updates } : item
+          )
+        }))
+      }))
+    );
+  };
 
   return (
     <SelectedTopicContext.Provider
@@ -49,6 +66,7 @@ export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
         setExpandedWeek,
         expandedSubtopics,
         setExpandedSubtopics,
+        updateItemStatus,
       }}
     >
       {children}

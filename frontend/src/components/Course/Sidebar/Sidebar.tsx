@@ -64,6 +64,8 @@ const Sidebar: React.FC = () => {
 
       try {
         const progress = await getProgress(courseId as string);
+        console.log(progress);
+
         setProgress(progress.progress);
         if (progress?.current_component) {
           const {
