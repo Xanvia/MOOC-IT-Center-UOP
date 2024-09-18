@@ -95,7 +95,7 @@ const Page: React.FC = () => {
   const handleNext = () => {
     if (!isFinished && userRole === "student") return;
 
-    if (item.completed == false) {
+    if (item.completed == false && userRole === "student") {
       try {
         console.log(item.id);
         markAsComplete(String(item.id));

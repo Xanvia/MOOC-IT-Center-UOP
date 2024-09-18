@@ -53,7 +53,7 @@ const Note: React.FC<NoteProps> = ({ selectedTopic }) => {
 
           <div className="py-14 px-3 w-10/12 min-h-[600px] mx-auto text-left bg-white">
             <div className="my-6 ml-12">
-              {isEdit && userRole !== "student" && (
+              {isEdit && userRole === "teacher" && (
                 <EditButtonPrimary
                   text="E D I T"
                   onClick={() => setEditView(true)}
