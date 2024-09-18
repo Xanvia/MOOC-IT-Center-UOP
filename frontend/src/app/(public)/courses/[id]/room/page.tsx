@@ -9,6 +9,7 @@ import Quiz from "@/components/Course/Quiz/Quiz";
 import {  startComponent } from "@/services/course.service";
 import { toast } from "sonner";
 import { useGlobal } from "@/contexts/store";
+import { markAsComplete } from "@/services/course.service";
 
 const Page: React.FC = () => {
   const {
@@ -97,7 +98,7 @@ const Page: React.FC = () => {
     if (item.completed == false) {
       try {
         console.log(item.id);
-        // markAsComplete(String(item.id));
+        markAsComplete(String(item.id));
         updateItemStatus(item.id, { completed: true });
         toast.success("Marked as completed");
       } catch {
