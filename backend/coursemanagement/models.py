@@ -19,7 +19,6 @@ class Payments(models.Model):
 
 class CourseTeachers(models.Model):
     ROLES = [
-        ("course_creator", "Course Creator"),
         ("editing_teacher", "Editing Teacher"),
         ("non-editing_teacher", "Non-Editing Teacher"),
     ]
