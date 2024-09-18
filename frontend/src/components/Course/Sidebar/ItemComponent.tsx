@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Item } from "@/components/Course/types";
 import SideBarIcon from "@/icons/sideBarIcon";
-import { FaTrash } from "react-icons/fa";
+import { FaCheck, FaTrash } from "react-icons/fa";
 import ConfirmDeleteModal from "../Modals/ConfrimDeleteModal";
 import { useGlobal } from "@/contexts/store";
+import { CircleCheck, CircleEllipsisIcon, FileLock } from "lucide-react";
 
 interface ItemComponentProps {
   weekIndex: number;
@@ -35,7 +36,9 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
   const { userRole } = useGlobal();
 
   const handleSelect = () => {
-    setSelectedTopic(item);
+    if (item.has_started) {
+      setSelectedTopic(item);
+    }
   };
 
   const handleDelete = () => {
@@ -48,8 +51,12 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
     <div className="flex items-center justify-between">
       <p
         className={`my-2 ml-8 cursor-pointer ${
-          isSelected ? "font-semibold text-gray-800" : "text-gray-500"
-        } `}
+          isSelected
+            ? "font-semibold text-gray-800"
+            : item.completed
+            ? "text-purple-900"
+            : "text-gray-500"
+        }`}
         onClick={handleSelect}
       >
         <SideBarIcon type={item.type} />
@@ -63,6 +70,15 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
           <FaTrash />
         </button>
       )}
+      {userRole === "student" ? (
+        item.completed ? (
+          <CircleCheck className="text-green-500 stroke-[1.5] size-5" />
+        ) : item.has_started ? (
+          <CircleEllipsisIcon className="text-blue-500 stroke-[1.5] size-5" />
+        ) : (
+          <FileLock className="text-red-700 stroke-[1.5] size-5" />
+        )
+      ) : null}
       {showModal && (
         <ConfirmDeleteModal
           setShowModal={setShowModal}

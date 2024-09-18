@@ -3,6 +3,8 @@ export interface Item {
   name: string;
   content: any;
   type: "Video" | "Note" | "Quiz";
+  has_started: boolean;
+  completed: boolean;
 }
 
 export interface Chapter {
