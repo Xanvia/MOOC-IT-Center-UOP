@@ -9,7 +9,8 @@ interface HeaderProps {
 
 const Header = ({ toggleSidebar }: HeaderProps) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const { isLoggedIn, isLoading } = useGlobal();
+  // const { isLoggedIn, isLoading } = useGlobal();
+  const isLoggedIn = true;
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

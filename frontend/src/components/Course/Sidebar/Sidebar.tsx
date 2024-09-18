@@ -17,7 +17,6 @@ import { useParams, useRouter } from "next/navigation";
 import Loader from "@/components/Loarder/Loarder";
 import { toast } from "sonner";
 import { useGlobal } from "@/contexts/store";
-import { set } from "jodit/types/core/helpers";
 
 const Sidebar: React.FC = () => {
   const {

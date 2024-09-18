@@ -2,7 +2,7 @@
 import Header from "@/components/layout/header";
 import Sidebar from "@/components/layout/settings-sidebar";
 import { useState } from "react";
-import { Home, Users, GraduationCap } from "lucide-react";
+import { Home, Users, GraduationCap, Book } from "lucide-react";
 
 export default function DashboardLayout({
   children,
@@ -12,16 +12,12 @@ export default function DashboardLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-  const courseID = "1";
 
   const navItems = [
-    { icon: Home, label: "Dashboard", href: `/settings/${courseID}` },
-    {
-      icon: GraduationCap,
-      label: "Teachers",
-      href: `/settings/${courseID}/teachers`,
-    },
-    { icon: Users, label: "Students", href: `/settings/${courseID}/students` },
+    { icon: Home, label: "Dashboard", href: "/admin" },
+    { icon: GraduationCap, label: "Teachers", href: "/admin/teachers" },
+    { icon: Book, label: "Courses", href: "/admin/courses" },
+    { icon: Users, label: "Students", href: "/admin/students" },
     // { icon: Calendar, label: "Schedule", href: "/schedule" },s
     // { icon: Settings, label: "Settings", href: "/settings" },
   ];

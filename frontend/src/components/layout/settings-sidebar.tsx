@@ -1,31 +1,16 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Home,
-  Book,
-  Users,
-  Calendar,
-  Settings,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface SidebarProps {
   isOpen: boolean; // renamed to isOpen to keep it consistent
   toggleSidebar: () => void; // Add this for the toggle button
+  navItems: { icon: any; label: string; href: string }[];
 }
 
-const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
+const Sidebar = ({ isOpen, toggleSidebar, navItems }: SidebarProps) => {
   const pathname = usePathname();
-
-  const navItems = [
-    { icon: Home, label: "Dashboard", href: "/dashboard" },
-    { icon: Book, label: "Courses", href: "/courses" },
-    { icon: Users, label: "Students", href: "/students" },
-    { icon: Calendar, label: "Schedule", href: "/schedule" },
-    { icon: Settings, label: "Settings", href: "/settings" },
-  ];
 
   return (
     <aside
