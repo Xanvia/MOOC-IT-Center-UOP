@@ -370,28 +370,36 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
 
       {/* Teacher Mode: Add/Edit MCQs */}
       {isEdit && (
-        <div className="mt-8">
+        <div className="mt-12">
           <p>Select timestamp using video slider</p>
           <h3 className="text-lg font-semibold mb-4">Add/Edit MCQs</h3>
           <div className="mb-4">
-            <label className="block font-medium mb-1">Question:</label>
+            {/* <label className="block font-medium mb-1">Question:</label> */}
             <input
               type="text"
+              placeholder="Enter question"
               value={newQuestion}
               onChange={(e) => setNewQuestion(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
+              className="flex-grow p-2 border border-gray-300 rounded-lg"
             />
           </div>
           <div className="mb-4">
-            <label className="block font-medium mb-1">Options:</label>
+            {/* <label className="block font-medium mb-1">Options:</label> */}
             {newOptions.map((option, index) => (
               <div key={index} className="flex space-x-2 mb-2">
                 <input
+                    type="text"
+                    placeholder="Enter answer option"
+                    value={option}
+                    onChange={(e) => handleNewOptionChange(index, e.target.value)}
+                    className="flex-grow p-2 border border-gray-300 rounded-lg"
+                />
+                {/* <input
                   type="text"
                   value={option}
                   onChange={(e) => handleNewOptionChange(index, e.target.value)}
                   className="w-full p-2 border border-gray-300 rounded"
-                />
+                /> */}
                 {index === newOptions.length - 1 && (
                   <button
                     onClick={addNewOption}
@@ -430,7 +438,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
 
       {/* MCQ List for Teacher */}
       {isEdit && (
-        <div className="mt-8">
+        <div className="mt-12">
           <h3 className="text-lg font-semibold mb-4">MCQs List</h3>
           <ul className="space-y-4">
             {editMCQs.map((mcq) => (
