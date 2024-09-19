@@ -81,7 +81,7 @@ class CourseSerializer(serializers.ModelSerializer):
                     representation["canEdit"] = True
                 else:
                     course_teacher = CourseTeachers.objects.filter(
-                        user=user, course=instance
+                        teacher=user, course=instance
                     ).first()
                     representation["canEdit"] = course_teacher.permissions.filter(
                         label="edit_course_public_details"

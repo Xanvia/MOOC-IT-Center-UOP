@@ -1,4 +1,4 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics,permissions
 from .models import (
     Course,
     Week,
@@ -53,6 +53,8 @@ class CourseViewSet(viewsets.ModelViewSet):
         if self.action == "update" or self.action == "add_details":
             # Only course creators can create weeks
             permission_classes = [EditPublicDetailsAccess]
+        elif self.action == "retrieve":
+            permission_classes = [permissions.AllowAny]
         else:
             permission_classes = []
         return [permission() for permission in permission_classes]
