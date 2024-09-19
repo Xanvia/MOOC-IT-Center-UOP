@@ -158,7 +158,7 @@ class WeekViewSet(viewsets.ModelViewSet):
 
             else:
                 course_teacher = CourseTeachers.objects.filter(
-                    user=user, course=course
+                    teacher=user, course=course
                 ).first()
 
                 representation["canEdit"] = course_teacher.permissions.filter(
@@ -171,7 +171,7 @@ class WeekViewSet(viewsets.ModelViewSet):
                     label="upload_files"
                 ).exists()
                 representation["canCreateItems"] = course_teacher.permissions.filter(
-                    lael="create_course_content"
+                    label="create_course_content"
                 ).exists()
         else:
             representation["canEdit"] = False
