@@ -70,9 +70,9 @@ class CourseSerializer(serializers.ModelSerializer):
             user = request.user
             try:
                 Enrollment.objects.get(student=user, course=instance)
-                representation["isEnrolled"] = "true"
+                representation["isEnrolled"] = True
             except Enrollment.DoesNotExist:
-                representation["isEnrolled"] = "false"
+                representation["isEnrolled"] = False
 
             # check if user is a teacher
             # and teacher is the creator of the course or has permissions to edit public details set can edit to true
