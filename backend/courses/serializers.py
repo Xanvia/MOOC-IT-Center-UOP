@@ -16,6 +16,7 @@ from .models import (
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
+from coursemanagement.models import CoursePermissions, CourseTeachers
 
 
 class CourseTeacherSerializer(serializers.ModelSerializer):
@@ -82,11 +83,41 @@ class WeekSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_representation(self, instance):
-
         representation = super().to_representation(instance)
         representation["chapters"] = ChapterSerializer(
             instance.chapters, many=True, context=self.context
         ).data
+
+        user = self.context["request"].user
+        course = instance.course  # Assuming `instance` has a `course` attribute
+
+        if user.groups.filter(name="teacher").exists():
+            if course.course_creator == user:
+                representation["canEdit"] = True
+                representation["canDelete"] = True
+                representation["canUploadFiles"] = True
+                representation["canCreateItems"] = True
+            else:
+                course_permission = CoursePermissions.objects.filter(
+                    user=user, course=course
+                ).first()
+                course_teacher = CourseTeachers.objects.filter(
+                    user=user, course=course
+                ).first()
+
+                representation["canEdit"] = course_teacher.permissions.filter(
+                    name="edit_course_content"
+                ).exists()
+                representation["canDelete"] = course_teacher.permissions.filter(
+                    name="delete_course_content"
+                ).exists()
+                representation["canUploadFiles"] = course_teacher.permissions.filter(
+                    name="upload_files"
+                ).exists()
+                representation["canCreateItems"] = course_teacher.permissions.filter(
+                    name="create_course_content"
+                ).exists()
+
         return representation
 
 
@@ -111,6 +142,7 @@ class ItemSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_representation(self, instance):
+
         request = self.context.get("request")
         student = request.user
         progress = Progress.objects.filter(

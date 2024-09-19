@@ -1,5 +1,6 @@
 from rest_framework import permissions
 from .models import Enrollment, Course, Week
+from coursemanagement.models import CourseTeachers, CoursePermissions
 
 
 class CourseContentListAccess(permissions.BasePermission):
@@ -14,11 +15,21 @@ class CourseContentListAccess(permissions.BasePermission):
         course_id = view.kwargs["course_id"]
         user = request.user
         # Allow course creator (teacher)
-        if (
-            self.is_in_group(user, "teacher")
-            and Course.objects.filter(id=course_id, course_creator=user).exists()
-        ):
-            return True
+        if self.is_in_group(user, "teacher"):
+            # Check if the user is the course creator
+            if Course.objects.filter(id=course_id, course_creator=user).exists():
+                return True
+
+            # Check if the user is a CourseTeacher with permission to view course content
+
+            course_teacher = CourseTeachers.objects.filter(
+                course_id=course_id, teacher_id=user.id
+            ).first()
+            view_permission = CoursePermissions.objects.filter(
+                label="view_course_content"
+            ).first()
+            if course_teacher and view_permission in course_teacher.permissions.all():
+                return True
 
         # Allow enrolled students
         if (
