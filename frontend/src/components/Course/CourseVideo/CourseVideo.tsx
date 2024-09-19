@@ -17,6 +17,7 @@ import {
 import { useGlobal } from "@/contexts/store";
 import { Permissions } from "../types";
 
+
 interface MCQ {
   timestamp: number;
   question: string;
@@ -242,48 +243,47 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
 
   return (
     <div className="max-w-4xl mx-auto my-8">
-      <div
-        className="bg-black rounded-lg overflow-hidden relative"
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
+      <div className="bg-black rounded-lg overflow-hidden relative" style={{ zIndex: 1 }}>
+      <video
+        ref={videoRef}
+        className="w-full h-auto"
+        onTimeUpdate={handleTimeUpdate}
+        onDurationChange={handleDurationChange}
+        onEnded={() => setIsPlaying(false)}
+        onClick={handlePlayPause}
       >
-        <video
-          ref={videoRef}
-          className="w-full h-auto"
-          onTimeUpdate={handleTimeUpdate}
-          onDurationChange={handleDurationChange}
-          onEnded={() => setIsPlaying(false)}
-          onClick={handlePlayPause}
-        >
-          <source src={videoSource} type="video/mp4" />
-        </video>
-        {!isPlaying && !currentMCQ && (
-          <button
-            onClick={handlePlayPause}
-            className="absolute inset-0 w-full h-full flex items-center justify-center"
-          >
-            <Play className="w-20 h-20 text-white opacity-80" />
-          </button>
-        )}
+        <source src={videoSource} type="video/mp4" />
+      </video>
 
-        <div
-          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 transition-opacity duration-300 ${
-            isHovering || !isPlaying ? "opacity-100" : "opacity-0"
-          }`}
+      {!isPlaying && !currentMCQ && (
+        <button
+          onClick={handlePlayPause}
+          className="absolute inset-0 w-full h-full flex items-center justify-center"
+          style={{ zIndex: 2 }} // Keep the play button inside the video stack
         >
-          <input
-            type="range"
-            value={currentTime}
-            max={duration}
-            onChange={handleSeek}
-            className="w-full h-1 bg-gray-600 appearance-none rounded-full outline-none opacity-70 transition-opacity cursor-pointer"
-            disabled={
-              !isEdit &&
-              !!currentMCQ &&
-              !currentMCQ.isDone &&
-              selectedAnswer === null
-            } // Disable in student mode during MCQs
-          />
+          <Play className="w-20 h-20 text-white opacity-80" />
+        </button>
+      )}
+
+      <div
+        className={` bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 transition-opacity duration-300 ${
+          isHovering || !isPlaying ? "opacity-100" : "opacity-0"
+        }`}
+        style={{ zIndex: 2 }} // Ensure that controls stay within the video stack
+      >
+        <input
+          type="range"
+          value={currentTime}
+          max={duration}
+          onChange={handleSeek}
+          className="w-full h-1 bg-gray-600 appearance-none rounded-full outline-none opacity-70 transition-opacity cursor-pointer"
+          disabled={
+            !isEdit &&
+            !!currentMCQ &&
+            !currentMCQ.isDone &&
+            selectedAnswer === null
+          }
+        />
           <div className="flex justify-between items-center mt-2">
             <div className="flex items-center space-x-4">
               <button
