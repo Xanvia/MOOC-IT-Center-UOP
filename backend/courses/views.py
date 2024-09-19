@@ -31,7 +31,13 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
 from django.shortcuts import get_object_or_404
-from .permissons import CourseContentListAccess, CousrseContentDeleteAccess
+from .permissons import (
+    CourseContentListAccess,
+    CousrseContentDeleteAccess,
+    CourseContentCreateAccess,
+    CourseContentEditAccess,
+    CourseFileUploadAccess,
+)
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -113,6 +119,9 @@ class WeekViewSet(viewsets.ModelViewSet):
         elif self.action == "destroy":
             # Only course creators can delete weeks
             permission_classes = [CousrseContentDeleteAccess]
+        elif self.action == "create":
+            # Only course creators can create weeks
+            permission_classes = [CourseContentCreateAccess]
         else:
             permission_classes = []
         return [permission() for permission in permission_classes]
@@ -170,6 +179,20 @@ class ChapterViewSet(viewsets.ModelViewSet):
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
 
+    def get_permissions(self):
+        """
+        Return different permission classes based on the action.
+        """
+        if self.action == "destroy":
+            # Only course creators can delete weeks
+            permission_classes = [CousrseContentDeleteAccess]
+        elif self.action == "create":
+            # Only course creators can create weeks
+            permission_classes = [CourseContentCreateAccess]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
+
     def create(self, request, *args, **kwargs):
 
         request.data["week"] = kwargs["pk"]
@@ -208,6 +231,24 @@ class NoteViewSet(viewsets.ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
 
+    def get_permissions(self):
+        """
+        Return different permission classes based on the action.
+        """
+        if self.action == "destroy":
+            # Only course creators can delete weeks
+            permission_classes = [CousrseContentDeleteAccess]
+        elif self.action == "create":
+            # Only course creators can create weeks
+            permission_classes = [CourseContentCreateAccess]
+        elif self.action == "update":
+            # Only course creators can create weeks
+            permission_classes = [CourseContentEditAccess]
+
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
+
     def create(self, request, *args, **kwargs):
 
         request.data["chapter"] = kwargs["chapter_id"]
@@ -235,6 +276,7 @@ class NoteViewSet(viewsets.ModelViewSet):
 class ImageUpload(generics.CreateAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
+    permission_classes = [CourseFileUploadAccess]
 
     def create(self, request, *args, **kwargs):
         request.data["note"] = kwargs["note_id"]
@@ -254,6 +296,29 @@ class ImageUpload(generics.CreateAPIView):
 class VideoViewSet(viewsets.ModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
+
+    def get_permissions(self):
+        """
+        Return different permission classes based on the action.
+        """
+        if self.action == "destroy":
+            # Only course creators can delete weeks
+            permission_classes = [CousrseContentDeleteAccess]
+        elif self.action == "create":
+            # Only course creators can create weeks
+            permission_classes = [CourseContentCreateAccess]
+        elif self.action == "update":
+            # Only course creators can create weeks
+            permission_classes = [CourseContentEditAccess]
+        elif self.action == "edit_quiz":
+            # Only course creators can create weeks
+            permission_classes = [CourseContentEditAccess]
+        elif self.action == "get_video_link":
+            permission_classes = [CourseFileUploadAccess]
+
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
 
     def get_video_link(self, request, *args, **kwargs):
         print(request.data)
@@ -323,6 +388,24 @@ class QuizViewSet(viewsets.ModelViewSet):
     serializer_class = QuizSerializer
     queryset = Quiz.objects.all()
 
+    def get_permissions(self):
+        """
+        Return different permission classes based on the action.
+        """
+        if self.action == "destroy":
+            # Only course creators can delete weeks
+            permission_classes = [CousrseContentDeleteAccess]
+        elif self.action == "create":
+            # Only course creators can create weeks
+            permission_classes = [CourseContentCreateAccess]
+        elif self.action == "update":
+            # Only course creators can create weeks
+            permission_classes = [CourseContentEditAccess]
+
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
+
     def create(self, request, *args, **kwargs):
 
         request.data["chapter"] = kwargs["chapter_id"]
@@ -350,6 +433,7 @@ class QuizViewSet(viewsets.ModelViewSet):
 class AddQuestionsViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    permission_classes = [CourseContentEditAccess]
 
     def create(self, request, *args, **kwargs):
 
