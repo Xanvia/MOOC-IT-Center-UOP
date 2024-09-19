@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from .models import Enrollment, Course, Week
+from .models import Enrollment, Course, Week,Chapter,Video,Quiz,Note
 from coursemanagement.models import CourseTeachers, CoursePermissions
 
 
@@ -8,11 +8,30 @@ class CourseContentListAccess(permissions.BasePermission):
     Custom permission to allow students (if enrolled) and course creators to list weeks.
     """
 
+    def get_course_id(self, view):
+        if "course_id" in view.kwargs:
+            return view.kwargs["course_id"]
+        elif "week_id" in view.kwargs:
+            week = Week.objects.get(pk=view.kwargs["week_id"])
+            return week.course_id
+        elif "chapter_id" in view.kwargs:
+            chapter = Chapter.objects.get(pk=view.kwargs["chapter_id"])
+            return chapter.week.course_id
+        elif "video_id" in view.kwargs:
+            video = Video.objects.get(pk=view.kwargs["video_id"])
+            return video.chapter.week.course_id
+        elif "quiz_id" in view.kwargs:
+            quiz = Quiz.objects.get(pk=view.kwargs["quiz_id"])
+            return quiz.chapter.week.course_id
+        elif "note_id" in view.kwargs:
+            note = Note.objects.get(pk=view.kwargs["note_id"])
+            return note.chapter.week.course_id
+
     def is_in_group(self, user, group_name):
         return user.groups.filter(name=group_name).exists()
 
     def has_permission(self, request, view):
-        course_id = view.kwargs["course_id"]
+        course_id = self.get_course_id(view)
         user = request.user
         # Allow course creator (teacher)
         if self.is_in_group(user, "teacher"):
@@ -47,17 +66,34 @@ class CousrseContentDeleteAccess(permissions.BasePermission):
     """
     Custom permission to allow only course creators to delete weeks.
     """
+    def get_course_id(self, view):
+        if "course_id" in view.kwargs:
+            return view.kwargs["course_id"]
+        elif "week_id" in view.kwargs:
+            week = Week.objects.get(pk=view.kwargs["week_id"])
+            return week.course_id
+        elif "chapter_id" in view.kwargs:
+            chapter = Chapter.objects.get(pk=view.kwargs["chapter_id"])
+            return chapter.week.course_id
+        elif "video_id" in view.kwargs:
+            video = Video.objects.get(pk=view.kwargs["video_id"])
+            return video.chapter.week.course_id
+        elif "quiz_id" in view.kwargs:
+            quiz = Quiz.objects.get(pk=view.kwargs["quiz_id"])
+            return quiz.chapter.week.course_id
+        elif "note_id" in view.kwargs:
+            note = Note.objects.get(pk=view.kwargs["note_id"])
+            return note.chapter.week.course_id
 
     def is_in_group(self, user, group_name):
         return user.groups.filter(name=group_name).exists()
 
     def has_permission(self, request, view):
-        week_id = view.kwargs["pk"]
         user = request.user
 
         # Only allow course creators (teachers) to delete
-        week = Week.objects.get(pk=week_id)
-        course = week.course
+        course_id = self.get_course_id(view)
+        course = Course.objects.get(pk=course_id)
         
 
         if self.is_in_group(user, "teacher"):
@@ -80,17 +116,34 @@ class CourseContentEditAccess(permissions.BasePermission):
     """
     Custom permission to allow only course creators to edit weeks.
     """
+    def get_course_id(self, view):
+        if "course_id" in view.kwargs:
+            return view.kwargs["course_id"]
+        elif "week_id" in view.kwargs:
+            week = Week.objects.get(pk=view.kwargs["week_id"])
+            return week.course_id
+        elif "chapter_id" in view.kwargs:
+            chapter = Chapter.objects.get(pk=view.kwargs["chapter_id"])
+            return chapter.week.course_id
+        elif "video_id" in view.kwargs:
+            video = Video.objects.get(pk=view.kwargs["video_id"])
+            return video.chapter.week.course_id
+        elif "quiz_id" in view.kwargs:
+            quiz = Quiz.objects.get(pk=view.kwargs["quiz_id"])
+            return quiz.chapter.week.course_id
+        elif "note_id" in view.kwargs:
+            note = Note.objects.get(pk=view.kwargs["note_id"])
+            return note.chapter.week.course_id
 
     def is_in_group(self, user, group_name):
         return user.groups.filter(name=group_name).exists()
 
     def has_permission(self, request, view):
-        week_id = view.kwargs["pk"]
         user = request.user
 
         # Only allow course creators (teachers) to edit
-        week = Week.objects.get(pk=week_id)
-        course = week.course
+        course_id = self.get_course_id(view)
+        course = Course.objects.get(pk=course_id)
 
         if self.is_in_group(user, "teacher"):
             # Check if the user is the course creator
@@ -112,12 +165,30 @@ class CourseContentCreateAccess(permissions.BasePermission):
     """
     Custom permission to allow only course creators to create weeks.
     """
+    def get_course_id(self, view):
+        if "course_id" in view.kwargs:
+            return view.kwargs["course_id"]
+        elif "week_id" in view.kwargs:
+            week = Week.objects.get(pk=view.kwargs["week_id"])
+            return week.course_id
+        elif "chapter_id" in view.kwargs:
+            chapter = Chapter.objects.get(pk=view.kwargs["chapter_id"])
+            return chapter.week.course_id
+        elif "video_id" in view.kwargs:
+            video = Video.objects.get(pk=view.kwargs["video_id"])
+            return video.chapter.week.course_id
+        elif "quiz_id" in view.kwargs:
+            quiz = Quiz.objects.get(pk=view.kwargs["quiz_id"])
+            return quiz.chapter.week.course_id
+        elif "note_id" in view.kwargs:
+            note = Note.objects.get(pk=view.kwargs["note_id"])
+            return note.chapter.week.course_id
 
     def is_in_group(self, user, group_name):
         return user.groups.filter(name=group_name).exists()
 
     def has_permission(self, request, view):
-        course_id = view.kwargs["course_id"]
+        course_id = self.get_course_id(view)
         user = request.user
 
         # Only allow course creators (teachers) to create
@@ -142,11 +213,30 @@ class CourseFileUploadAccess(permissions.BasePermission):
     Custom permission to allow only course creators to upload files.
     """
 
+    def get_course_id(self, view):
+        if "course_id" in view.kwargs:
+            return view.kwargs["course_id"]
+        elif "week_id" in view.kwargs:
+            week = Week.objects.get(pk=view.kwargs["week_id"])
+            return week.course_id
+        elif "chapter_id" in view.kwargs:
+            chapter = Chapter.objects.get(pk=view.kwargs["chapter_id"])
+            return chapter.week.course_id
+        elif "video_id" in view.kwargs:
+            video = Video.objects.get(pk=view.kwargs["video_id"])
+            return video.chapter.week.course_id
+        elif "quiz_id" in view.kwargs:
+            quiz = Quiz.objects.get(pk=view.kwargs["quiz_id"])
+            return quiz.chapter.week.course_id
+        elif "note_id" in view.kwargs:
+            note = Note.objects.get(pk=view.kwargs["note_id"])
+            return note.chapter.week.course_id
+
     def is_in_group(self, user, group_name):
         return user.groups.filter(name=group_name).exists()
 
     def has_permission(self, request, view):
-        course_id = view.kwargs["course_id"]
+        course_id = self.get_course_id(view)
         user = request.user
 
         # Only allow course creators (teachers) to upload files

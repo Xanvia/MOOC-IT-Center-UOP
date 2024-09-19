@@ -44,6 +44,10 @@ class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
+    def get_object(self):
+        self.kwargs["pk"] = self.kwargs.get("course_id")
+        return super().get_object()
+
     def filter_queryset(self, queryset):
         if self.action == "list":
             return super().filter_queryset(queryset).filter(status="published")
@@ -51,7 +55,6 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         response = super().retrieve(request, *args, **kwargs)
-
         response.data = {"status": "success", "data": response.data}
         return response
 
@@ -108,6 +111,10 @@ class CourseViewSet(viewsets.ModelViewSet):
 class WeekViewSet(viewsets.ModelViewSet):
     queryset = Week.objects.all()
     serializer_class = WeekSerializer
+
+    def get_object(self):
+        self.kwargs["pk"] = self.kwargs.get("week_id")
+        return super().get_object()
 
     def get_permissions(self):
         """
@@ -179,6 +186,10 @@ class ChapterViewSet(viewsets.ModelViewSet):
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
 
+    def get_object(self):
+        self.kwargs["pk"] = self.kwargs.get("chapter_id")
+        return super().get_object()
+
     def get_permissions(self):
         """
         Return different permission classes based on the action.
@@ -195,7 +206,7 @@ class ChapterViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
 
-        request.data["week"] = kwargs["pk"]
+        request.data["week"] = kwargs["week_id"]
         response = super().create(request, *args, **kwargs)
 
         response.data = {
@@ -230,6 +241,10 @@ class ChapterViewSet(viewsets.ModelViewSet):
 class NoteViewSet(viewsets.ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
+
+    def get_object(self):
+        self.kwargs["pk"] = self.kwargs.get("note_id")
+        return super().get_object()
 
     def get_permissions(self):
         """
@@ -296,6 +311,10 @@ class ImageUpload(generics.CreateAPIView):
 class VideoViewSet(viewsets.ModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
+
+    def get_object(self):
+        self.kwargs["pk"] = self.kwargs.get("video_id")
+        return super().get_object()
 
     def get_permissions(self):
         """
@@ -388,6 +407,10 @@ class QuizViewSet(viewsets.ModelViewSet):
     serializer_class = QuizSerializer
     queryset = Quiz.objects.all()
 
+    def get_object(self):
+        self.kwargs["pk"] = self.kwargs.get("quiz_id")
+        return super().get_object()
+
     def get_permissions(self):
         """
         Return different permission classes based on the action.
@@ -437,7 +460,7 @@ class AddQuestionsViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
 
-        request.data["quiz"] = kwargs["pk"]
+        request.data["quiz"] = kwargs["quiz_id"]
         response = super().create(request, *args, **kwargs)
         response.data = {
             "status": "success",
