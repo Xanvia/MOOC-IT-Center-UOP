@@ -255,3 +255,33 @@ class CourseFileUploadAccess(permissions.BasePermission):
             ).first()
             if course_teacher and upload_permission in course_teacher.permissions.all():
                 return True
+            
+
+class EditPublicDetailsAccess(permissions.BasePermission):
+    """
+    Custom permission to allow only course creators to edit public details.
+    """
+
+    def is_in_group(self, user, group_name):
+        return user.groups.filter(name=group_name).exists()
+
+    def has_permission(self, request, view):
+        course_id = view.kwargs["course_id"]
+        user = request.user
+
+        # Only allow course creators (teachers) to edit public details
+        course = Course.objects.get(pk=course_id)
+        if self.is_in_group(user, "teacher"):
+            # Check if the user is the course creator
+            if course.course_creator == user:
+                return True
+
+            # Check if the user is a CourseTeacher with permission to edit public details
+            course_teacher = CourseTeachers.objects.filter(
+                course_id=course.id, teacher_id=user.id
+            ).first()
+            edit_permission = CoursePermissions.objects.filter(
+                label="edit_public_details"
+            ).first()
+            if course_teacher and edit_permission in course_teacher.permissions.all():
+                return True

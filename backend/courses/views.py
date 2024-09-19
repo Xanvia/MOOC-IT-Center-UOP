@@ -37,12 +37,24 @@ from .permissons import (
     CourseContentCreateAccess,
     CourseContentEditAccess,
     CourseFileUploadAccess,
+    EditPublicDetailsAccess,
 )
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+    def get_permissions(self):
+        """
+        Return different permission classes based on the action.
+        """
+        if self.action == "update" or self.action == "add_details":
+            # Only course creators can create weeks
+            permission_classes = [EditPublicDetailsAccess]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
 
     def get_object(self):
         self.kwargs["pk"] = self.kwargs.get("course_id")
@@ -73,8 +85,8 @@ class CourseViewSet(viewsets.ModelViewSet):
         return response
 
     def add_details(self, request, *args, **kwargs):
-
-        request.data["course_creator"] = request.user.id
+        course = self.get_object()
+        request.data["course_creator"] = course.course_creator.id
 
         response = super().update(request, partial=True, *args, **kwargs)
 
@@ -85,8 +97,8 @@ class CourseViewSet(viewsets.ModelViewSet):
         return response
 
     def update(self, request, *args, **kwargs):
-        request.data._mutable = True
-        request.data["course_creator"] = request.user.id
+        course = self.get_object()
+        request.data["course_creator"] = course.course_creator.id
 
         response = super().update(request, partial=True, *args, **kwargs)
 
