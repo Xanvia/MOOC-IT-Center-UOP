@@ -370,7 +370,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
 
       {/* Teacher Mode: Add/Edit MCQs */}
       {isEdit && (
-        <div className="mt-12">
+        <div className="mt-12 p-10 bg-gray-100 rounded-lg shadow-lg">
           <p>Select timestamp using video slider</p>
           <h3 className="text-lg font-semibold mb-4">Add/Edit MCQs</h3>
           <div className="mb-4">
@@ -438,7 +438,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
 
       {/* MCQ List for Teacher */}
       {isEdit && (
-        <div className="mt-12">
+        <div className="p-10 bg-gray-100 rounded-lg shadow-lg mt-12">
           <h3 className="text-lg font-semibold mb-4">MCQs List</h3>
           <ul className="space-y-4">
             {editMCQs.map((mcq) => (
