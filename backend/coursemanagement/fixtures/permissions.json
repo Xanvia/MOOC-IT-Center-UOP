@@ -1,0 +1,72 @@
+[
+  {
+    "model": "coursemanagement.coursepermissions",
+    "pk": 1,
+    "fields": {
+      "label": "view_course_content"
+    }
+  },
+  {
+    "model": "coursemanagement.coursepermissions",
+    "pk": 2,
+    "fields": {
+      "label": "create_course_content"
+    }
+  },
+  {
+    "model": "coursemanagement.coursepermissions",
+    "pk": 3,
+    "fields": {
+      "label": "edit_course_content"
+    }
+  },
+  {
+    "model": "coursemanagement.coursepermissions",
+    "pk": 4,
+    "fields": {
+      "label": "delete_course_content"
+    }
+  },
+  {
+    "model": "coursemanagement.coursepermissions",
+    "pk": 5,
+    "fields": {
+      "label": "manage_students"
+    }
+  },
+  {
+    "model": "coursemanagement.coursepermissions",
+    "pk": 6,
+    "fields": {
+      "label": "view_reports"
+    }
+  },
+  {
+    "model": "coursemanagement.coursepermissions",
+    "pk": 7,
+    "fields": {
+      "label": "grade_assignments"
+    }
+  },
+  {
+    "model": "coursemanagement.coursepermissions",
+    "pk": 8,
+    "fields": {
+      "label": "manage_forum"
+    }
+  },
+  {
+    "model": "coursemanagement.coursepermissions",
+    "pk": 9,
+    "fields": {
+      "label": "upload_files"
+    }
+  },
+  {
+    "model": "coursemanagement.coursepermissions",
+    "pk": 10,
+    "fields": {
+      "label": "edit_course_public_details"
+    }
+  }
+]
