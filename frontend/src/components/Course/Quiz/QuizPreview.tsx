@@ -71,7 +71,7 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({ questions, quizTitle }) => {
           {q.question_type === "SC" || q.question_type === "MC" ? (
             <ul className="list-none">
               {q.answers.map((answer, i) => (
-                <li key={i} className="mb-2">
+                <li key={i} className="mb-2 ml-8">
                   <label className={`inline-flex px-5 py-2 items-center border rounded-md ${getAnswerStyle(index, answer)}`}>
                     {q.question_type === "SC" ? (
                       <input
