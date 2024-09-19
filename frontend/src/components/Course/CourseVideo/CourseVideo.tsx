@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useGlobal } from "@/contexts/store";
 import { Permissions } from "../types";
+import SecondaryButton from "@/components/Buttons/SecondaryButton";
 
 
 interface MCQ {
@@ -349,20 +350,20 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
 
       {isEdit && permissions.canUploadFiles && (
         <div className="mt-4">
-          <input
-            type="file"
-            accept="video/*"
-            onChange={handleFileUpload}
-            className="hidden"
-            id="file-upload"
-          />
-          <label
-            htmlFor="file-upload"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded cursor-pointer transition-colors inline-block"
-          >
-            Upload New Video
-          </label>
-        </div>
+        <input
+          type="file"
+          accept="video/*"
+          onChange={handleFileUpload}
+          className="hidden"
+          id="file-upload"
+        />
+        <label htmlFor="file-upload">
+        <SecondaryButton
+          text="Upload New Video" // Change the text here to whatever you want
+          onClick={() => document.getElementById("file-upload")?.click()} // This will trigger the file input click
+        />
+      </label>
+      </div>
       )}
 
       {/* Teacher Mode: Add/Edit MCQs */}
@@ -412,19 +413,15 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
             />
           </div>
           {editingMCQ ? (
-            <button
-              onClick={handleUpdateMCQ}
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-            >
-              Update MCQ
-            </button>
+            <SecondaryButton
+              text="Update MCQ" // Text for the button
+              onClick={handleUpdateMCQ} // Click handler for updating MCQ
+            />
           ) : (
-            <button
-              onClick={saveMCQ}
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-            >
-              Save MCQ
-            </button>
+            <SecondaryButton
+              text="Save MCQ" // Text for the button
+              onClick={saveMCQ} // Click handler for saving MCQ
+            />
           )}
         </div>
       )}
