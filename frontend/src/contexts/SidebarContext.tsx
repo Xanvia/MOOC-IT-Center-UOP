@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { Item, Week } from "@/components/Course/types";
+import { Item, Permissions, Week } from "@/components/Course/types";
 interface SelectedTopicContextType {
   selectedTopic: Item;
   setSelectedTopic: React.Dispatch<React.SetStateAction<Item>>;
@@ -13,6 +13,8 @@ interface SelectedTopicContextType {
     React.SetStateAction<{ [key: number]: boolean }>
   >;
   updateItemStatus: (itemId: number, updates: Partial<Item>) => void;
+  permissions: Permissions;
+  setPermissions: React.Dispatch<React.SetStateAction<Permissions>>;
 }
 
 const SelectedTopicContext = createContext<SelectedTopicContextType | null>(
@@ -37,20 +39,26 @@ export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
 
   const [weeks, setWeeks] = useState<Week[]>([]);
   const [expandedWeek, setExpandedWeek] = useState<number | null>(0);
+  const [permissions, setPermissions] = useState<Permissions>({
+    canEdit: false,
+    canDelete: false,
+    canCreateItems: false,
+    canUploadFiles: false,
+  });
   const [expandedSubtopics, setExpandedSubtopics] = useState<{
     [key: number]: boolean;
   }>({ 0: true });
 
   const updateItemStatus = (itemId: number, updates: Partial<Item>) => {
-    setWeeks(prevWeeks => 
-      prevWeeks.map(week => ({
+    setWeeks((prevWeeks) =>
+      prevWeeks.map((week) => ({
         ...week,
-        chapters: week.chapters?.map(chapter => ({
+        chapters: week.chapters?.map((chapter) => ({
           ...chapter,
-          items: chapter.items?.map(item => 
+          items: chapter.items?.map((item) =>
             item.id === itemId ? { ...item, ...updates } : item
-          )
-        }))
+          ),
+        })),
       }))
     );
   };
@@ -67,6 +75,8 @@ export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
         expandedSubtopics,
         setExpandedSubtopics,
         updateItemStatus,
+        permissions,  
+        setPermissions,
       }}
     >
       {children}

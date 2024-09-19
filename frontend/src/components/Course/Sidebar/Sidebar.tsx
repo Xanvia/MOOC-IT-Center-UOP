@@ -26,6 +26,8 @@ const Sidebar: React.FC = () => {
     setWeeks,
     expandedWeek,
     setExpandedWeek,
+    setPermissions,
+    permissions,
   } = useSelectedTopic();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -42,6 +44,8 @@ const Sidebar: React.FC = () => {
       try {
         const data = await fetchCourseContent(courseId as string);
         setWeeks(data.weeks);
+        setPermissions(data.permissions);
+        console.log(data.permissions);
         setIsLoading(false);
       } catch (error: any) {
         if (
@@ -310,9 +314,10 @@ const Sidebar: React.FC = () => {
               selectedTopic={selectedTopic}
               setSelectedTopic={setSelectedTopic}
               isLastWeek={weekIndex === weeks.length - 1}
+              permissions={permissions}
             />
           ))}
-        {userRole === "teacher" ? (
+        {permissions.canCreateItems ? (
           <button
             className="w-full px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400"
             onClick={addNewWeek}

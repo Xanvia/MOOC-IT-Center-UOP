@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Chapter, Item } from "@/components/Course/types";
+import { Chapter, Item, Permissions } from "@/components/Course/types";
 import { FaChevronRight, FaChevronDown, FaPlus, FaTrash } from "react-icons/fa";
 import Select, {
   SingleValueProps,
@@ -10,6 +10,7 @@ import SideBarIcon from "@/icons/sideBarIcon";
 import ItemComponent from "./ItemComponent";
 import ConfirmDeleteModal from "../Modals/ConfrimDeleteModal";
 import { useGlobal } from "@/contexts/store";
+import { Trash } from "lucide-react";
 
 interface ChapterComponentProps {
   weekIndex: number;
@@ -37,6 +38,7 @@ interface ChapterComponentProps {
   ) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
+  permissions: Permissions;
 }
 
 interface OptionType {
@@ -56,6 +58,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
   removeTopic,
   selectedTopic,
   setSelectedTopic,
+  permissions,
 }) => {
   const [newItemName, setNewItemName] = useState<string>("");
   const [showNewItemInput, setShowNewItemInput] = useState<boolean>(false);
@@ -199,10 +202,10 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
         </h5>
         {userRole === "teacher" && (
           <button
-            className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
+            className="ml-2 text-red-500  rounded hover:bg-red-200"
             onClick={() => setShowModal(true)}
           >
-            <FaTrash />
+            <Trash size={16} />
           </button>
         )}
       </div>
@@ -219,6 +222,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
                 removeItem={removeItem}
                 selectedTopic={selectedTopic}
                 setSelectedTopic={setSelectedTopic}
+                permissions={permissions}
               />
             ))}
           {showNewItemInput ? (
@@ -252,7 +256,8 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
               </button>
             </div>
           ) : (
-            userRole === "teacher" && (
+            userRole === "teacher" &&
+            permissions.canCreateItems && (
               <button
                 className="mt-2 ml-8 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400"
                 onClick={() => setShowNewItemInput(true)}

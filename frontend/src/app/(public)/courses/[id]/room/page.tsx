@@ -6,7 +6,7 @@ import { useSelectedTopic } from "@/contexts/SidebarContext";
 import { Item, Week, Chapter } from "@/components/Course/types";
 import YellowButton from "@/components/Buttons/YellowButton";
 import Quiz from "@/components/Course/Quiz/Quiz";
-import {  startComponent } from "@/services/course.service";
+import { startComponent } from "@/services/course.service";
 import { toast } from "sonner";
 import { useGlobal } from "@/contexts/store";
 import { markAsComplete } from "@/services/course.service";
@@ -22,6 +22,7 @@ const Page: React.FC = () => {
     setExpandedSubtopics,
     expandedSubtopics,
     updateItemStatus,
+    permissions,
   } = useSelectedTopic();
   const [item, setItem] = useState<Item>({ ...selectedTopic });
   const [isFinished, setIsFinished] = useState<boolean>(true);
@@ -37,7 +38,7 @@ const Page: React.FC = () => {
         startComponent(String(item.id));
         updateItemStatus(item.id, { has_started: true });
       } catch {
-        console.log("Starting Component");
+        // console.log("Starting Component");
       }
     }
   }, [item]);
@@ -160,18 +161,18 @@ const Page: React.FC = () => {
   return (
     <div className="flex-grow p-4 mb-96 ml-96" key={item.id}>
       {item.type === "Note" ? (
-        <Note selectedTopic={item} />
+        <Note selectedTopic={item} permissions={permissions} />
       ) : item.type === "Video" ? (
         <CourseVideo
           videoURL={item.content.video_link}
           title={item.name}
           id={item.id}
           mcqs={mcqs}
-          isEdit={true}
+          permissions={permissions}
         />
       ) : item.type === "Quiz" ? (
         <>
-          <Quiz item={item} />
+          <Quiz item={item} permissions={permissions} />
         </>
       ) : (
         <div>No content available</div>

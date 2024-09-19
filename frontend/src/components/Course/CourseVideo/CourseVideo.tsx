@@ -15,6 +15,7 @@ import {
   Trash,
 } from "lucide-react";
 import { useGlobal } from "@/contexts/store";
+import { Permissions } from "../types";
 
 interface MCQ {
   timestamp: number;
@@ -29,7 +30,7 @@ interface CourseVideoProps {
   videoURL: string;
   title: string;
   mcqs: MCQ[];
-  isEdit: boolean; // New flag to differentiate Teacher/Student mode
+  permissions: Permissions;
 }
 
 const CourseVideo: React.FC<CourseVideoProps> = ({
@@ -37,9 +38,9 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   title,
   id,
   mcqs,
-  isEdit, // teacher mode enabled if true
+  permissions,
 }) => {
-  const {userRole} = useGlobal();
+  const { userRole } = useGlobal();
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -59,6 +60,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   const [newOptions, setNewOptions] = useState<string[]>([""]);
   const [newCorrectAnswer, setNewCorrectAnswer] = useState<number>(0);
   const [editingMCQ, setEditingMCQ] = useState<MCQ | null>(null); // MCQ being edited
+  const [isEdit, setIsEdit] = useState<boolean>(permissions.canEdit);
 
   const videoSource = uploadedVideoURL
     ? `${HOST}${uploadedVideoURL}`
@@ -344,21 +346,24 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       </div>
 
       <h2 className="text-xl font-bold mt-4 mb-2">{title}</h2>
-      <div className="mt-4">
-        <input
-          type="file"
-          accept="video/*"
-          onChange={handleFileUpload}
-          className="hidden"
-          id="file-upload"
-        />
-        <label
-          htmlFor="file-upload"
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded cursor-pointer transition-colors inline-block"
-        >
-          Upload New Video
-        </label>
-      </div>
+
+      {isEdit && permissions.canUploadFiles && (
+        <div className="mt-4">
+          <input
+            type="file"
+            accept="video/*"
+            onChange={handleFileUpload}
+            className="hidden"
+            id="file-upload"
+          />
+          <label
+            htmlFor="file-upload"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded cursor-pointer transition-colors inline-block"
+          >
+            Upload New Video
+          </label>
+        </div>
+      )}
 
       {/* Teacher Mode: Add/Edit MCQs */}
       {isEdit && (
