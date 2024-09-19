@@ -16,6 +16,7 @@ from .models import (
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
+from coursemanagement.models import CourseTeachers
 
 
 class CourseTeacherSerializer(serializers.ModelSerializer):
@@ -69,9 +70,25 @@ class CourseSerializer(serializers.ModelSerializer):
             user = request.user
             try:
                 Enrollment.objects.get(student=user, course=instance)
-                representation["isEnrolled"] = "true"
+                representation["isEnrolled"] = True
             except Enrollment.DoesNotExist:
-                representation["isEnrolled"] = "false"
+                representation["isEnrolled"] = False
+
+            # check if user is a teacher
+            # and teacher is the creator of the course or has permissions to edit public details set can edit to true
+            if user.groups.filter(name="teacher").exists():
+                if instance.course_creator == user:
+                    representation["canEdit"] = True
+                else:
+                    course_teacher = CourseTeachers.objects.filter(
+                        user=user, course=instance
+                    ).first()
+                    representation["canEdit"] = course_teacher.permissions.filter(
+                        label="edit_course_public_details"
+                    ).exists()
+            else:
+                representation["canEdit"] = False
+
         return representation
 
 
@@ -82,11 +99,39 @@ class WeekSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_representation(self, instance):
-
         representation = super().to_representation(instance)
         representation["chapters"] = ChapterSerializer(
             instance.chapters, many=True, context=self.context
         ).data
+
+        user = self.context["request"].user
+        course = instance.course  # Assuming `instance` has a `course` attribute
+
+        if user.groups.filter(name="teacher").exists():
+            if course.course_creator == user:
+                representation["canEdit"] = True
+                representation["canDelete"] = True
+                representation["canUploadFiles"] = True
+                representation["canCreateItems"] = True
+            else:
+
+                course_teacher = CourseTeachers.objects.filter(
+                    user=user, course=course
+                ).first()
+
+                representation["canEdit"] = course_teacher.permissions.filter(
+                    label="edit_course_content"
+                ).exists()
+                representation["canDelete"] = course_teacher.permissions.filter(
+                    label="delete_course_content"
+                ).exists()
+                representation["canUploadFiles"] = course_teacher.permissions.filter(
+                    label="upload_files"
+                ).exists()
+                representation["canCreateItems"] = course_teacher.permissions.filter(
+                    lael="create_course_content"
+                ).exists()
+
         return representation
 
 
@@ -111,6 +156,7 @@ class ItemSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_representation(self, instance):
+
         request = self.context.get("request")
         student = request.user
         progress = Progress.objects.filter(

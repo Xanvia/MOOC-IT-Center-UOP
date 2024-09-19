@@ -20,7 +20,7 @@ router.register(r"progress", ProgressTrackViewSet, basename="progress")
 urlpatterns = [
     # get course details, update course details, create course
     path(
-        "<int:pk>",
+        "<int:course_id>",
         CourseViewSet.as_view(
             {"get": "retrieve", "patch": "add_details", "put": "update"}
         ),
@@ -34,7 +34,7 @@ urlpatterns = [
     ),
     # get course detials, update course details, delete course
     path(
-        "<int:pk>",
+        "<int:course_id>",
         CourseViewSet.as_view(
             {"get": "retrieve", "patch": "add_details", "put": "update"}
         ),
@@ -42,7 +42,7 @@ urlpatterns = [
     ),
     # delete week
     path(
-        "week/<int:pk>/", WeekViewSet.as_view({"delete": "destroy"}), name="week-detail"
+        "week/<int:week_id>/", WeekViewSet.as_view({"delete": "destroy"}), name="week-detail"
     ),
     # get all weeks, create week
     path(
@@ -52,19 +52,19 @@ urlpatterns = [
     ),
     # create chapter
     path(
-        "week/<int:pk>/chapter/",
+        "week/<int:week_id>/chapter/",
         ChapterViewSet.as_view({"post": "create"}),
         name="chapter-list",
     ),
     # delete chapter
     path(
-        "week/chapter/<int:pk>/",
+        "week/chapter/<int:chapter_id>/",
         ChapterViewSet.as_view({"delete": "destroy"}),
         name="chapter-detail",
     ),
     # update note , delete note
     path(
-        "week/chapter/note/<int:pk>/",
+        "week/chapter/note/<int:note_id>/",
         NoteViewSet.as_view({"put": "update", "delete": "destroy"}),
         name="note-detail",
     ),
@@ -90,7 +90,7 @@ urlpatterns = [
     ),
     # upload video file
     path(
-        "week/chapter/video/<int:pk>/",
+        "week/chapter/video/<int:video_id>/",
         VideoViewSet.as_view(
             {"put": "update", "delete": "destroy", "patch": "edit_quiz"}
         ),
@@ -104,12 +104,12 @@ urlpatterns = [
     ),
     # update delete quiz
     path(
-        "week/chapter/quiz/<int:pk>/",
+        "week/chapter/quiz/<int:quiz_id>/",
         QuizViewSet.as_view({"put": "update", "delete": "destroy"}),
         name="quiz-detail",
     ),
     path(
-        "quiz/<int:pk>/questions/",
+        "quiz/<int:quiz_id>/questions/",
         AddQuestionsViewSet.as_view({"post": "create"}),
         name="add-questions",
     ),
