@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from "react";
-import { Week, Item } from "@/components/Course/types";
+import { Week, Item, Permissions } from "@/components/Course/types";
 import { FaChevronRight, FaChevronDown, FaPlus, FaTrash } from "react-icons/fa";
 import ChapterComponent from "./ChapterComponent";
 import ConfirmDeleteModal from "../Modals/ConfrimDeleteModal";
 import { useSelectedTopic } from "@/contexts/SidebarContext";
 import { useGlobal } from "@/contexts/store";
+import { Trash } from "lucide-react";
 
 interface WeekComponentProps {
   weekIndex: number;
@@ -34,6 +35,7 @@ interface WeekComponentProps {
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
   isLastWeek: boolean;
+  permissions: Permissions;
 }
 
 const WeekComponent: React.FC<WeekComponentProps> = ({
@@ -47,6 +49,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
   removeTopic,
   removeWeek,
   isLastWeek,
+  permissions,
 }) => {
   const [newTopicName, setNewTopicName] = useState<string>("");
   const [showNewTopicInput, setShowNewTopicInput] = useState<boolean>(false);
@@ -92,7 +95,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
     <div className="mb-8 mx-2 pb-2">
       <div className="flex items-center justify-between">
         <h4
-          className="text-md font-medium text-primary pb-1 mb-2 cursor-pointer flex items-center"
+          className="text-md font-medium text-primary mb-2 pb-1 cursor-pointer flex items-center"
           onClick={() => toggleWeek(weekIndex)}
         >
           {expanded ? (
@@ -102,14 +105,15 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
           )}
           {week.name}
         </h4>
-        {isLastWeek && userRole=="teacher" &&( // Conditionally render the delete button
-          <button
-            className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
-            onClick={() => setShowModal(true)}
-          >
-            <FaTrash />
-          </button>
-        )}
+        {isLastWeek &&
+          userRole == "teacher" && permissions.canDelete && ( // Conditionally render the delete button
+            <button
+              className="ml-2 mb-4 text-red-500 rounded hover:bg-red-200"
+              onClick={() => setShowModal(true)}
+            >
+              <Trash size={16} />
+            </button>
+          )}
       </div>
       {expanded && (
         <div>
@@ -126,6 +130,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
               removeTopic={removeTopic}
               selectedTopic={selectedTopic}
               setSelectedTopic={setSelectedTopic}
+              permissions={permissions}
             />
           ))}
           {showNewTopicInput ? (
@@ -146,7 +151,7 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
               </button>
             </div>
           ) : (
-            userRole === "teacher" && (
+            permissions.canCreateItems == true && (
               <button
                 className="w-60 mt-4 ml-5 px-4 py-2 bg-blue-200 text-black text-sm font-semibold rounded hover:bg-blue-400"
                 onClick={() => setShowNewTopicInput(true)}

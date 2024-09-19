@@ -30,7 +30,7 @@ export default function CoursesHome() {
     undefined
   );
   const [reload, setReload] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(courseData?.canEdit || false);
 
   const courseId = params.id;
 
@@ -40,6 +40,7 @@ export default function CoursesHome() {
       try {
         const data = await fetchCourseData(courseId as string);
         setCourseData(data);
+        setIsEdit(data.canEdit);
       } catch (error) {
         console.error(error);
       }

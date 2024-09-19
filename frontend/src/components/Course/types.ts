@@ -19,4 +19,9 @@ export interface Week {
   chapters: Chapter[];
 }
 
-
+export interface Permissions {
+  canEdit: boolean;
+  canDelete: boolean;
+  canCreateItems: boolean;
+  canUploadFiles: boolean;
+}

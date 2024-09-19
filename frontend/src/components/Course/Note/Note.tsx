@@ -6,19 +6,20 @@ import { useState } from "react";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import { editNote } from "@/services/course.service";
 import { toast } from "sonner";
-import { Item } from "@/components/Course/types";
+import { Item, Permissions } from "@/components/Course/types";
 import { useGlobal } from "@/contexts/store";
 
 interface NoteProps {
   selectedTopic: Item;
+  permissions: Permissions;
 }
 
-const Note: React.FC<NoteProps> = ({ selectedTopic }) => {
-  const isEdit = true;
+const Note: React.FC<NoteProps> = ({ selectedTopic, permissions }) => {
   const { userRole } = useGlobal();
 
   const [noteContent, setNoteContent] = useState(selectedTopic.content);
   const [editView, setEditView] = useState(false);
+  const [isEdit, setIsEdit] = useState(permissions.canEdit);
 
   const handleSave = async (value: string) => {
     try {

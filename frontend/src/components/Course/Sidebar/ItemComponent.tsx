@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Item } from "@/components/Course/types";
+import { Item, Permissions } from "@/components/Course/types";
 import SideBarIcon from "@/icons/sideBarIcon";
 import { FaCheck, FaTrash } from "react-icons/fa";
 import ConfirmDeleteModal from "../Modals/ConfrimDeleteModal";
 import { useGlobal } from "@/contexts/store";
-import { CircleCheck, CircleEllipsisIcon, FileLock } from "lucide-react";
+import { CircleCheck, CircleEllipsisIcon, FileLock, Trash } from "lucide-react";
 
 interface ItemComponentProps {
   weekIndex: number;
@@ -20,6 +20,7 @@ interface ItemComponentProps {
   ) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
+  permissions: Permissions;
 }
 
 const ItemComponent: React.FC<ItemComponentProps> = ({
@@ -30,6 +31,7 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
   removeItem,
   selectedTopic,
   setSelectedTopic,
+  permissions,
 }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const isSelected = selectedTopic === item;
@@ -62,12 +64,12 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
         <SideBarIcon type={item.type} />
         {item.name}
       </p>
-      {userRole === "teacher" && (
+      {permissions.canDelete && (
         <button
-          className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
+        className="ml-2 text-red-500 rounded hover:bg-red-200"
           onClick={() => setShowModal(true)}
         >
-          <FaTrash />
+          <Trash size={16} />
         </button>
       )}
       {userRole === "student" ? (

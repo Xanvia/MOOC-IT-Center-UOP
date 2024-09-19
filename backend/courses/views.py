@@ -1,4 +1,4 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics,permissions
 from .models import (
     Course,
     Week,
@@ -39,6 +39,7 @@ from .permissons import (
     CourseFileUploadAccess,
     EditPublicDetailsAccess,
 )
+from coursemanagement.models import CourseTeachers
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -52,6 +53,8 @@ class CourseViewSet(viewsets.ModelViewSet):
         if self.action == "update" or self.action == "add_details":
             # Only course creators can create weeks
             permission_classes = [EditPublicDetailsAccess]
+        elif self.action == "retrieve":
+            permission_classes = [permissions.AllowAny]
         else:
             permission_classes = []
         return [permission() for permission in permission_classes]
@@ -145,6 +148,40 @@ class WeekViewSet(viewsets.ModelViewSet):
             permission_classes = []
         return [permission() for permission in permission_classes]
 
+    def get_custom_permissions(self, user):
+        course = Course.objects.get(id=self.kwargs["course_id"])
+        representation = {}
+        if user.groups.filter(name="teacher").exists():
+            if course.course_creator == user:
+                representation["canEdit"] = True
+                representation["canDelete"] = True
+                representation["canUploadFiles"] = True
+                representation["canCreateItems"] = True
+
+            else:
+                course_teacher = CourseTeachers.objects.filter(
+                    teacher=user, course=course
+                ).first()
+
+                representation["canEdit"] = course_teacher.permissions.filter(
+                    label="edit_course_content"
+                ).exists()
+                representation["canDelete"] = course_teacher.permissions.filter(
+                    label="delete_course_content"
+                ).exists()
+                representation["canUploadFiles"] = course_teacher.permissions.filter(
+                    label="upload_files"
+                ).exists()
+                representation["canCreateItems"] = course_teacher.permissions.filter(
+                    label="create_course_content"
+                ).exists()
+        else:
+            representation["canEdit"] = False
+            representation["canDelete"] = False
+            representation["canUploadFiles"] = False
+            representation["canCreateItems"] = False
+        return representation
+
     def get_queryset(self):
         if self.action == "destroy":
             return super().get_queryset()
@@ -164,11 +201,14 @@ class WeekViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
+
+        user = self.request.user
+        if user:
+            custom_permissions = self.get_custom_permissions(user)
+
         response.data = {
             "status": "success",
-            "data": {
-                "weeks": response.data,
-            },
+            "data": {"weeks": response.data, "permissions": custom_permissions},
         }
         return response
 
