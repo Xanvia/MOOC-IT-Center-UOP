@@ -348,6 +348,8 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
         </div>
       </div>
 
+      
+      <center>
       <h2 className="text-xl font-bold mt-4 mb-2">{title}</h2>
 
       {isEdit && permissions.canUploadFiles && (
@@ -360,6 +362,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
           id="file-upload"
         />
         <label htmlFor="file-upload">
+          
         <SecondaryButton
           text="Upload New Video" // Change the text here to whatever you want
           onClick={() => document.getElementById("file-upload")?.click()} // This will trigger the file input click
@@ -367,6 +370,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       </label>
       </div>
       )}
+      </center>
 
       {/* Teacher Mode: Add/Edit MCQs */}
       {isEdit && (
@@ -438,7 +442,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
 
       {/* MCQ List for Teacher */}
       {isEdit && (
-        <div className="p-10 bg-gray-100 rounded-lg shadow-lg mt-12">
+        <div className="p-10 bg-gray-100 rounded-lg shadow-lg mt-12 mb-24">
           <h3 className="text-lg font-semibold mb-4">MCQs List</h3>
           <ul className="space-y-4">
             {editMCQs.map((mcq) => (
