@@ -17,6 +17,8 @@ import {
 import { useGlobal } from "@/contexts/store";
 import { Permissions } from "../types";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
+import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
+
 
 
 interface MCQ {
@@ -443,12 +445,10 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
                   </p>
                 </div>
                 <div className="flex space-x-2">
-                  <button
-                    onClick={() => handleEditMCQ(mcq)}
-                    className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
-                  >
-                    <Edit className="w-5 h-5 inline" /> Edit
-                  </button>
+                <EditButtonPrimary
+                  text="E D I T"
+                  onClick={() => handleEditMCQ(mcq)}
+                />                  
                   <button
                     onClick={() => handleDeleteMCQ(mcq.timestamp)}
                     className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
