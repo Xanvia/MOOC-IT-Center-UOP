@@ -14,12 +14,12 @@ interface NoteProps {
   permissions: Permissions;
 }
 
-const Note: React.FC<NoteProps> = ({ selectedTopic ,permissions}) => {
-  const isEdit = true;
+const Note: React.FC<NoteProps> = ({ selectedTopic, permissions }) => {
   const { userRole } = useGlobal();
 
   const [noteContent, setNoteContent] = useState(selectedTopic.content);
   const [editView, setEditView] = useState(false);
+  const [isEdit, setIsEdit] = useState(permissions.canEdit);
 
   const handleSave = async (value: string) => {
     try {

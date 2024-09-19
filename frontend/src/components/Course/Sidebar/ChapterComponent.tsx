@@ -200,7 +200,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
           )}
           {chapter.name}
         </h5>
-        {userRole === "teacher" && (
+        { permissions.canDelete &&(
           <button
             className="ml-2 text-red-500  rounded hover:bg-red-200"
             onClick={() => setShowModal(true)}
