@@ -16,7 +16,7 @@ from .models import (
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
-from coursemanagement.models import CoursePermissions, CourseTeachers
+from coursemanagement.models import CourseTeachers
 
 
 class CourseTeacherSerializer(serializers.ModelSerializer):
@@ -73,6 +73,22 @@ class CourseSerializer(serializers.ModelSerializer):
                 representation["isEnrolled"] = "true"
             except Enrollment.DoesNotExist:
                 representation["isEnrolled"] = "false"
+
+            # check if user is a teacher
+            # and teacher is the creator of the course or has permissions to edit public details set can edit to true
+            if user.groups.filter(name="teacher").exists():
+                if instance.course_creator == user:
+                    representation["canEdit"] = True
+                else:
+                    course_teacher = CourseTeachers.objects.filter(
+                        user=user, course=instance
+                    ).first()
+                    representation["canEdit"] = course_teacher.permissions.filter(
+                        label="edit_course_public_details"
+                    ).exists()
+            else:
+                representation["canEdit"] = False
+
         return representation
 
 
@@ -98,24 +114,22 @@ class WeekSerializer(serializers.ModelSerializer):
                 representation["canUploadFiles"] = True
                 representation["canCreateItems"] = True
             else:
-                course_permission = CoursePermissions.objects.filter(
-                    user=user, course=course
-                ).first()
+
                 course_teacher = CourseTeachers.objects.filter(
                     user=user, course=course
                 ).first()
 
                 representation["canEdit"] = course_teacher.permissions.filter(
-                    name="edit_course_content"
+                    label="edit_course_content"
                 ).exists()
                 representation["canDelete"] = course_teacher.permissions.filter(
-                    name="delete_course_content"
+                    label="delete_course_content"
                 ).exists()
                 representation["canUploadFiles"] = course_teacher.permissions.filter(
-                    name="upload_files"
+                    label="upload_files"
                 ).exists()
                 representation["canCreateItems"] = course_teacher.permissions.filter(
-                    name="create_course_content"
+                    lael="create_course_content"
                 ).exists()
 
         return representation
