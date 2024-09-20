@@ -13,13 +13,13 @@ import {
   Maximize,
   Edit,
   Trash,
+  PauseIcon,
 } from "lucide-react";
 import { useGlobal } from "@/contexts/store";
 import { Permissions } from "../types";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import DeleteButtonPrimary from "@/components/Buttons/DeleteButtonPrimary";
-
 
 interface MCQ {
   timestamp: number;
@@ -65,6 +65,9 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   const [newCorrectAnswer, setNewCorrectAnswer] = useState<number>(0);
   const [editingMCQ, setEditingMCQ] = useState<MCQ | null>(null); // MCQ being edited
   const [isEdit, setIsEdit] = useState<boolean>(permissions.canEdit);
+  const [isPreview, setIsPreview] = useState<boolean>(true);
+
+  const togglePreview = () => setIsPreview(!isPreview);
 
   const videoSource = uploadedVideoURL
     ? `${HOST}${uploadedVideoURL}`
@@ -77,8 +80,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   }, [uploadedVideoURL, videoURL]);
 
   useEffect(() => {
-    if (!isEdit) {
-      // Only check MCQs in student mode
+    if (isPreview) {
       const checkForMCQ = () => {
         const matchingMCQ = mcqs.find(
           (mcq) =>
@@ -96,10 +98,10 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       };
       checkForMCQ();
     }
-  }, [currentTime, mcqs, currentMCQ, answeredMCQs, isEdit]);
+  }, [currentTime, mcqs, currentMCQ, answeredMCQs, isPreview]);
 
   const handlePlayPause = () => {
-    if (videoRef.current) {
+    if (videoRef.current && !currentMCQ) {
       if (videoRef.current.paused) {
         videoRef.current.play();
         setIsPlaying(true);
@@ -109,7 +111,6 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       }
     }
   };
-
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(e.target.value);
     if (videoRef.current) {
@@ -187,6 +188,9 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
     setIsPlaying(true);
   };
 
+  const handleMouseEnter = () => setIsHovering(true);
+  const handleMouseLeave = () => setIsHovering(false);
+
   // Teacher Mode: Adding MCQ handling
   const addNewOption = () => setNewOptions([...newOptions, ""]);
 
@@ -245,48 +249,60 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto my-8">
-      <div className="bg-black rounded-lg overflow-hidden relative" style={{ zIndex: 1 }}>
-      <video
-        ref={videoRef}
-        className="w-full h-auto"
-        onTimeUpdate={handleTimeUpdate}
-        onDurationChange={handleDurationChange}
-        onEnded={() => setIsPlaying(false)}
-        onClick={handlePlayPause}
-      >
-        <source src={videoSource} type="video/mp4" />
-      </video>
-
-      {!isPlaying && !currentMCQ && (
-        <button
-          onClick={handlePlayPause}
-          className="absolute inset-0 w-full h-full flex items-center justify-center"
-          style={{ zIndex: 2 }} // Keep the play button inside the video stack
-        >
-          <Play className="w-20 h-20 text-white opacity-80" />
-        </button>
-      )}
-
+    <div
+      className="max-w-4xl mx-auto my-8"
+      onMouseEnter={handleMouseEnter} // Start showing controls when hovering
+      onMouseLeave={handleMouseLeave} // Hide controls when not hovering
+    >
       <div
-        className={` bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 transition-opacity duration-300 ${
-          isHovering || !isPlaying ? "opacity-100" : "opacity-0"
-        }`}
-        style={{ zIndex: 2 }} // Ensure that controls stay within the video stack
+        className="bg-black rounded-lg overflow-hidden relative"
+        style={{ zIndex: 1 }}
       >
-        <input
-          type="range"
-          value={currentTime}
-          max={duration}
-          onChange={handleSeek}
-          className="w-full h-1 bg-gray-600 appearance-none rounded-full outline-none opacity-70 transition-opacity cursor-pointer"
-          disabled={
-            !isEdit &&
-            !!currentMCQ &&
-            !currentMCQ.isDone &&
-            selectedAnswer === null
-          }
-        />
+        <video
+          ref={videoRef}
+          className="w-full h-auto"
+          onTimeUpdate={handleTimeUpdate}
+          onDurationChange={handleDurationChange}
+          onEnded={() => setIsPlaying(false)}
+          onClick={handlePlayPause}
+        >
+          <source src={videoSource} type="video/mp4" />
+        </video>
+
+        {!isPlaying && !currentMCQ && (
+          <button
+            onClick={handlePlayPause}
+            className="absolute inset-0 w-full h-full flex items-center justify-center"
+            style={{ zIndex: 2 }}
+          >
+            <Play className="w-20 h-20 text-white opacity-80" />
+          </button>
+        )}
+
+        {isPlaying && !currentMCQ && isHovering && (
+          <button
+            onClick={handlePlayPause}
+            className="absolute inset-0 w-full h-full flex items-center justify-center"
+            style={{ zIndex: 2 }}
+          >
+            <PauseIcon className="w-20 h-20 text-white opacity-80" />
+          </button>
+        )}
+
+        {/* Controls container */}
+        <div
+          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 transition-opacity duration-300 ${
+            isHovering || !isPlaying ? "opacity-100" : "opacity-0"
+          }`} // Show controls on hover or when video is paused
+          style={{ zIndex: 2 }}
+        >
+          <input
+            type="range"
+            value={currentTime}
+            max={duration}
+            onChange={handleSeek}
+            className="w-full h-1 bg-gray-600 appearance-none rounded-full outline-none opacity-70 transition-opacity cursor-pointer"
+          />
           <div className="flex justify-between items-center mt-2">
             <div className="flex items-center space-x-4">
               <button
@@ -348,32 +364,36 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
         </div>
       </div>
 
-      
       <center>
-      <h2 className="text-xl font-bold mt-4 mb-2">{title}</h2>
+        <h2 className="text-xl font-bold mt-4 mb-2">{title}</h2>
 
-      {isEdit && permissions.canUploadFiles && (
-        <div className="mt-4">
-        <input
-          type="file"
-          accept="video/*"
-          onChange={handleFileUpload}
-          className="hidden"
-          id="file-upload"
-        />
-        <label htmlFor="file-upload">
-          
-        <SecondaryButton
-          text="Upload New Video" // Change the text here to whatever you want
-          onClick={() => document.getElementById("file-upload")?.click()} // This will trigger the file input click
-        />
-      </label>
-      </div>
-      )}
+        {isPreview ? (
+         <EditButtonPrimary text="Edit" onClick={togglePreview} />
+        ):(
+          <SecondaryButton text="Preview" onClick={togglePreview} />
+        )}
+
+        {!isPreview && permissions.canUploadFiles && (
+          <div className="mt-4">
+            <input
+              type="file"
+              accept="video/*"
+              onChange={handleFileUpload}
+              className="hidden"
+              id="file-upload"
+            />
+            <label htmlFor="file-upload">
+              <SecondaryButton
+                text="Upload New Video" // Change the text here to whatever you want
+                onClick={() => document.getElementById("file-upload")?.click()} // This will trigger the file input click
+              />
+            </label>
+          </div>
+        )}
       </center>
 
       {/* Teacher Mode: Add/Edit MCQs */}
-      {isEdit && (
+      {!isPreview && (
         <div className="mt-12 p-10 bg-gray-100 rounded-lg shadow-lg">
           <p>Select timestamp using video slider</p>
           <h3 className="text-lg font-semibold mb-4">Add/Edit MCQs</h3>
@@ -392,11 +412,11 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
             {newOptions.map((option, index) => (
               <div key={index} className="flex space-x-2 mb-2">
                 <input
-                    type="text"
-                    placeholder="Enter answer option"
-                    value={option}
-                    onChange={(e) => handleNewOptionChange(index, e.target.value)}
-                    className="flex-grow p-2 border border-gray-300 rounded-lg"
+                  type="text"
+                  placeholder="Enter answer option"
+                  value={option}
+                  onChange={(e) => handleNewOptionChange(index, e.target.value)}
+                  className="flex-grow p-2 border border-gray-300 rounded-lg"
                 />
                 {/* <input
                   type="text"
@@ -441,8 +461,8 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       )}
 
       {/* MCQ List for Teacher */}
-      {isEdit && (
-        <div className="p-10 bg-gray-100 rounded-lg shadow-lg mt-12 mb-24">
+      {!isPreview && (
+        <div className="p-10 bg-gray-100 rounded-lg shadow-lg mt-12 mb-24 z-40">
           <h3 className="text-lg font-semibold mb-4">MCQs List</h3>
           <ul className="space-y-4">
             {editMCQs.map((mcq) => (
@@ -464,8 +484,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
                   <DeleteButtonPrimary
                     text="D E L E T E"
                     onClick={() => handleDeleteMCQ(mcq.timestamp)}
-                  />                  
-                  
+                  />
                 </div>
               </li>
             ))}
@@ -474,8 +493,11 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       )}
 
       {/* MCQ View for students */}
-      {currentMCQ && !isEdit && (
-        <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center">
+      {currentMCQ && isPreview && (
+        <div
+          className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center"
+          style={{ zIndex: 10 }}
+        >
           <div className="bg-white p-6 rounded-lg max-w-lg w-full">
             <h3 className="text-xl font-bold mb-4">{currentMCQ.question}</h3>
             <div className="space-y-2">
