@@ -2,7 +2,7 @@ export interface Item {
   id: number;
   name: string;
   content: any;
-  type: "Video" | "Note" | "Quiz";
+  type: "Video" | "Note" | "Quiz" | "Code";
   has_started: boolean;
   completed: boolean;
 }

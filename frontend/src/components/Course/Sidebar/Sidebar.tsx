@@ -12,6 +12,7 @@ import {
   deleteComponent,
   fetchCourseContent,
   getProgress,
+  createCodingQ,
 } from "@/services/course.service";
 import { useParams, useRouter } from "next/navigation";
 import Loader from "@/components/Loarder/Loarder";
@@ -83,8 +84,6 @@ const Sidebar: React.FC = () => {
     const loadProgress = async () => {
       if (!courseId || weeks.length === 0) return;
       try {
-        console.log(userRole);
-
         const progress = await getProgress(courseId as string);
         setProgress(progress.progress);
         if (progress?.current_component) {
@@ -185,6 +184,8 @@ const Sidebar: React.FC = () => {
             break;
           case "Quiz":
             response = await createQuiz(chapterId as string, item.name);
+          case "Code":
+            response = await createCodingQ(chapterId as string, item.name);
             break;
           default:
             break;

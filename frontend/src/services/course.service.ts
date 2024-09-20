@@ -177,6 +177,21 @@ export const createQuiz = async (chapterId: string, name: string) => {
   }
 };
 
+export const createCodingQ = async (chapterId: string, name: string) => {
+  try {
+    // const response = await axiosInstance.post(
+    //   `/course/week/chapter/${chapterId}/code/`,
+    //   {
+    //     name,
+    //   }
+    // );
+    // return response.data;
+    return 
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
 export const createWeek = async (courseId: string, name: string) => {
   try {
     const response = await axiosInstance.post(`/course/${courseId}/week/`, {
