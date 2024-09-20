@@ -13,9 +13,13 @@ import {
   Maximize,
   Edit,
   Trash,
+  PauseIcon,
 } from "lucide-react";
 import { useGlobal } from "@/contexts/store";
 import { Permissions } from "../types";
+import SecondaryButton from "@/components/Buttons/SecondaryButton";
+import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
+import DeleteButtonPrimary from "@/components/Buttons/DeleteButtonPrimary";
 
 interface MCQ {
   timestamp: number;
@@ -61,6 +65,9 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   const [newCorrectAnswer, setNewCorrectAnswer] = useState<number>(0);
   const [editingMCQ, setEditingMCQ] = useState<MCQ | null>(null); // MCQ being edited
   const [isEdit, setIsEdit] = useState<boolean>(permissions.canEdit);
+  const [isPreview, setIsPreview] = useState<boolean>(true);
+
+  const togglePreview = () => setIsPreview(!isPreview);
 
   const videoSource = uploadedVideoURL
     ? `${HOST}${uploadedVideoURL}`
@@ -73,8 +80,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   }, [uploadedVideoURL, videoURL]);
 
   useEffect(() => {
-    if (!isEdit) {
-      // Only check MCQs in student mode
+    if (isPreview) {
       const checkForMCQ = () => {
         const matchingMCQ = mcqs.find(
           (mcq) =>
@@ -92,10 +98,10 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       };
       checkForMCQ();
     }
-  }, [currentTime, mcqs, currentMCQ, answeredMCQs, isEdit]);
+  }, [currentTime, mcqs, currentMCQ, answeredMCQs, isPreview]);
 
   const handlePlayPause = () => {
-    if (videoRef.current) {
+    if (videoRef.current && !currentMCQ) {
       if (videoRef.current.paused) {
         videoRef.current.play();
         setIsPlaying(true);
@@ -105,7 +111,6 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       }
     }
   };
-
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(e.target.value);
     if (videoRef.current) {
@@ -183,6 +188,9 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
     setIsPlaying(true);
   };
 
+  const handleMouseEnter = () => setIsHovering(true);
+  const handleMouseLeave = () => setIsHovering(false);
+
   // Teacher Mode: Adding MCQ handling
   const addNewOption = () => setNewOptions([...newOptions, ""]);
 
@@ -241,11 +249,14 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto my-8">
+    <div
+      className="max-w-4xl mx-auto my-8"
+      onMouseEnter={handleMouseEnter} // Start showing controls when hovering
+      onMouseLeave={handleMouseLeave} // Hide controls when not hovering
+    >
       <div
         className="bg-black rounded-lg overflow-hidden relative"
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
+        style={{ zIndex: 1 }}
       >
         <video
           ref={videoRef}
@@ -257,19 +268,33 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
         >
           <source src={videoSource} type="video/mp4" />
         </video>
+
         {!isPlaying && !currentMCQ && (
           <button
             onClick={handlePlayPause}
             className="absolute inset-0 w-full h-full flex items-center justify-center"
+            style={{ zIndex: 2 }}
           >
             <Play className="w-20 h-20 text-white opacity-80" />
           </button>
         )}
 
+        {isPlaying && !currentMCQ && isHovering && (
+          <button
+            onClick={handlePlayPause}
+            className="absolute inset-0 w-full h-full flex items-center justify-center"
+            style={{ zIndex: 2 }}
+          >
+            <PauseIcon className="w-20 h-20 text-white opacity-80" />
+          </button>
+        )}
+
+        {/* Controls container */}
         <div
           className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 transition-opacity duration-300 ${
             isHovering || !isPlaying ? "opacity-100" : "opacity-0"
-          }`}
+          }`} // Show controls on hover or when video is paused
+          style={{ zIndex: 2 }}
         >
           <input
             type="range"
@@ -277,12 +302,6 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
             max={duration}
             onChange={handleSeek}
             className="w-full h-1 bg-gray-600 appearance-none rounded-full outline-none opacity-70 transition-opacity cursor-pointer"
-            disabled={
-              !isEdit &&
-              !!currentMCQ &&
-              !currentMCQ.isDone &&
-              selectedAnswer === null
-            } // Disable in student mode during MCQs
           />
           <div className="flex justify-between items-center mt-2">
             <div className="flex items-center space-x-4">
@@ -345,54 +364,70 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
         </div>
       </div>
 
-      <h2 className="text-xl font-bold mt-4 mb-2">{title}</h2>
+      <center>
+        <h2 className="text-xl font-bold mt-4 mb-2">{title}</h2>
 
-      {isEdit && permissions.canUploadFiles && (
-        <div className="mt-4">
-          <input
-            type="file"
-            accept="video/*"
-            onChange={handleFileUpload}
-            className="hidden"
-            id="file-upload"
-          />
-          <label
-            htmlFor="file-upload"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded cursor-pointer transition-colors inline-block"
-          >
-            Upload New Video
-          </label>
-        </div>
-      )}
+        {isPreview ? (
+         <EditButtonPrimary text="Edit" onClick={togglePreview} />
+        ):(
+          <SecondaryButton text="Preview" onClick={togglePreview} />
+        )}
+
+        {!isPreview && permissions.canUploadFiles && (
+          <div className="mt-4">
+            <input
+              type="file"
+              accept="video/*"
+              onChange={handleFileUpload}
+              className="hidden"
+              id="file-upload"
+            />
+            <label htmlFor="file-upload">
+              <SecondaryButton
+                text="Upload New Video" // Change the text here to whatever you want
+                onClick={() => document.getElementById("file-upload")?.click()} // This will trigger the file input click
+              />
+            </label>
+          </div>
+        )}
+      </center>
 
       {/* Teacher Mode: Add/Edit MCQs */}
-      {isEdit && (
-        <div className="mt-8">
+      {!isPreview && (
+        <div className="mt-12 p-10 bg-gray-100 rounded-lg shadow-lg">
           <p>Select timestamp using video slider</p>
           <h3 className="text-lg font-semibold mb-4">Add/Edit MCQs</h3>
           <div className="mb-4">
-            <label className="block font-medium mb-1">Question:</label>
+            {/* <label className="block font-medium mb-1">Question:</label> */}
             <input
               type="text"
+              placeholder="Enter question"
               value={newQuestion}
               onChange={(e) => setNewQuestion(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
+              className="flex-grow p-2 border border-gray-300 rounded-lg"
             />
           </div>
           <div className="mb-4">
-            <label className="block font-medium mb-1">Options:</label>
+            {/* <label className="block font-medium mb-1">Options:</label> */}
             {newOptions.map((option, index) => (
               <div key={index} className="flex space-x-2 mb-2">
                 <input
                   type="text"
+                  placeholder="Enter answer option"
+                  value={option}
+                  onChange={(e) => handleNewOptionChange(index, e.target.value)}
+                  className="flex-grow p-2 border border-gray-300 rounded-lg"
+                />
+                {/* <input
+                  type="text"
                   value={option}
                   onChange={(e) => handleNewOptionChange(index, e.target.value)}
                   className="w-full p-2 border border-gray-300 rounded"
-                />
+                /> */}
                 {index === newOptions.length - 1 && (
                   <button
                     onClick={addNewOption}
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                    className="bg-blue-900 text-white px-4 py-2 rounded"
                   >
                     Add Option
                   </button>
@@ -412,26 +447,22 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
             />
           </div>
           {editingMCQ ? (
-            <button
-              onClick={handleUpdateMCQ}
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-            >
-              Update MCQ
-            </button>
+            <SecondaryButton
+              text="Update MCQ" // Text for the button
+              onClick={handleUpdateMCQ} // Click handler for updating MCQ
+            />
           ) : (
-            <button
-              onClick={saveMCQ}
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-            >
-              Save MCQ
-            </button>
+            <SecondaryButton
+              text="Save MCQ" // Text for the button
+              onClick={saveMCQ} // Click handler for saving MCQ
+            />
           )}
         </div>
       )}
 
       {/* MCQ List for Teacher */}
-      {isEdit && (
-        <div className="mt-8">
+      {!isPreview && (
+        <div className="p-10 bg-gray-100 rounded-lg shadow-lg mt-12 mb-24 z-40">
           <h3 className="text-lg font-semibold mb-4">MCQs List</h3>
           <ul className="space-y-4">
             {editMCQs.map((mcq) => (
@@ -446,18 +477,14 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
                   </p>
                 </div>
                 <div className="flex space-x-2">
-                  <button
+                  <EditButtonPrimary
+                    text="E D I T"
                     onClick={() => handleEditMCQ(mcq)}
-                    className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
-                  >
-                    <Edit className="w-5 h-5 inline" /> Edit
-                  </button>
-                  <button
+                  />
+                  <DeleteButtonPrimary
+                    text="D E L E T E"
                     onClick={() => handleDeleteMCQ(mcq.timestamp)}
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                  >
-                    <Trash className="w-5 h-5 inline" /> Delete
-                  </button>
+                  />
                 </div>
               </li>
             ))}
@@ -466,8 +493,11 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       )}
 
       {/* MCQ View for students */}
-      {currentMCQ && !isEdit && (
-        <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center">
+      {currentMCQ && isPreview && (
+        <div
+          className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center"
+          style={{ zIndex: 10 }}
+        >
           <div className="bg-white p-6 rounded-lg max-w-lg w-full">
             <h3 className="text-xl font-bold mb-4">{currentMCQ.question}</h3>
             <div className="space-y-2">
