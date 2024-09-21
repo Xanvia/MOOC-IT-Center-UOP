@@ -10,6 +10,7 @@ import { startComponent } from "@/services/course.service";
 import { toast } from "sonner";
 import { useGlobal } from "@/contexts/store";
 import { markAsComplete } from "@/services/course.service";
+import CodingQ from "@/components/Course/CodingQ/CodingQ";
 
 const Page: React.FC = () => {
   const {
@@ -156,7 +157,8 @@ const Page: React.FC = () => {
         />
       ) : item.type === "Quiz" ? (
         <>
-          <Quiz item={item} permissions={permissions} />
+          {/* <Quiz item={item} permissions={permissions} />*/}
+          <CodingQ />
         </>
       ) : (
         <div>No content available</div>
