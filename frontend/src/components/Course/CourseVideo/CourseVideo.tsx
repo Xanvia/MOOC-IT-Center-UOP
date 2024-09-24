@@ -209,11 +209,11 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       correctAnswer: newCorrectAnswer,
       isDone: false,
     };
-  
+
     const updatedMCQs = [...editMCQs, newMCQ]; // Append new MCQ to the list
-  
+
     setEditMCQs(updatedMCQs); // Update the local state
-  
+
     try {
       await addQuizToVideo(id, updatedMCQs); // Send updated MCQs array to backend
       toast.success("MCQ added successfully!");
@@ -225,7 +225,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       toast.error("Error saving MCQ: " + error.message);
     }
   };
-  
+
   const handleEditMCQ = (mcq: MCQ) => {
     setEditingMCQ(mcq);
     setNewQuestion(mcq.question);
@@ -235,17 +235,17 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
 
   const handleDeleteMCQ = async (timestamp: number) => {
     setIsLoading(true); // Start loading state
-  
+
     const updatedMCQs = editMCQs.filter((mcq) => mcq.timestamp !== timestamp);
     setEditMCQs(updatedMCQs);
-  
+
     try {
       await addQuizToVideo(id, updatedMCQs);
       toast.success("MCQ deleted successfully!");
     } catch (error: any) {
       toast.error("Error deleting MCQ: " + error.message);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -255,15 +255,16 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
         mcq.timestamp === editingMCQ.timestamp
           ? {
               ...mcq,
+              timestamp: currentTime,
               question: newQuestion,
               options: newOptions,
               correctAnswer: newCorrectAnswer,
             }
           : mcq
       );
-  
+
       setEditMCQs(updatedMCQs); // Update local state with the new MCQ data
-  
+
       try {
         await addQuizToVideo(id, updatedMCQs); // Send the updated MCQs to the backend
         toast.success("MCQ updated successfully!");
@@ -277,8 +278,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       }
     }
   };
-  
-  
+
   return (
     <div
       className="max-w-4xl mx-auto my-8"
@@ -426,7 +426,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       {/* Teacher Mode: Add/Edit MCQs */}
       {!isPreview && (
         <div className="mt-12 p-10 bg-gray-100 rounded-lg shadow-lg">
-          <p>Select timestamp using video slider</p>
+          <p className="text-red-400">Select timestamp using video slider</p>
           <h3 className="text-lg font-semibold mb-4">Add/Edit MCQs</h3>
           <div className="mb-4">
             {/* <label className="block font-medium mb-1">Question:</label> */}
