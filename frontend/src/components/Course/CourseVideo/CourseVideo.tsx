@@ -2,7 +2,7 @@
 import React, { useCallback, useRef, useState, useEffect } from "react";
 import { HOST } from "@/utils/constants";
 import { toast } from "sonner";
-import { uploadVideo } from "@/services/course.service";
+import { addQuizToVideo, uploadVideo } from "@/services/course.service";
 import {
   Play,
   Pause,
@@ -33,7 +33,7 @@ interface CourseVideoProps {
   id: number;
   videoURL: string;
   title: string;
-  mcqs: MCQ[];
+  mcqs: any[];
   permissions: Permissions;
 }
 
@@ -66,6 +66,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   const [editingMCQ, setEditingMCQ] = useState<MCQ | null>(null); // MCQ being edited
   const [isEdit, setIsEdit] = useState<boolean>(permissions.canEdit);
   const [isPreview, setIsPreview] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const togglePreview = () => setIsPreview(!isPreview);
 
@@ -200,7 +201,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
     setNewOptions(updatedOptions);
   };
 
-  const saveMCQ = () => {
+  const saveMCQ = async () => {
     const newMCQ: MCQ = {
       timestamp: currentTime,
       question: newQuestion,
@@ -208,13 +209,23 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       correctAnswer: newCorrectAnswer,
       isDone: false,
     };
-    setEditMCQs([...editMCQs, newMCQ]);
-    setNewQuestion("");
-    setNewOptions([""]);
-    setNewCorrectAnswer(0);
-    toast.success("MCQ added successfully!");
+  
+    const updatedMCQs = [...editMCQs, newMCQ]; // Append new MCQ to the list
+  
+    setEditMCQs(updatedMCQs); // Update the local state
+  
+    try {
+      await addQuizToVideo(id, updatedMCQs); // Send updated MCQs array to backend
+      toast.success("MCQ added successfully!");
+      // Reset input fields after success
+      setNewQuestion("");
+      setNewOptions([""]);
+      setNewCorrectAnswer(0);
+    } catch (error: any) {
+      toast.error("Error saving MCQ: " + error.message);
+    }
   };
-
+  
   const handleEditMCQ = (mcq: MCQ) => {
     setEditingMCQ(mcq);
     setNewQuestion(mcq.question);
@@ -222,12 +233,23 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
     setNewCorrectAnswer(mcq.correctAnswer);
   };
 
-  const handleDeleteMCQ = (timestamp: number) => {
-    setEditMCQs(editMCQs.filter((mcq) => mcq.timestamp !== timestamp));
-    toast.success("MCQ deleted successfully!");
+  const handleDeleteMCQ = async (timestamp: number) => {
+    setIsLoading(true); // Start loading state
+  
+    const updatedMCQs = editMCQs.filter((mcq) => mcq.timestamp !== timestamp);
+    setEditMCQs(updatedMCQs);
+  
+    try {
+      await addQuizToVideo(id, updatedMCQs);
+      toast.success("MCQ deleted successfully!");
+    } catch (error: any) {
+      toast.error("Error deleting MCQ: " + error.message);
+    } finally {
+      setIsLoading(false); 
+    }
   };
 
-  const handleUpdateMCQ = () => {
+  const handleUpdateMCQ = async () => {
     if (editingMCQ) {
       const updatedMCQs = editMCQs.map((mcq) =>
         mcq.timestamp === editingMCQ.timestamp
@@ -239,15 +261,24 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
             }
           : mcq
       );
-      setEditMCQs(updatedMCQs);
-      setEditingMCQ(null);
-      setNewQuestion("");
-      setNewOptions([""]);
-      setNewCorrectAnswer(0);
-      toast.success("MCQ updated successfully!");
+  
+      setEditMCQs(updatedMCQs); // Update local state with the new MCQ data
+  
+      try {
+        await addQuizToVideo(id, updatedMCQs); // Send the updated MCQs to the backend
+        toast.success("MCQ updated successfully!");
+        // Clear the edit state after success
+        setEditingMCQ(null);
+        setNewQuestion("");
+        setNewOptions([""]);
+        setNewCorrectAnswer(0);
+      } catch (error: any) {
+        toast.error("Error updating MCQ: " + error.message);
+      }
     }
   };
-
+  
+  
   return (
     <div
       className="max-w-4xl mx-auto my-8"
@@ -368,8 +399,8 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
         <h2 className="text-xl font-bold mt-4 mb-2">{title}</h2>
 
         {isPreview ? (
-         <EditButtonPrimary text="Edit" onClick={togglePreview} />
-        ):(
+          <EditButtonPrimary text="Edit" onClick={togglePreview} />
+        ) : (
           <SecondaryButton text="Preview" onClick={togglePreview} />
         )}
 

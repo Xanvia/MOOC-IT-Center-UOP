@@ -45,7 +45,6 @@ const Sidebar: React.FC = () => {
         const data = await fetchCourseContent(courseId as string);
         setWeeks(data.weeks);
         setPermissions(data.permissions);
-        console.log(data.permissions);
         setIsLoading(false);
       } catch (error: any) {
         if (
@@ -70,7 +69,6 @@ const Sidebar: React.FC = () => {
           const lastItem = lastChapter.items[lastChapter.items.length - 1];
           setSelectedTopic(lastItem);
           setExpandedWeek(weeks.length - 1);
-          console.log(lastItem);
           return;
         }
       }
