@@ -107,8 +107,6 @@ class WeekSerializer(serializers.ModelSerializer):
         user = self.context["request"].user
         course = instance.course  # Assuming `instance` has a `course` attribute
 
-        
-
         return representation
 
 
@@ -206,9 +204,11 @@ class VideoSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation.pop("video_link")
         representation.pop("video_id")
+        representation.pop("quizzes")
         representation["content"] = {
             "video_link": instance.video_link,
             "duration": instance.duration,
+            "quizzes": instance.quizzes,
         }
         return representation
 

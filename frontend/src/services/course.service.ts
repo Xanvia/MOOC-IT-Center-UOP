@@ -330,3 +330,18 @@ export const startComponent = async (componentId: string) => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+
+export const addQuizToVideo = async (videoId: number,quizzesData: any) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/course/week/chapter/video/${videoId}/`,
+      {
+        quizzes:quizzesData,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+}
