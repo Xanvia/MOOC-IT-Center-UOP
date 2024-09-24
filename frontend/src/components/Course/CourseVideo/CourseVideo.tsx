@@ -11,8 +11,6 @@ import {
   VolumeX,
   Settings,
   Maximize,
-  Edit,
-  Trash,
   PauseIcon,
 } from "lucide-react";
 import { useGlobal } from "@/contexts/store";
@@ -35,6 +33,7 @@ interface CourseVideoProps {
   title: string;
   mcqs: any[];
   permissions: Permissions;
+  isCompleted: boolean;
 }
 
 const CourseVideo: React.FC<CourseVideoProps> = ({
@@ -43,6 +42,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   id,
   mcqs,
   permissions,
+  isCompleted,
 }) => {
   const { userRole } = useGlobal();
 
@@ -64,9 +64,9 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   const [newOptions, setNewOptions] = useState<string[]>([""]);
   const [newCorrectAnswer, setNewCorrectAnswer] = useState<number>(0);
   const [editingMCQ, setEditingMCQ] = useState<MCQ | null>(null); // MCQ being edited
-  const [isEdit, setIsEdit] = useState<boolean>(permissions.canEdit);
-  const [isPreview, setIsPreview] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [isEdit, setIsEdit] = useState(permissions.canEdit);
+  const [isPreview, setIsPreview] = useState<boolean>(true);
 
   const togglePreview = () => setIsPreview(!isPreview);
 
@@ -86,7 +86,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
         const matchingMCQ = mcqs.find(
           (mcq) =>
             Math.abs(mcq.timestamp - currentTime) < 0.5 &&
-            !mcq.isDone &&
+            !isCompleted &&
             !answeredMCQs.has(mcq.timestamp)
         );
         if (matchingMCQ && !currentMCQ) {
@@ -397,12 +397,12 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
 
       <center>
         <h2 className="text-xl font-bold mt-4 mb-2">{title}</h2>
-
-        {isPreview ? (
-          <EditButtonPrimary text="Edit" onClick={togglePreview} />
-        ) : (
-          <SecondaryButton text="Preview" onClick={togglePreview} />
-        )}
+        {isEdit &&
+          (isPreview ? (
+            <EditButtonPrimary text="Edit" onClick={togglePreview} />
+          ) : (
+            <SecondaryButton text="Preview" onClick={togglePreview} />
+          ))}
 
         {!isPreview && permissions.canUploadFiles && (
           <div className="mt-4">

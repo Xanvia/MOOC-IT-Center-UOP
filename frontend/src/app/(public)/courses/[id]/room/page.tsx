@@ -152,6 +152,7 @@ const Page: React.FC = () => {
           id={item.id}
           mcqs={item.content.quizzes}
           permissions={permissions}
+          isCompleted = {item.completed}
         />
       ) : item.type === "Quiz" ? (
         <>
