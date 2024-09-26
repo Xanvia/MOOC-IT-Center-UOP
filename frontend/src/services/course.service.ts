@@ -13,6 +13,15 @@ export const fetchAllCourses = async () => {
   }
 };
 
+export const fetchMyCourses = async () => {
+  try {
+    const response = await axiosInstance.get("/course/my-courses/");
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
 export const createCourse = async (values: CreateCourseData) => {
   try {
     const response = await axiosInstance.post("/course/", {

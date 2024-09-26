@@ -64,7 +64,7 @@ const Sidebar: React.FC = () => {
   useEffect(() => {
     if (userRole === "teacher") {
       const lastWeek = weeks[weeks.length - 1];
-      if (lastWeek.chapters && lastWeek.chapters.length > 0) {
+      if (lastWeek && lastWeek.chapters && lastWeek.chapters.length > 0) {
         const lastChapter = lastWeek.chapters[lastWeek.chapters.length - 1];
         if (lastChapter.items && lastChapter.items.length > 0) {
           const lastItem = lastChapter.items[lastChapter.items.length - 1];
