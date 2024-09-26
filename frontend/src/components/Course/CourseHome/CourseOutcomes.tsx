@@ -40,7 +40,7 @@ const CourseOutcomes: React.FC<CourseOutcomesProps> = ({
   const handleSave = async () => {
     toggleEditView();
     try {
-      const response = await addOutcomes(1, outComes);
+      const response = await addOutcomes(courseId, outComes);
       toast.success(response.message);
     } catch (error: any) {
       toast.error(error.message);

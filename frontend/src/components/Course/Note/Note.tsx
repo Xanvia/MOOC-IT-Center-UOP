@@ -49,7 +49,7 @@ const Note: React.FC<NoteProps> = ({ selectedTopic, permissions }) => {
       ) : (
         <>
           <h2 className="text-2xl text-primary font-semibold ml-16 my-10">
-            Introduction to Web Developing
+            {selectedTopic.name}
           </h2>
 
           <div className="py-14 px-3 w-10/12 min-h-[600px] mx-auto text-left bg-white">

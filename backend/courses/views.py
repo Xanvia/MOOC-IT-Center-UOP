@@ -241,7 +241,7 @@ class WeekViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         except Exception as e:
-            print(e)
+          
             return Response(
                 {"status": "error", "message": "An unexpected error occurred"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -297,7 +297,7 @@ class ChapterViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         except Exception as e:
-            print(e)
+           
             return Response(
                 {"status": "error", "message": "An unexpected error occurred"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -412,7 +412,7 @@ class VideoViewSet(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def get_video_link(self, request, *args, **kwargs):
-        print(request.data)
+        
         if "video_file" not in request.data:
             raise ValidationError({"video_file": "Video file is required"})
 
