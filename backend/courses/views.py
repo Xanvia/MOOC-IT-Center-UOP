@@ -110,6 +110,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         course = self.get_object()
+        request.data._mutable = True
         request.data["course_creator"] = course.course_creator.id
 
         response = super().update(request, partial=True, *args, **kwargs)
