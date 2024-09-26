@@ -132,7 +132,7 @@ export default function CourseDescEditModal({ courseData, reloadData }: Props) {
             >
               <Image
                 src={imagePreviewUrl || ""}
-                alt="Header image"
+                alt="Enter the Header image here"
                 width={670}
                 height={300}
                 className="ring-4 ring-primary_light  mt-3"
