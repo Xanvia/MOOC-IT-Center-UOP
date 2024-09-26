@@ -32,6 +32,7 @@ urlpatterns = [
         CourseViewSet.as_view({"get": "list", "post": "create"}),
         name="course-list",
     ),
+    path("my-courses/", CourseViewSet.as_view({"get": "my_courses"}), name="my-courses"),
     # get course detials, update course details, delete course
     path(
         "<int:course_id>",
