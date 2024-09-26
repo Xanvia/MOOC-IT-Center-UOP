@@ -249,7 +249,7 @@ export default function CourseDescEditModal({ courseData, reloadData }: Props) {
                       />
                     </div>
                     <div className="col-span-1">
-                      <label htmlFor="duration" className="text-sm font-semibold text-primary">
+                      <label htmlFor="duration" className={InputLabelClasses2}>
                         Course Duration
                       </label>
                       <Field
@@ -261,7 +261,7 @@ export default function CourseDescEditModal({ courseData, reloadData }: Props) {
                             ? "border-primary"
                             : ""
                         }`}
-                        placeholder="No of weeks"
+                        placeholder="Enter course duration"
                       />
                       <ErrorMessage
                         name="duration"
