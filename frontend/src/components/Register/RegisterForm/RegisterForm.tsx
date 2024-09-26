@@ -76,10 +76,10 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
     setResetForm();
     try {
       const res = await registerUser(values);
-      setStep("Two");
       Cookies.set("token", res.data.access_token);
       Cookies.set("user", JSON.stringify(res.data.user));
       setUserRole(res.data.user.userRole);
+      setStep("Two");
       toast.success(res.message);
     } catch (error: any) {
       toast.error(error.message);
@@ -95,10 +95,10 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
       const code = await getGoogleCode();
       if (code !== null) {
         const res = await registerWithGoogle(code, userRole);
-        setStep("Two");
         Cookies.set("token", res.data.access_token);
         Cookies.set("user", JSON.stringify(res.data.user));
         setUserRole(res.data.user.userRole);
+        setStep("Two");
         toast.success(res.message);
       }
     } catch (error: any) {
