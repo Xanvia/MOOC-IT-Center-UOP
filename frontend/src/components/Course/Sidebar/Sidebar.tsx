@@ -37,6 +37,11 @@ const Sidebar: React.FC = () => {
   const { userRole, isLoggedIn } = useGlobal();
   const [progress, setProgress] = useState<number>(0);
   const [progressLoaded, setProgressLoaded] = useState<boolean>(false);
+  const [reload, setReload] = useState(false);
+
+  const reloadData = () => {
+    setReload((prevState) => !prevState);
+  };
 
   useEffect(() => {
     const loadCourseContent = async () => {
@@ -57,7 +62,7 @@ const Sidebar: React.FC = () => {
     };
 
     loadCourseContent();
-  }, [courseId, router]);
+  }, [courseId, router, reload]);
 
   // Fetch progress after weeks is loaded
   useEffect(() => {
@@ -186,22 +191,23 @@ const Sidebar: React.FC = () => {
         }
         toast.success(response.message);
         item.id = response.data.id;
-        setWeeks((prevWeeks) => {
-          const newWeeks = prevWeeks.map((week, wIdx) => {
-            if (wIdx !== weekIndex) return week;
-            return {
-              ...week,
-              chapters: week.chapters.map((chapter, cIdx) => {
-                if (cIdx !== chapterIndex) return chapter;
-                return {
-                  ...chapter,
-                  items: [...(chapter.items || []), item],
-                };
-              }),
-            };
-          });
-          return newWeeks;
-        });
+        // setWeeks((prevWeeks) => {
+        //   const newWeeks = prevWeeks.map((week, wIdx) => {
+        //     if (wIdx !== weekIndex) return week;
+        //     return {
+        //       ...week,
+        //       chapters: week.chapters.map((chapter, cIdx) => {
+        //         if (cIdx !== chapterIndex) return chapter;
+        //         return {
+        //           ...chapter,
+        //           items: [...(chapter.items || []), item],
+        //         };
+        //       }),
+        //     };
+        //   });
+        //   return newWeeks;
+        // });
+        reloadData();
       } catch (error: any) {
         toast.error(error.message);
       }
