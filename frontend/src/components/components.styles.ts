@@ -367,7 +367,8 @@ export const CourseCardOuterClasses = clsx(
   "bg-white",
   "bg-clip-border",
   "text-gray-700",
-  "shadow-lg"
+  "shadow-lg",
+  "h-[350px]" 
 );
 
 export const CourseCardImageContainerClsx = clsx(
@@ -380,7 +381,8 @@ export const CourseCardImageContainerClsx = clsx(
   "rounded-xl",
   "bg-blue-gray-500",
   "bg-clip-border",
-  "shadow-blue-gray-500/40"
+  "shadow-blue-gray-500/40",
+  "h-[150px]" // Fixed height for the image container
 );
 
 export const CourseCardImageClsx = clsx(
@@ -388,6 +390,7 @@ export const CourseCardImageClsx = clsx(
   "inset-0",
   "w-full",
   "h-full",
+  "object-cover", // Ensure the image covers the container
   "bg-gradient-to-tr",
   "from-transparent",
   "via-transparent",
@@ -398,34 +401,32 @@ export const CourseCardTitleContainerClsx = clsx(
   "flex",
   "items-center",
   "justify-between",
-  "min-h-[80px]",
-  "md:min-h-[75px]",
-  "2xl:min-h-[60px]",
+  "h-[60px]", // Fixed height for title container
   "w-full"
 );
 
 export const CourseCardTitle = clsx(
   "block",
   "font-sans",
-  "text-[20px]",
+  "text-lg", // Slightly reduced font size
   "antialiased",
   "font-medium",
   "leading-snug",
   "tracking-normal",
   "text-blue-gray-900"
 );
+
 export const CourseCardDescription = clsx(
   "block",
   "font-sans",
-  "text-base",
+  "text-sm", // Reduced font size
   "antialiased",
   "text-grey-700",
   "font-light",
-  "min-h-[80px]",
-  "md:min-h-[72px]",
-  "2xl:min-h-[47px]"
+  "overflow-hidden" ,// Hide overflow text
+  "min-h-[50px]", // Fixed height for description
+  "mb-6"
 );
-
 export const interestCloseButtonClasses = clsx(
   "text-gray-400",
   "bg-transparent",

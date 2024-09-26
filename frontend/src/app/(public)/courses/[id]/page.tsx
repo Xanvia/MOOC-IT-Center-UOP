@@ -69,7 +69,7 @@ export default function CoursesHome() {
     <>
       <Breadcrumb breadcrumbs={breadcrumbs} />
       <CourseHeader
-        isEdit={false}
+        isEdit={isEdit}
         courseData={courseData}
         reloadData={reloadData}
       />

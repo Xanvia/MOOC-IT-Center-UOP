@@ -66,6 +66,15 @@ class CourseViewSet(viewsets.ModelViewSet):
     def filter_queryset(self, queryset):
         if self.action == "list":
             return super().filter_queryset(queryset).filter(status="published")
+        elif self.action == "my_courses":
+            if self.request.user.groups.filter(name="teacher").exists():
+                return super().filter_queryset(queryset).filter(
+                    course_creator=self.request.user
+                )
+            elif self.request.user.groups.filter(name="student").exists():
+                return super().filter_queryset(queryset).filter(
+                    enrollment__student=self.request.user
+                )
         return super().filter_queryset(queryset)
 
     def retrieve(self, request, *args, **kwargs):
@@ -114,6 +123,16 @@ class CourseViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
+        response.data = {
+            "status": "success",
+            "data": {
+                "courses": response.data,
+            },
+        }
+        return response
+
+    def my_courses(self,request,*args,**kwargs):
+        response = super().list(request, *args, **kwargs)
         response.data = {
             "status": "success",
             "data": {

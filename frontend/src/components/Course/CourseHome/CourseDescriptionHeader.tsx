@@ -62,11 +62,18 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
               </h2>
             </div>
           </div>
-          <div className="relative mt-10 sm:mt-10 md:mt-14 sm:ml-20 ml-2">
-            {isEdit ? (
+          <div className="relative flex justify-between items-center sm:mt-10 md:mt-14 sm:ml-20 ml-2">
+            {isEdit && (
               <CourseDescEditModal
                 courseData={courseData}
                 reloadData={reloadData}
+              />
+            )}
+
+            {isEdit ? (
+              <PrimaryButton
+                text="C L A S S R O O M"
+                onClick={() => router.push(`/courses/${courseData.id}/room`)}
               />
             ) : (
               <>
