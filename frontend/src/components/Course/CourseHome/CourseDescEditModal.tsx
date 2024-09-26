@@ -204,7 +204,7 @@ export default function CourseDescEditModal({ courseData, reloadData }: Props) {
                 <Form>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 sm:mx-10">
                       <div className="col-span-2">
-                        <label htmlFor="title" className={InputLabelClasses2}>
+                        <label htmlFor="title" className="text-sm font-semibold text-primary">
                           Course Title
                         </label>
                         <Field
@@ -249,7 +249,7 @@ export default function CourseDescEditModal({ courseData, reloadData }: Props) {
                       />
                     </div>
                     <div className="col-span-1">
-                      <label htmlFor="duration" className={InputLabelClasses2}>
+                      <label htmlFor="duration" className="text-sm font-semibold text-primary">
                         Course Duration
                       </label>
                       <Field
