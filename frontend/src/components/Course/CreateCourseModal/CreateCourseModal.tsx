@@ -69,6 +69,8 @@ export default function CreateCourseModal() {
       await createCourse(data);
       toast.success("Course created successfully!");
       setIsOpen(false);
+      window.location.reload();
+
     } catch (error: any) {
       const errorMessage = error.message ?? "Failed to create course";
       toast.error(errorMessage);
