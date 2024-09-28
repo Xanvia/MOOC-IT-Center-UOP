@@ -241,7 +241,7 @@ export const fetchCourseContent = async (courseId: string) => {
 };
 
 export const deleteComponent = async (
-  componentType: "Note" | "Chapter" | "Week" | "Video" | "Quiz",
+  componentType: "Note" | "Chapter" | "Week" | "Video" | "Quiz" | "Code",
   componentId: string
 ) => {
   let url = `/course/week`;

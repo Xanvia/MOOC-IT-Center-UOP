@@ -29,7 +29,7 @@ interface ChapterComponentProps {
     chapterIndex: number,
     itemIndex: number,
     itemId: string,
-    itemType: "Note" | "Video" | "Quiz"
+    itemType: "Note" | "Video" | "Quiz" | "Code",
   ) => void;
   removeTopic: (
     weekIndex: number,
