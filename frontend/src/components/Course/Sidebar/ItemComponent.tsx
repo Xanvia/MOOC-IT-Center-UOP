@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Item, Permissions } from "@/components/Course/types";
 import SideBarIcon from "@/icons/sideBarIcon";
-import { FaCheck, FaTrash } from "react-icons/fa";
 import ConfirmDeleteModal from "../Modals/ConfrimDeleteModal";
 import { useGlobal } from "@/contexts/store";
 import { CircleCheck, CircleEllipsisIcon, FileLock, Trash } from "lucide-react";
@@ -16,7 +15,7 @@ interface ItemComponentProps {
     chapterIndex: number,
     itemIndex: number,
     itemId: string,
-    itemType: "Note" | "Video" | "Quiz"
+    itemType: "Note" | "Video" | "Quiz" | "Code"
   ) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;
@@ -66,7 +65,7 @@ const ItemComponent: React.FC<ItemComponentProps> = ({
       </p>
       {permissions.canDelete && (
         <button
-        className="ml-2 text-red-500 rounded hover:bg-red-200"
+          className="ml-2 text-red-500 rounded hover:bg-red-200"
           onClick={() => setShowModal(true)}
         >
           <Trash size={16} />

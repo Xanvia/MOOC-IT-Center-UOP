@@ -24,7 +24,7 @@ interface WeekComponentProps {
     chapterIndex: number,
     itemIndex: number,
     itemId: string,
-    itemType: "Note" | "Video" | "Quiz"
+    itemType: "Note" | "Video" | "Quiz" | "Code"
   ) => void;
   removeTopic: (
     weekIndex: number,
@@ -106,7 +106,8 @@ const WeekComponent: React.FC<WeekComponentProps> = ({
           {week.name}
         </h4>
         {isLastWeek &&
-          userRole == "teacher" && permissions.canDelete && ( // Conditionally render the delete button
+          userRole == "teacher" &&
+          permissions.canDelete && ( // Conditionally render the delete button
             <button
               className="ml-2 mb-4 text-red-500 rounded hover:bg-red-200"
               onClick={() => setShowModal(true)}

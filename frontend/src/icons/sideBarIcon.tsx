@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface SideBarIconProps {
   type: string;
@@ -56,6 +56,26 @@ const SideBarIcon: React.FC<SideBarIconProps> = ({ type }) => {
           <path d="M14 3v4a1 1 0 0 0 1 1h4" />
           <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
           <path d="M9 15l2 2l4 -4" />
+        </svg>
+      );
+    case "Code":
+      return (
+        <svg
+          className="h-5 w-5 inline-block mr-2"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m8 8-4 4 4 4m8 0 4-4-4-4m-2-3-4 14"
+          />
         </svg>
       );
     default:

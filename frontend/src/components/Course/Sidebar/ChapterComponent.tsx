@@ -29,7 +29,7 @@ interface ChapterComponentProps {
     chapterIndex: number,
     itemIndex: number,
     itemId: string,
-    itemType: "Note" | "Video" | "Quiz"
+    itemType: "Note" | "Video" | "Quiz" | "Code",
   ) => void;
   removeTopic: (
     weekIndex: number,
@@ -70,6 +70,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
     { value: "Video", label: "Video", type: "Video" },
     { value: "Note", label: "Note", type: "Note" },
     { value: "Quiz", label: "Quiz", type: "Quiz" },
+    { value: "Code", label: "Code", type: "Code" },
   ];
 
   const customSingleValue = ({ data }: SingleValueProps<OptionType>) => (
@@ -94,7 +95,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
       addItem(weekIndex, chapterIndex, chapterId as string, {
         id: 0,
         name: newItemName,
-        type: newItemType as "Video" | "Note" | "Quiz",
+        type: newItemType as "Video" | "Note" | "Quiz" | "Code",
         content: "",
         has_started: false,
         completed: false,
@@ -200,7 +201,7 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
           )}
           {chapter.name}
         </h5>
-        { permissions.canDelete &&(
+        {permissions.canDelete && (
           <button
             className="ml-2 text-red-500  rounded hover:bg-red-200"
             onClick={() => setShowModal(true)}

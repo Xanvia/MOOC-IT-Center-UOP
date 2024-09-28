@@ -10,6 +10,7 @@ import { startComponent } from "@/services/course.service";
 import { toast } from "sonner";
 import { useGlobal } from "@/contexts/store";
 import { markAsComplete } from "@/services/course.service";
+import CodingQ from "@/components/Course/CodingQ/CodingQ";
 
 const Page: React.FC = () => {
   const {
@@ -152,16 +153,17 @@ const Page: React.FC = () => {
           id={item.id}
           mcqs={item.content.quizzes}
           permissions={permissions}
-          isCompleted = {item.completed}
+          isCompleted={item.completed}
         />
       ) : item.type === "Quiz" ? (
         <>
           <Quiz item={item} permissions={permissions} />
+          {/* <CodingQ /> */}
         </>
       ) : (
         <div>No content available</div>
       )}
-      <div className="flex justify-between mt-12 mx-32">
+      <div className="flex justify-between mt-6 mx-32">
         <YellowButton text="Prev" onClick={handlePrev} />
         <YellowButton text="Next" onClick={handleNext} />
       </div>
