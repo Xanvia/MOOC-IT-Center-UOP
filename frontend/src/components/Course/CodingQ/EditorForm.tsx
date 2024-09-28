@@ -1,13 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import { Trash } from "lucide-react";
+import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 
-const EditForm: React.FC = () => {
+interface Props {
+  toggleEditMode: () => void;
+}
+
+const EditForm: React.FC<Props> = ({ toggleEditMode }) => {
   const [language, setLanguage] = useState("Select");
   const [gradingMethod, setGradingMethod] = useState("Select");
   const [question, setQuestion] = useState("");
   const [explanation, setExplanation] = useState("");
-  const [testCases, setTestCases] = useState([{ input: "", output: "", marks: "" }]);
+  const [testCases, setTestCases] = useState([
+    { input: "", output: "", marks: "" },
+  ]);
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const [isGradingOpen, setIsGradingOpen] = useState(false);
   const [isTimed, setIsTimed] = useState(false);
@@ -56,6 +63,12 @@ const EditForm: React.FC = () => {
     setTestCases(updatedTestCases);
   };
 
+  const handleSave = ()=>{
+
+    
+    toggleEditMode();
+  };
+
   const renderDropdown = (
     value: string,
     setValue: React.Dispatch<React.SetStateAction<string>>,
@@ -66,6 +79,7 @@ const EditForm: React.FC = () => {
     label: string
   ) => (
     <div className="mb-4 relative" ref={ref}>
+      : ( isEdit && <EditButtonPrimary text="EDIT" onClick={handleSave} />)
       <span className="text-sm font-semibold text-primary pr-52">{label}</span>
       <div className="relative w-3/4 mt-4">
         <button
@@ -132,7 +146,7 @@ const EditForm: React.FC = () => {
       {renderDropdown(
         language,
         setLanguage,
-        ["JavaScript", "Python", "Java"],
+        ["JavaScript", "Python", "Java", "C", "C++"],
         isLanguageOpen,
         setIsLanguageOpen,
         languageDropdownRef,
@@ -157,7 +171,9 @@ const EditForm: React.FC = () => {
               onChange={(e) => setIsTimed(e.target.checked)}
               className="form-checkbox h-5 w-5 text-primary"
             />
-            <span className="ml-2 text-sm font-semibold text-primary">Is Timed</span>
+            <span className="ml-2 text-sm font-semibold text-primary">
+              Is Timed
+            </span>
           </label>
           {isTimed && (
             <div className="mt-2">
@@ -171,7 +187,7 @@ const EditForm: React.FC = () => {
             </div>
           )}
         </div>
-        </div>
+      </div>
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">

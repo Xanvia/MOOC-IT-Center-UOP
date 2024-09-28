@@ -370,3 +370,12 @@ export const addQuizToVideo = async (videoId: number, quizzesData: any) => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const addDetailsCode = async (
+  code_id: number,
+  question: string,
+  explanation: string,
+  test_cases: any,
+  duration: number,
+  grading_type: string
+) => {};

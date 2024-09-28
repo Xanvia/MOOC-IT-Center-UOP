@@ -24,15 +24,13 @@ const CodingQ: React.FC<Props> = ({ permissions }) => {
           Coding Question 1
         </h2>
         <div>
-          {editMode ? (
+          {editMode && (
             <SecondaryButton text="SAVE" onClick={toggleEditMode} />
-          ) : (
-            isEdit && <EditButtonPrimary text="EDIT" onClick={toggleEditMode} />
-          )}
+          ) }
         </div>
       </div>
 
-      {editMode ? <EditForm /> : <CodeEditor />}
+      {editMode ? <EditForm toggleEditMode={toggleEditMode} /> : <CodeEditor />}
     </div>
   );
 };
