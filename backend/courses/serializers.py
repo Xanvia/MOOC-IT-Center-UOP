@@ -13,6 +13,7 @@ from .models import (
     Question,
     Answer,
     Progress,
+    CodingAssignment,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -143,6 +144,8 @@ class ItemSerializer(serializers.ModelSerializer):
             representation = QuizSerializer(instance.quiz).data
         elif instance.type == "Video":
             representation = VideoSerializer(instance.video).data
+        elif instance.type == "Code":
+            representation = CodingQuizSerializer(instance.codingassignment).data
         else:
             return super().to_representation(instance)
 
@@ -191,6 +194,16 @@ class QuizSerializer(serializers.ModelSerializer):
             "questions": QuestionSerializer(instance.questions, many=True).data,
         }
         return representation
+
+
+class CodingQuizSerializer(serializers.ModelSerializer):
+    type = serializers.CharField(default="Code")
+
+    class Meta:
+        model = CodingAssignment
+        fields = "__all__"
+
+
 
 
 class VideoSerializer(serializers.ModelSerializer):
