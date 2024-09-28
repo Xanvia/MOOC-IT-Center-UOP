@@ -144,6 +144,8 @@ class ItemSerializer(serializers.ModelSerializer):
             representation = QuizSerializer(instance.quiz).data
         elif instance.type == "Video":
             representation = VideoSerializer(instance.video).data
+        elif instance.type == "Code":
+            representation = CodingQuizSerializer(instance.codingassignment).data
         else:
             return super().to_representation(instance)
 
@@ -201,14 +203,7 @@ class CodingQuizSerializer(serializers.ModelSerializer):
         model = CodingAssignment
         fields = "__all__"
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation["content"] = {
-            "deadline": instance.deadline,
-            "question": QuestionSerializer(instance.question).data,
-            "test_cases": instance.test_cases,
-        }
-        return representation
+
 
 
 class VideoSerializer(serializers.ModelSerializer):
