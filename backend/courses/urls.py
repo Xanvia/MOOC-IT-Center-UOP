@@ -144,6 +144,6 @@ urlpatterns = [
      path(
         "week/chapter/code/<int:code_id>/",
         CodingQuizViewSet.as_view({"put": "update", "delete": "destroy"}),
-        name="note-detail",
+        name="code-detail",
     ),
 ]
