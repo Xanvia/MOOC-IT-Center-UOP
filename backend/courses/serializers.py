@@ -193,6 +193,24 @@ class QuizSerializer(serializers.ModelSerializer):
         return representation
 
 
+class CodingQuizSerializer(serializers.ModelSerializer):
+    type = serializers.CharField(default="CodingQuiz")
+
+    class Meta:
+        model = Quiz
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["content"] = {
+            "deadline": instance.deadline,
+            "full_grades": instance.full_grades,
+            "question": QuestionSerializer(instance.questions, many=True).data,
+            "test_cases": instance.test_cases,
+        }
+        return representation
+
+
 class VideoSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="Video")
 

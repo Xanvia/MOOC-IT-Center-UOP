@@ -82,6 +82,8 @@ class Quiz(Component):
 
 class CodingAssignment(Component):
     question = models.TextField()
+    deadline = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    duration = models.DurationField(blank=True, null=True)
     test_cases = models.JSONField(default=list, blank=True, null=True)
 
 
