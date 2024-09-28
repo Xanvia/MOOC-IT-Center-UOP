@@ -68,3 +68,7 @@ class Answerdmin(admin.ModelAdmin):
 @admin.register(Progress)
 class ProgressAdmin(admin.ModelAdmin):
     list_display = ["id","enrollment", "completed"]
+
+@admin.register(CodingAssignment)
+class CodingAssignmentAdmin(admin.ModelAdmin):
+    list_display = ["id", "question"]

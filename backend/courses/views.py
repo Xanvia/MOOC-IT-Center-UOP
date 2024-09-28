@@ -12,6 +12,7 @@ from .models import (
     Enrollment,
     Progress,
     Component,
+    CodingAssignment,
 )
 from .serializers import (
     CourseSerializer,
@@ -25,6 +26,7 @@ from .serializers import (
     QuestionSerializer,
     ProgressSerializer,
     ProgressTrackSerializer,
+    CodingQuizSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -526,11 +528,11 @@ class QuizViewSet(viewsets.ModelViewSet):
 
 
 class CodingQuizViewSet(viewsets.ModelViewSet):
-    serializer_class = QuizSerializer
-    queryset = Quiz.objects.all()
+    serializer_class = CodingQuizSerializer
+    queryset = CodingAssignment.objects.all()
 
     def get_object(self):
-        self.kwargs["pk"] = self.kwargs.get("quiz_id")
+        self.kwargs["pk"] = self.kwargs.get("code_id")
         return super().get_object()
 
     def get_permissions(self):
@@ -558,7 +560,7 @@ class CodingQuizViewSet(viewsets.ModelViewSet):
 
         response.data = {
             "status": "success",
-            "message": "Quiz created successfully",
+            "message": "Coding Quiz created successfully",
             "data": {
                 "id": response.data["id"],
             },

@@ -179,14 +179,13 @@ export const createQuiz = async (chapterId: string, name: string) => {
 
 export const createCodingQ = async (chapterId: string, name: string) => {
   try {
-    // const response = await axiosInstance.post(
-    //   `/course/week/chapter/${chapterId}/code/`,
-    //   {
-    //     name,
-    //   }
-    // );
-    // return response.data;
-    return;
+    const response = await axiosInstance.post(
+      `/course/week/chapter/${chapterId}/code/`,
+      {
+        name,
+      }
+    );
+    return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
   }
@@ -260,6 +259,9 @@ export const deleteComponent = async (
       break;
     case "Video":
       url += `/chapter/video/${componentId}/`;
+      break;
+    case "Code":
+      url += `/chapter/code/${componentId}/`;
       break;
     default:
       throw new Error("Invalid component type");

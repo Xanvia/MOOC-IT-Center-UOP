@@ -13,6 +13,7 @@ from .models import (
     Question,
     Answer,
     Progress,
+    CodingAssignment,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -194,18 +195,17 @@ class QuizSerializer(serializers.ModelSerializer):
 
 
 class CodingQuizSerializer(serializers.ModelSerializer):
-    type = serializers.CharField(default="CodingQuiz")
+    type = serializers.CharField(default="Code")
 
     class Meta:
-        model = Quiz
+        model = CodingAssignment
         fields = "__all__"
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation["content"] = {
             "deadline": instance.deadline,
-            "full_grades": instance.full_grades,
-            "question": QuestionSerializer(instance.questions, many=True).data,
+            "question": QuestionSerializer(instance.question).data,
             "test_cases": instance.test_cases,
         }
         return representation
