@@ -1,13 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import CodeEditor from "./CodeEditor";
+import EditForm from "./EditorForm";
+import SecondaryButton from "@/components/Buttons/SecondaryButton";
+import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 
 const CodingQ: React.FC = () => {
+  const [editMode, setEditMode] = useState(false); // Manage view between EditForm and CodeEditor
+  const isEdit = true;
+
+  // Toggle between EditorForm and CodeEditor within edit mode
+  const toggleEditMode = () => {
+    setEditMode((prev) => !prev);
+  };
+
   return (
     <div>
-      <h2 className="text-2xl text-primary font-semibold ml-16 my-5">
-        Coding Question 1
-      </h2>
-      <CodeEditor />
+      <div className="flex justify-between items-center ml-16 my-5">
+        <h2 className="text-2xl text-primary font-semibold">
+          Coding Question 1
+        </h2>
+        <div>
+          {editMode ? (
+            <SecondaryButton text="SAVE" onClick={toggleEditMode} />
+          ) : (
+            isEdit && <EditButtonPrimary text="EDIT" onClick={toggleEditMode} />
+          )}
+        </div>
+      </div>
+
+      {editMode ? (
+        <EditForm />
+      ) : (
+        <CodeEditor />
+      )}
     </div>
   );
 };
