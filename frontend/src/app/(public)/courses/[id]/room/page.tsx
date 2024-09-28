@@ -153,7 +153,7 @@ const Page: React.FC = () => {
           id={item.id}
           mcqs={item.content.quizzes}
           permissions={permissions}
-          isCompleted = {item.completed}
+          isCompleted={item.completed}
         />
       ) : item.type === "Quiz" ? (
         <>
@@ -163,7 +163,7 @@ const Page: React.FC = () => {
       ) : (
         <div>No content available</div>
       )}
-      <div className="flex justify-between mt-12 mx-32">
+      <div className="flex justify-between mt-6 mx-32">
         <YellowButton text="Prev" onClick={handlePrev} />
         <YellowButton text="Next" onClick={handleNext} />
       </div>
