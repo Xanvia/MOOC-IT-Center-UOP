@@ -158,7 +158,10 @@ const Page: React.FC = () => {
       ) : item.type === "Quiz" ? (
         <>
           <Quiz item={item} permissions={permissions} />
-          {/* <CodingQ /> */}
+        </>
+      ) : item.type === "Code" ? (
+        <>
+          <CodingQ permissions={permissions} />
         </>
       ) : (
         <div>No content available</div>
