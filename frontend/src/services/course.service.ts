@@ -186,7 +186,7 @@ export const createCodingQ = async (chapterId: string, name: string) => {
     //   }
     // );
     // return response.data;
-    return 
+    return;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
   }
@@ -355,17 +355,16 @@ export const startComponent = async (componentId: string) => {
   }
 };
 
-
-export const addQuizToVideo = async (videoId: number,quizzesData: any) => {
+export const addQuizToVideo = async (videoId: number, quizzesData: any) => {
   try {
     const response = await axiosInstance.patch(
       `/course/week/chapter/video/${videoId}/`,
       {
-        quizzes:quizzesData,
+        quizzes: quizzesData,
       }
     );
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
   }
-}
+};
