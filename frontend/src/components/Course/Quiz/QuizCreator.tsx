@@ -15,6 +15,7 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion, quizId }) => {
   const [currentOptions, setCurrentOptions] = useState<string[]>([]);
   const [correctAnswers, setCorrectAnswers] = useState<Set<string>>(new Set());
   const [answerType, setAnswerType] = useState<string>("SC");
+  const [questionScore, setQuestionScore] = useState<number>(1); // New state for question score
 
   const handleAddQuestion = async () => {
     if (!currentQuestion) {
@@ -34,6 +35,11 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion, quizId }) => {
       }
     }
 
+    if (questionScore <= 0) {
+      toast.warning("Please enter a valid score (greater than 0).");
+      return;
+    }
+
     const formattedAnswers = currentOptions.map((option) => ({
       text: option,
       is_correct: correctAnswers.has(option) ? "True" : "False",
@@ -44,13 +50,16 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion, quizId }) => {
       text: currentQuestion,
       question_type: answerType,
       answers: formattedAnswers,
+      score: questionScore, // Include the score in the question data
     };
+
     try {
       await createQuizQuestion(
         quizId,
         questionData.text,
         questionData.question_type,
-        questionData.answers
+        questionData.answers,
+        questionData.score 
       );
       toast.success("Question added successfully!");
     } catch (error) {
@@ -61,6 +70,7 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion, quizId }) => {
     setCurrentOptions([]);
     setCorrectAnswers(new Set());
     setAnswerType("SC");
+    setQuestionScore(1); // Reset score to default value
     addQuestion(questionData);
   };
 
@@ -97,14 +107,15 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion, quizId }) => {
           onChange={(e) => setCurrentQuestion(e.target.value)}
           className="w-full p-2 mb-4 border rounded-lg"
         />
-        <div className="flex items-center mb-8 space-x-2">
+        <div className="flex items-center mb-4 space-x-2 mr-4">
+        <h3 className="">Mark allocated for question :</h3>
           <input
-            type="text"
-            placeholder="Enter answer option"
-            value={currentAnswer}
-            onChange={(e) => setCurrentAnswer(e.target.value)}
-            className="flex-grow p-2 border rounded-lg"
-            disabled={!currentQuestion || answerType === "open_ended"}
+            type="number"
+            placeholder="Question score"
+            value={questionScore}
+            onChange={(e) => setQuestionScore(Math.max(1, parseInt(e.target.value) || 1))}
+            className="w-24 p-2 border rounded-lg"
+            min="1"
           />
           <select
             value={answerType}
@@ -116,26 +127,34 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion, quizId }) => {
             <option value="MC">Multiple Correct Answers</option>
             <option value="OE">Open Ended</option>
           </select>
+        </div>
+        <div className="flex items-center mb-8 space-x-2">
+          <input
+            type="text"
+            placeholder="Enter answer option"
+            value={currentAnswer}
+            onChange={(e) => setCurrentAnswer(e.target.value)}
+            className="flex-grow p-2 border rounded-lg"
+            disabled={!currentQuestion || answerType === "OE"}
+          />
           <button
             onClick={addOption}
             className={`py-2 px-4 rounded-lg transition duration-300 ${
-              currentQuestion && answerType !== "open_ended"
+              currentQuestion && answerType !== "OE"
                 ? "bg-primary text-white hover:bg-primary_test"
                 : "bg-gray-300 text-gray-600 cursor-not-allowed"
             }`}
             disabled={
-              !currentQuestion || !currentAnswer || answerType === "open_ended"
+              !currentQuestion || !currentAnswer || answerType === "OE"
             }
           >
             Add Option
           </button>
         </div>
-        {currentOptions.length > 0 && answerType !== "open_ended" && (
+        {currentOptions.length > 0 && answerType !== "OE" && (
           <div className="mb-4 bg-blue-100 p-4 rounded-md">
             <p className="text-lg font-semibold mb-2">
-              Select the correct{" "}
-              {answerType === "SC" ? "answer" : "answers"} before adding the
-              question:
+              Select the correct {answerType === "SC" ? "answer" : "answers"} before adding the question:
             </p>
             {currentOptions.map((option, index) => (
               <div key={index} className="flex items-center mb-2 ml-4">

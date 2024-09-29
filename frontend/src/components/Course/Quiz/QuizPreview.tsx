@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import { submitQuiz } from "@/services/course.service";
+import { toast } from "sonner";
 
 interface Answer {
   text: string;
@@ -67,9 +68,10 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
         } else if (question.question_type === "MC") {
           const selectedSet = selectedAnswer as Set<string> | undefined;
           const correctAnswers = question.answers.filter((a) => a.is_correct);
-          if (selectedSet && 
-              selectedSet.size === correctAnswers.length &&
-              correctAnswers.every((a) => selectedSet.has(a.text))
+          if (
+            selectedSet &&
+            selectedSet.size === correctAnswers.length &&
+            correctAnswers.every((a) => selectedSet.has(a.text))
           ) {
             totalScore += question.score;
           }
@@ -101,17 +103,17 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
   const handleSubmit = async () => {
     const score = calculateScore();
     const studentAnswers = createStudentAnswers();
-    
+
     try {
       await submitQuiz(quizId, score, studentAnswers);
       setShowResults(true);
       setQuizSubmitted(true);
+      toast.success("Quiz Submitted");
     } catch (error) {
       console.error("Failed to submit quiz:", error);
       // Handle error (e.g., show error message to user)
     }
   };
-
 
   const getAnswerStyle = (questionIndex: number, answer: Answer) => {
     if (!showResults) return "";
@@ -214,10 +216,7 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
       ))}
       {!isCompleted && !quizSubmitted && (
         <div className="flex p-4 justify-end">
-          <SecondaryButton
-            text="Submit"
-            onClick={handleSubmit}
-          />
+          <SecondaryButton text="Submit" onClick={handleSubmit} />
         </div>
       )}
       {showResults && (
