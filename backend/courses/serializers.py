@@ -14,6 +14,8 @@ from .models import (
     Answer,
     Progress,
     CodingAssignment,
+    StudentQuiz,
+    StudentCodingAnswer,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -329,3 +331,26 @@ class ProgressTrackSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"error": "You are not enrolled in this course"}
             )
+
+
+class StudentQuizSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentQuiz
+        fields = ["quiz", "student_answers","score"]
+
+    def validate(self, attrs):
+        # check if student has already answered this quiz
+        request = self.context.get("request")
+        user = request.user
+        quiz = attrs.get("quiz")
+        enrollement = Enrollment.objects.get(student=user, course__week__chapter__component__quiz=quiz)
+        attrs["enrollement"] = enrollement
+        try:
+            StudentQuiz.objects.get(student=user, quiz=quiz)
+            raise serializers.ValidationError("You have already answered this quiz")
+        except StudentQuiz.DoesNotExist:
+            pass
+        return super().validate(attrs)
+    
+    
