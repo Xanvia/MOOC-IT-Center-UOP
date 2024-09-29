@@ -1,3 +1,13 @@
+export enum CategoryEnum {
+  All = 0,
+  UIDesign = 1,
+  Programming = 2,
+  Marketing = 3,
+  SoftSkill = 4,
+  Network = 5,
+  DataAnalyst = 6
+}
+
 export interface CreateCourseData {
   name: string;
   institution: string;
@@ -12,7 +22,7 @@ export interface CourseCreator {
 }
 
 export interface Category {
-  id: number;
+  id: CategoryEnum;
   label: string;
 }
 
@@ -41,3 +51,13 @@ export interface UpdateCourseData {
   level: string;
   imageFile: File | null;
 }
+
+export const categoryLabels: { [key in CategoryEnum]: string } = {
+  [CategoryEnum.All]: 'All',
+  [CategoryEnum.UIDesign]: 'UI Design',
+  [CategoryEnum.Programming]: 'Programming',
+  [CategoryEnum.Marketing]: 'Marketing',
+  [CategoryEnum.SoftSkill]: 'Soft Skill',
+  [CategoryEnum.Network]: 'Network',
+  [CategoryEnum.DataAnalyst]: 'Data Analyst'
+};
