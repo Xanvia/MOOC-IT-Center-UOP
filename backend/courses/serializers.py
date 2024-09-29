@@ -192,7 +192,6 @@ class QuizSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation["content"] = {
             "deadline": instance.deadline,
-            "full_grades": instance.full_grades,
             "questions": QuestionSerializer(instance.questions, many=True).data,
         }
         return representation

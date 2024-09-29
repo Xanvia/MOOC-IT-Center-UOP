@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
+import { submitQuiz } from "@/services/course.service";
 
 interface Answer {
   text: string;
@@ -7,21 +8,31 @@ interface Answer {
 }
 
 interface Question {
+  id: number;
   text: string;
   question_type: string;
   answers: Answer[];
+  score: number;
 }
 
 interface QuizPreviewProps {
   questions: Question[];
   quizTitle: string;
+  quizId: number;
+  isCompleted?: boolean;
 }
 
-const QuizPreview: React.FC<QuizPreviewProps> = ({ questions, quizTitle }) => {
+const QuizPreview: React.FC<QuizPreviewProps> = ({
+  questions,
+  quizTitle,
+  quizId,
+  isCompleted,
+}) => {
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string | Set<string>;
   }>({});
   const [showResults, setShowResults] = useState<boolean>(false);
+  const [quizSubmitted, setQuizSubmitted] = useState<boolean>(false);
 
   const handleOptionChange = (questionIndex: number, option: string) => {
     setSelectedAnswers((prev) => {
@@ -43,16 +54,72 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({ questions, quizTitle }) => {
     });
   };
 
-  const handleSubmit = () => {
-    setShowResults(true);
+  const calculateScore = () => {
+    let totalScore = 0;
+    questions.forEach((question, index) => {
+      if (question.question_type !== "OE") {
+        const selectedAnswer = selectedAnswers[index];
+        if (question.question_type === "SC") {
+          const correctAnswer = question.answers.find((a) => a.is_correct);
+          if (correctAnswer && selectedAnswer === correctAnswer.text) {
+            totalScore += question.score;
+          }
+        } else if (question.question_type === "MC") {
+          const selectedSet = selectedAnswer as Set<string> | undefined;
+          const correctAnswers = question.answers.filter((a) => a.is_correct);
+          if (selectedSet && 
+              selectedSet.size === correctAnswers.length &&
+              correctAnswers.every((a) => selectedSet.has(a.text))
+          ) {
+            totalScore += question.score;
+          }
+        }
+      }
+    });
+    return totalScore;
   };
+
+  const createStudentAnswers = () => {
+    const studentAnswers: { [key: number]: string | string[] } = {};
+    questions.forEach((question, index) => {
+      const selectedAnswer = selectedAnswers[index];
+      if (question.question_type === "SC" || question.question_type === "OE") {
+        if (selectedAnswer !== undefined) {
+          studentAnswers[question.id] = selectedAnswer as string;
+        }
+      } else if (question.question_type === "MC") {
+        if (selectedAnswer instanceof Set) {
+          studentAnswers[question.id] = Array.from(selectedAnswer);
+        } else {
+          studentAnswers[question.id] = [];
+        }
+      }
+    });
+    return studentAnswers;
+  };
+
+  const handleSubmit = async () => {
+    const score = calculateScore();
+    const studentAnswers = createStudentAnswers();
+    
+    try {
+      await submitQuiz(quizId, score, studentAnswers);
+      setShowResults(true);
+      setQuizSubmitted(true);
+    } catch (error) {
+      console.error("Failed to submit quiz:", error);
+      // Handle error (e.g., show error message to user)
+    }
+  };
+
 
   const getAnswerStyle = (questionIndex: number, answer: Answer) => {
     if (!showResults) return "";
-    
-    const isSelected = questions[questionIndex].question_type === "SC"
-      ? selectedAnswers[questionIndex] === answer.text
-      : (selectedAnswers[questionIndex] as Set<string>)?.has(answer.text);
+
+    const isSelected =
+      questions[questionIndex].question_type === "SC"
+        ? selectedAnswers[questionIndex] === answer.text
+        : (selectedAnswers[questionIndex] as Set<string>)?.has(answer.text);
 
     if (answer.is_correct) {
       return "bg-green-100 border-green-500 text-green-700";
@@ -72,7 +139,12 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({ questions, quizTitle }) => {
             <ul className="list-none">
               {q.answers.map((answer, i) => (
                 <li key={i} className="mb-2 ml-8">
-                  <label className={`inline-flex px-5 py-2 items-center border rounded-md ${getAnswerStyle(index, answer)}`}>
+                  <label
+                    className={`inline-flex px-5 py-2 items-center border rounded-md ${getAnswerStyle(
+                      index,
+                      answer
+                    )}`}
+                  >
                     {q.question_type === "SC" ? (
                       <input
                         type="radio"
@@ -140,9 +212,20 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({ questions, quizTitle }) => {
           )}
         </div>
       ))}
-      <div className="flex p-4 justify-end">
-        <SecondaryButton text={showResults ? "Reset" : "Submit"} onClick={showResults ? () => { setShowResults(false); setSelectedAnswers({}); } : handleSubmit} />
-      </div>
+      {!isCompleted && !quizSubmitted && (
+        <div className="flex p-4 justify-end">
+          <SecondaryButton
+            text="Submit"
+            onClick={handleSubmit}
+          />
+        </div>
+      )}
+      {showResults && (
+        <div className="mt-4 p-4 bg-gray-100 rounded-md">
+          <h3 className="text-xl font-semibold">Quiz Results</h3>
+          <p className="mt-2">Total Score: {calculateScore()}</p>
+        </div>
+      )}
     </div>
   );
 };
