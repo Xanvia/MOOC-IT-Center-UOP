@@ -300,7 +300,8 @@ export const createQuizQuestion = async (
   quizId: number,
   text: string,
   questionType: string,
-  answers: { text: string; is_correct?: string }[]
+  answers: { text: string; is_correct?: string }[],
+  score:number,
 ) => {
   try {
     const response = await axiosInstance.post(
@@ -309,6 +310,7 @@ export const createQuizQuestion = async (
         text,
         question_type: questionType,
         answers,
+        score,
       }
     );
     return response.data;
@@ -379,3 +381,22 @@ export const addDetailsCode = async (
   duration: number,
   grading_type: string
 ) => {};
+
+export const submitQuiz = async (
+  quizId: number,
+  score: number,
+  student_answers: any
+) => {
+  try {
+    const response = await axiosInstance.post(
+      `/course/quiz/${quizId}/submit/`,
+      {
+        score,
+        student_answers,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};

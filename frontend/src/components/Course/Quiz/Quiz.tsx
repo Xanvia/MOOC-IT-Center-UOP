@@ -19,12 +19,16 @@ const CreateQuiz: React.FC<Props> = ({ item, permissions }) => {
   const addQuestion = (question: any) => {
     setQuestions([...questions, question]);
   };
-  
 
   return (
     <div className="quiz-container">
       {isEdit && <QuizCreator addQuestion={addQuestion} quizId={item.id} />}
-      <QuizPreview questions={questions} quizTitle={item.name} />
+      <QuizPreview
+        questions={questions}
+        quizTitle={item.name}
+        isCompleted={item.completed}
+        quizId={item.id}
+      />
     </div>
   );
 };

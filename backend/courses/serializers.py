@@ -14,6 +14,8 @@ from .models import (
     Answer,
     Progress,
     CodingAssignment,
+    StudentQuiz,
+    StudentCodingAnswer,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -190,7 +192,6 @@ class QuizSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation["content"] = {
             "deadline": instance.deadline,
-            "full_grades": instance.full_grades,
             "questions": QuestionSerializer(instance.questions, many=True).data,
         }
         return representation
@@ -329,3 +330,38 @@ class ProgressTrackSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"error": "You are not enrolled in this course"}
             )
+
+
+class StudentQuizSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentQuiz
+        fields = ["quiz", "student_answers","score"]
+
+    def validate(self, attrs):
+        # check if student has already answered this quiz
+        request = self.context.get("request")
+        user = request.user
+        quiz = attrs.get("quiz")
+        enrollement = Enrollment.objects.get(student=user, course=quiz.chapter.week.course)
+        attrs["enrollement"] = enrollement
+        try:
+            StudentQuiz.objects.get(enrollement__student=user, quiz=quiz)
+            raise serializers.ValidationError("You have already answered this quiz")
+        except StudentQuiz.DoesNotExist:
+            pass
+        return super().validate(attrs)
+    
+    def create(self, validated_data):
+        quiz = validated_data.get("quiz")
+        # we have to iterate through all the questions in the quiz, in order to check if theres atleast one open_ended
+        open_ended = False
+        for question in quiz.questions.all():
+            if question.question_type == Question.OPENN_ENDED:
+                open_ended = True
+        validated_data["graded"] = not open_ended
+
+
+        return super().create(validated_data)
+    
+    

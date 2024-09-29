@@ -77,7 +77,7 @@ class Note(Component):
 class Quiz(Component):
     deadline = models.DateTimeField(default=timezone.now, blank=True, null=True)
     duration = models.DurationField(blank=True, null=True)
-    full_grades = models.IntegerField(default=100, blank=True, null=True)
+    
 
 
 class CodingAssignment(Component):
@@ -132,6 +132,7 @@ class Question(models.Model):
     ]
 
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions")
+    score = models.IntegerField(default=1)
     text = models.TextField()
     question_type = models.CharField(max_length=2, choices=QUESTION_TYPES)
 
@@ -154,11 +155,12 @@ class StudentQuiz(models.Model):
     enrollement = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     score = models.IntegerField(default=0)
+    graded = models.BooleanField(default=False)
     completed_at = models.DateTimeField(auto_now_add=True)
     student_answers = models.JSONField(default=list)
 
     def __str__(self):
-        return f"{self.student.username} - {self.quiz.name}"
+        return f"{self.quiz.name}"
 
 
 class StudentCodingAnswer(models.Model):

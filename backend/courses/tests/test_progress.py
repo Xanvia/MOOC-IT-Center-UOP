@@ -127,3 +127,5 @@ class ProgressViewsetTest(APITestCase):
             },
         }
         self.assertEqual(response.data, expected_data)
+
+    

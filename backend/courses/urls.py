@@ -13,6 +13,7 @@ from .views import (
     ProgressTrackViewSet,
     GetProgressAPIView,
     CodingQuizViewSet,
+    StudentQuizViewSet,
 )
 
 router = DefaultRouter()
@@ -146,4 +147,5 @@ urlpatterns = [
         CodingQuizViewSet.as_view({"put": "update", "delete": "destroy"}),
         name="code-detail",
     ),
+    path("quiz/<int:pk>/submit/", StudentQuizViewSet.as_view({"post": "submit_quiz"})),
 ]

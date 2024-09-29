@@ -13,6 +13,7 @@ from .models import (
     Progress,
     Component,
     CodingAssignment,
+    StudentQuiz,
 )
 from .serializers import (
     CourseSerializer,
@@ -27,6 +28,7 @@ from .serializers import (
     ProgressSerializer,
     ProgressTrackSerializer,
     CodingQuizSerializer,
+    StudentQuizSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -643,4 +645,19 @@ class GetProgressAPIView(generics.RetrieveAPIView):
         response = super().retrieve(request, *args, **kwargs)
 
         response.data = {"status": "success", "data": response.data}
+        return response
+
+
+class StudentQuizViewSet(viewsets.ModelViewSet):
+    queryset = Progress.objects.all()
+    serializer_class = StudentQuizSerializer
+
+    def submit_quiz(self, request, *args, **kwargs):
+        student = request.user
+        request.data["quiz"] = kwargs["pk"]
+        response = super().create(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "message": "Quiz submitted successfully",
+        }
         return response
