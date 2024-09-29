@@ -154,11 +154,12 @@ class StudentQuiz(models.Model):
     enrollement = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     score = models.IntegerField(default=0)
+    graded = models.BooleanField(default=False)
     completed_at = models.DateTimeField(auto_now_add=True)
     student_answers = models.JSONField(default=list)
 
     def __str__(self):
-        return f"{self.student.username} - {self.quiz.name}"
+        return f"{self.quiz.name}"
 
 
 class StudentCodingAnswer(models.Model):

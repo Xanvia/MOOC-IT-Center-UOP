@@ -654,13 +654,10 @@ class StudentQuizViewSet(viewsets.ModelViewSet):
 
     def submit_quiz(self, request, *args, **kwargs):
         student = request.user
-        request.data["quiz"] = kwargs["quiz_id"]
+        request.data["quiz"] = kwargs["pk"]
         response = super().create(request, *args, **kwargs)
         response.data = {
             "status": "success",
             "message": "Quiz submitted successfully",
-            "data": {
-                "id": response.data["id"],
-            },
         }
         return response

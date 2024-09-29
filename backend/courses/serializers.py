@@ -344,13 +344,25 @@ class StudentQuizSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         user = request.user
         quiz = attrs.get("quiz")
-        enrollement = Enrollment.objects.get(student=user, course__week__chapter__component__quiz=quiz)
+        enrollement = Enrollment.objects.get(student=user, course=quiz.chapter.week.course)
         attrs["enrollement"] = enrollement
         try:
-            StudentQuiz.objects.get(student=user, quiz=quiz)
+            StudentQuiz.objects.get(enrollement__student=user, quiz=quiz)
             raise serializers.ValidationError("You have already answered this quiz")
         except StudentQuiz.DoesNotExist:
             pass
         return super().validate(attrs)
+    
+    def create(self, validated_data):
+        quiz = validated_data.get("quiz")
+        # we have to iterate through all the questions in the quiz, in order to check if theres atleast one open_ended
+        open_ended = False
+        for question in quiz.questions.all():
+            if question.question_type == Question.OPENN_ENDED:
+                open_ended = True
+        validated_data["graded"] = not open_ended
+
+
+        return super().create(validated_data)
     
     
