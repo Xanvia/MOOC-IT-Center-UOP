@@ -46,7 +46,9 @@ const EducationCard: React.FC<props> = ({ eduData, reload }) => {
           <h1>{eduData.institution}</h1>
         </div>
         <div className="text text-gray-600 mt-4">
-          <h1>{eduData.degree}</h1>
+          <h1>
+            {eduData.degree} in {eduData.field_of_study}
+          </h1>
         </div>
         <div className="text mt-2 text-right text-gray-500 font-medium mr-2">
           <h1>

@@ -29,6 +29,7 @@ export const createCourse = async (values: CreateCourseData) => {
       institution: values.institution,
       category: values.category,
       difficulty: values.difficulty,
+      payment_type: values.payment_type,
     });
 
     return response.data;

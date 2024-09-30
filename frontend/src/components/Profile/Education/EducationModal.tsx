@@ -142,6 +142,22 @@ const EducationModal: React.FC<Props> = ({
                     <div className={InputInnerDiv}>
                       <Field
                         type="text"
+                        name="field_of_study"
+                        className={InputFieldClasses}
+                        placeholder=" "
+                      />
+                      <ErrorMessage
+                        name="field"
+                        component="div"
+                        className="top-0 left-0 text-red-600 text-xs"
+                      />
+                      <label className={InputLabel}>Field Of Study</label>
+                    </div>
+                  </div>
+                  <div className={InputOuterDiv}>
+                    <div className={InputInnerDiv}>
+                      <Field
+                        type="text"
                         name="degree"
                         className={InputFieldClasses}
                         placeholder=" "
@@ -151,7 +167,7 @@ const EducationModal: React.FC<Props> = ({
                         component="div"
                         className="top-0 left-0 text-red-600 text-xs"
                       />
-                      <label className={InputLabel}>Education Type</label>
+                      <label className={InputLabel}>Degree</label>
                     </div>
                   </div>
                   <div className={InputOuterDiv}>
