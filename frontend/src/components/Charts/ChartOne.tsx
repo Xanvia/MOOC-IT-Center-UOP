@@ -1,6 +1,9 @@
+"use client";
 import { ApexOptions } from "apexcharts";
 import React from "react";
 import ReactApexChart from "react-apexcharts";
+import dynamic from "next/dynamic";
+
 // import DefaultSelectOption from "@/components/SelectOption/DefaultSelectOption";
 
 const ChartOne: React.FC = () => {
