@@ -32,7 +32,10 @@ class CourseTeacherSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation["full_name"] = f"{instance.first_name} {instance.last_name}"
         representation["headline"] = instance.userprofile.headline
-        representation["profile_picture"] =  instance.userprofile.profile_image.url if instance.userprofile.profile_image  else None
+        if instance.userprofile.profile_image:
+            representation["profile_picture"] = instance.userprofile.profile_image.url
+        else:
+            representation["profile_picture"] = instance.userprofile.profile_picture if instance.userprofile else None
         representation.pop("first_name")
         representation.pop("last_name")
         return representation
