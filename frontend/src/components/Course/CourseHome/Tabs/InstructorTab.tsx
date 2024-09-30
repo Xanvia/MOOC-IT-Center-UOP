@@ -1,31 +1,12 @@
 import Image from "next/image";
 import React from "react";
+import { Instructor } from "../../course.types";
 
 interface Props {
   instructors: Instructor[];
 }
 
-interface Instructor {
-  name: string;
-  country: string;
-  university: string;
-  duration: string;
-  subjectArea: string;
-  description: string;
-}
-
-const instructors: Instructor[] = [
-  {
-    name: "John Doe",
-    country: "USA",
-    university: "Harvard",
-    duration: "10 years",
-    subjectArea: "Computer Science",
-    description: "John Doe is a highly experienced instructor...",
-  },
-];
-
-const Example: React.FC = () => {
+const Example: React.FC<Props> = ({ instructors }) => {
   return (
     <div>
       <section className="relative isolate overflow-hidden bg-white px-6 py-24 sm:py-32 lg:px-8">
@@ -36,22 +17,21 @@ const Example: React.FC = () => {
           <figure className="mt-10">
             <blockquote className="text-center text-xl font-semibold leading-8 text-gray-900 sm:text-2xl sm:leading-9"></blockquote>
             <figcaption className="mt-10">
-              <Image
-                alt=""
-                src="https://ui-avatars.com/api/?name=john doe&color=ffffff&background=008080"
-                className="mx-auto h-10 w-10 rounded-full"
-                width={40}
-                height={40}
-              />
-
               {instructors.map((instructor, index) => (
                 <div
                   key={index}
                   className="mt-4 flex items-center justify-center space-x-3 text-base"
                 >
+                  <Image
+                    alt=""
+                    src={instructor.profile_picture}
+                    className="mx-auto h-10 w-10 rounded-full"
+                    width={40}
+                    height={40}
+                  />
                   <div className="font-semibold text-gray-900">
                     {" "}
-                    {instructor.name}
+                    {instructor.full_name}
                   </div>
                   <svg
                     width={3}
@@ -62,9 +42,7 @@ const Example: React.FC = () => {
                   >
                     <circle r={1} cx={1} cy={1} />
                   </svg>
-                  <div className="text-gray-600">
-                    University of {instructor.university}
-                  </div>
+                  <div className="text-gray-600">{instructor.headline}</div>
                 </div>
               ))}
             </figcaption>
