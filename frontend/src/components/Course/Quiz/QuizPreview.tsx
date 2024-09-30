@@ -21,6 +21,7 @@ interface QuizPreviewProps {
   quizTitle: string;
   quizId: number;
   isCompleted?: boolean;
+  setIsFinished: (isFinished: boolean) => void;
 }
 
 const QuizPreview: React.FC<QuizPreviewProps> = ({
@@ -28,6 +29,7 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
   quizTitle,
   quizId,
   isCompleted,
+  setIsFinished,
 }) => {
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string | Set<string>;
@@ -105,9 +107,10 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
     const studentAnswers = createStudentAnswers();
 
     try {
-      await submitQuiz(quizId, score, studentAnswers);
+      // await submitQuiz(quizId, score, studentAnswers);
       setShowResults(true);
       setQuizSubmitted(true);
+      setIsFinished(true);
       toast.success("Quiz Submitted");
     } catch (error) {
       console.error("Failed to submit quiz:", error);

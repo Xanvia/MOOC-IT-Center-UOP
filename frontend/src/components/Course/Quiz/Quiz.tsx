@@ -9,9 +9,10 @@ import { useGlobal } from "@/contexts/store";
 interface Props {
   item: Item;
   permissions: Permissions;
+  setIsFinished: (isFinished: boolean) => void;
 }
 
-const CreateQuiz: React.FC<Props> = ({ item, permissions }) => {
+const CreateQuiz: React.FC<Props> = ({ item, permissions, setIsFinished }) => {
   const [questions, setQuestions] = useState<any[]>(item.content.questions);
   const [isEdit, setIsEdit] = useState<boolean>(permissions.canEdit);
   const { userRole } = useGlobal();
@@ -28,6 +29,7 @@ const CreateQuiz: React.FC<Props> = ({ item, permissions }) => {
         quizTitle={item.name}
         isCompleted={item.completed}
         quizId={item.id}
+        setIsFinished={setIsFinished}
       />
     </div>
   );
