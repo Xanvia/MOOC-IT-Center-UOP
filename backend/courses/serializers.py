@@ -32,6 +32,10 @@ class CourseTeacherSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation["full_name"] = f"{instance.first_name} {instance.last_name}"
         representation["headline"] = instance.userprofile.headline
+        if instance.userprofile.profile_image:
+            representation["profile_picture"] = instance.userprofile.profile_image.url
+        else:
+            representation["profile_picture"] = instance.userprofile.profile_picture if instance.userprofile else None
         representation.pop("first_name")
         representation.pop("last_name")
         return representation
@@ -63,9 +67,11 @@ class CourseSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
 
         representation = super().to_representation(instance)
-        representation["course_creator"] = CourseTeacherSerializer(
-            instance.course_creator
-        ).data
+
+        teachers = CourseTeachers.objects.filter(course=instance)
+        instructors = [CourseTeacherSerializer(instance.course_creator).data]
+        instructors.extend(CourseTeacherSerializer(teacher.teacher).data for teacher in teachers)
+        representation["instructors"] = instructors
         representation["category"] = InterestSerializer(instance.category).data
         representation["institution"] = instance.institution.label
 
