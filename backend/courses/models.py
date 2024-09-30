@@ -7,17 +7,30 @@ from userprofiles.models import Institution, Interest
 
 
 class Course(models.Model):
+    PAYMENT_TYPE_CHOICES = [
+        ('free', 'Free'),
+        ('paid', 'Completely Paid'),
+        ('trial', '1 Week Free Trial and Paid'),
+    ]
+
     course_creator = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     specifications = models.TextField(blank=True, null=True)
     category = models.ForeignKey(Interest, on_delete=models.CASCADE)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
+    faculty = models.CharField(max_length=255, blank=True, null=True)
+    department = models.CharField(max_length=255, blank=True, null=True)
     outcomes = models.JSONField(default=list, blank=True, null=True)
     header_image = models.ImageField(upload_to="course_images/", blank=True, null=True)
     duration = models.CharField(max_length=255, blank=True, null=True)
     difficulty = models.CharField(max_length=255)
     status = models.CharField(max_length=255, default="unpublished")
+    payment_type = models.CharField(
+        max_length=50,
+        choices=PAYMENT_TYPE_CHOICES,
+        default='trial'
+    )
 
 
 class Week(models.Model):
