@@ -11,7 +11,7 @@ import DropDownInstitution from "@/components/DropDown/DropDownUni";
 import DropDownInterests from "@/components/DropDown/DropDownInterests";
 import { createCourse } from "@/services/course.service";
 import { CreateCourseData } from "../course.types";
-
+import DropDownPaymentType from "@/components/DropDown/DropDownPayement";
 interface Interest {
   id: number;
   label: string;
@@ -25,6 +25,7 @@ export default function CreateCourseModal() {
   const [category, setCategory] = useState<Interest>();
   const [difficulty, setDifficulty] = useState("");
   const [institution, setInstitution] = useState("");
+  const [paymentType, setPaymentType] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -48,6 +49,10 @@ export default function CreateCourseModal() {
     setDifficulty(value);
   };
 
+  const handlePaymentTypeChange = (value: string) => {
+    setPaymentType(value);
+  };
+
   const handleSubmit = async (values: FromValues) => {
     if (institution === "") {
       toast.error("Please select an organization");
@@ -58,12 +63,16 @@ export default function CreateCourseModal() {
     } else if (difficulty === "") {
       toast.error("Please select a difficulty");
       return;
+    } else if (paymentType === "") {
+      toast.error("Please select a payment type");
+      return;
     }
     const data: CreateCourseData = {
       name: values.title,
       institution: institution,
       category: category.id,
       difficulty: difficulty,
+      payment_type: paymentType,
     };
     try {
       await createCourse(data);
@@ -122,29 +131,29 @@ export default function CreateCourseModal() {
                         className="text-red-500 text-sm"
                       />
                     </div>
-                    <div className="col-span-2 mb-4 md:px-5 lg:px-10">
+                    <div className="col-span-2 sm:col-span-1 mb-4 md:px-5 lg:px-10">
                       <DropDownInstitution
                         label="Organization Name"
                         addSelection={setInstitution}
                         selectedInstitution={institution as string}
                       />
                     </div>
-                    <div className="md:px-5 lg:px-10 col-span-2 sm:col-span-1">
-                      <label
-                        htmlFor="title"
-                        className=" text-sm font-bold text-primary"
-                      >
-                        Course Category
-                      </label>
-                      <DropDownInterests
-                        addSelection={handleCategoryChange}
-                        value="Select Course Category"
+                    <div className="col-span-2 sm:col-span-1 mb-4 md:px-5 lg:px-10 pt-1">
+                      <DropDownPaymentType
+                        value={paymentType ?? ""}
+                        setPaymentType={handlePaymentTypeChange}
                       />
                     </div>
-                    <div className="md:px-5 lg:px-10 col-span-2 sm:col-span-1">
+                    <div className="col-span-2 sm:col-span-1 mb-4 md:px-5 lg:px-10">
                       <CourseDifficultyDropdown
                         value={difficulty ?? ""}
                         onChange={handleDifficultyChange}
+                      />
+                    </div>
+                    <div className="col-span-2 sm:col-span-1 mb-4 md:px-5 lg:px-10 pt-5">
+                      <DropDownInterests
+                        addSelection={handleCategoryChange}
+                        value="Select Course Category"
                       />
                     </div>
                   </div>

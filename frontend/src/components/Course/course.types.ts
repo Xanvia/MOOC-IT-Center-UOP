@@ -3,6 +3,7 @@ export interface CreateCourseData {
   institution: string;
   category: number;
   difficulty: string;
+  payment_type: string;
 }
 
 export interface CourseCreator {
