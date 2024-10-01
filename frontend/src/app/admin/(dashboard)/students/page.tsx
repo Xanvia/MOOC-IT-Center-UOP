@@ -3,7 +3,7 @@ import Head from "next/head";
 import { Plus } from "lucide-react";
 import StudentTable from "@/components/Students/StudentTable";
 
-export interface StudentData {
+interface StudentData {
   name: string;
   profilePicture: string;
   course: string; // What they're studying
@@ -12,11 +12,11 @@ export interface StudentData {
   status: "Active" | "Alumni" | "On Leave";
 }
 
-export interface StudentTableProps {
+interface StudentTableProps {
   data: StudentData[];
 }
 
-export const studentsData: StudentData[] = [
+const studentsData: StudentData[] = [
   {
     name: "Emma Thompson",
     profilePicture: "/api/placeholder/40/40",
@@ -125,10 +125,6 @@ const StudentsPage = () => {
       </main>
     </div>
   );
-  <button className="flex items-center px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors duration-200">
-    <Plus className="w-4 h-4 mr-2" />
-    Add New Teacher
-  </button>;
 };
 
 export default StudentsPage;

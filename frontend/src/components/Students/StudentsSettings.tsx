@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 interface StudentData {
   name: string;
@@ -49,7 +50,9 @@ const StudentSettingsTable = ({
             {data.map((student, index) => (
               <tr key={index}>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <img
+                  <Image
+                    width={40}
+                    height={40}
                     src={student.profilePicture}
                     alt={`${student.name}'s profile`}
                     className="h-10 w-10 rounded-full object-cover"
@@ -61,9 +64,7 @@ const StudentSettingsTable = ({
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">{student.year}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <button
-                    className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600"
-                  >
+                  <button className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">
                     Manage Grade
                   </button>
                 </td>

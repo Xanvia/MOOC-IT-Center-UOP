@@ -3,7 +3,7 @@ import Head from "next/head";
 import { Plus } from "lucide-react";
 import TeacherTable from "@/components/TeacherTable/TeacherTable";
 
-export interface TeacherData {
+interface TeacherData {
   name: string;
   profilePicture: string; // URL for the profile picture
   headline: string; // Changed from 'course' to match the table header
@@ -12,7 +12,7 @@ export interface TeacherData {
   status: "Active" | "Inactive";
 }
 
-export const teachersData: TeacherData[] = [
+const teachersData: TeacherData[] = [
   {
     name: "Candice Schiner",
     profilePicture: "/api/placeholder/40/40", // Using a placeholder, replace with actual URL

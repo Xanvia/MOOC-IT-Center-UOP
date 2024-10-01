@@ -1,10 +1,8 @@
 import React from "react";
 import Head from "next/head";
-import { Plus } from "lucide-react";
-import StudentTable from "@/components/Students/StudentTable";
 import StudentSettingsTable from "@/components/Students/StudentsSettings";
 
-export interface StudentData {
+interface StudentData {
   name: string;
   profilePicture: string;
   course: string; // What they're studying
@@ -13,11 +11,11 @@ export interface StudentData {
   status: "Active" | "Alumni" | "On Leave";
 }
 
-export interface StudentTableProps {
+interface StudentTableProps {
   data: StudentData[];
 }
 
-export const studentsData: StudentData[] = [
+const studentsData: StudentData[] = [
   {
     name: "Emma Thompson",
     profilePicture: "/api/placeholder/40/40",
