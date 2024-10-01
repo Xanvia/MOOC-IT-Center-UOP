@@ -1,13 +1,14 @@
 import React from "react";
+
 export interface TeacherData {
   name: string;
-  course: string;
-  faculty: string;
-  department: string;
+  profilePicture: string;  // URL for the profile picture
+  headline: string;        // Changed from 'course' to match the table header
+  institution: string;     // Changed from 'faculty' to match the table header
+  courses: string;         // Changed from 'department' to match the table header
   status: "Active" | "Inactive";
 }
 
-// Props interface for the TeacherTable component
 export interface TeacherTableProps {
   data: TeacherData[];
 }
@@ -20,19 +21,19 @@ const TeacherTable = ({ data }: TeacherTableProps) => {
           <thead className="bg-gray-100 sticky top-0">
             <tr>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
+                Profile
+              </th>
+              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
                 Name
               </th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                Course
+                Headline
               </th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                Faculty
+                Institution
               </th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                Department
-              </th>
-              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                Status
+                Courses
               </th>
             </tr>
           </thead>
@@ -40,26 +41,22 @@ const TeacherTable = ({ data }: TeacherTableProps) => {
           <tbody className="bg-white divide-y divide-gray-200">
             {data.map((teacher, index) => (
               <tr key={index}>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <img
+                    src={teacher.profilePicture}
+                    alt={`${teacher.name}'s profile`}
+                    className="h-10 w-10 rounded-full object-cover"
+                  />
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap">{teacher.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {teacher.course}
+                  {teacher.headline}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {teacher.faculty}
+                  {teacher.institution}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {teacher.department}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      teacher.status === "Active"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {teacher.status}
-                  </span>
+                  {teacher.courses}
                 </td>
               </tr>
             ))}

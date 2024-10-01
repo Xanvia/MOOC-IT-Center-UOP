@@ -5,25 +5,28 @@ import TeacherTable from "@/components/TeacherTable/TeacherTable";
 
 export interface TeacherData {
   name: string;
-  course: string;
-  faculty: string;
-  department: string;
+  profilePicture: string; // URL for the profile picture
+  headline: string; // Changed from 'course' to match the table header
+  institution: string; // Changed from 'faculty' to match the table header
+  courses: string; // Changed from 'department' to match the table header
   status: "Active" | "Inactive";
 }
 
 export const teachersData: TeacherData[] = [
   {
     name: "Candice Schiner",
-    course: "Introduction to computer network",
-    faculty: "Faculty of Science",
-    department: "Statistic and Computer Science",
+    profilePicture: "/api/placeholder/40/40", // Using a placeholder, replace with actual URL
+    headline: "Computer Network Specialist",
+    institution: "University of Technology",
+    courses: "Introduction to Computer Networks, Advanced Networking",
     status: "Active",
   },
   {
     name: "John Doe",
-    course: "Material Science",
-    faculty: "Faculty of Engineering",
-    department: "Civil Engineering",
+    profilePicture: "/api/placeholder/40/40", // Using a placeholder, replace with actual URL
+    headline: "Materials Science Professor",
+    institution: "Engineering Institute",
+    courses: "Material Science, Advanced Materials",
     status: "Active",
   },
 ];
@@ -41,10 +44,6 @@ const TeachersPage = () => {
           <h2 className="text-2xl font-semibold text-gray-800">
             Manage Teachers
           </h2>
-          <button className="flex items-center px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors duration-200">
-            <Plus className="w-4 h-4 mr-2" />
-            Add New Teacher
-          </button>
         </div>
 
         <div className="mb-6">
