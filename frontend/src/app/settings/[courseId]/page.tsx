@@ -3,10 +3,16 @@ import DataStatsOne from "@/components/DataStats/DataStats";
 import ChartOne from "@/components/Charts/ChartOne";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import Header from "@/components/layout/header";
+
 
 const CourseSettingsPage: React.FC = () => {
   return (
     <div>
+      <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+          {/* <!-- ===== Header Star ===== --> */}
+          {/* <Header /> */}
+        </div>
       <h1>Course Settings</h1>
       <p>Manage your course settings here.</p>
       
