@@ -131,10 +131,10 @@ const ChartOne: React.FC = () => {
   };
 
   return (
-    <div className="col-span-12 rounded-[10px] bg-white px-7.5 pb-6 pt-7.5 shadow-1 dark:bg-gray-dark dark:shadow-card xl:col-span-7">
+    <div className="bg-slate-100 col-span-12 rounded-[10px] bg-white px-12 pb-6 pt-7 shadow-1 dark:bg-gray-dark dark:shadow-card xl:col-span-7">
       <div className="mb-3.5 flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h4 className="text-body-2xlg font-bold text-dark dark:text-white">
+          <h4 className=" text-body-2xlg font-bold text-dark dark:text-white">
                 Overview
           </h4>
         </div>
@@ -146,7 +146,7 @@ const ChartOne: React.FC = () => {
         </div>
       </div>
       <div>
-        <div className="-ml-4 -mr-5">
+        <div className="-ml-4 -mr-5 pt-5">
           <ReactApexChart
             options={options}
             series={series}
