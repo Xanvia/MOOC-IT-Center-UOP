@@ -3,11 +3,9 @@ import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import { Trash } from "lucide-react";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 
-interface Props {
-  toggleEditMode: () => void;
-}
+interface Props {}
 
-const EditForm: React.FC<Props> = ({ toggleEditMode }) => {
+const EditForm: React.FC<Props> = ({}) => {
   const [language, setLanguage] = useState("Select");
   const [gradingMethod, setGradingMethod] = useState("Select");
   const [question, setQuestion] = useState("");
@@ -63,10 +61,8 @@ const EditForm: React.FC<Props> = ({ toggleEditMode }) => {
     setTestCases(updatedTestCases);
   };
 
-  const handleSave = ()=>{
-
-    
-    toggleEditMode();
+  const handleSave = () => {
+    // toggleEditMode();
   };
 
   const renderDropdown = (
@@ -79,7 +75,7 @@ const EditForm: React.FC<Props> = ({ toggleEditMode }) => {
     label: string
   ) => (
     <div className="mb-4 relative" ref={ref}>
-      : ( isEdit && <EditButtonPrimary text="EDIT" onClick={handleSave} />)
+      
       <span className="text-sm font-semibold text-primary pr-52">{label}</span>
       <div className="relative w-3/4 mt-4">
         <button

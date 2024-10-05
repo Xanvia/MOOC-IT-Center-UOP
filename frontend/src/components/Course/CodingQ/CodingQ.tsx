@@ -4,17 +4,21 @@ import EditForm from "./EditorForm";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import { Item, Permissions } from "../types";
+
 interface Props {
   permissions: Permissions;
 }
 
 const CodingQ: React.FC<Props> = ({ permissions }) => {
-  const [editMode, setEditMode] = useState(false); // Manage view between EditForm and CodeEditor
-  const [isEdit, setIsEdit] = useState<boolean>(permissions.canEdit);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const { canEdit } = permissions;
 
-  // Toggle between EditorForm and CodeEditor within edit mode
-  const toggleEditMode = () => {
-    setEditMode((prev) => !prev);
+  const handleEditClick = () => {
+    setIsEditMode(true);
+  };
+
+  const handleSaveClick = () => {
+    setIsEditMode(false);
   };
 
   return (
@@ -24,13 +28,17 @@ const CodingQ: React.FC<Props> = ({ permissions }) => {
           Coding Question 1
         </h2>
         <div>
-          {editMode && (
-            <SecondaryButton text="SAVE" onClick={toggleEditMode} />
-          ) }
+          {isEditMode?(
+            <SecondaryButton text="SAVE" onClick={handleSaveClick} />
+          ) : (
+            canEdit && (
+              <EditButtonPrimary text="Edit" onClick={handleEditClick} />
+            )
+          )}
         </div>
       </div>
 
-      {editMode ? <EditForm toggleEditMode={toggleEditMode} /> : <CodeEditor />}
+      {isEditMode ? <EditForm /> : <CodeEditor />}
     </div>
   );
 };
