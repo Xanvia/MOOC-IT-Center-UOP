@@ -129,6 +129,17 @@ const Sidebar: React.FC = () => {
     [expandedWeek]
   );
 
+  const handleNotificationClick = () => {
+    setSelectedTopic({
+      id: -1,
+      name: "Notifications",
+      content: "",
+      type: "Notifications",
+      has_started: true,
+      completed: true,
+    });
+  };
+
   const addNewWeek = useCallback(async () => {
     const weekName = `Week ${weeks.length + 1}`;
     try {
@@ -291,18 +302,49 @@ const Sidebar: React.FC = () => {
   return (
     <div className="fixed left-0 w-3/12 bg-gray-white min-h-screen overflow-y-auto  mb-96">
       <div className="w-84 p-8 border-r bg-primary_light min-h-screen h-full border-gray-200  pb-20 mb-96 ">
-        <div className="mt-4 mb-10">
-          <h3 className="text-lg font-semibold">Progress</h3>
-          <div className="relative h-2 mt-2 bg-gray-300 rounded">
-            <div
-              className="absolute top-0 left-0 h-full bg-blue-600 rounded w-3/12"
-              style={{ width: `${progress}%` }}
-            ></div>
+        <div
+          className={`mb-4 p-4 rounded-lg cursor-pointer transition-all ${
+            selectedTopic.type === "Notifications"
+              ? "bg-blue-100 border-l-4 border-blue-500"
+              : "hover:bg-gray-100"
+          }`}
+          onClick={handleNotificationClick}
+        >
+          <div className="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+              />
+            </svg>
+            <span className="font-semibold">Notifications & Discussions</span>
           </div>
-          <p className="my-2 text-sm text-gray-600">
-            {progress}% of the course is completed
-          </p>
         </div>
+
+        {userRole === "student" && (
+          <div className="mt-4 mb-10">
+            <h3 className="text-lg font-semibold">Progress</h3>
+
+            <div className="relative h-2 mt-2 bg-gray-300 rounded">
+              <div
+                className="absolute top-0 left-0 h-full bg-blue-600 rounded w-3/12"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+
+            <p className="my-2 text-sm text-gray-600">
+              {progress}% of the course is completed
+            </p>
+          </div>
+        )}
         {weeks &&
           weeks.map((week, weekIndex) => (
             <WeekComponent

@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { useGlobal } from "@/contexts/store";
 import { markAsComplete } from "@/services/course.service";
 import CodingQ from "@/components/Course/CodingQ/CodingQ";
+import Notifications from "@/components/Course/Notification";
 
 const Page: React.FC = () => {
   const {
@@ -147,6 +148,14 @@ const Page: React.FC = () => {
   //   const lastItem = lastChapter?.items?.[lastChapter.items.length - 1];
   //   return item.id === lastItem?.id;
   // };
+  if (item.type == "Notifications") {
+    return (
+      <div className="flex-grow p-4 mb-96 ml-96" key={item.id}>
+        <Notifications />
+      </div>
+    );
+  }
+
   return (
     <div className="flex-grow p-4 mb-96 ml-96" key={item.id}>
       {item.type === "Note" ? (
