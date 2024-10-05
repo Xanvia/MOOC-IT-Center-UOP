@@ -223,7 +223,7 @@ class CodingQuizSerializer(serializers.ModelSerializer):
             "explanation": instance.explanation,
             "language": instance.language,
             "test_cases": instance.test_cases,
-            "duration": instance.duration/60,
+            "duration": instance.duration,
             "starter_code": instance.starter_code,
             "grading_type": instance.grading_type,
         }

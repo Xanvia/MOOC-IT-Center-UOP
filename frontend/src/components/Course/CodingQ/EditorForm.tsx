@@ -2,27 +2,49 @@ import React, { useState, useEffect, useRef } from "react";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import { Trash } from "lucide-react";
 import { Item } from "../types";
+import { addDetailsCode, addStarterCode } from "@/services/course.service";
+import { toast } from "sonner";
 
 interface Props {
   item: Item;
+  onSave: () => void;
 }
 
-const EditForm: React.FC<Props> = ({ item }) => {
+interface TestCase {
+  stdin: string;
+  expected_output: string;
+  marks?: string;
+}
+
+const EditForm: React.FC<Props> = ({ item, onSave }) => {
   const [language, setLanguage] = useState(item.content?.language || "Select");
   const [gradingMethod, setGradingMethod] = useState(
     item.content?.grading_type || "Select"
   );
-  const [question, setQuestion] = useState("");
-  const [explanation, setExplanation] = useState("");
-  const [testCases, setTestCases] = useState([
-    { input: "", output: "", marks: "" },
-  ]);
+  const [question, setQuestion] = useState(item.content?.question || "");
+  const [explanation, setExplanation] = useState(
+    item.content?.explanation || ""
+  );
+  const [testCases, setTestCases] = useState<TestCase[]>(() => {
+    if (item.content?.test_cases && item.content.test_cases.length > 0) {
+      return item.content.test_cases.map((testCase: TestCase) => ({
+        stdin: testCase.stdin || "",
+        expected_output: testCase.expected_output || "",
+        marks: testCase.marks || "",
+      }));
+    }
+    return [{ stdin: "", expected_output: "", marks: "" }];
+  });
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const [isGradingOpen, setIsGradingOpen] = useState(false);
   const [isTimed, setIsTimed] = useState(item.content?.duration != 0 || false);
-  const [timeInMinutes, setTimeInMinutes] = useState(item.content?.duration || 0);
+  const [timeInMinutes, setTimeInMinutes] = useState(
+    item.content?.duration || 0
+  );
   const languageDropdownRef = useRef<HTMLDivElement | null>(null);
   const gradingDropdownRef = useRef<HTMLDivElement | null>(null);
+
+
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -47,16 +69,19 @@ const EditForm: React.FC<Props> = ({ item }) => {
   }, []);
 
   const addTestCase = () => {
-    setTestCases([...testCases, { input: "", output: "", marks: "" }]);
+    setTestCases([...testCases, { stdin: "", expected_output: "", marks: "" }]);
   };
 
   const handleTestCaseChange = (
     index: number,
-    field: "input" | "output" | "marks",
+    field: "stdin" | "expected_output" | "marks",
     value: string
   ) => {
     const updatedTestCases = [...testCases];
-    updatedTestCases[index][field] = value;
+    updatedTestCases[index] = {
+      ...updatedTestCases[index],
+      [field]: value,
+    };
     setTestCases(updatedTestCases);
   };
 
@@ -65,9 +90,25 @@ const EditForm: React.FC<Props> = ({ item }) => {
     setTestCases(updatedTestCases);
   };
 
-  const handleSave = () => {
-    // toggleEditMode();
+  const handleSaveClick = async () => {
+    try {
+      await addDetailsCode(
+        item.id,
+        question,
+        explanation,
+        testCases,
+        timeInMinutes,
+        gradingMethod,
+        language
+      );
+      onSave();
+      toast.success("Question added successfully");
+    } catch (err) {
+      toast.error("Error adding question");
+    }
   };
+
+
 
   const renderDropdown = (
     value: string,
@@ -140,8 +181,12 @@ const EditForm: React.FC<Props> = ({ item }) => {
       </div>
     </div>
   );
+
   return (
     <form className="ml-16">
+      <div className="mt-6 flex justify-end">
+        <SecondaryButton text="SAVE" onClick={handleSaveClick} />
+      </div>
       {renderDropdown(
         language,
         setLanguage,
@@ -179,7 +224,7 @@ const EditForm: React.FC<Props> = ({ item }) => {
               <input
                 type="number"
                 value={timeInMinutes}
-                onChange={(e) => setTimeInMinutes(e.target.value)}
+                onChange={(e) => setTimeInMinutes(parseInt(e.target.value))}
                 placeholder="Time in minutes"
                 className="p-2 border border-gray-300 rounded-md w-2/3"
               />
@@ -188,73 +233,94 @@ const EditForm: React.FC<Props> = ({ item }) => {
         </div>
       </div>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">
-          Question
-        </label>
-        <textarea
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          className="mt-1 block w-1/2 p-2 border border-gray-300 rounded-md"
-        ></textarea>
+      <div className="flex space-x-4 mb-4">
+        <div className="flex-1">
+          <label htmlFor="question" className="block">
+            Question
+          </label>
+          <textarea
+            id="question"
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
+
+        <div className="flex-1">
+          <label htmlFor="explanation" className="block">
+            Explanation
+          </label>
+          <textarea
+            value={explanation}
+            id="explanation"
+            onChange={(e) => setExplanation(e.target.value)}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
       </div>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">
-          Explanation
-        </label>
-        <textarea
-          value={explanation}
-          onChange={(e) => setExplanation(e.target.value)}
-          className="mt-1 block w-1/2 p-2 border border-gray-300 rounded-md"
-        ></textarea>
-      </div>
-
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
           Test Cases
         </label>
+
         {testCases.map((testCase, index) => (
-          <div key={index} className="flex mb-2 items-center">
-            <input
-              type="text"
-              value={testCase.input}
-              onChange={(e) =>
-                handleTestCaseChange(index, "input", e.target.value)
-              }
-              placeholder="Input"
-              className="mr-2 p-2 border border-gray-300 rounded-md w-1/4"
-            />
-            <input
-              type="text"
-              value={testCase.output}
-              onChange={(e) =>
-                handleTestCaseChange(index, "output", e.target.value)
-              }
-              placeholder="Output"
-              className="mr-2 p-2 border border-gray-300 rounded-md w-1/4"
-            />
-            {gradingMethod === "Test Case Based Grading" && (
+          <div key={index} className="mb-4">
+            <div className="flex mb-1">
+              <label className="w-1/4 mr-2 text-sm font-medium text-gray-600">
+                Input
+              </label>
+              <label className="w-1/4 mr-2 text-sm font-medium text-gray-600">
+                Output
+              </label>
+              {gradingMethod === "Test Case Based Grading" && (
+                <label className="w-1/6 mr-2 text-sm font-medium text-gray-600">
+                  Marks
+                </label>
+              )}
+            </div>
+            <div className="flex items-center">
               <input
-                type="number"
-                value={testCase.marks}
+                type="text"
+                value={testCase.stdin}
                 onChange={(e) =>
-                  handleTestCaseChange(index, "marks", e.target.value)
+                  handleTestCaseChange(index, "stdin", e.target.value)
                 }
-                placeholder="Marks"
-                className="mr-2 p-2 border border-gray-300 rounded-md w-1/6"
+                placeholder="Input"
+                className="mr-2 p-2 border border-gray-300 rounded-md w-1/4"
               />
-            )}
-            <button
-              type="button"
-              onClick={() => removeTestCase(index)}
-              className="text-red-500 hover:text-red-700"
-              aria-label="Remove test case"
-            >
-              <Trash size={20} />
-            </button>
+              <input
+                type="text"
+                value={testCase.expected_output}
+                onChange={(e) =>
+                  handleTestCaseChange(index, "expected_output", e.target.value)
+                }
+                placeholder="Output"
+                className="mr-2 p-2 border border-gray-300 rounded-md w-1/4"
+              />
+              {gradingMethod === "Test Case Based Grading" && (
+                <input
+                  type="number"
+                  value={testCase.marks}
+                  onChange={(e) =>
+                    handleTestCaseChange(index, "marks", e.target.value)
+                  }
+                  placeholder="Marks"
+                  className="mr-2 p-2 border border-gray-300 rounded-md w-1/6"
+                />
+              )}
+              <button
+                type="button"
+                onClick={() => removeTestCase(index)}
+                className="text-red-500 hover:text-red-700"
+                aria-label="Remove test case"
+              >
+                <Trash size={20} />
+              </button>
+            </div>
           </div>
         ))}
+
         <div className="mt-6">
           <SecondaryButton onClick={addTestCase} text="Add Test Case" />
         </div>

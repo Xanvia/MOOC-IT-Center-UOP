@@ -98,7 +98,7 @@ class CodingAssignment(Component):
     explanation = models.TextField(blank=True, null=True)
     grading_type = models.CharField(max_length=255, blank=True, null=True)
     # deadline = models.DateTimeField(default=timezone.now, blank=True, null=True)
-    duration = models.DurationField(blank=True, null=True)
+    duration = models.IntegerField(blank=True, null=True)
     test_cases = models.JSONField(default=list, blank=True, null=True)
     language = models.CharField(max_length=255, blank=True, null=True)
     starter_code = models.TextField(blank=True, null=True)

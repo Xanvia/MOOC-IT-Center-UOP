@@ -4,6 +4,7 @@ import EditForm from "./EditorForm";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import { Item, Permissions } from "../types";
+import { init } from "next/dist/compiled/webpack/webpack";
 
 interface Props {
   permissions: Permissions;
@@ -18,7 +19,7 @@ const CodingQ: React.FC<Props> = ({ permissions, item }) => {
     setIsEditMode(true);
   };
 
-  const handleSaveClick = () => {
+  const handleSave = () => {
     setIsEditMode(false);
   };
 
@@ -27,19 +28,26 @@ const CodingQ: React.FC<Props> = ({ permissions, item }) => {
       <div className="flex justify-between items-center ml-16 my-5">
         <h2 className="text-2xl text-primary font-semibold">{item.name}</h2>
         <div>
-          {isEditMode ? (
-            <SecondaryButton text="SAVE" onClick={handleSaveClick} />
-          ) : (
-            canEdit && (
-              <EditButtonPrimary text="Edit" onClick={handleEditClick} />
-            )
+          {!isEditMode && canEdit && (
+            <EditButtonPrimary
+              text="Edit Question Details"
+              onClick={handleEditClick}
+            />
           )}
         </div>
       </div>
 
-      {isEditMode ? <EditForm item={item} /> : <CodeEditor />}
+      {isEditMode ? (
+        <EditForm item={item} onSave={handleSave} />
+      ) : (
+        <CodeEditor
+          initialCode={item.content.starter_code}
+          canEdit={canEdit}
+          language={item.content.language}
+          codeID={item.id}
+        />
+      )}
     </div>
   );
 };
-
 export default CodingQ;
