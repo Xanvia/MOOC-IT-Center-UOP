@@ -9,20 +9,17 @@ import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-r";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-github";
+import SecondaryButton from "@/components/Buttons/SecondaryButton";
+import { toast } from "sonner";
+import { addStarterCode } from "@/services/course.service";
+import { languageOptions } from "./data";
 
-const initialCode = `function add(a, b) {
-  return a + b;
+interface Props {
+  codeID: number;
+  initialCode?: string;
+  canEdit?: boolean;
+  language: string;
 }
-
-console.log(add(5, 3));`;
-
-const languageOptions = [
-  { value: "javascript", label: "JavaScript" },
-  { value: "python", label: "Python" },
-  { value: "c_cpp", label: "C/C++" },
-  { value: "java", label: "Java" },
-  { value: "r", label: "R" },
-];
 
 const hardcodedTestResults = [
   { id: 1, name: "Test Case 1", status: "passed" },
@@ -30,25 +27,24 @@ const hardcodedTestResults = [
   { id: 3, name: "Test Case 3", status: "passed" },
 ];
 
-const CodeEditor: React.FC = () => {
-  const [code, setCode] = useState(initialCode);
+const CodeEditor: React.FC<Props> = ({
+  initialCode,
+  canEdit,
+  language,
+  codeID,
+}) => {
+  const [code, setCode] = useState(
+    initialCode ||
+      languageOptions.find((language) => language === language)?.starter_code
+  );
   const [output, setOutput] = useState("");
   const [testResults, setTestResults] = useState<
     { id: number; name: string; status: string }[]
   >([]);
-  const [selectedLanguage, setSelectedLanguage] = useState(
-    languageOptions[0].value
-  ); // Default: JavaScript
   const [isDarkMode, setIsDarkMode] = useState(false);
-
+ 
   const handleEditorChange = (newCode: string) => {
     setCode(newCode);
-  };
-
-  const handleLanguageChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setSelectedLanguage(event.target.value);
   };
 
   const handleRun = () => {
@@ -65,6 +61,15 @@ const CodeEditor: React.FC = () => {
     setIsDarkMode(!isDarkMode);
   };
 
+  const handleSaveClick = async () => {
+    try {
+      await addStarterCode(codeID, code || "");
+      toast.success("Code Saved Successfully");
+    } catch (err) {
+      toast.error("Error adding question");
+    }
+  };
+
   const passedTests = testResults.filter(
     (test) => test.status === "passed"
   ).length;
@@ -79,23 +84,8 @@ const CodeEditor: React.FC = () => {
       }`}
     >
       <div className="flex-1 p-4">
-        <div className="mb-4 flex justify-between items-center">
-          {/* Language Selector Dropdown */}
-          <select
-            value={selectedLanguage}
-            onChange={handleLanguageChange}
-            className={`px-4 py-2 rounded-md ${
-              isDarkMode ? "bg-gray-600 text-white" : "bg-white text-black"
-            }`}
-          >
-            {languageOptions.map((lang) => (
-              <option key={lang.value} value={lang.value}>
-                {lang.label}
-              </option>
-            ))}
-          </select>
+        {/* <div className="mb-4 flex justify-between items-center">
 
-          {/* Toggle Theme Button */}
           <button
             onClick={toggleTheme}
             className={`px-4 py-2 ${
@@ -104,15 +94,17 @@ const CodeEditor: React.FC = () => {
           >
             Toggle Theme
           </button>
-        </div>
+        </div> */}
 
         {/* AceEditor Component */}
         <div
           className={`rounded shadow-md overflow-hidden`}
-          style={{ height: "calc(100% - 120px)" }}
+          style={{ height: "calc(100% - 90px)" }}
         >
           <AceEditor
-            mode={selectedLanguage}
+            mode={
+              languageOptions.find((lang) => lang.display === language)?.value
+            }
             theme={isDarkMode ? "monokai" : "github"}
             value={code}
             onChange={handleEditorChange}
@@ -132,23 +124,30 @@ const CodeEditor: React.FC = () => {
         </div>
 
         {/* Run and Submit Buttons */}
-        <div className="mt-4 space-x-4">
+        <div className="mt-6 flex flex-wrap items-center gap-4">
           <button
             onClick={handleRun}
             className={`px-4 py-2 ${
               isDarkMode ? "bg-green-600" : "bg-green-500"
-            } text-white rounded-md`}
+            } text-white rounded-md hover:opacity-90 transition-opacity flex items-center gap-2`}
           >
-            Run
+            <span>Run</span>
           </button>
+
           <button
             onClick={handleSubmit}
             className={`px-4 py-2 ${
               isDarkMode ? "bg-blue-600" : "bg-blue-500"
-            } text-white rounded-md`}
+            } text-white rounded-md hover:opacity-90 transition-opacity flex items-center gap-2`}
           >
-            Submit
+            <span>Submit</span>
           </button>
+
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            Edit the Starter code and save
+          </p>
+
+          {canEdit && <SecondaryButton text="SAVE" onClick={handleSaveClick} />}
         </div>
       </div>
 

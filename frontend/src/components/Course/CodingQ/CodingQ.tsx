@@ -1,38 +1,53 @@
+"use client";
 import React, { useState } from "react";
 import CodeEditor from "./CodeEditor";
 import EditForm from "./EditorForm";
-import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import { Item, Permissions } from "../types";
+
 interface Props {
   permissions: Permissions;
+  item: Item;
 }
 
-const CodingQ: React.FC<Props> = ({ permissions }) => {
-  const [editMode, setEditMode] = useState(false); // Manage view between EditForm and CodeEditor
-  const [isEdit, setIsEdit] = useState<boolean>(permissions.canEdit);
+const CodingQ: React.FC<Props> = ({ permissions, item }) => {
+  const [isEditMode, setIsEditMode] = useState(false);
+  const { canEdit } = permissions;
 
-  // Toggle between EditorForm and CodeEditor within edit mode
-  const toggleEditMode = () => {
-    setEditMode((prev) => !prev);
+  const handleEditClick = () => {
+    setIsEditMode(true);
+  };
+
+  const handleSave = () => {
+    window.location.reload();
+    setIsEditMode(false);
   };
 
   return (
     <div>
       <div className="flex justify-between items-center ml-16 my-5">
-        <h2 className="text-2xl text-primary font-semibold">
-          Coding Question 1
-        </h2>
+        <h2 className="text-2xl text-primary font-semibold">{item.name}</h2>
         <div>
-          {editMode && (
-            <SecondaryButton text="SAVE" onClick={toggleEditMode} />
-          ) }
+          {!isEditMode && canEdit && (
+            <EditButtonPrimary
+              text="Edit Question Details"
+              onClick={handleEditClick}
+            />
+          )}
         </div>
       </div>
 
-      {editMode ? <EditForm toggleEditMode={toggleEditMode} /> : <CodeEditor />}
+      {isEditMode ? (
+        <EditForm item={item} onSave={handleSave} />
+      ) : (
+        <CodeEditor
+          initialCode={item.content.starter_code}
+          canEdit={canEdit}
+          language={item.content.language}
+          codeID={item.id}
+        />
+      )}
     </div>
   );
 };
-
 export default CodingQ;

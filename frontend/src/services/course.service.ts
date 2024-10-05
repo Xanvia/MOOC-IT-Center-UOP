@@ -3,6 +3,11 @@ import {
   CreateCourseData,
   UpdateCourseData,
 } from "@/components/Course/course.types";
+interface TestCase {
+  stdin: string;
+  expected_output: string;
+  marks?: string;
+}
 
 export const fetchAllCourses = async () => {
   try {
@@ -302,7 +307,7 @@ export const createQuizQuestion = async (
   text: string,
   questionType: string,
   answers: { text: string; is_correct?: string }[],
-  score:number,
+  score: number
 ) => {
   try {
     const response = await axiosInstance.post(
@@ -378,10 +383,44 @@ export const addDetailsCode = async (
   code_id: number,
   question: string,
   explanation: string,
-  test_cases: any,
+  test_cases: TestCase[],
   duration: number,
-  grading_type: string
-) => {};
+  grading_type: string,
+  starter_code: string,
+  language: string
+) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/week/chapter/code/${code_id}/`,
+      {
+        question,
+        explanation,
+        test_cases,
+        duration,
+        grading_type,
+        starter_code,
+        language,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const addStarterCode = async (code_id: number, starter_code: string) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/week/chapter/code/${code_id}/`,
+      {
+        starter_code,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
 
 export const submitQuiz = async (
   quizId: number,

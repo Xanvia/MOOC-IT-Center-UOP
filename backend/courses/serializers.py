@@ -210,6 +210,24 @@ class CodingQuizSerializer(serializers.ModelSerializer):
         model = CodingAssignment
         fields = "__all__"
 
+    def to_representation(self, instance):
+        representation =  super().to_representation(instance)
+        representation.pop("test_cases")
+        representation.pop("starter_code")
+        representation.pop("grading_type")
+        representation.pop("language")
+        representation.pop("explanation")
+        representation.pop("question")
+        representation["content"] = {
+            "question": instance.question,
+            "explanation": instance.explanation,
+            "language": instance.language,
+            "test_cases": instance.test_cases,
+            "duration": instance.duration,
+            "starter_code": instance.starter_code,
+            "grading_type": instance.grading_type,
+        }
+        return representation
 
 
 

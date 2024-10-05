@@ -171,7 +171,7 @@ const Page: React.FC = () => {
         </>
       ) : item.type === "Code" ? (
         <>
-          <CodingQ permissions={permissions} />
+          <CodingQ permissions={permissions} item={item} />
         </>
       ) : (
         <div>No content available</div>
