@@ -18,6 +18,7 @@ import { Permissions } from "../types";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import DeleteButtonPrimary from "@/components/Buttons/DeleteButtonPrimary";
+import ChatDrawer from "../Drawer/Drawer";
 
 interface MCQ {
   timestamp: number;
@@ -69,6 +70,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(permissions.canEdit);
   const [isPreview, setIsPreview] = useState<boolean>(true);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
   const togglePreview = () => setIsPreview(!isPreview);
 
@@ -202,7 +204,9 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
 
   // Teacher Mode: Adding MCQ handling
   const addNewOption = () => setNewOptions([...newOptions, ""]);
-
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
   const handleNewOptionChange = (index: number, value: string) => {
     const updatedOptions = [...newOptions];
     updatedOptions[index] = value;
@@ -584,6 +588,19 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
           </div>
         </div>
       )}
+
+      <button
+        className="fixed top-1/2 right-0 transform -translate-y-1/2 bg-blue-500 text-white p-2 rounded-l-lg shadow-lg focus:outline-none"
+        onClick={toggleDrawer}
+      >
+        {isDrawerOpen ? ">" : "<"} {/* Toggle Arrow Icon */}
+      </button>
+
+      {/* Chat Drawer Component */}
+      <ChatDrawer
+        isOpen={isDrawerOpen}
+        toggleDrawer={toggleDrawer}
+      />
     </div>
   );
 };
