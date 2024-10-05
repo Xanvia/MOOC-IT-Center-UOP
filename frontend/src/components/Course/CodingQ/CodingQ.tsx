@@ -7,9 +7,10 @@ import { Item, Permissions } from "../types";
 
 interface Props {
   permissions: Permissions;
+  item: Item;
 }
 
-const CodingQ: React.FC<Props> = ({ permissions }) => {
+const CodingQ: React.FC<Props> = ({ permissions, item }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const { canEdit } = permissions;
 
@@ -24,11 +25,9 @@ const CodingQ: React.FC<Props> = ({ permissions }) => {
   return (
     <div>
       <div className="flex justify-between items-center ml-16 my-5">
-        <h2 className="text-2xl text-primary font-semibold">
-          Coding Question 1
-        </h2>
+        <h2 className="text-2xl text-primary font-semibold">{item.name}</h2>
         <div>
-          {isEditMode?(
+          {isEditMode ? (
             <SecondaryButton text="SAVE" onClick={handleSaveClick} />
           ) : (
             canEdit && (
@@ -38,7 +37,7 @@ const CodingQ: React.FC<Props> = ({ permissions }) => {
         </div>
       </div>
 
-      {isEditMode ? <EditForm /> : <CodeEditor />}
+      {isEditMode ? <EditForm item={item} /> : <CodeEditor />}
     </div>
   );
 };

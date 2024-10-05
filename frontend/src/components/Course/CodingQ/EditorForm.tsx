@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import { Trash } from "lucide-react";
-import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
+import { Item } from "../types";
 
-interface Props {}
+interface Props {
+  item: Item;
+}
 
-const EditForm: React.FC<Props> = ({}) => {
-  const [language, setLanguage] = useState("Select");
-  const [gradingMethod, setGradingMethod] = useState("Select");
+const EditForm: React.FC<Props> = ({ item }) => {
+  const [language, setLanguage] = useState(item.content?.language || "Select");
+  const [gradingMethod, setGradingMethod] = useState(
+    item.content?.grading_type || "Select"
+  );
   const [question, setQuestion] = useState("");
   const [explanation, setExplanation] = useState("");
   const [testCases, setTestCases] = useState([
@@ -15,8 +19,8 @@ const EditForm: React.FC<Props> = ({}) => {
   ]);
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const [isGradingOpen, setIsGradingOpen] = useState(false);
-  const [isTimed, setIsTimed] = useState(false);
-  const [timeInMinutes, setTimeInMinutes] = useState("");
+  const [isTimed, setIsTimed] = useState(item.content?.duration != 0 || false);
+  const [timeInMinutes, setTimeInMinutes] = useState(item.content?.duration || 0);
   const languageDropdownRef = useRef<HTMLDivElement | null>(null);
   const gradingDropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -75,7 +79,6 @@ const EditForm: React.FC<Props> = ({}) => {
     label: string
   ) => (
     <div className="mb-4 relative" ref={ref}>
-      
       <span className="text-sm font-semibold text-primary pr-52">{label}</span>
       <div className="relative w-3/4 mt-4">
         <button
