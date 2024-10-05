@@ -386,6 +386,7 @@ export const addDetailsCode = async (
   test_cases: TestCase[],
   duration: number,
   grading_type: string,
+  starter_code: string,
   language: string
 ) => {
   try {
@@ -397,6 +398,7 @@ export const addDetailsCode = async (
         test_cases,
         duration,
         grading_type,
+        starter_code,
         language,
       }
     );

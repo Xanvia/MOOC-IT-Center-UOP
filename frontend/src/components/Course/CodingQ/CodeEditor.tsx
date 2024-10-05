@@ -42,7 +42,7 @@ const CodeEditor: React.FC<Props> = ({
     { id: number; name: string; status: string }[]
   >([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
-
+ 
   const handleEditorChange = (newCode: string) => {
     setCode(newCode);
   };
@@ -64,7 +64,7 @@ const CodeEditor: React.FC<Props> = ({
   const handleSaveClick = async () => {
     try {
       await addStarterCode(codeID, code || "");
-      toast.success("Question added successfully");
+      toast.success("Code Saved Successfully");
     } catch (err) {
       toast.error("Error adding question");
     }

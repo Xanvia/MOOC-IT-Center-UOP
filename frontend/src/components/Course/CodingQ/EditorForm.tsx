@@ -4,6 +4,7 @@ import { Trash } from "lucide-react";
 import { Item } from "../types";
 import { addDetailsCode, addStarterCode } from "@/services/course.service";
 import { toast } from "sonner";
+import { languageOptions } from "./data";
 
 interface Props {
   item: Item;
@@ -44,7 +45,10 @@ const EditForm: React.FC<Props> = ({ item, onSave }) => {
   const languageDropdownRef = useRef<HTMLDivElement | null>(null);
   const gradingDropdownRef = useRef<HTMLDivElement | null>(null);
 
-
+  const [starterCode, setStarterCode] = useState(
+    item.content?.starter_code ||
+      languageOptions.find((language) => language === language)?.starter_code
+  );
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -90,6 +94,14 @@ const EditForm: React.FC<Props> = ({ item, onSave }) => {
     setTestCases(updatedTestCases);
   };
 
+  const handleLanguageChange = (value: string) => {
+    setLanguage(value);
+    setStarterCode(
+      languageOptions.find((language) => language.display === value)
+        ?.starter_code
+    );
+  };
+
   const handleSaveClick = async () => {
     try {
       await addDetailsCode(
@@ -99,6 +111,7 @@ const EditForm: React.FC<Props> = ({ item, onSave }) => {
         testCases,
         timeInMinutes,
         gradingMethod,
+        starterCode,
         language
       );
       onSave();
@@ -107,8 +120,6 @@ const EditForm: React.FC<Props> = ({ item, onSave }) => {
       toast.error("Error adding question");
     }
   };
-
-
 
   const renderDropdown = (
     value: string,
@@ -165,7 +176,11 @@ const EditForm: React.FC<Props> = ({ item, onSave }) => {
                 role="option"
                 aria-selected={value === option}
                 onClick={() => {
-                  setValue(option);
+                  if (label === "Language") {
+                    handleLanguageChange(option);
+                  } else {
+                    setValue(option);
+                  }
                   setIsOpen(false);
                 }}
               >

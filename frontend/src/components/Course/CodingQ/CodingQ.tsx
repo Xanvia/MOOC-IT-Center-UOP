@@ -1,10 +1,9 @@
+"use client";
 import React, { useState } from "react";
 import CodeEditor from "./CodeEditor";
 import EditForm from "./EditorForm";
-import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import { Item, Permissions } from "../types";
-import { init } from "next/dist/compiled/webpack/webpack";
 
 interface Props {
   permissions: Permissions;
@@ -20,6 +19,7 @@ const CodingQ: React.FC<Props> = ({ permissions, item }) => {
   };
 
   const handleSave = () => {
+    window.location.reload();
     setIsEditMode(false);
   };
 
