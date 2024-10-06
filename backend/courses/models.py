@@ -76,9 +76,17 @@ class VideoQuiz(models.Model):
 
 
 class ItemChat(models.Model):
+    VISIBILITY_CHOICES = [
+        ("all", "All"),
+        ("teachers", "Teachers"),
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    visibility = models.CharField(
+        max_length=10, choices=VISIBILITY_CHOICES, default="all"
+    )
 
     def __str__(self):
         return self.message
@@ -203,3 +211,33 @@ class StudentCodingAnswer(models.Model):
 class VideoFile(models.Model):
     file = models.FileField(upload_to="videos/")
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Announcement(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Announcement for {self.course.name} by {self.user.username}"
+
+
+class Discussion(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='discussions')
+
+class Message(models.Model):
+    discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE, related_name='messages')
+    visibility = models.BooleanField(default=True)
+    time = models.DateTimeField(default=timezone.now)
+    content = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class Thread(models.Model):
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='threads')
+    visibility = models.BooleanField(default=True)
+    time = models.DateTimeField(default=timezone.now)
+    content = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
