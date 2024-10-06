@@ -9,7 +9,7 @@ interface ChatDrawerProps {
 const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, toggleDrawer }) => {
   return (
     <div
-      className={`fixed right-0 top-0 h-full w-80 bg-white shadow-xl transition-transform transform ${
+      className={`z-40 fixed right-0 top-0 h-full w-96 bg-white shadow-xl transition-transform transform ${
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
