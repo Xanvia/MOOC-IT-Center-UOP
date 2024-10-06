@@ -38,4 +38,6 @@ export interface Discussion {
   user: string;
   message: string;
   timestamp: string;
+  isCurrentUser?: boolean;
+  threadCount?: number;
 }

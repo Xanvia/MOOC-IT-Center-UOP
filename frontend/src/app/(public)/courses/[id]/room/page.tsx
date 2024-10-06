@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { useGlobal } from "@/contexts/store";
 import { markAsComplete } from "@/services/course.service";
 import CodingQ from "@/components/Course/CodingQ/CodingQ";
-import Notifications from "@/components/Course/Notification";
+import Notifications from "@/components/Course/Discussion/Notification";
 
 const Page: React.FC = () => {
   const {
