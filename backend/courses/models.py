@@ -8,9 +8,9 @@ from userprofiles.models import Institution, Interest
 
 class Course(models.Model):
     PAYMENT_TYPE_CHOICES = [
-        ('free', 'Free'),
-        ('paid', 'Completely Paid'),
-        ('trial', '1 Week Free Trial and Paid'),
+        ("free", "Free"),
+        ("paid", "Completely Paid"),
+        ("trial", "1 Week Free Trial and Paid"),
     ]
 
     course_creator = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -27,9 +27,7 @@ class Course(models.Model):
     difficulty = models.CharField(max_length=255)
     status = models.CharField(max_length=255, default="unpublished")
     payment_type = models.CharField(
-        max_length=50,
-        choices=PAYMENT_TYPE_CHOICES,
-        default='trial'
+        max_length=50, choices=PAYMENT_TYPE_CHOICES, default="trial"
     )
 
 
@@ -76,21 +74,44 @@ class VideoQuiz(models.Model):
     correct_option = models.IntegerField()
     time_stamp = models.CharField(max_length=255, blank=True, null=True)
 
+
+class ItemChat(models.Model):
+    VISIBILITY_CHOICES = [
+        ("all", "All"),
+        ("teachers", "Teachers"),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    visibility = models.CharField(
+        max_length=10, choices=VISIBILITY_CHOICES, default="all"
+    )
+
+    def __str__(self):
+        return self.message
+
+
 class Video(Component):
     video_id = models.CharField(max_length=255, blank=True, null=True)
     video_link = models.CharField(max_length=1000, blank=True, null=True)
     duration = models.CharField(max_length=255, null=True, blank=True)
     quizzes = models.JSONField(default=list, blank=True, null=True)
-    
+    chat = models.ForeignKey(
+        ItemChat, on_delete=models.CASCADE, related_name="videos", blank=True, null=True
+    )
+
 
 class Note(Component):
     content = models.TextField(blank=True, null=True)
+    chat = models.ForeignKey(
+        ItemChat, on_delete=models.CASCADE, related_name="notes", blank=True, null=True
+    )
 
 
 class Quiz(Component):
     deadline = models.DateTimeField(default=timezone.now, blank=True, null=True)
     duration = models.DurationField(blank=True, null=True)
-    
 
 
 class CodingAssignment(Component):
@@ -190,3 +211,33 @@ class StudentCodingAnswer(models.Model):
 class VideoFile(models.Model):
     file = models.FileField(upload_to="videos/")
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Announcement(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Announcement for {self.course.name} by {self.user.username}"
+
+
+class Discussion(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='discussions')
+
+class Message(models.Model):
+    discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE, related_name='messages')
+    visibility = models.BooleanField(default=True)
+    time = models.DateTimeField(default=timezone.now)
+    content = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class Thread(models.Model):
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='threads')
+    visibility = models.BooleanField(default=True)
+    time = models.DateTimeField(default=timezone.now)
+    content = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

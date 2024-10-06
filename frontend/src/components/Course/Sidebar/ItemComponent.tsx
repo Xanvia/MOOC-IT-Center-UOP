@@ -15,7 +15,7 @@ interface ItemComponentProps {
     chapterIndex: number,
     itemIndex: number,
     itemId: string,
-    itemType: "Note" | "Video" | "Quiz" | "Code"
+    itemType: any,
   ) => void;
   selectedTopic: Item | null;
   setSelectedTopic: (item: Item) => void;

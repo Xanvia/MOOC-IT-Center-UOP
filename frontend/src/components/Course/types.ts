@@ -2,7 +2,7 @@ export interface Item {
   id: number;
   name: string;
   content: any;
-  type: "Video" | "Note" | "Quiz" | "Code";
+  type: "Video" | "Note" | "Quiz" | "Code" | "Notifications";
   has_started: boolean;
   completed: boolean;
 }
@@ -24,4 +24,20 @@ export interface Permissions {
   canDelete: boolean;
   canCreateItems: boolean;
   canUploadFiles: boolean;
+}
+
+export interface Announcement {
+  id: number;
+  title: string;
+  content: string;
+  timestamp: string;
+}
+
+export interface Discussion {
+  id: number;
+  user: string;
+  message: string;
+  timestamp: string;
+  isCurrentUser?: boolean;
+  threadCount?: number;
 }

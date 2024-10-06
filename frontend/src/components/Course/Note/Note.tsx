@@ -8,6 +8,7 @@ import { editNote } from "@/services/course.service";
 import { toast } from "sonner";
 import { Item, Permissions } from "@/components/Course/types";
 import { useGlobal } from "@/contexts/store";
+import ChatDrawer from "../Drawer/Drawer";
 
 interface NoteProps {
   selectedTopic: Item;
@@ -20,6 +21,7 @@ const Note: React.FC<NoteProps> = ({ selectedTopic, permissions }) => {
   const [noteContent, setNoteContent] = useState(selectedTopic.content);
   const [editView, setEditView] = useState(false);
   const [isEdit, setIsEdit] = useState(permissions.canEdit);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const handleSave = async (value: string) => {
     try {
@@ -30,6 +32,9 @@ const Note: React.FC<NoteProps> = ({ selectedTopic, permissions }) => {
     } catch (error: any) {
       toast.error(error.message);
     }
+  };
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
   };
 
   return (
@@ -65,7 +70,22 @@ const Note: React.FC<NoteProps> = ({ selectedTopic, permissions }) => {
               className={`${classes.note} ql-editor`}
               dangerouslySetInnerHTML={{ __html: noteContent }}
             />
+
+
           </div>
+
+          <button
+            className="fixed top-1/2 right-0 transform -translate-y-1/2 bg-blue-500 text-white p-2 rounded-l-lg shadow-lg focus:outline-none"
+            onClick={toggleDrawer}
+          >
+            {isDrawerOpen ? ">" : "<"} {/* Toggle Arrow Icon */}
+          </button>
+
+          {/* Chat Drawer Component */}
+          <ChatDrawer
+            isOpen={isDrawerOpen}
+            toggleDrawer={toggleDrawer}
+          />
         </>
       )}
     </div>
