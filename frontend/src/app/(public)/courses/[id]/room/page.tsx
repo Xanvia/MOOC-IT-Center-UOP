@@ -180,7 +180,11 @@ const Page: React.FC = () => {
         </>
       ) : item.type === "Code" ? (
         <>
-          <CodingQ permissions={permissions} item={item} />
+          <CodingQ
+            permissions={permissions}
+            item={item}
+            userRole={userRole || "student"}
+          />
         </>
       ) : (
         <div>No content available</div>

@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import AceEditor from "react-ace";
-
-// Import language modes and themes
+import { runCode, submitCode } from "@/services/code.service";
+import SecondaryButton from "@/components/Buttons/SecondaryButton";
+import { toast } from "sonner";
+import { addStarterCode, saveCode } from "@/services/course.service";
+import { languageOptions } from "./data";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-c_cpp";
@@ -9,52 +12,94 @@ import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-r";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-github";
-import SecondaryButton from "@/components/Buttons/SecondaryButton";
-import { toast } from "sonner";
-import { addStarterCode } from "@/services/course.service";
-import { languageOptions } from "./data";
+
+const languageData = [
+  { id: 46, name: "Bash (5.0.0)" },
+  { id: 71, name: "Python" },
+  { id: 63, name: "JavaScript" },
+  { id: 62, name: "Java" },
+  { id: 80, name: "R" },
+  { id: 75, name: "C" },
+  { id: 76, name: "C++" },
+];
+
+// Define the TestResult interface within this file or import it if it's defined elsewhere
+interface TestResult {
+  input: string;
+  expected_output: string;
+  actual_output: string;
+  passed: boolean;
+  id: number;
+  status: "passed" | "failed";
+  name: string;
+}
 
 interface Props {
   codeID: number;
   initialCode?: string;
   canEdit?: boolean;
   language: string;
+  testCases: { stdin: string; expected_output: string }[];
+  userRole: string;
 }
-
-const hardcodedTestResults = [
-  { id: 1, name: "Test Case 1", status: "passed" },
-  { id: 2, name: "Test Case 2", status: "failed" },
-  { id: 3, name: "Test Case 3", status: "passed" },
-];
 
 const CodeEditor: React.FC<Props> = ({
   initialCode,
   canEdit,
   language,
   codeID,
+  testCases,
+  userRole,
 }) => {
   const [code, setCode] = useState(
     initialCode ||
       languageOptions.find((language) => language === language)?.starter_code
   );
   const [output, setOutput] = useState("");
-  const [testResults, setTestResults] = useState<
-    { id: number; name: string; status: string }[]
-  >([]);
+  const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
- 
+
   const handleEditorChange = (newCode: string) => {
     setCode(newCode);
   };
 
-  const handleRun = () => {
-    // Hardcoded output for now
-    setOutput("Output is generated here...");
+  const handleRun = async () => {
+    try {
+      if (code) {
+        const result = await runCode(
+          code,
+          "",
+          languageData.find((lang) => lang.name === language)?.id || 0
+        );
+        if (!result.stdout) {
+          setOutput(result.stderr);
+        } else {
+          setOutput(result.stdout);
+        }
+      }
+    } catch (err) {
+      toast.error("Error running code");
+    }
   };
 
-  const handleSubmit = () => {
-    // Set hardcoded test results for now
-    setTestResults(hardcodedTestResults);
+  const handleSubmit = async () => {
+    try {
+      if (code) {
+        const results = await submitCode(
+          code,
+          testCases,
+          languageData.find((lang) => lang.name === language)?.id || 0
+        );
+        setOutput(results.map((result) => result.actual_output).join("\n"));
+        setTestResults(results);
+        if (userRole == "student") {
+          const grade = getGrade();
+          await saveCode(codeID, code || "", grade);
+        }
+      }
+    } catch (err) {
+      toast.error("Error submitting code");
+    }
   };
 
   const toggleTheme = () => {
@@ -70,9 +115,17 @@ const CodeEditor: React.FC<Props> = ({
     }
   };
 
-  const passedTests = testResults.filter(
-    (test) => test.status === "passed"
-  ).length;
+  const getGrade = () => {
+    let grade = 0;
+    testResults.map((result) => {
+      if (result.passed) {
+        grade++;
+      }
+    });
+    return grade;
+  };
+
+  const passedTests = testResults.filter((test) => test.passed).length;
   const totalTests = testResults.length;
   const scorePercentage =
     totalTests > 0 ? ((passedTests / totalTests) * 100).toFixed(2) : "0";
@@ -84,17 +137,15 @@ const CodeEditor: React.FC<Props> = ({
       }`}
     >
       <div className="flex-1 p-4">
-        {/* <div className="mb-4 flex justify-between items-center">
-
-          <button
-            onClick={toggleTheme}
-            className={`px-4 py-2 ${
-              isDarkMode ? "bg-blue-600" : "bg-blue-500"
-            } text-white rounded-md`}
-          >
-            Toggle Theme
-          </button>
-        </div> */}
+        {/* Theme Toggle Button */}
+        {/* <button
+          onClick={toggleTheme}
+          className={`px-4 py-2 ${
+            isDarkMode ? "bg-blue-600" : "bg-blue-500"
+          } text-white rounded-md`}
+        >
+          Toggle Theme
+        </button> */}
 
         {/* AceEditor Component */}
         <div
@@ -102,9 +153,7 @@ const CodeEditor: React.FC<Props> = ({
           style={{ height: "calc(100% - 90px)" }}
         >
           <AceEditor
-            mode={
-              languageOptions.find((lang) => lang.display === language)?.value
-            }
+            mode={"Python"}
             theme={isDarkMode ? "monokai" : "github"}
             value={code}
             onChange={handleEditorChange}
@@ -142,10 +191,6 @@ const CodeEditor: React.FC<Props> = ({
           >
             <span>Submit</span>
           </button>
-
-          <p className="text-sm text-gray-600 dark:text-gray-300">
-            Edit the Starter code and save
-          </p>
 
           {canEdit && <SecondaryButton text="SAVE" onClick={handleSaveClick} />}
         </div>

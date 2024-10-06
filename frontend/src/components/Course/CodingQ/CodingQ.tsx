@@ -8,9 +8,10 @@ import { Item, Permissions } from "../types";
 interface Props {
   permissions: Permissions;
   item: Item;
+  userRole: string;
 }
 
-const CodingQ: React.FC<Props> = ({ permissions, item }) => {
+const CodingQ: React.FC<Props> = ({ permissions, item,userRole }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const { canEdit } = permissions;
 
@@ -45,6 +46,8 @@ const CodingQ: React.FC<Props> = ({ permissions, item }) => {
           canEdit={canEdit}
           language={item.content.language}
           codeID={item.id}
+          testCases={item.content.test_cases}
+          userRole={userRole}
         />
       )}
     </div>
