@@ -14,6 +14,7 @@ from .views import (
     GetProgressAPIView,
     CodingQuizViewSet,
     StudentQuizViewSet,
+    StudentCodingViewSet,
 )
 
 router = DefaultRouter()
@@ -148,4 +149,5 @@ urlpatterns = [
         name="code-detail",
     ),
     path("quiz/<int:pk>/submit/", StudentQuizViewSet.as_view({"post": "submit_quiz"})),
+    path("code/<int:pk>/submit/", StudentCodingViewSet.as_view({"post": "submit_code"})),
 ]
