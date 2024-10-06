@@ -233,7 +233,7 @@ const Sidebar: React.FC = () => {
       chapterIndex: number,
       itemIndex: number,
       itemId: string,
-      itemType: "Note" | "Video" | "Quiz" | "Code"
+      itemType: "Note" | "Video" | "Quiz" | "Code" 
     ) => {
       try {
         const response = await deleteComponent(itemType, itemId);
