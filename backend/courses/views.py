@@ -11,9 +11,7 @@ from .models import (
     Question,
     Enrollment,
     Progress,
-    Component,
     CodingAssignment,
-    StudentQuiz,
 )
 from .serializers import (
     CourseSerializer,
@@ -29,6 +27,7 @@ from .serializers import (
     ProgressTrackSerializer,
     CodingQuizSerializer,
     StudentQuizSerializer,
+    StudentCodingSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -659,5 +658,19 @@ class StudentQuizViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Quiz submitted successfully",
+        }
+        return response
+    
+class StudentCodingViewSet(viewsets.ModelViewSet):
+    queryset = Progress.objects.all()
+    serializer_class = StudentCodingSerializer
+
+    def submit_code(self, request, *args, **kwargs):
+        student = request.user
+        request.data["coding_assignment"] = kwargs["pk"]
+        response = super().create(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "message": "Code submitted successfully",
         }
         return response
