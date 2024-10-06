@@ -440,3 +440,22 @@ export const submitQuiz = async (
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const saveCode = async (
+  code_id: number,
+  code: string,
+  grade: number
+) => {
+  try {
+    const response = await axiosInstance.post(
+      `/course/code/${code_id}/submit/`,
+      {
+        code,
+        grade,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};

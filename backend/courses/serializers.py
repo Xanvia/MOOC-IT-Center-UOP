@@ -389,3 +389,24 @@ class StudentQuizSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
     
     
+
+class StudentCodingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentCodingAnswer
+        fields = ["coding_assignment", "code", "result","grade"]
+
+    def validate(self, attrs):
+        # check if student has already answered this quiz
+        request = self.context.get("request")
+        user = request.user
+        coding_assignment = attrs.get("coding_assignment")
+        enrollement = Enrollment.objects.get(student=user, course=coding_assignment.chapter.week.course)
+        attrs["enrollement"] = enrollement
+        try:
+            StudentCodingAnswer.objects.get(enrollement__student=user, coding_assignment=coding_assignment)
+            raise serializers.ValidationError("You have already submitted this quiz")
+        except StudentCodingAnswer.DoesNotExist:
+            pass
+        return super().validate(attrs)
+    

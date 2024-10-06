@@ -204,7 +204,6 @@ class StudentCodingAnswer(models.Model):
     enrollement = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
     coding_assignment = models.ForeignKey(CodingAssignment, on_delete=models.CASCADE)
     code = models.TextField()
-    result = models.TextField()
     grade = models.DecimalField(max_digits=5, decimal_places=2)
 
 

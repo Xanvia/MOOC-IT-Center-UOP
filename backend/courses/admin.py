@@ -14,6 +14,7 @@ from .models import (
     Answer,
     VideoFile,
     StudentQuiz,
+    StudentCodingAnswer,
 )
 
 
@@ -78,3 +79,7 @@ class CodingAssignmentAdmin(admin.ModelAdmin):
 @admin.register(StudentQuiz)
 class StudentQuizAdmin(admin.ModelAdmin):
     list_display = ["id", "quiz", "enrollement", "score","graded"]
+
+@admin.register(StudentCodingAnswer)
+class StudentCodingAnswerAdmin(admin.ModelAdmin):
+    list_display = ["id", "enrollement", "coding_assignment", "grade"]
