@@ -12,6 +12,7 @@ from .models import (
     Enrollment,
     Progress,
     CodingAssignment,
+    Announcement,
 )
 from .serializers import (
     CourseSerializer,
@@ -28,6 +29,7 @@ from .serializers import (
     CodingQuizSerializer,
     StudentQuizSerializer,
     StudentCodingSerializer,
+    AnnouncementSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -41,6 +43,7 @@ from .permissons import (
     CourseContentEditAccess,
     CourseFileUploadAccess,
     EditPublicDetailsAccess,
+    AnnouncemantAccess,
 )
 from coursemanagement.models import CourseTeachers
 
@@ -672,5 +675,60 @@ class StudentCodingViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Code submitted successfully",
+        }
+        return response
+    
+class AnnouncementViewSet(viewsets.ModelViewSet):
+    queryset = Announcement.objects.all()
+    serializer_class = AnnouncementSerializer
+    permission_classes = [AnnouncemantAccess]
+
+    def create(self, request, *args, **kwargs):
+        request.data["course"] = kwargs["course_id"]
+        request.data["user"] = request.user.id
+        response = super().create(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "message": "Announcement created successfully",
+        }
+        return response
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            response = super().destroy(request, *args, **kwargs)
+        except ProtectedError:
+            return Response(
+                {"status": "error", "message": "Announcement is not empty"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except Exception as e:
+            return Response(
+                {"status": "error", "message": "An unexpected error occurred"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        response.data = {
+            "status": "success",
+            "message": "Announcement deleted successfully",
+        }
+        return response
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, partial=True, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Announcement updated successfully",
+        }
+        return response
+    
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "data": {
+                "announcements": response.data,
+            },
         }
         return response

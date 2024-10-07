@@ -15,6 +15,7 @@ from .views import (
     CodingQuizViewSet,
     StudentQuizViewSet,
     StudentCodingViewSet,
+    AnnouncementViewSet,
 )
 
 router = DefaultRouter()
@@ -150,4 +151,6 @@ urlpatterns = [
     ),
     path("quiz/<int:pk>/submit/", StudentQuizViewSet.as_view({"post": "submit_quiz"})),
     path("code/<int:pk>/submit/", StudentCodingViewSet.as_view({"post": "submit_code"})),
+    path("<int:course_id>/announcement/",AnnouncementViewSet.as_view({"post":"create","get":"list"}),name="announcement-list"),
+    path("announcement/<int:pk>/",AnnouncementViewSet.as_view({"put":"update","delete":"destroy"}),name="announcement-detail"),
 ]

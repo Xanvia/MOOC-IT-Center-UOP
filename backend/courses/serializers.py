@@ -16,6 +16,10 @@ from .models import (
     CodingAssignment,
     StudentQuiz,
     StudentCodingAnswer,
+    Announcement,
+    ItemChat,
+    Message,
+    Discussion,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -410,3 +414,10 @@ class StudentCodingSerializer(serializers.ModelSerializer):
             pass
         return super().validate(attrs)
     
+
+
+class AnnouncementSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Announcement
+        fields = "__all__"

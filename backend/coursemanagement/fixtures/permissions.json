@@ -68,5 +68,12 @@
     "fields": {
       "label": "edit_course_public_details"
     }
+  },
+  {
+    "model": "coursemanagement.coursepermissions",
+    "pk": 11,
+    "fields": {
+      "label": "make_announcements"
+    }
   }
 ]
