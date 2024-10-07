@@ -15,6 +15,10 @@ from .views import (
     CodingQuizViewSet,
     StudentQuizViewSet,
     StudentCodingViewSet,
+    AnnouncementViewSet,
+    MessageViewSet,
+    ReplyViewSet,
+    ItemChatViewSet,
 )
 
 router = DefaultRouter()
@@ -143,11 +147,53 @@ urlpatterns = [
         CodingQuizViewSet.as_view({"post": "create"}),
         name="add-code",
     ),
-     path(
+    path(
         "week/chapter/code/<int:code_id>/",
         CodingQuizViewSet.as_view({"put": "update", "delete": "destroy"}),
         name="code-detail",
     ),
     path("quiz/<int:pk>/submit/", StudentQuizViewSet.as_view({"post": "submit_quiz"})),
-    path("code/<int:pk>/submit/", StudentCodingViewSet.as_view({"post": "submit_code"})),
+    path(
+        "code/<int:pk>/submit/", StudentCodingViewSet.as_view({"post": "submit_code"})
+    ),
+    path(
+        "<int:course_id>/announcement/",
+        AnnouncementViewSet.as_view({"post": "create", "get": "list"}),
+        name="announcement-list",
+    ),
+    path(
+        "announcement/<int:pk>/",
+        AnnouncementViewSet.as_view({"put": "update", "delete": "destroy"}),
+        name="announcement-detail",
+    ),
+    path(
+        "<int:course_id>/messages/",
+        MessageViewSet.as_view({"post": "create", "get": "list"}),
+        name="message-list",
+    ),
+    path(
+        "message/<int:pk>/",
+        MessageViewSet.as_view({"put": "update", "delete": "destroy"}),
+        name="message-detail",
+    ),
+    path(
+        "message/<int:message_id>/reply",
+        ReplyViewSet.as_view({"post": "create", "get": "list"}),
+        name="reply-message",
+    ),
+    path(
+        "reply/<int:pk>/",
+        ReplyViewSet.as_view({"put": "update", "delete": "destroy"}),
+        name="reply-detail",
+    ),
+    path(
+        "component/<int:component_id>/chat",
+        ItemChatViewSet.as_view({"post": "create", "get": "list"}),
+        name="item-chat",
+    ),
+    path(
+        "itemchat/<int:pk>/",
+        ItemChatViewSet.as_view({"put": "update", "delete": "destroy"}),
+        name="chat-detail",
+    ),
 ]

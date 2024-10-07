@@ -16,6 +16,10 @@ from .models import (
     CodingAssignment,
     StudentQuiz,
     StudentCodingAnswer,
+    Announcement,
+    ItemChat,
+    Message,
+    Reply,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -35,7 +39,9 @@ class CourseTeacherSerializer(serializers.ModelSerializer):
         if instance.userprofile.profile_image:
             representation["profile_picture"] = instance.userprofile.profile_image.url
         else:
-            representation["profile_picture"] = instance.userprofile.profile_picture if instance.userprofile else None
+            representation["profile_picture"] = (
+                instance.userprofile.profile_picture if instance.userprofile else None
+            )
         representation.pop("first_name")
         representation.pop("last_name")
         return representation
@@ -70,7 +76,9 @@ class CourseSerializer(serializers.ModelSerializer):
 
         teachers = CourseTeachers.objects.filter(course=instance)
         instructors = [CourseTeacherSerializer(instance.course_creator).data]
-        instructors.extend(CourseTeacherSerializer(teacher.teacher).data for teacher in teachers)
+        instructors.extend(
+            CourseTeacherSerializer(teacher.teacher).data for teacher in teachers
+        )
         representation["instructors"] = instructors
         representation["category"] = InterestSerializer(instance.category).data
         representation["institution"] = instance.institution.label
@@ -211,7 +219,7 @@ class CodingQuizSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_representation(self, instance):
-        representation =  super().to_representation(instance)
+        representation = super().to_representation(instance)
         representation.pop("test_cases")
         representation.pop("starter_code")
         representation.pop("grading_type")
@@ -228,7 +236,6 @@ class CodingQuizSerializer(serializers.ModelSerializer):
             "grading_type": instance.grading_type,
         }
         return representation
-
 
 
 class VideoSerializer(serializers.ModelSerializer):
@@ -360,14 +367,16 @@ class StudentQuizSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentQuiz
-        fields = ["quiz", "student_answers","score"]
+        fields = ["quiz", "student_answers", "score"]
 
     def validate(self, attrs):
         # check if student has already answered this quiz
         request = self.context.get("request")
         user = request.user
         quiz = attrs.get("quiz")
-        enrollement = Enrollment.objects.get(student=user, course=quiz.chapter.week.course)
+        enrollement = Enrollment.objects.get(
+            student=user, course=quiz.chapter.week.course
+        )
         attrs["enrollement"] = enrollement
         try:
             StudentQuiz.objects.get(enrollement__student=user, quiz=quiz)
@@ -375,7 +384,7 @@ class StudentQuizSerializer(serializers.ModelSerializer):
         except StudentQuiz.DoesNotExist:
             pass
         return super().validate(attrs)
-    
+
     def create(self, validated_data):
         quiz = validated_data.get("quiz")
         # we have to iterate through all the questions in the quiz, in order to check if theres atleast one open_ended
@@ -385,28 +394,57 @@ class StudentQuizSerializer(serializers.ModelSerializer):
                 open_ended = True
         validated_data["graded"] = not open_ended
 
-
         return super().create(validated_data)
-    
-    
+
 
 class StudentCodingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentCodingAnswer
-        fields = ["coding_assignment", "code", "result","grade"]
+        fields = ["coding_assignment", "code", "result", "grade"]
 
     def validate(self, attrs):
         # check if student has already answered this quiz
         request = self.context.get("request")
         user = request.user
         coding_assignment = attrs.get("coding_assignment")
-        enrollement = Enrollment.objects.get(student=user, course=coding_assignment.chapter.week.course)
+        enrollement = Enrollment.objects.get(
+            student=user, course=coding_assignment.chapter.week.course
+        )
         attrs["enrollement"] = enrollement
         try:
-            StudentCodingAnswer.objects.get(enrollement__student=user, coding_assignment=coding_assignment)
+            StudentCodingAnswer.objects.get(
+                enrollement__student=user, coding_assignment=coding_assignment
+            )
             raise serializers.ValidationError("You have already submitted this quiz")
         except StudentCodingAnswer.DoesNotExist:
             pass
         return super().validate(attrs)
-    
+
+
+class AnnouncementSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Announcement
+        fields = "__all__"
+
+
+class MessageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Message
+        fields = "__all__"
+
+
+class ReplySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Reply
+        fields = "__all__"
+
+
+class ItemChatSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ItemChat
+        fields = "__all__"
