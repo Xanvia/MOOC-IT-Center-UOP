@@ -18,6 +18,7 @@ from .views import (
     AnnouncementViewSet,
     MessageViewSet,
     ReplyViewSet,
+    ItemChatViewSet,
 )
 
 router = DefaultRouter()
@@ -184,5 +185,15 @@ urlpatterns = [
         "reply/<int:pk>/",
         ReplyViewSet.as_view({"put": "update", "delete": "destroy"}),
         name="reply-detail",
+    ),
+    path(
+        "component/<int:component_id>/chat",
+        ItemChatViewSet.as_view({"post": "create", "get": "list"}),
+        name="item-chat",
+    ),
+    path(
+        "itemchat/<int:pk>/",
+        ItemChatViewSet.as_view({"put": "update", "delete": "destroy"}),
+        name="chat-detail",
     ),
 ]

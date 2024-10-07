@@ -441,3 +441,10 @@ class ReplySerializer(serializers.ModelSerializer):
     class Meta:
         model = Reply
         fields = "__all__"
+
+
+class ItemChatSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ItemChat
+        fields = "__all__"

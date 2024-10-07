@@ -75,12 +75,24 @@ class VideoQuiz(models.Model):
     time_stamp = models.CharField(max_length=255, blank=True, null=True)
 
 
+class Video(Component):
+    video_id = models.CharField(max_length=255, blank=True, null=True)
+    video_link = models.CharField(max_length=1000, blank=True, null=True)
+    duration = models.CharField(max_length=255, null=True, blank=True)
+    quizzes = models.JSONField(default=list, blank=True, null=True)
+
+
+
+class Note(Component):
+    content = models.TextField(blank=True, null=True)
+
+
 class ItemChat(models.Model):
     VISIBILITY_CHOICES = [
         ("all", "All"),
         ("teachers", "Teachers"),
     ]
-
+    component = models.ForeignKey(Component, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -91,22 +103,6 @@ class ItemChat(models.Model):
     def __str__(self):
         return self.message
 
-
-class Video(Component):
-    video_id = models.CharField(max_length=255, blank=True, null=True)
-    video_link = models.CharField(max_length=1000, blank=True, null=True)
-    duration = models.CharField(max_length=255, null=True, blank=True)
-    quizzes = models.JSONField(default=list, blank=True, null=True)
-    chat = models.ForeignKey(
-        ItemChat, on_delete=models.CASCADE, related_name="videos", blank=True, null=True
-    )
-
-
-class Note(Component):
-    content = models.TextField(blank=True, null=True)
-    chat = models.ForeignKey(
-        ItemChat, on_delete=models.CASCADE, related_name="notes", blank=True, null=True
-    )
 
 
 class Quiz(Component):
