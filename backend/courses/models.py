@@ -224,19 +224,16 @@ class Announcement(models.Model):
         return f"Announcement for {self.course.name} by {self.user.username}"
 
 
-class Discussion(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='discussions')
 
 class Message(models.Model):
-    discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE, related_name='messages')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE,blank=True, null=True)
     visibility = models.BooleanField(default=True)
     time = models.DateTimeField(default=timezone.now)
     content = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-class Thread(models.Model):
+class Reply(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='threads')
-    visibility = models.BooleanField(default=True)
     time = models.DateTimeField(default=timezone.now)
     content = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -20,6 +20,10 @@ from courses.models import (
     StudentQuiz,
     Enrollment,
     VideoQuiz,
+    Announcement,
+    Message,
+    ItemChat,
+    Reply,
 )
 
 
@@ -39,8 +43,12 @@ def assign_permissions(sender, **kwargs):
         Question,
         Answer,
         VideoQuiz,
+        Announcement,
+        Message,
+        ItemChat,
+        Reply,
     ]
-    student_models = [Progress, StudentQuiz, StudentCodingAnswer, Enrollment]
+    student_models = [Progress, StudentQuiz, StudentCodingAnswer, Enrollment,Message,Reply,ItemChat]
 
     # Get the groups
     admin = Group.objects.get(name="admin")

@@ -1,4 +1,4 @@
-from rest_framework import viewsets, generics,permissions
+from rest_framework import viewsets, generics, permissions
 from .models import (
     Course,
     Week,
@@ -13,6 +13,8 @@ from .models import (
     Progress,
     CodingAssignment,
     Announcement,
+    Message,
+    Reply,
 )
 from .serializers import (
     CourseSerializer,
@@ -30,6 +32,8 @@ from .serializers import (
     StudentQuizSerializer,
     StudentCodingSerializer,
     AnnouncementSerializer,
+    MessageSerializer,
+    ReplySerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -74,12 +78,16 @@ class CourseViewSet(viewsets.ModelViewSet):
             return super().filter_queryset(queryset).filter(status="published")
         elif self.action == "my_courses":
             if self.request.user.groups.filter(name="teacher").exists():
-                return super().filter_queryset(queryset).filter(
-                    course_creator=self.request.user
+                return (
+                    super()
+                    .filter_queryset(queryset)
+                    .filter(course_creator=self.request.user)
                 )
             elif self.request.user.groups.filter(name="student").exists():
-                return super().filter_queryset(queryset).filter(
-                    enrollment__student=self.request.user
+                return (
+                    super()
+                    .filter_queryset(queryset)
+                    .filter(enrollment__student=self.request.user)
                 )
         return super().filter_queryset(queryset)
 
@@ -138,7 +146,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         }
         return response
 
-    def my_courses(self,request,*args,**kwargs):
+    def my_courses(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         response.data = {
             "status": "success",
@@ -247,7 +255,7 @@ class WeekViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         except Exception as e:
-          
+
             return Response(
                 {"status": "error", "message": "An unexpected error occurred"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -303,7 +311,7 @@ class ChapterViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         except Exception as e:
-           
+
             return Response(
                 {"status": "error", "message": "An unexpected error occurred"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -418,7 +426,7 @@ class VideoViewSet(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def get_video_link(self, request, *args, **kwargs):
-        
+
         if "video_file" not in request.data:
             raise ValidationError({"video_file": "Video file is required"})
 
@@ -663,7 +671,8 @@ class StudentQuizViewSet(viewsets.ModelViewSet):
             "message": "Quiz submitted successfully",
         }
         return response
-    
+
+
 class StudentCodingViewSet(viewsets.ModelViewSet):
     queryset = Progress.objects.all()
     serializer_class = StudentCodingSerializer
@@ -677,11 +686,15 @@ class StudentCodingViewSet(viewsets.ModelViewSet):
             "message": "Code submitted successfully",
         }
         return response
-    
+
+
 class AnnouncementViewSet(viewsets.ModelViewSet):
     queryset = Announcement.objects.all()
     serializer_class = AnnouncementSerializer
     permission_classes = [AnnouncemantAccess]
+
+    def filter_queryset(self, queryset):
+        return super().filter_queryset(queryset).filter(course=self.kwargs["course_id"])
 
     def create(self, request, *args, **kwargs):
         request.data["course"] = kwargs["course_id"]
@@ -721,7 +734,7 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
             "message": "Announcement updated successfully",
         }
         return response
-    
+
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
@@ -729,6 +742,119 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
             "status": "success",
             "data": {
                 "announcements": response.data,
+            },
+        }
+        return response
+
+
+class MessageViewSet(viewsets.ModelViewSet):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+
+    def filter_queryset(self, queryset):
+        return super().filter_queryset(queryset).filter(course=self.kwargs["course_id"])
+
+    def create(self, request, *args, **kwargs):
+        request.data["course"] = kwargs["course_id"]
+        request.data["user"] = request.user.id
+        response = super().create(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "message": "Message created successfully",
+        }
+        return response
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            response = super().destroy(request, *args, **kwargs)
+        except ProtectedError:
+            return Response(
+                {"status": "error", "message": "Message is not empty"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except Exception as e:
+            return Response(
+                {"status": "error", "message": "An unexpected error occurred"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        response.data = {
+            "status": "success",
+            "message": "Message deleted successfully",
+        }
+        return response
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, partial=True, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Message updated successfully",
+        }
+        return response
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "data": {
+                "messages": response.data,
+            },
+        }
+        return response
+
+
+class ReplyViewSet(viewsets.ModelViewSet):
+    queryset = Reply.objects.all()
+    serializer_class = ReplySerializer
+
+    def filter_queryset(self, queryset):
+        return (
+            super().filter_queryset(queryset).filter(message=self.kwargs["message_id"])
+        )
+
+    def create(self, request, *args, **kwargs):
+        request.data["message"] = kwargs["message_id"]
+        request.data["user"] = request.user.id
+        response = super().create(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "message": "Thread created successfully",
+        }
+        return response
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            response = super().destroy(request, *args, **kwargs)
+        except Exception as e:
+            return Response(
+                {"status": "error", "message": "An unexpected error occurred"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        response.data = {
+            "status": "success",
+            "message": "Thread deleted successfully",
+        }
+        return response
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, partial=True, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Thread updated successfully",
+        }
+        return response
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "data": {
+                "threads": response.data,
             },
         }
         return response
