@@ -1,12 +1,27 @@
+"use client";
 import React from "react";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
 
-const CourseSettingsPage: React.FC = () => {
+// Use dynamic imports to ensure these are only loaded on the client
+const DataStatsOne = dynamic(() => import("@/components/DataStats/DataStats"), {
+  ssr: false,
+});
+const ChartOne = dynamic(() => import("@/components/Charts/ChartOne"), {
+  ssr: false,
+});
+const ChartTwo = dynamic(() => import("@/components/Charts/ChartTwo"), {
+  ssr: false,
+});
+
+const AdminPage: React.FC = () => {
   return (
     <div>
-      <h1>Course Settings</h1>
-      <p>Manage your course settings here.</p>
+      <DataStatsOne />
+      <ChartOne />
+      <ChartTwo />
     </div>
   );
 };
 
-export default CourseSettingsPage;
+export default AdminPage;

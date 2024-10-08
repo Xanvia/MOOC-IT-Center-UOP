@@ -4,7 +4,7 @@ import ProfileButton from "../Navbar/ProfileButton";
 import { useGlobal } from "@/contexts/store";
 
 interface HeaderProps {
-  toggleSidebar: () => any;
+  toggleSidebar: () => void;
 }
 
 const Header = ({ toggleSidebar }: HeaderProps) => {

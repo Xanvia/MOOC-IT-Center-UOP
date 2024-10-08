@@ -153,7 +153,9 @@ const CodeEditor: React.FC<Props> = ({
           style={{ height: "calc(100% - 90px)" }}
         >
           <AceEditor
-            mode={"Python"}
+            mode={
+              languageOptions.find((lang) => lang.display === language)?.value
+            }
             theme={isDarkMode ? "monokai" : "github"}
             value={code}
             onChange={handleEditorChange}
