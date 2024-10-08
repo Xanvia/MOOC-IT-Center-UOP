@@ -4,9 +4,10 @@ import ProfileButton from "../Navbar/ProfileButton";
 import { useGlobal } from "@/contexts/store";
 
 interface HeaderProps {
+  toggleSidebar: () => void;
 }
 
-const Header = ({  }: HeaderProps) => {
+const Header = ({ toggleSidebar }: HeaderProps) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   // const { isLoggedIn, isLoading } = useGlobal();
   const isLoggedIn = true;
