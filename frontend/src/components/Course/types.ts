@@ -36,7 +36,7 @@ export interface Announcement {
 export interface Discussion {
   id: number;
   user: string;
-  message: string;
+  content: string;
   timestamp: string;
   isCurrentUser?: boolean;
   threadCount?: number;

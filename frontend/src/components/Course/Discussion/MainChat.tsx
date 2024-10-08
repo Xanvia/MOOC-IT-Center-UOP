@@ -1,33 +1,63 @@
-// MainChat.tsx
-import React, { useState } from 'react';
+"use client";
+import React, { use, useEffect, useState } from "react";
 import { useGlobal } from "@/contexts/store";
 import { MessageCircle, MoreVertical, Reply } from "lucide-react";
-import { Discussion,Announcement } from '../types';
+import { Discussion, Announcement } from "../types";
+import { getAnnouncements, getDiscussions } from "@/services/chat.service";
+import { useParams } from "next/navigation";
+import { useRouter } from "next/router";
 interface MainChatProps {
   onThreadSelect: (discussion: Discussion) => void;
 }
 
 export default function MainChat({ onThreadSelect }: MainChatProps) {
   const { userRole } = useGlobal();
-  const [activeTab, setActiveTab] = useState<'announcements' | 'discussions'>('announcements');
-  const [newMessage, setNewMessage] = useState('');
-  const [newAnnouncement, setNewAnnouncement] = useState({ title: '', content: '' });
+  const params = useParams();
+  const [activeTab, setActiveTab] = useState<"announcements" | "discussions">(
+    "announcements"
+  );
+  const [newMessage, setNewMessage] = useState("");
+  const [newAnnouncement, setNewAnnouncement] = useState({
+    title: "",
+    content: "",
+  });
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
 
-  const [announcements, setAnnouncements] = useState<Announcement[]>([
-    {
-      id: 1,
-      title: 'Final Project Due Date Extended',
-      content: 'The deadline for the final project has been extended by one week. Please make sure to submit your work by the new deadline.',
-      timestamp: '2 days ago'
-    }
-  ]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
 
-  const [discussions, setDiscussions] = useState<Discussion[]>([
-    { id: 1, user: 'John Doe', message: 'Has anyone started on the final project?', timestamp: '2 hours ago', isCurrentUser: false, threadCount: 3 },
-    { id: 2, user: 'Jane Smith', message: 'Yes, I\'ve begun working on it. The requirements seem challenging!', timestamp: '1 hour ago', isCurrentUser: false },
-    { id: 3, user: 'You', message: 'I\'m also working on it. Would anyone like to form a study group?', timestamp: '30 minutes ago', isCurrentUser: true, threadCount: 2 },
-  ]);
+  const [discussions, setDiscussions] = useState<Discussion[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const courseID = Number(params.id);
+        if (!isNaN(courseID)) {
+          const data = await getAnnouncements(courseID);
+          setAnnouncements(data.announcements);
+        } else {
+          console.error("Invalid course ID");
+        }
+      } catch (error) {
+        console.error("Failed to fetch announcements:", error);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const courseID = Number(params.id);
+        if (!isNaN(courseID)) {
+          const data = await getDiscussions(courseID);
+          setDiscussions(data.messages);
+        } else {
+          console.error("Invalid course ID");
+        }
+      } catch (error) {
+        console.error("Failed to fetch discussions:", error);
+      }
+    })();
+  }, []);
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
@@ -35,24 +65,24 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
         ...discussions,
         {
           id: discussions.length + 1,
-          user: 'You',
-          message: newMessage,
-          timestamp: 'Just now',
-          isCurrentUser: true
-        }
+          user: "You",
+          content: newMessage,
+          timestamp: "Just now",
+          isCurrentUser: true,
+        },
       ]);
-      setNewMessage('');
+      setNewMessage("");
     }
   };
 
   const handleDeleteMessage = (id: number) => {
-    setDiscussions(discussions.filter(discussion => discussion.id !== id));
+    setDiscussions(discussions.filter((discussion) => discussion.id !== id));
     setOpenMenuId(null);
   };
 
   const handleEditMessage = (id: number) => {
     // Placeholder for edit functionality
-    console.log('Edit message:', id);
+    console.log("Edit message:", id);
     setOpenMenuId(null);
   };
 
@@ -68,10 +98,10 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
           id: announcements.length + 1,
           title: newAnnouncement.title,
           content: newAnnouncement.content,
-          timestamp: 'Just now'
-        }
+          timestamp: "Just now",
+        },
       ]);
-      setNewAnnouncement({ title: '', content: '' });
+      setNewAnnouncement({ title: "", content: "" });
     }
   };
 
@@ -80,37 +110,55 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
       {/* Tab Navigation */}
       <div className="flex space-x-4">
         <button
-          className={`px-4 py-2 rounded ${activeTab === 'announcements' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-          onClick={() => setActiveTab('announcements')}
+          className={`px-4 py-2 rounded ${
+            activeTab === "announcements"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200"
+          }`}
+          onClick={() => setActiveTab("announcements")}
         >
           Announcements
         </button>
         <button
-          className={`px-4 py-2 rounded ${activeTab === 'discussions' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-          onClick={() => setActiveTab('discussions')}
+          className={`px-4 py-2 rounded ${
+            activeTab === "discussions"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200"
+          }`}
+          onClick={() => setActiveTab("discussions")}
         >
           Discussions
         </button>
       </div>
 
       {/* Announcements Tab */}
-      {activeTab === 'announcements' && (
+      {activeTab === "announcements" && (
         <div>
-          {userRole === 'teacher' && (
+          {userRole === "teacher" && (
             <div className="mb-4 p-4 bg-white rounded-lg shadow">
               <input
                 type="text"
                 className="w-full p-2 mb-2 border rounded"
                 placeholder="Announcement title..."
                 value={newAnnouncement.title}
-                onChange={(e) => setNewAnnouncement((prev) => ({ ...prev, title: e.target.value }))}
+                onChange={(e) =>
+                  setNewAnnouncement((prev) => ({
+                    ...prev,
+                    title: e.target.value,
+                  }))
+                }
               />
               <textarea
                 className="w-full p-2 mb-2 border rounded"
                 rows={3}
                 placeholder="Announcement content..."
                 value={newAnnouncement.content}
-                onChange={(e) => setNewAnnouncement((prev) => ({ ...prev, content: e.target.value }))}
+                onChange={(e) =>
+                  setNewAnnouncement((prev) => ({
+                    ...prev,
+                    content: e.target.value,
+                  }))
+                }
               />
               <button
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -121,9 +169,14 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
             </div>
           )}
           {announcements.map((announcement) => (
-            <div key={announcement.id} className="p-4 bg-yellow-50 rounded-lg shadow">
+            <div
+              key={announcement.id}
+              className="p-4 bg-yellow-50 rounded-lg shadow"
+            >
               <h3 className="font-bold text-lg">{announcement.title}</h3>
-              <p className="text-sm text-gray-500 mb-2">Posted {announcement.timestamp}</p>
+              <p className="text-sm text-gray-500 mb-2">
+                Posted {announcement.timestamp}
+              </p>
               <p>{announcement.content}</p>
             </div>
           ))}
@@ -131,15 +184,20 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
       )}
 
       {/* Discussions Tab */}
-      {activeTab === 'discussions' && (
+      {activeTab === "discussions" && (
         <div>
           {discussions.map((discussion) => (
-            <div key={discussion.id} className="p-4 mb-4 bg-white rounded-lg shadow">
+            <div
+              key={discussion.id}
+              className="p-4 mb-4 bg-white rounded-lg shadow"
+            >
               <div className="flex justify-between">
                 <div>
                   <h4 className="font-bold">{discussion.user}</h4>
-                  <p>{discussion.message}</p>
-                  <span className="text-xs text-gray-400">{discussion.timestamp}</span>
+                  <p>{discussion.content}</p>
+                  <span className="text-xs text-gray-400">
+                    {discussion.timestamp}
+                  </span>
                 </div>
                 <div className="relative">
                   <button
@@ -172,7 +230,8 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
                   onClick={() => onThreadSelect(discussion)}
                 >
                   <Reply size={16} className="mr-1" />
-                  {discussion.threadCount} {discussion.threadCount > 1 ? 'replies' : 'reply'}
+                  {discussion.threadCount}{" "}
+                  {discussion.threadCount > 1 ? "replies" : "reply"}
                 </button>
               )}
             </div>
@@ -184,9 +243,9 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
               placeholder="Type your message..."
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
             />
-            <button 
+            <button
               className="px-4 py-2 bg-blue-500 text-white rounded-r hover:bg-blue-600 flex items-center"
               onClick={handleSendMessage}
             >
