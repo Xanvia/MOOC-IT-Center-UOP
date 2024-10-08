@@ -15,6 +15,7 @@ from .models import (
     VideoFile,
     StudentQuiz,
     StudentCodingAnswer,
+    Announcement,
 )
 
 
@@ -67,9 +68,11 @@ class QuestionAdmin(admin.ModelAdmin):
 class Answerdmin(admin.ModelAdmin):
     list_display = ["id", "text", "is_correct"]
 
+
 @admin.register(Progress)
 class ProgressAdmin(admin.ModelAdmin):
-    list_display = ["id","enrollment", "completed"]
+    list_display = ["id", "enrollment", "completed"]
+
 
 @admin.register(CodingAssignment)
 class CodingAssignmentAdmin(admin.ModelAdmin):
@@ -78,8 +81,14 @@ class CodingAssignmentAdmin(admin.ModelAdmin):
 
 @admin.register(StudentQuiz)
 class StudentQuizAdmin(admin.ModelAdmin):
-    list_display = ["id", "quiz", "enrollement", "score","graded"]
+    list_display = ["id", "quiz", "enrollement", "score", "graded"]
+
 
 @admin.register(StudentCodingAnswer)
 class StudentCodingAnswerAdmin(admin.ModelAdmin):
     list_display = ["id", "enrollement", "coding_assignment", "grade"]
+
+
+@admin.register(Announcement)
+class AnnouncementAdmin(admin.ModelAdmin):
+    list_display = ["id", "content"]
