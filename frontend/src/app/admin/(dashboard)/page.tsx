@@ -1,28 +1,27 @@
 "use client";
 import React from "react";
-import DataStatsOne from "@/components/DataStats/DataStats";
-import ChartOne from "@/components/Charts/ChartOne";
+import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-import Header from "@/components/layout/header";
-import ChartTwo from "@/components/Charts/ChartTwo";
 
-const CourseSettingsPage: React.FC = () => {
+// Use dynamic imports to ensure these are only loaded on the client
+const DataStatsOne = dynamic(() => import("@/components/DataStats/DataStats"), {
+  ssr: false,
+});
+const ChartOne = dynamic(() => import("@/components/Charts/ChartOne"), {
+  ssr: false,
+});
+const ChartTwo = dynamic(() => import("@/components/Charts/ChartTwo"), {
+  ssr: false,
+});
+
+const AdminPage: React.FC = () => {
   return (
-    <div className="bg-slate-100">
-      <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-        {/* <!-- ===== Header Star ===== --> */}
-        <Header />
-      </div>
-      {/* <h1>Course Settings</h1> */}
-      {/* <p>Manage your course settings here.</p> */}
-
+    <div>
       <DataStatsOne />
-      <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-9 2xl:gap-7.5">
-        <ChartOne />
-        <ChartTwo />
-      </div>
+      <ChartOne />
+      <ChartTwo />
     </div>
   );
 };
 
-export default CourseSettingsPage;
+export default AdminPage;
