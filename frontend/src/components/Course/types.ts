@@ -26,12 +26,7 @@ export interface Permissions {
   canUploadFiles: boolean;
 }
 
-export interface Announcement {
-  id: number;
-  title: string;
-  content: string;
-  timestamp: string;
-}
+// types.ts
 
 export interface Discussion {
   id: number;
@@ -40,4 +35,21 @@ export interface Discussion {
   timestamp: string;
   isCurrentUser?: boolean;
   threadCount?: number;
+  visibility: "all" | "teachers";
+}
+
+export interface ThreadMessage {
+  id: number;
+  user: string;
+  content: string;
+  timestamp: string;
+  isCurrentUser?: boolean;
+  visibility: "all" | "teachers";
+}
+
+export interface Announcement {
+  id: number;
+  title: string;
+  content: string;
+  timestamp: string;
 }

@@ -1,49 +1,48 @@
+// ThreadView.tsx
+
 import React, { useState } from 'react';
 import { MessageCircle, ArrowLeft, MoreVertical } from "lucide-react";
+import { Discussion, ThreadMessage } from '../types';
 
-interface ThreadMessage {
-  id: number;
-  user: string;
-  message: string;
-  timestamp: string;
-  isCurrentUser?: boolean;
-}
-
-interface Discussion {
-  id: number;
-  user: string;
-  message: string;
-  timestamp: string;
-  isCurrentUser?: boolean;
-  threadCount?: number;
+interface ThreadViewProps {
+  parentMessage: Discussion;
+  onBack: () => void;
+  userRole: string;
 }
 
 export default function ThreadView({
   parentMessage,
-  onBack
-}: {
-  parentMessage: Discussion;
-  onBack: () => void;
-}) {
+  onBack,
+  userRole
+}: ThreadViewProps) {
   const [threadMessages, setThreadMessages] = useState<ThreadMessage[]>([
     {
       id: 1,
       user: "Alice Cooper",
-      message: "This is a great point! Let's discuss it further.",
+      content: "This is a great point! Let's discuss it further.",
       timestamp: "1 hour ago",
-      isCurrentUser: false
+      isCurrentUser: false,
+      visibility: "all"
     },
     {
       id: 2,
       user: "You",
-      message: "Thanks! I think we should focus on the project requirements first.",
+      content: "Thanks! I think we should focus on the project requirements first.",
       timestamp: "30 minutes ago",
-      isCurrentUser: true
+      isCurrentUser: true,
+      visibility: "all"
     }
   ]);
   
   const [newThreadMessage, setNewThreadMessage] = useState('');
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+
+  const canSeeMessage = (message: ThreadMessage) => {
+    if (message.visibility === 'teachers') {
+      return userRole === 'teacher';
+    }
+    return true;
+  };
 
   const handleSendThreadMessage = () => {
     if (newThreadMessage.trim()) {
@@ -52,9 +51,10 @@ export default function ThreadView({
         {
           id: threadMessages.length + 1,
           user: 'You',
-          message: newThreadMessage,
-          timestamp: 'Just now',
-          isCurrentUser: true
+          content: newThreadMessage,
+          timestamp: new Date().toLocaleString(),
+          isCurrentUser: true,
+          visibility: "all"
         }
       ]);
       setNewThreadMessage('');
@@ -71,7 +71,7 @@ export default function ThreadView({
   };
 
   return (
-    <div className="flex flex-col h-[600px]">
+    <div className="flex flex-col h-full">
       <div className="flex items-center mb-4">
         <button 
           onClick={onBack}
@@ -85,58 +85,68 @@ export default function ThreadView({
       <div className="bg-gray-50 p-4 rounded-lg mb-4">
         <div className="font-semibold">{parentMessage.user}</div>
         <div className="text-sm text-gray-500 mb-2">{parentMessage.timestamp}</div>
-        <div>{parentMessage.message}</div>
+        <div>{parentMessage.content}</div>
       </div>
       
-      <div className="flex-grow overflow-y-auto mb-4">
+      <div className="flex-grow overflow-y-auto mb-4 space-y-4">
         {threadMessages.map((message) => (
-          <div 
-            key={message.id} 
-            className={`flex mb-4 ${message.isCurrentUser ? 'justify-end' : 'justify-start'}`}
-          >
+          canSeeMessage(message) && (
             <div 
-              className={`relative max-w-[70%] p-4 rounded-lg shadow ${
-                message.isCurrentUser ? 'bg-blue-500 text-white' : 'bg-white'
-              }`}
+              key={message.id} 
+              className={`flex ${message.isCurrentUser ? 'justify-end' : 'justify-start'}`}
             >
-              <div className="flex justify-between mb-2">
-                <span className="font-semibold">{message.user}</span>
-                <span className="text-sm opacity-75">{message.timestamp}</span>
-              </div>
-              <p>{message.message}</p>
-              {message.isCurrentUser && (
-                <div className="mt-2 flex justify-end">
-                  <div className="relative">
-                    <button 
-                      className="p-1 hover:bg-opacity-20 hover:bg-gray-700 rounded"
-                      onClick={() => toggleMenu(message.id)}
-                    >
-                      <MoreVertical size={16} />
-                    </button>
-                    {openMenuId === message.id && (
-                      <div className="absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-20">
-                        <button
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                          onClick={() => {
-                            console.log('Edit message:', message.id);
-                            setOpenMenuId(null);
-                          }}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"
-                          onClick={() => handleDeleteMessage(message.id)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    )}
-                  </div>
+              <div 
+                className={`flex flex-col space-y-1 ${
+                  message.isCurrentUser ? 'text-right' : 'text-left'
+                }`}
+              >
+                <span className="text-sm text-gray-500">{message.user} • {message.timestamp}</span>
+                <p 
+                  className={`inline-block px-3 py-2 rounded-full ${
+                    message.isCurrentUser ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                  }`}
+                >
+                  {message.content}
+                </p>
+                {message.visibility === 'teachers' && (
+                  <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-0.5 rounded-full">
+                    Teachers Only
+                  </span>
+                )}
+                <div className="flex items-center space-x-2">
+                  {message.isCurrentUser && (
+                    <div className="relative">
+                      <button 
+                        className={`hover:text-gray-700`}
+                        onClick={() => toggleMenu(message.id)}
+                      >
+                        <MoreVertical size={16} />
+                      </button>
+                      {openMenuId === message.id && (
+                        <div className="absolute right-0 mt-2 py-2 w-32 bg-white rounded-md shadow-xl z-20">
+                          <button
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                            onClick={() => {
+                              console.log('Edit message:', message.id);
+                              setOpenMenuId(null);
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"
+                            onClick={() => handleDeleteMessage(message.id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
-          </div>
+          )
         ))}
       </div>
       
