@@ -1,8 +1,8 @@
 "use client";
 
-import React from 'react';
+import React from "react";
 
-interface PermissionModalProps {
+export interface PermissionModalProps {
   isOpen: boolean;
   onClose: () => void;
   teacherName: string;
@@ -22,7 +22,10 @@ const TeacherPermissionModal: React.FC<PermissionModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-xl font-bold mb-4">Permissions for {teacherName}</h2>
+      <h2 className="text-xl font-semibold mb-4">
+        Permissions for <span className="font-bold">{teacherName}</span>
+      </h2>
+
         <div className="mb-4">
           {permissions.map((permission) => (
             <div key={permission.id} className="flex items-center mb-2">
