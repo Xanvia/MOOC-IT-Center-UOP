@@ -27,7 +27,7 @@ export const getDiscussions = async (courseId: number) => {
       content: msg.content,
       timestamp: new Date(msg.time).toLocaleString(),
       visibility: mapVisibility(msg.visibility),
-      isCurrentUser: msg.user === "You", // Adjust as per your authentication logic
+      isCurrentUser: msg.user === "me", // Adjust as per your authentication logic
       threadCount: msg.threadCount || 0, // Assuming threadCount is provided
     }));
     return { messages };

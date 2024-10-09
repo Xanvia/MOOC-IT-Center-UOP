@@ -459,3 +459,14 @@ export const saveCode = async (
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const getChatMessages = async (itemID: number) => {
+
+  try {
+    const response = await axiosInstance.get(`course/component/${itemID}/chat`);
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+}
+

@@ -7,7 +7,6 @@ from .models import (
     Video,
     Quiz,
     CodingAssignment,
-    Image,
     Enrollment,
     Progress,
     Question,
@@ -16,6 +15,8 @@ from .models import (
     StudentQuiz,
     StudentCodingAnswer,
     Announcement,
+    ItemChat,
+    Message,
 )
 
 
@@ -91,4 +92,12 @@ class StudentCodingAnswerAdmin(admin.ModelAdmin):
 
 @admin.register(Announcement)
 class AnnouncementAdmin(admin.ModelAdmin):
+    list_display = ["id", "content"]
+
+@admin.register(ItemChat)
+class ItemChatAdmin(admin.ModelAdmin):
+    list_display = ["id", "message"]
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
     list_display = ["id", "content"]
