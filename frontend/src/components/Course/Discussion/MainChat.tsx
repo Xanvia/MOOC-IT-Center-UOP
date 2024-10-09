@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useGlobal } from "@/contexts/store";
 import { Discussion, Announcement } from "../types";
-import { getAnnouncements, getDiscussions } from "@/services/chat.service";
+import { addAnnouncement, getAnnouncements, getDiscussions } from "@/services/chat.service";
 import { useParams } from "next/navigation";
 import DiscussionThread from "./Discussion";
 import ThreadView from "./Thread";
@@ -93,8 +93,10 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
     setOpenMenuId(openMenuId === id ? null : id);
   };
 
-  const handlePostAnnouncement = () => {
+  const handlePostAnnouncement = async() => {
     if (newAnnouncement.title.trim() && newAnnouncement.content.trim()) {
+      try{
+      await addAnnouncement(Number(params.id), newAnnouncement.title, newAnnouncement.content);
       setAnnouncements([
         ...announcements,
         {
@@ -104,7 +106,11 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
           timestamp: new Date().toLocaleString(),
         },
       ]);
-      setNewAnnouncement({ title: "", content: "" });
+
+      } catch (error) {
+        console.error("Failed to post announcement:", error);
+      }
+      
     }
   };
 

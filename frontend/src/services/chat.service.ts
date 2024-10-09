@@ -35,3 +35,16 @@ export const getDiscussions = async (courseId: number) => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+
+export const addAnnouncement = async (courseId: number, title: string, content: string) => {
+  try {
+    const response = await axiosInstance.post(`/course/${courseId}/announcement/`, {
+      title,
+      content,
+    });
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+}
