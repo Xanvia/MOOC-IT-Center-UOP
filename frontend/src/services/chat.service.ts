@@ -11,6 +11,7 @@ export const getAnnouncements = async (courseId: number) => {
       title: ann.title,
       content: ann.content,
       timestamp: new Date(ann.time).toLocaleString(),
+      canEdit: ann.canEdit,
     }));
     return { announcements };
   } catch (error: any) {
@@ -36,15 +37,34 @@ export const getDiscussions = async (courseId: number) => {
   }
 };
 
-
-export const addAnnouncement = async (courseId: number, title: string, content: string) => {
+export const addAnnouncement = async (
+  courseId: number,
+  title: string,
+  content: string
+) => {
   try {
-    const response = await axiosInstance.post(`/course/${courseId}/announcement/`, {
-      title,
-      content,
-    });
+    const response = await axiosInstance.post(
+      `/course/${courseId}/announcement/`,
+      {
+        title,
+        content,
+      }
+    );
     return response.data.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
   }
-}
+};
+
+export const deleteAnnouncement = async (
+  announcementId: number
+) => {
+  try {
+    const response = await axiosInstance.delete(
+      `/course/announcement/${announcementId}/`
+    );
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};

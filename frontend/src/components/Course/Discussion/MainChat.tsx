@@ -2,10 +2,17 @@
 import React, { useEffect, useState } from "react";
 import { useGlobal } from "@/contexts/store";
 import { Discussion, Announcement } from "../types";
-import { addAnnouncement, getAnnouncements, getDiscussions } from "@/services/chat.service";
+import {
+  addAnnouncement,
+  deleteAnnouncement,
+  getAnnouncements,
+  getDiscussions,
+} from "@/services/chat.service";
 import { useParams } from "next/navigation";
 import DiscussionThread from "./Discussion";
 import ThreadView from "./Thread";
+import { Trash } from "lucide-react";
+
 interface MainChatProps {
   onThreadSelect: (discussion: Discussion) => void;
 }
@@ -89,28 +96,44 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
     setOpenMenuId(null);
   };
 
+  const handleDeleteAnnouncement = async (id: number) => {
+    try {
+      await deleteAnnouncement(id);
+      setAnnouncements(
+        announcements.filter((announcement) => announcement.id !== id)
+      );
+    } catch {
+      console.log("error");
+    }
+  };
+
   const toggleMenu = (id: number) => {
     setOpenMenuId(openMenuId === id ? null : id);
   };
 
-  const handlePostAnnouncement = async() => {
+  const handlePostAnnouncement = async () => {
     if (newAnnouncement.title.trim() && newAnnouncement.content.trim()) {
-      try{
-      await addAnnouncement(Number(params.id), newAnnouncement.title, newAnnouncement.content);
-      setAnnouncements([
-        ...announcements,
-        {
-          id: announcements.length + 1,
-          title: newAnnouncement.title,
-          content: newAnnouncement.content,
-          timestamp: new Date().toLocaleString(),
-        },
-      ]);
-
+      try {
+        await addAnnouncement(
+          Number(params.id),
+          newAnnouncement.title,
+          newAnnouncement.content
+        );
+        setAnnouncements([
+          ...announcements,
+          {
+            id: announcements.length + 1,
+            title: newAnnouncement.title,
+            content: newAnnouncement.content,
+            timestamp: new Date().toLocaleString(),
+            canEdit: true,
+          },
+        ]);
+        // Optionally reset the newAnnouncement state
+        setNewAnnouncement({ title: "", content: "" });
       } catch (error) {
         console.error("Failed to post announcement:", error);
       }
-      
     }
   };
 
@@ -190,9 +213,16 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
             {announcements.map((announcement) => (
               <div
                 key={announcement.id}
-                className="p-4 bg-yellow-50 rounded-lg shadow"
+                className="relative p-4 bg-yellow-50 rounded-lg shadow"
               >
                 <h3 className="font-bold text-lg">{announcement.title}</h3>
+                {announcement.canEdit && (
+                  <Trash
+                    className="absolute top-2 right-2 w-6 h-6 text-gray-500 cursor-pointer"
+                    onClick={() => handleDeleteAnnouncement(announcement.id)}
+                  />
+                )}
+
                 <p className="text-sm text-gray-500 mb-2">
                   Posted {announcement.timestamp}
                 </p>

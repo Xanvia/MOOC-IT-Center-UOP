@@ -696,6 +696,8 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
     permission_classes = [AnnouncemantAccess]
 
     def filter_queryset(self, queryset):
+        if self.action == "destroy" or self.action == "update":
+            return super().filter_queryset(queryset)
         return super().filter_queryset(queryset).filter(course=self.kwargs["course_id"])
 
     def create(self, request, *args, **kwargs):
@@ -717,6 +719,7 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         except Exception as e:
+            print(e)
             return Response(
                 {"status": "error", "message": "An unexpected error occurred"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,

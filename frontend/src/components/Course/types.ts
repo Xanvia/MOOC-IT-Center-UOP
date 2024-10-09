@@ -52,4 +52,5 @@ export interface Announcement {
   title: string;
   content: string;
   timestamp: string;
+  canEdit: boolean;
 }
