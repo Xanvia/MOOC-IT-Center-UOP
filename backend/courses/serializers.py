@@ -428,12 +428,26 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         model = Announcement
         fields = "__all__"
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["user"] = (
+            instance.user.first_name[0] + " " + instance.user.last_name
+        )
+        return representation
+
 
 class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
         fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["user"] = (
+            instance.user.first_name[0] + " " + instance.user.last_name
+        )
+        return representation
 
 
 class ReplySerializer(serializers.ModelSerializer):
@@ -448,3 +462,10 @@ class ItemChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = ItemChat
         fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["user"] = (
+            instance.user.first_name[0] + " " + instance.user.last_name
+        )
+        return representation
