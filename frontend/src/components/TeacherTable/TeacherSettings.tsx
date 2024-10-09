@@ -66,7 +66,7 @@ const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({ data }) => 
                 {/* <td className="px-6 py-4 whitespace-nowrap">{teacher.courses}</td> */}
                 <td className="px-6 py-4 whitespace-nowrap">
                   <button
-                    className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600"
+                    className="bg-blue-800 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-900"
                     onClick={() => handlePermissionsClick(teacher)}
                   >
                     Permissions
