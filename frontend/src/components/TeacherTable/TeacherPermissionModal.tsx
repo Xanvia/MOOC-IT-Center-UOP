@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import SolidButton from "../Buttons/SolidButton";
+import CloseButton from "../Buttons/CloseButton"; // Import the CloseButton component
 
 interface Permission {
   id: string;
@@ -45,6 +46,11 @@ const TeacherPermissionModal: React.FC<TeacherPermissionModalProps> = ({
         className="bg-white py-10 px-5 sm:px-10 rounded-lg shadow-lg relative max-w-xl w-full"
         onMouseDown={handleOutsideClick}
       >
+        {/* Close Button at the top-right corner */}
+        <div className="absolute top-2 right-2">
+          <CloseButton onClick={onClose} /> {/* Use CloseButton component */}
+        </div>
+
         <h2 className="text-center text-2xl mb-8">
           Permissions for <span className="font-bold">{teacherName}</span>
         </h2>
