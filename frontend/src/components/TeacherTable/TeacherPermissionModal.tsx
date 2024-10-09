@@ -46,9 +46,8 @@ const TeacherPermissionModal: React.FC<TeacherPermissionModalProps> = ({
         className="bg-white py-10 px-5 sm:px-10 rounded-lg shadow-lg relative max-w-xl w-full"
         onMouseDown={handleOutsideClick}
       >
-        {/* Close Button at the top-right corner */}
         <div className="absolute top-2 right-2">
-          <CloseButton onClick={onClose} /> {/* Use CloseButton component */}
+          <CloseButton onClick={onClose} />
         </div>
 
         <h2 className="text-center text-2xl mb-8">
@@ -73,12 +72,6 @@ const TeacherPermissionModal: React.FC<TeacherPermissionModalProps> = ({
         </div>
 
         <div className="flex justify-end">
-          <button
-            onClick={onClose}
-            className="bg-blue-500 text-white px-4 py-2 mr-2 rounded hover:bg-blue-600"
-          >
-            Close
-          </button>
           <SolidButton type="submit" text="D O N E" />
         </div>
       </div>
