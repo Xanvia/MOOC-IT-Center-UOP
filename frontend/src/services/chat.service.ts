@@ -56,9 +56,7 @@ export const addAnnouncement = async (
   }
 };
 
-export const deleteAnnouncement = async (
-  announcementId: number
-) => {
+export const deleteAnnouncement = async (announcementId: number) => {
   try {
     const response = await axiosInstance.delete(
       `/course/announcement/${announcementId}/`
@@ -68,3 +66,16 @@ export const deleteAnnouncement = async (
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const deleteMessage = async (messageID: number) => {
+  try {
+    const response = await axiosInstance.delete(
+      `/course/message/${messageID}/`
+    );
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+

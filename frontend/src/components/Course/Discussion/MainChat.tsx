@@ -5,6 +5,7 @@ import { Discussion, Announcement } from "../types";
 import {
   addAnnouncement,
   deleteAnnouncement,
+  deleteMessage,
   getAnnouncements,
   getDiscussions,
 } from "@/services/chat.service";
@@ -85,9 +86,14 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
     }
   };
 
-  const handleDeleteMessage = (id: number) => {
-    setDiscussions(discussions.filter((discussion) => discussion.id !== id));
-    setOpenMenuId(null);
+  const handleDeleteMessage = async (id: number) => {
+    try {
+      await deleteMessage(id);
+      setDiscussions(discussions.filter((discussion) => discussion.id !== id));
+      setOpenMenuId(null);
+    } catch {
+      console.log("error");
+    }
   };
 
   const handleEditMessage = (id: number) => {
