@@ -58,9 +58,9 @@ const TeacherTable = ({ data }: TeacherTableProps) => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   {teacher.institution}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                {/* <td className="px-6 py-4 whitespace-nowrap">
                   {teacher.courses}
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>
