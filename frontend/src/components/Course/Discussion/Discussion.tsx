@@ -5,6 +5,7 @@ import { MessageCircle, MoreVertical, Reply } from "lucide-react";
 import { Discussion } from "../types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import MessageSendSelector from "./MassageSelector";
 
 dayjs.extend(relativeTime);
 
@@ -177,13 +178,7 @@ export default function DiscussionThread({
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
         />
-        <button
-          className="px-4 py-2 bg-blue-500 text-white rounded-r hover:bg-blue-600 flex items-center"
-          onClick={handleSendMessage}
-        >
-          <MessageCircle size={18} className="mr-2" />
-          Send
-        </button>
+       <MessageSendSelector  onSend={handleSendMessage}/>
       </div>
     </div>
   );
