@@ -935,17 +935,17 @@ class ItemChatViewSet(viewsets.ModelViewSet):
 
 class ThreadMessageViewSet(viewsets.ModelViewSet):
     queryset = ThreadMessage.objects.all()
-    serializer_class = ItemChatSerializer
+    serializer_class = ThreadMessageSerializer
 
     def filter_queryset(self, queryset):
         return (
             super()
             .filter_queryset(queryset)
-            .filter(item_chat=self.kwargs["item_chat_id"])
+            .filter(chat=self.kwargs["pk"])
         )
 
     def create(self, request, *args, **kwargs):
-        request.data["item_chat"] = kwargs["item_chat_id"]
+        request.data["chat"] = kwargs["pk"]
         request.data["user"] = request.user.id
         response = super().create(request, *args, **kwargs)
         response.data = {

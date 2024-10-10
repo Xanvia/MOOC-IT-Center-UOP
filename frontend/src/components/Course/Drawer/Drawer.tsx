@@ -1,6 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getChatMessages,  } from "@/services/course.service";
+import {
+  addChatMessage,
+  addThreadMessage,
+  getChatMessages,
+  getThread,
+} from "@/services/course.service";
 import { MessageCircle, ArrowLeft, SendHorizontal } from "lucide-react";
 
 interface ChatMessage {
@@ -14,6 +19,9 @@ interface ChatMessage {
 
 interface ThreadMessage extends ChatMessage {
   parent_id: number;
+  message: string;
+  created_at: string;
+  user: string;
 }
 
 interface ChatDrawerProps {
@@ -22,12 +30,17 @@ interface ChatDrawerProps {
   id: number;
 }
 
-const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, toggleDrawer, id }) => {
+const ChatDrawer: React.FC<ChatDrawerProps> = ({
+  isOpen,
+  toggleDrawer,
+  id,
+}) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [threadMessages, setThreadMessages] = useState<ThreadMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [isThreadView, setIsThreadView] = useState(false);
   const [activeThread, setActiveThread] = useState<ChatMessage | null>(null);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -37,12 +50,17 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, toggleDrawer, id }) => 
       }
     };
     fetchMessages();
-  }, [isOpen, id]);
+  }, [isOpen, id, reload]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (newMessage.trim()) {
-      // Implement the send message logic here
-      setNewMessage("");
+      try {
+        await addChatMessage(id, newMessage);
+        reloadData();
+        setNewMessage("");
+      } catch (error: any) {
+        console.error(error.message);
+      }
     }
   };
 
@@ -50,10 +68,27 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, toggleDrawer, id }) => 
     setIsThreadView(true);
     setActiveThread(message);
     try {
-      // const threadData = await getItemChatThread(message.id);
-      // setThreadMessages(threadData.threads);
+      const threadData = await getThread(message.id);
+      if (Array.isArray(threadData.thread_messages)) {
+        setThreadMessages(threadData.thread_messages);
+      } else {
+        setThreadMessages([]);
+      }
     } catch (error) {
       console.error("Failed to fetch thread messages:", error);
+      setThreadMessages([]);
+    }
+  };
+  
+  const handleSendThreadMessage = async () => {
+    if (newMessage.trim() && activeThread) {
+      try {
+        await addThreadMessage(newMessage, activeThread.id);
+        reloadData();
+        setNewMessage("");
+      } catch (error: any) {
+        console.error(error.message);
+      }
     }
   };
 
@@ -63,10 +98,37 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, toggleDrawer, id }) => 
     setThreadMessages([]);
   };
 
-  const MessageView = ({ message, isThread = false }: { message: ChatMessage | ThreadMessage, isThread?: boolean }) => (
+  const reloadData = () => {
+    setReload((prevState) => !prevState);
+  };
+
+  useEffect(() => {
+    if (isThreadView && activeThread) {
+      const fetchThreadMessages = async () => {
+        try {
+          const data = await getThread(activeThread.id);
+          console.log("Thread Messages: ", data);
+          setThreadMessages(data.thread_messages || []); // Ensure it's always an array
+        } catch (error: any) {
+          console.error("Failed to fetch thread messages:", error);
+        }
+      };
+      fetchThreadMessages();
+    }
+  }, [activeThread, isThreadView]);
+
+  const MessageView = ({
+    message,
+    isThread = false,
+  }: {
+    message: ChatMessage | ThreadMessage;
+    isThread?: boolean;
+  }) => (
     <div
       className={`relative rounded-lg p-3 max-w-xs ${
-        message.user === "me" ? "self-end bg-blue-100" : "self-start bg-gray-100"
+        message.user === "me"
+          ? "self-end bg-blue-100"
+          : "self-start bg-gray-100"
       }`}
     >
       {message.user !== "me" && (
@@ -132,9 +194,13 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, toggleDrawer, id }) => 
           <>
             {activeThread && <MessageView message={activeThread} isThread />}
             <div className="border-b my-4"></div>
-            {threadMessages.map((message) => (
-              <MessageView key={message.id} message={message} isThread />
-            ))}
+            {Array.isArray(threadMessages) && threadMessages.length > 0 ? (
+              threadMessages.map((message) => (
+                <MessageView key={message.id} message={message} isThread />
+              ))
+            ) : (
+              <p>No thread messages available.</p>
+            )}
           </>
         ) : (
           messages.map((message) => (
@@ -149,14 +215,19 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, toggleDrawer, id }) => 
           <input
             type="text"
             className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-            placeholder={isThreadView ? "Reply in thread..." : "Type a message..."}
+            placeholder={
+              isThreadView ? "Reply in thread..." : "Type a message..."
+            }
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+            onKeyPress={(e) =>
+              e.key === "Enter" &&
+              (isThreadView ? handleSendThreadMessage() : handleSendMessage())
+            }
           />
           <button
             className="ml-2 p-2 bg-blue-500 text-white rounded-lg focus:outline-none"
-            onClick={handleSendMessage}
+            onClick={isThreadView ? handleSendThreadMessage : handleSendMessage}
           >
             <SendHorizontal size={20} />
           </button>
