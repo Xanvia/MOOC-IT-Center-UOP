@@ -757,6 +757,8 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
 
     def filter_queryset(self, queryset):
+        if self.action == "destroy" or self.action == "update":
+            return super().filter_queryset(queryset)
         return super().filter_queryset(queryset).filter(course=self.kwargs["course_id"])
 
     def create(self, request, *args, **kwargs):

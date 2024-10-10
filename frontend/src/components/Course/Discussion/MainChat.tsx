@@ -13,6 +13,7 @@ import { useParams } from "next/navigation";
 import DiscussionThread from "./Discussion";
 import ThreadView from "./Thread";
 import { Trash } from "lucide-react";
+import { toast } from "sonner";
 
 interface MainChatProps {
   onThreadSelect: (discussion: Discussion) => void;
@@ -35,7 +36,7 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
   const [discussions, setDiscussions] = useState<Discussion[]>([]);
   const [selectedDiscussion, setSelectedDiscussion] =
     useState<Discussion | null>(null);
-
+  const [reload, setReload] = useState(false);
   useEffect(() => {
     (async () => {
       try {
@@ -66,24 +67,10 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
         console.error("Failed to fetch discussions:", error);
       }
     })();
-  }, [params.id]);
+  }, [params.id, reload]);
 
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      setDiscussions([
-        ...discussions,
-        {
-          id: discussions.length + 1,
-          user: "You",
-          content: newMessage,
-          timestamp: new Date().toLocaleString(),
-          isCurrentUser: true,
-          visibility: "all",
-          threadCount: 0, // Initialize threadCount
-        },
-      ]);
-      setNewMessage("");
-    }
+  const reloadData = () => {
+    setReload((prevState) => !prevState);
   };
 
   const handleDeleteMessage = async (id: number) => {
@@ -91,8 +78,10 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
       await deleteMessage(id);
       setDiscussions(discussions.filter((discussion) => discussion.id !== id));
       setOpenMenuId(null);
-    } catch {
+      toast.success("deleted");
+    } catch (error: any) {
       console.log("error");
+      toast.error(error);
     }
   };
 
@@ -247,7 +236,7 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
           onThreadSelect={handleThreadSelect}
           onDeleteMessage={handleDeleteMessage}
           onEditMessage={handleEditMessage}
-          onSendMessage={handleSendMessage}
+          reloadData={reloadData}
         />
       )}
 

@@ -78,4 +78,17 @@ export const deleteMessage = async (messageID: number) => {
   }
 };
 
+export const addMessage = async(courseId:number,content:string,visibility:string)=>{
+  try{
+    const response = await axiosInstance.post(`/course/${courseId}/messages/`,{
+      content,
+      visibility
+    });
+    return response.data.data;
+  }catch (error:any){
+    throw new Error(error.response?.data.message ?? "Network error");
 
+  }
+  
+
+}
