@@ -21,6 +21,7 @@
     "apexcharts": "^3.54.0",
     "axios": "^1.6.8",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
     "dompurify": "^3.1.5",
     "formik": "^2.4.6",
     "headlessui": "^0.0.0",

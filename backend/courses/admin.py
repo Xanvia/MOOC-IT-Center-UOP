@@ -7,7 +7,6 @@ from .models import (
     Video,
     Quiz,
     CodingAssignment,
-    Image,
     Enrollment,
     Progress,
     Question,
@@ -15,6 +14,10 @@ from .models import (
     VideoFile,
     StudentQuiz,
     StudentCodingAnswer,
+    Announcement,
+    ItemChat,
+    Message,
+    Reply,
 )
 
 
@@ -67,9 +70,11 @@ class QuestionAdmin(admin.ModelAdmin):
 class Answerdmin(admin.ModelAdmin):
     list_display = ["id", "text", "is_correct"]
 
+
 @admin.register(Progress)
 class ProgressAdmin(admin.ModelAdmin):
-    list_display = ["id","enrollment", "completed"]
+    list_display = ["id", "enrollment", "completed"]
+
 
 @admin.register(CodingAssignment)
 class CodingAssignmentAdmin(admin.ModelAdmin):
@@ -78,8 +83,27 @@ class CodingAssignmentAdmin(admin.ModelAdmin):
 
 @admin.register(StudentQuiz)
 class StudentQuizAdmin(admin.ModelAdmin):
-    list_display = ["id", "quiz", "enrollement", "score","graded"]
+    list_display = ["id", "quiz", "enrollement", "score", "graded"]
+
 
 @admin.register(StudentCodingAnswer)
 class StudentCodingAnswerAdmin(admin.ModelAdmin):
     list_display = ["id", "enrollement", "coding_assignment", "grade"]
+
+
+@admin.register(Announcement)
+class AnnouncementAdmin(admin.ModelAdmin):
+    list_display = ["id", "content"]
+
+@admin.register(ItemChat)
+class ItemChatAdmin(admin.ModelAdmin):
+    list_display = ["id", "message"]
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ["id", "content"]
+
+
+@admin.register(Reply)
+class ReplyAdmin(admin.ModelAdmin):
+    list_display = ["id","content"]

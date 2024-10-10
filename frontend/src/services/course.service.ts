@@ -459,3 +459,71 @@ export const saveCode = async (
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const getChatMessages = async (itemID: number) => {
+  try {
+    const response = await axiosInstance.get(`course/component/${itemID}/chat`);
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const addChatMessage = async (itemID: number, message: string) => {
+  try {
+    const response = await axiosInstance.post(
+      `course/component/${itemID}/chat`,
+      {
+        message,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const getThread = async (parent_id: number) => {
+  try {
+    const response = await axiosInstance.get(
+      `course/itemchat/${parent_id}/thread/`
+    );
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const addThreadMessage = async (message: string, parent_id: number) => {
+  try {
+    const response = await axiosInstance.post(
+      `course/itemchat/${parent_id}/thread/`,
+      {
+        message,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const deleteMessage = async (messageID: number) => {
+  try {
+    const response = await axiosInstance.delete(
+      `course/itemchat/${messageID}/`
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const deleteThreadMessage = async (messageID: number) => {
+  try {
+    const response = await axiosInstance.delete(`course/thread/${messageID}/`);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};

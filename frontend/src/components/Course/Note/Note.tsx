@@ -70,8 +70,6 @@ const Note: React.FC<NoteProps> = ({ selectedTopic, permissions }) => {
               className={`${classes.note} ql-editor`}
               dangerouslySetInnerHTML={{ __html: noteContent }}
             />
-
-
           </div>
 
           <button
@@ -85,6 +83,7 @@ const Note: React.FC<NoteProps> = ({ selectedTopic, permissions }) => {
           <ChatDrawer
             isOpen={isDrawerOpen}
             toggleDrawer={toggleDrawer}
+            id={selectedTopic.id}
           />
         </>
       )}

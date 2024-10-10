@@ -20,6 +20,7 @@ from .models import (
     ItemChat,
     Message,
     Reply,
+    ThreadMessage,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -120,10 +121,6 @@ class WeekSerializer(serializers.ModelSerializer):
         representation["chapters"] = ChapterSerializer(
             instance.chapters, many=True, context=self.context
         ).data
-
-        user = self.context["request"].user
-        course = instance.course  # Assuming `instance` has a `course` attribute
-
         return representation
 
 
@@ -428,12 +425,45 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         model = Announcement
         fields = "__all__"
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["user"] = (
+            instance.user.first_name[0] + " " + instance.user.last_name
+        )
+        request = self.context.get("request")
+        user = request.user
+        if user.groups.filter(name="teacher").exists():
+            if instance.user == user:
+                representation["canEdit"] = True
+            else:
+                course_teacher = CourseTeachers.objects.filter(
+                    teacher=user, course=instance.course
+                ).first()
+                representation["canEdit"] = course_teacher.permissions.filter(
+                    label="make_announcement"
+                ).exists()
+        else:
+            representation["canEdit"] = False
+        return representation
+
 
 class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
         fields = "__all__"
+
+    def to_representation(self, instance):
+        request = self.context.get("request")
+        representation = super().to_representation(instance)
+        
+        if ( instance.user == request.user ):
+            representation["user"] = "me"
+        else:
+            representation["user"] = (
+                instance.user.first_name[0] + " " + instance.user.last_name
+            )
+        return representation
 
 
 class ReplySerializer(serializers.ModelSerializer):
@@ -442,9 +472,50 @@ class ReplySerializer(serializers.ModelSerializer):
         model = Reply
         fields = "__all__"
 
+    def to_representation(self, instance):
+        request = self.context.get("request")
+        representation = super().to_representation(instance)
+        
+        if ( instance.user == request.user ):
+            representation["user"] = "me"
+        else:
+            representation["user"] = (
+                instance.user.first_name[0] + " " + instance.user.last_name
+            )
+        return representation
 
 class ItemChatSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ItemChat
         fields = "__all__"
+
+    def to_representation(self, instance):
+        request = self.context.get("request")
+        representation = super().to_representation(instance)
+       
+        if ( instance.user == request.user ):
+            representation["user"] = "me"
+        else:
+            representation["user"] = (
+                instance.user.first_name[0] + " " + instance.user.last_name
+            )
+        return representation
+    
+class ThreadMessageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ThreadMessage
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        request = self.context.get("request")
+        representation = super().to_representation(instance)
+       
+        if ( instance.user == request.user ):
+            representation["user"] = "me"
+        else:
+            representation["user"] = (
+                instance.user.first_name[0] + " " + instance.user.last_name
+            )
+        return representation

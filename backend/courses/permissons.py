@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from .models import Enrollment, Course, Week,Chapter,Video,Quiz,Note,CodingAssignment
+from .models import Enrollment, Course, Week,Chapter,Video,Quiz,Note,CodingAssignment,Announcement
 from coursemanagement.models import CourseTeachers, CoursePermissions
 
 
@@ -315,11 +315,14 @@ class AnnouncemantAccess(permissions.BasePermission):
         if view.action == "list":
             return True
 
-        course_id = view.kwargs["course_id"]
-        user = request.user
 
-        # Only allow course creators (teachers) to create announcements
-        course = Course.objects.get(pk=course_id)
+        if "course_id" in view.kwargs:
+           course = Course.objects.get(pk=view.kwargs["course_id"])
+        else:
+            announcement_id = view.kwargs["pk"]
+            course = Course.objects.filter(announcement__id=announcement_id).first()
+
+        user = request.user
         if self.is_in_group(user, "teacher"):
             # Check if the user is the course creator
             if course.course_creator == user:

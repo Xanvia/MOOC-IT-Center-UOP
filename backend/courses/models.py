@@ -82,7 +82,6 @@ class Video(Component):
     quizzes = models.JSONField(default=list, blank=True, null=True)
 
 
-
 class Note(Component):
     content = models.TextField(blank=True, null=True)
 
@@ -102,7 +101,6 @@ class ItemChat(models.Model):
 
     def __str__(self):
         return self.message
-
 
 
 class Quiz(Component):
@@ -220,16 +218,36 @@ class Announcement(models.Model):
         return f"Announcement for {self.course.name} by {self.user.username}"
 
 
-
 class Message(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE,blank=True, null=True)
-    visibility = models.BooleanField(default=True)
+    VISIBILITY_CHOICES = [
+        ("all", "All"),
+        ("teachers", "Teachers"),
+    ]
+
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=True, null=True)
+    visibility = models.CharField(
+        max_length=10, choices=VISIBILITY_CHOICES, default="all"
+    )
     time = models.DateTimeField(default=timezone.now)
     content = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
 
 class Reply(models.Model):
-    message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='threads')
+    message = models.ForeignKey(
+        Message, on_delete=models.CASCADE, related_name="threads"
+    )
     time = models.DateTimeField(default=timezone.now)
     content = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class ThreadMessage(models.Model):
+   
+    chat = models.ForeignKey(ItemChat, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.message
