@@ -13,6 +13,9 @@ from .models import (
     Question,
     Answer,
     Progress,
+    CodingAssignment,
+    StudentQuiz,
+    StudentCodingAnswer,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -29,6 +32,10 @@ class CourseTeacherSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation["full_name"] = f"{instance.first_name} {instance.last_name}"
         representation["headline"] = instance.userprofile.headline
+        if instance.userprofile.profile_image:
+            representation["profile_picture"] = instance.userprofile.profile_image.url
+        else:
+            representation["profile_picture"] = instance.userprofile.profile_picture if instance.userprofile else None
         representation.pop("first_name")
         representation.pop("last_name")
         return representation
@@ -60,9 +67,11 @@ class CourseSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
 
         representation = super().to_representation(instance)
-        representation["course_creator"] = CourseTeacherSerializer(
-            instance.course_creator
-        ).data
+
+        teachers = CourseTeachers.objects.filter(course=instance)
+        instructors = [CourseTeacherSerializer(instance.course_creator).data]
+        instructors.extend(CourseTeacherSerializer(teacher.teacher).data for teacher in teachers)
+        representation["instructors"] = instructors
         representation["category"] = InterestSerializer(instance.category).data
         representation["institution"] = instance.institution.label
 
@@ -143,6 +152,8 @@ class ItemSerializer(serializers.ModelSerializer):
             representation = QuizSerializer(instance.quiz).data
         elif instance.type == "Video":
             representation = VideoSerializer(instance.video).data
+        elif instance.type == "Code":
+            representation = CodingQuizSerializer(instance.codingassignment).data
         else:
             return super().to_representation(instance)
 
@@ -187,10 +198,19 @@ class QuizSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation["content"] = {
             "deadline": instance.deadline,
-            "full_grades": instance.full_grades,
             "questions": QuestionSerializer(instance.questions, many=True).data,
         }
         return representation
+
+
+class CodingQuizSerializer(serializers.ModelSerializer):
+    type = serializers.CharField(default="Code")
+
+    class Meta:
+        model = CodingAssignment
+        fields = "__all__"
+
+
 
 
 class VideoSerializer(serializers.ModelSerializer):
@@ -316,3 +336,38 @@ class ProgressTrackSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"error": "You are not enrolled in this course"}
             )
+
+
+class StudentQuizSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentQuiz
+        fields = ["quiz", "student_answers","score"]
+
+    def validate(self, attrs):
+        # check if student has already answered this quiz
+        request = self.context.get("request")
+        user = request.user
+        quiz = attrs.get("quiz")
+        enrollement = Enrollment.objects.get(student=user, course=quiz.chapter.week.course)
+        attrs["enrollement"] = enrollement
+        try:
+            StudentQuiz.objects.get(enrollement__student=user, quiz=quiz)
+            raise serializers.ValidationError("You have already answered this quiz")
+        except StudentQuiz.DoesNotExist:
+            pass
+        return super().validate(attrs)
+    
+    def create(self, validated_data):
+        quiz = validated_data.get("quiz")
+        # we have to iterate through all the questions in the quiz, in order to check if theres atleast one open_ended
+        open_ended = False
+        for question in quiz.questions.all():
+            if question.question_type == Question.OPENN_ENDED:
+                open_ended = True
+        validated_data["graded"] = not open_ended
+
+
+        return super().create(validated_data)
+    
+    

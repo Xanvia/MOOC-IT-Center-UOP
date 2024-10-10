@@ -34,6 +34,7 @@ interface CourseVideoProps {
   mcqs: any[];
   permissions: Permissions;
   isCompleted: boolean;
+  setIsFinished: (isFinished: boolean) => void;
 }
 
 const CourseVideo: React.FC<CourseVideoProps> = ({
@@ -43,6 +44,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   mcqs,
   permissions,
   isCompleted,
+  setIsFinished,
 }) => {
   const { userRole } = useGlobal();
 
@@ -179,6 +181,12 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
     if (currentMCQ) {
       setAnsweredMCQs((prev) => new Set(prev).add(currentMCQ.timestamp));
       currentMCQ.isDone = true;
+
+      // Check if all MCQs are completed
+      const allMCQsCompleted = mcqs.every((mcq) => mcq.isDone);
+      if (allMCQsCompleted) {
+        setIsFinished(true);
+      }
     }
     setCurrentMCQ(null);
     setSelectedAnswer(null);

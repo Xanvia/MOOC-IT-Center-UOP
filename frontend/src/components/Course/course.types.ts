@@ -3,6 +3,7 @@ export interface CreateCourseData {
   institution: string;
   category: number;
   difficulty: string;
+  payment_type: string;
 }
 
 export interface CourseCreator {
@@ -31,6 +32,7 @@ export interface CourseData {
   category: Category;
   isEnrolled?: boolean;
   canEdit?: boolean;
+  instructors: Instructor[];
 }
 
 export interface UpdateCourseData {
@@ -40,4 +42,11 @@ export interface UpdateCourseData {
   duration: string;
   level: string;
   imageFile: File | null;
+}
+
+export interface Instructor {
+  email: string;
+  full_name: string;
+  headline: string;
+  profile_picture: string;
 }

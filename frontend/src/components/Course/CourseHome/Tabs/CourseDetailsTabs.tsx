@@ -65,7 +65,9 @@ const CourseDetailsTabs = ({
           relaodData={reloadData}
         />
       )}
-      {activeTab === "Instructor" && <InstructorTab />}
+      {activeTab === "Instructor" && (
+        <InstructorTab instructors={courseData.instructors} />
+      )}
       {activeTab !== "Outcomes" && <CourseContent />}
       <CourseOutcomes
         outcomes={courseData.outcomes}

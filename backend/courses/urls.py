@@ -12,6 +12,8 @@ from .views import (
     AddQuestionsViewSet,
     ProgressTrackViewSet,
     GetProgressAPIView,
+    CodingQuizViewSet,
+    StudentQuizViewSet,
 )
 
 router = DefaultRouter()
@@ -32,7 +34,9 @@ urlpatterns = [
         CourseViewSet.as_view({"get": "list", "post": "create"}),
         name="course-list",
     ),
-    path("my-courses/", CourseViewSet.as_view({"get": "my_courses"}), name="my-courses"),
+    path(
+        "my-courses/", CourseViewSet.as_view({"get": "my_courses"}), name="my-courses"
+    ),
     # get course detials, update course details, delete course
     path(
         "<int:course_id>",
@@ -43,7 +47,9 @@ urlpatterns = [
     ),
     # delete week
     path(
-        "week/<int:week_id>/", WeekViewSet.as_view({"delete": "destroy"}), name="week-detail"
+        "week/<int:week_id>/",
+        WeekViewSet.as_view({"delete": "destroy"}),
+        name="week-detail",
     ),
     # get all weeks, create week
     path(
@@ -130,4 +136,16 @@ urlpatterns = [
         GetProgressAPIView.as_view(),
         name="get_progress",
     ),
+    # add coding question
+    path(
+        "week/chapter/<int:chapter_id>/code/",
+        CodingQuizViewSet.as_view({"post": "create"}),
+        name="add-code",
+    ),
+     path(
+        "week/chapter/code/<int:code_id>/",
+        CodingQuizViewSet.as_view({"put": "update", "delete": "destroy"}),
+        name="code-detail",
+    ),
+    path("quiz/<int:pk>/submit/", StudentQuizViewSet.as_view({"post": "submit_quiz"})),
 ]

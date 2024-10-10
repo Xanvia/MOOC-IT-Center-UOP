@@ -13,6 +13,7 @@ from .models import (
     Question,
     Answer,
     VideoFile,
+    StudentQuiz,
 )
 
 
@@ -68,3 +69,12 @@ class Answerdmin(admin.ModelAdmin):
 @admin.register(Progress)
 class ProgressAdmin(admin.ModelAdmin):
     list_display = ["id","enrollment", "completed"]
+
+@admin.register(CodingAssignment)
+class CodingAssignmentAdmin(admin.ModelAdmin):
+    list_display = ["id", "question"]
+
+
+@admin.register(StudentQuiz)
+class StudentQuizAdmin(admin.ModelAdmin):
+    list_display = ["id", "quiz", "enrollement", "score","graded"]

@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from .models import Enrollment, Course, Week,Chapter,Video,Quiz,Note
+from .models import Enrollment, Course, Week,Chapter,Video,Quiz,Note,CodingAssignment
 from coursemanagement.models import CourseTeachers, CoursePermissions
 
 
@@ -26,6 +26,9 @@ class CourseContentListAccess(permissions.BasePermission):
         elif "note_id" in view.kwargs:
             note = Note.objects.get(pk=view.kwargs["note_id"])
             return note.chapter.week.course_id
+        elif "code_id" in view.kwargs:
+            code = CodingAssignment.objects.get(pk=view.kwargs["code_id"])
+            return code.chapter.week.course_id
 
     def is_in_group(self, user, group_name):
         return user.groups.filter(name=group_name).exists()
@@ -84,6 +87,9 @@ class CousrseContentDeleteAccess(permissions.BasePermission):
         elif "note_id" in view.kwargs:
             note = Note.objects.get(pk=view.kwargs["note_id"])
             return note.chapter.week.course_id
+        elif "code_id" in view.kwargs:
+            code = CodingAssignment.objects.get(pk=view.kwargs["code_id"])
+            return code.chapter.week.course_id
 
     def is_in_group(self, user, group_name):
         return user.groups.filter(name=group_name).exists()
@@ -134,6 +140,9 @@ class CourseContentEditAccess(permissions.BasePermission):
         elif "note_id" in view.kwargs:
             note = Note.objects.get(pk=view.kwargs["note_id"])
             return note.chapter.week.course_id
+        elif "code_id" in view.kwargs:
+            code = CodingAssignment.objects.get(pk=view.kwargs["code_id"])
+            return code.chapter.week.course_id
 
     def is_in_group(self, user, group_name):
         return user.groups.filter(name=group_name).exists()
@@ -183,6 +192,9 @@ class CourseContentCreateAccess(permissions.BasePermission):
         elif "note_id" in view.kwargs:
             note = Note.objects.get(pk=view.kwargs["note_id"])
             return note.chapter.week.course_id
+        elif "code_id" in view.kwargs:
+            code = CodingAssignment.objects.get(pk=view.kwargs["code_id"])
+            return code.chapter.week.course_id
 
     def is_in_group(self, user, group_name):
         return user.groups.filter(name=group_name).exists()
@@ -231,6 +243,10 @@ class CourseFileUploadAccess(permissions.BasePermission):
         elif "note_id" in view.kwargs:
             note = Note.objects.get(pk=view.kwargs["note_id"])
             return note.chapter.week.course_id
+
+        elif "code_id" in view.kwargs:
+            code = CodingAssignment.objects.get(pk=view.kwargs["code_id"])
+            return code.chapter.week.course_id
 
     def is_in_group(self, user, group_name):
         return user.groups.filter(name=group_name).exists()

@@ -26,11 +26,12 @@ const Page: React.FC = () => {
     permissions,
   } = useSelectedTopic();
   const [item, setItem] = useState<Item>({ ...selectedTopic });
-  const [isFinished, setIsFinished] = useState<boolean>(true);
+  const [isFinished, setIsFinished] = useState<boolean>(false);
   const { userRole } = useGlobal();
 
   useEffect(() => {
     setItem({ ...selectedTopic });
+    setIsFinished(selectedTopic.completed);
   }, [selectedTopic]);
 
   useEffect(() => {
@@ -95,8 +96,12 @@ const Page: React.FC = () => {
   };
 
   const handleNext = () => {
-    if (!isFinished && userRole === "student") return;
-
+    if (userRole === "student" && !isFinished && item.type != "Note") {
+      toast.warning(
+        `Please complete the current ${item.type}  before moving to the next`
+      );
+      return;
+    }
     if (item.completed == false && userRole === "student") {
       try {
         console.log(item.id);
@@ -154,11 +159,19 @@ const Page: React.FC = () => {
           mcqs={item.content.quizzes}
           permissions={permissions}
           isCompleted={item.completed}
+          setIsFinished={setIsFinished}
         />
       ) : item.type === "Quiz" ? (
         <>
-          <Quiz item={item} permissions={permissions} />
-          {/* <CodingQ /> */}
+          <Quiz
+            item={item}
+            permissions={permissions}
+            setIsFinished={setIsFinished}
+          />
+        </>
+      ) : item.type === "Code" ? (
+        <>
+          <CodingQ permissions={permissions} />
         </>
       ) : (
         <div>No content available</div>

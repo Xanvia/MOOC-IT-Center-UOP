@@ -7,17 +7,30 @@ from userprofiles.models import Institution, Interest
 
 
 class Course(models.Model):
+    PAYMENT_TYPE_CHOICES = [
+        ('free', 'Free'),
+        ('paid', 'Completely Paid'),
+        ('trial', '1 Week Free Trial and Paid'),
+    ]
+
     course_creator = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     specifications = models.TextField(blank=True, null=True)
     category = models.ForeignKey(Interest, on_delete=models.CASCADE)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
+    faculty = models.CharField(max_length=255, blank=True, null=True)
+    department = models.CharField(max_length=255, blank=True, null=True)
     outcomes = models.JSONField(default=list, blank=True, null=True)
     header_image = models.ImageField(upload_to="course_images/", blank=True, null=True)
     duration = models.CharField(max_length=255, blank=True, null=True)
     difficulty = models.CharField(max_length=255)
     status = models.CharField(max_length=255, default="unpublished")
+    payment_type = models.CharField(
+        max_length=50,
+        choices=PAYMENT_TYPE_CHOICES,
+        default='trial'
+    )
 
 
 class Week(models.Model):
@@ -77,11 +90,14 @@ class Note(Component):
 class Quiz(Component):
     deadline = models.DateTimeField(default=timezone.now, blank=True, null=True)
     duration = models.DurationField(blank=True, null=True)
-    full_grades = models.IntegerField(default=100, blank=True, null=True)
+    
 
 
 class CodingAssignment(Component):
-    question = models.TextField()
+    question = models.TextField(blank=True, null=True)
+    grading_type = models.CharField(max_length=255, blank=True, null=True)
+    deadline = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    duration = models.DurationField(blank=True, null=True)
     test_cases = models.JSONField(default=list, blank=True, null=True)
 
 
@@ -129,6 +145,7 @@ class Question(models.Model):
     ]
 
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions")
+    score = models.IntegerField(default=1)
     text = models.TextField()
     question_type = models.CharField(max_length=2, choices=QUESTION_TYPES)
 
@@ -151,11 +168,12 @@ class StudentQuiz(models.Model):
     enrollement = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     score = models.IntegerField(default=0)
+    graded = models.BooleanField(default=False)
     completed_at = models.DateTimeField(auto_now_add=True)
     student_answers = models.JSONField(default=list)
 
     def __str__(self):
-        return f"{self.student.username} - {self.quiz.name}"
+        return f"{self.quiz.name}"
 
 
 class StudentCodingAnswer(models.Model):
