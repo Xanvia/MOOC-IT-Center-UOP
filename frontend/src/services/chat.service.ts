@@ -100,9 +100,28 @@ export const getReplies = async (messageId: number) => {
     const response = await axiosInstance.get(
       `/course/message/${messageId}/reply`
     );
-    console.log(response);
-    return response.data.data;
+    const replies = response.data.data.threads.map((reply: any) => ({
+      id: reply.id,
+      user: reply.user,
+      content: reply.content,
+      timestamp: new Date(reply.time).toLocaleString(),
+      isCurrentUser: reply.user === "me", // Adjust as per your authentication logic
+    }));
+    return replies;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? " Network error");
   }
 };
+
+export const addReply = async(messageId: number, content: string) => {
+  try {
+    const response = await axiosInstance.post(`/course/message/${messageId}/reply`, {
+      content,
+    });
+    
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+}
+

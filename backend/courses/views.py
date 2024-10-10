@@ -828,6 +828,8 @@ class ReplyViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Thread created successfully",
+            "data": response.data
+            
         }
         return response
 
