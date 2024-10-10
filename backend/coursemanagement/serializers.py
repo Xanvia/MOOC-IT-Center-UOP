@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CourseTeachers
+from .models import (CourseTeachers,CoursePermissions)
 from django.contrib.auth.models import User
 
 
@@ -24,4 +24,9 @@ class CourseTeachersSerializer(serializers.ModelSerializer):
         if CourseTeachers.objects.filter(course=course, teacher=teacher).exists():
             raise serializers.ValidationError("Teacher already added to course")
         return attrs
+    
 
+class CoursePermissionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CoursePermissions
+        fields = "__all__"
