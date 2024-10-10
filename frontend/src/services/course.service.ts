@@ -507,3 +507,23 @@ export const addThreadMessage = async (message: string, parent_id: number) => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const deleteMessage = async (messageID: number) => {
+  try {
+    const response = await axiosInstance.delete(
+      `course/itemchat/${messageID}/`
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const deleteThreadMessage = async (messageID: number) => {
+  try {
+    const response = await axiosInstance.delete(`course/thread/${messageID}/`);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};

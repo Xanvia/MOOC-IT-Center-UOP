@@ -3,10 +3,13 @@ import React, { useEffect, useState } from "react";
 import {
   addChatMessage,
   addThreadMessage,
+  deleteMessage,
+  deleteThreadMessage,
   getChatMessages,
   getThread,
 } from "@/services/course.service";
-import { MessageCircle, ArrowLeft, SendHorizontal } from "lucide-react";
+import { MessageCircle, ArrowLeft, SendHorizontal, Trash } from "lucide-react";
+import ThreadView from "../Discussion/Thread";
 
 interface ChatMessage {
   id: number;
@@ -79,7 +82,7 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({
       setThreadMessages([]);
     }
   };
-  
+
   const handleSendThreadMessage = async () => {
     if (newMessage.trim() && activeThread) {
       try {
@@ -115,7 +118,20 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({
       };
       fetchThreadMessages();
     }
-  }, [activeThread, isThreadView]);
+  }, [activeThread, isThreadView, reload]);
+
+  const handleDeleteMessage = async (id: number) => {
+    try {
+      if (isThreadView) {
+        await deleteThreadMessage(id);
+      } else {
+        await deleteMessage(id);
+      }
+      reloadData();
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  };
 
   const MessageView = ({
     message,
@@ -148,6 +164,14 @@ const ChatDrawer: React.FC<ChatDrawerProps> = ({
           >
             <MessageCircle size={14} className="mr-1" />
             {message.thread_count || 0}
+          </button>
+        )}
+        {message.user === "me" && (
+          <button
+            onClick={() => handleDeleteMessage(message.id)}
+            className="text-red-500 hover:text-red-700"
+          >
+            <Trash size={12} />
           </button>
         )}
       </div>

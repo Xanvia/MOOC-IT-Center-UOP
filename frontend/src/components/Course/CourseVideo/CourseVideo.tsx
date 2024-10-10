@@ -598,6 +598,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
 
       {/* Chat Drawer Component */}
       <ChatDrawer
+        id={id}
         isOpen={isDrawerOpen}
         toggleDrawer={toggleDrawer}
       />

@@ -878,6 +878,8 @@ class ItemChatViewSet(viewsets.ModelViewSet):
     serializer_class = ItemChatSerializer
 
     def filter_queryset(self, queryset):
+        if self.action == "destroy" or self.action == "update":
+            return super().filter_queryset(queryset)
         return (
             super().filter_queryset(queryset).filter(component=self.kwargs["component_id"])
         )
@@ -938,6 +940,8 @@ class ThreadMessageViewSet(viewsets.ModelViewSet):
     serializer_class = ThreadMessageSerializer
 
     def filter_queryset(self, queryset):
+        if self.action == "destroy" or self.action == "update":
+            return super().filter_queryset(queryset)
         return (
             super()
             .filter_queryset(queryset)
