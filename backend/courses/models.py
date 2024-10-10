@@ -240,3 +240,14 @@ class Reply(models.Model):
     time = models.DateTimeField(default=timezone.now)
     content = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class ThreadMessage(models.Model):
+   
+    chat = models.ForeignKey(ItemChat, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.message

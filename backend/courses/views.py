@@ -16,6 +16,7 @@ from .models import (
     Message,
     Reply,
     ItemChat,
+    ThreadMessage
 )
 from .serializers import (
     CourseSerializer,
@@ -36,6 +37,7 @@ from .serializers import (
     MessageSerializer,
     ReplySerializer,
     ItemChatSerializer,
+    ThreadMessageSerializer
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -926,6 +928,68 @@ class ItemChatViewSet(viewsets.ModelViewSet):
             "status": "success",
             "data": {
                 "item_chats": response.data,
+            },
+        }
+        return response
+
+
+class ThreadMessageViewSet(viewsets.ModelViewSet):
+    queryset = ThreadMessage.objects.all()
+    serializer_class = ItemChatSerializer
+
+    def filter_queryset(self, queryset):
+        return (
+            super()
+            .filter_queryset(queryset)
+            .filter(item_chat=self.kwargs["item_chat_id"])
+        )
+
+    def create(self, request, *args, **kwargs):
+        request.data["item_chat"] = kwargs["item_chat_id"]
+        request.data["user"] = request.user.id
+        response = super().create(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "message": "Thread message created successfully",
+        }
+        return response
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            response = super().destroy(request, *args, **kwargs)
+        except ProtectedError:
+            return Response(
+                {"status": "error", "message": "Thread message is not empty"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except Exception as e:
+            return Response(
+                {"status": "error", "message": "An unexpected error occurred"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        response.data = {
+            "status": "success",
+            "message": "Thread message deleted successfully",
+        }
+        return response
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, partial=True, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "message": "Thread message updated successfully",
+        }
+        return response
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "data": {
+                "thread_messages": response.data,
             },
         }
         return response
