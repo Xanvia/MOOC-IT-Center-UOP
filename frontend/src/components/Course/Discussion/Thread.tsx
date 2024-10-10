@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { MessageCircle, ArrowLeft, MoreVertical } from "lucide-react";
 import { Discussion, ThreadMessage } from "../types";
 import { toast } from "sonner";
-import { addMessage, addReply, getReplies } from "@/services/chat.service";
+import { addMessage, addReply, deleteReply, getReplies } from "@/services/chat.service";
 
 interface ThreadViewProps {
   parentMessage: Discussion;
@@ -33,9 +33,12 @@ export default function ThreadView({
     }
   };
 
-  const handleDeleteMessage = (id: number) => {
-    setThreadMessages(threadMessages.filter((msg) => msg.id !== id));
-    setOpenMenuId(null);
+  const handleDeleteMessage =async (id: number) => {
+    try {
+      await deleteReply(id);
+      setThreadMessages(threadMessages.filter((msg) => msg.id !== id));
+      setOpenMenuId(null);
+    } catch {}
   };
 
   const toggleMenu = (id: number) => {
@@ -126,7 +129,7 @@ export default function ThreadView({
                     </button>
                     {openMenuId === message.id && (
                       <div className="absolute right-0 mt-2 py-2 w-32 bg-white rounded-md shadow-xl z-20">
-                        <button
+                        {/* <button
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                           onClick={() => {
                             console.log("Edit message:", message.id);
@@ -134,7 +137,7 @@ export default function ThreadView({
                           }}
                         >
                           Edit
-                        </button>
+                        </button> */}
                         <button
                           className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"
                           onClick={() => handleDeleteMessage(message.id)}

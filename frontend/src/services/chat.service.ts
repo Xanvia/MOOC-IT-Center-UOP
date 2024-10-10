@@ -125,3 +125,11 @@ export const addReply = async(messageId: number, content: string) => {
   }
 }
 
+export const deleteReply = async(replyId:number)=>{
+  try{
+    const response = await axiosInstance.delete(`/course/reply/${replyId}/`);
+    return response.data.data;
+  }catch(error:any){
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+}

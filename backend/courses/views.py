@@ -817,6 +817,8 @@ class ReplyViewSet(viewsets.ModelViewSet):
     serializer_class = ReplySerializer
 
     def filter_queryset(self, queryset):
+        if self.action == "destroy" or self.action == "update":
+            return super().filter_queryset(queryset)
         return (
             super().filter_queryset(queryset).filter(message=self.kwargs["message_id"])
         )
