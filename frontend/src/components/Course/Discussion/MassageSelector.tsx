@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { MessageCircle, ChevronRight, User, Users } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "./Popover";
 import { Button } from "@headlessui/react";
-type Visibility = "private" | "all";
+type Visibility = "teachers" | "all";
 
 interface MessageSendSelectorProps {
   onSend: (visibility: Visibility) => void;
@@ -16,7 +16,7 @@ const MessageSendSelector = ({
   const [visibility, setVisibility] = useState<Visibility>("all");
 
   const options = {
-    private: {
+    teachers: {
       label: "Private",
       icon: User,
       color: "blue",

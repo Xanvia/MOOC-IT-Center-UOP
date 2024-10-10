@@ -51,7 +51,7 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
         console.error("Failed to fetch announcements:", error);
       }
     })();
-  }, [params.id]);
+  }, [params.id,reload]);
 
   useEffect(() => {
     (async () => {
@@ -92,6 +92,7 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
   };
 
   const handleDeleteAnnouncement = async (id: number) => {
+    console.log("delete announcement", id);
     try {
       await deleteAnnouncement(id);
       setAnnouncements(
@@ -114,17 +115,7 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
           newAnnouncement.title,
           newAnnouncement.content
         );
-        setAnnouncements([
-          ...announcements,
-          {
-            id: announcements.length + 1,
-            title: newAnnouncement.title,
-            content: newAnnouncement.content,
-            timestamp: new Date().toLocaleString(),
-            canEdit: true,
-          },
-        ]);
-        // Optionally reset the newAnnouncement state
+        reloadData();
         setNewAnnouncement({ title: "", content: "" });
       } catch (error) {
         console.error("Failed to post announcement:", error);
@@ -210,7 +201,7 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
                 key={announcement.id}
                 className="relative p-4 bg-yellow-50 rounded-lg shadow"
               >
-                <h3 className="font-bold text-lg">{announcement.title}</h3>
+                <h3 className="font-bold text-lg">{announcement.title} {announcement.id}</h3>
                 {announcement.canEdit && (
                   <Trash
                     className="absolute top-2 right-2 w-6 h-6 text-gray-500 cursor-pointer"

@@ -315,8 +315,13 @@ class AnnouncemantAccess(permissions.BasePermission):
         if view.action == "list":
             return True
 
-        announcement_id = view.kwargs["pk"]
-        course = Course.objects.filter(announcement__id=announcement_id).first()
+
+        if "course_id" in view.kwargs:
+           course = Course.objects.get(pk=view.kwargs["course_id"])
+        else:
+            announcement_id = view.kwargs["pk"]
+            course = Course.objects.filter(announcement__id=announcement_id).first()
+
         user = request.user
         if self.is_in_group(user, "teacher"):
             # Check if the user is the course creator

@@ -17,6 +17,7 @@ from .models import (
     Announcement,
     ItemChat,
     Message,
+    Reply,
 )
 
 
@@ -101,3 +102,8 @@ class ItemChatAdmin(admin.ModelAdmin):
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
     list_display = ["id", "content"]
+
+
+@admin.register(Reply)
+class ReplyAdmin(admin.ModelAdmin):
+    list_display = ["id","content"]

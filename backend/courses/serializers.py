@@ -471,6 +471,17 @@ class ReplySerializer(serializers.ModelSerializer):
         model = Reply
         fields = "__all__"
 
+    def to_representation(self, instance):
+        request = self.context.get("request")
+        representation = super().to_representation(instance)
+        
+        if ( instance.user == request.user ):
+            representation["user"] = "me"
+        else:
+            representation["user"] = (
+                instance.user.first_name[0] + " " + instance.user.last_name
+            )
+        return representation
 
 class ItemChatSerializer(serializers.ModelSerializer):
 

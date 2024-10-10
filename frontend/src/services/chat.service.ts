@@ -1,3 +1,4 @@
+import { Axis3D } from "lucide-react";
 import axiosInstance from "../lib/axiosInstance";
 import { mapVisibility } from "./utils";
 
@@ -78,17 +79,30 @@ export const deleteMessage = async (messageID: number) => {
   }
 };
 
-export const addMessage = async(courseId:number,content:string,visibility:string)=>{
-  try{
-    const response = await axiosInstance.post(`/course/${courseId}/messages/`,{
+export const addMessage = async (
+  courseId: number,
+  content: string,
+  visibility: string
+) => {
+  try {
+    const response = await axiosInstance.post(`/course/${courseId}/messages/`, {
       content,
-      visibility
+      visibility,
     });
     return response.data.data;
-  }catch (error:any){
+  } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
-
   }
-  
+};
 
-}
+export const getReplies = async (messageId: number) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/message/${messageId}/reply`
+    );
+    console.log(response);
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? " Network error");
+  }
+};

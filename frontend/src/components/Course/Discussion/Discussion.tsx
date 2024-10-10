@@ -34,7 +34,7 @@ export default function DiscussionThread({
 }: DiscussionThreadProps) {
   const params = useParams();
   const [newMessage, setNewMessage] = useState("");
-  const [messageVisibility, setMessageVisibility] = useState<"private" | "all">(
+  const [messageVisibility, setMessageVisibility] = useState<"teachers" | "all">(
     "all"
   );
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
@@ -50,7 +50,7 @@ export default function DiscussionThread({
     setOpenMenuId(openMenuId === id ? null : id);
   };
 
-  const handleSendMessage = async (visibility: "private" | "all") => {
+  const handleSendMessage = async (visibility: "teachers" | "all") => {
     if (newMessage.trim()) {
       try {
         const courseId = params.id;
