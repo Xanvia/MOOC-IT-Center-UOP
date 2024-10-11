@@ -1,56 +1,59 @@
+'use client';
 
-import React from "react";
-import Head from "next/head";
-import { Plus } from "lucide-react";
+import React, { useState } from "react";
 import CourseTable from "@/components/CourseTable/CourseTable";
+import PublishToggle from "@/components/Buttons/ToggleButton";
 
 interface CourseData {
   courseName: string;
   profilePicture: string;
   courseCreater: string;
-  subscription: string; 
-  level: "Active" | "Intermediate" | "Advanced";
+  publish: string; 
+  level: "Beginner" | "Intermediate" | "Advanced";
 }
 
 const courseData: CourseData[] = [
   {
     courseCreater: "Candice Schiner",
-    profilePicture: "/api/placeholder/40/40", // Using a placeholder, replace with actual URL
+    profilePicture: "/api/placeholder/40/40",
     courseName: "Computer Network",
-    courses: "Introduction to Computer Networks, Advanced Networking",
+    publish: " ",
     level: "Beginner",
   },
   {
     courseCreater: "John Doe",
-    profilePicture: "/api/placeholder/40/40", // Using a placeholder, replace with actual URL
+    profilePicture: "/api/placeholder/40/40",
     courseName: "Materials Science",
-    courses: "Material Science, Advanced Materials",
+    publish: " ",
     level: "Intermediate",
   },
   {
     courseCreater: "Candice Schiner",
-    profilePicture: "/api/placeholder/40/40", // Using a placeholder, replace with actual URL
+    profilePicture: "/api/placeholder/40/40",
     courseName: "Computer Network",
-    courses: "Introduction to Computer Networks, Advanced Networking",
+    publish: " ",
     level: "Advanced",
   },
-
 ];
 
+const CoursesPage: React.FC = () => {
+  const [isPublished, setIsPublished] = useState<boolean>(true);
 
-const CoursesPage = () => {
+  const handlePublishToggle = (course: CourseData) => {
+    // Implement publish logic here
+    console.log(`Toggled publish for ${course.courseName}`);
+  };
+
   return (
     <div className="flex h-screen bg-gray-50">
-      <Head>
-        <title>OpenEd - Teacher Management</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <main className="flex-1 flex flex-col overflow-hidden p-6 bg-white rounded-lg shadow-md mx-6 my-6">
         <div className="flex justify-between items-center mb-6 border-b pb-4">
           <h2 className="text-2xl font-semibold text-gray-800">
             Manage Courses
           </h2>
+        </div>
+        <div className="">
+          <PublishToggle />
         </div>
 
         <div className="mb-6">
@@ -63,11 +66,8 @@ const CoursesPage = () => {
 
         <CourseTable
           data={courseData}
-          onSubscribeClick={(courseId: string) => {
-            // Handle permissions click event here
-          }}
+          onPublishClick={handlePublishToggle}
         />
-
       </main>
     </div>
   );

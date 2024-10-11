@@ -5,18 +5,18 @@ interface CourseData {
   courseName: string;
   profilePicture: string;
   courseCreater: string;
-  subscription: string; 
+  publish: string; 
   level: "Beginner" | "Intermediate" | "Advanced";
 }
 
 interface CourseTableProps {
   data: CourseData[];
-  onSubscribeClick: (course: CourseData) => void; // New prop to handle button click
+  onPublishClick: (course: CourseData) => void; // New prop to handle button click
 }
 
 const CourseTable = ({
   data,
-  onSubscribeClick,
+  onPublishClick,
 }: CourseTableProps) => {
   return (
     <div className="flex flex-col bg-white rounded-lg shadow-sm border border-gray-200">
@@ -37,7 +37,7 @@ const CourseTable = ({
                 LEVEL
               </th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                SUBSCRIPTION
+                PUBLISH
               </th>
             </tr>
           </thead>
@@ -72,8 +72,8 @@ const CourseTable = ({
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <button className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">
-                    Subscribe
+                  <button className="bg-blue-800 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700">
+                    Publish
                   </button>
                 </td>
               </tr>
