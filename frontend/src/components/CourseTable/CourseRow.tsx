@@ -30,22 +30,21 @@ const CourseRow: React.FC<CourseRowProps> = ({ course, isPublished, onPublish })
         </span>
       </td>
       <td className="px-6 py-4">
-        <div className="flex space-x-2">
+        <div className="flex space-x-9">
           {isPublished ? (
             <>
-              <button className="text-blue-600 hover:underline">View</button>
-              <button className="text-blue-600 hover:underline">Comment</button>
+              <button className="bg-gray-400 hover:bg-gray-300 text-white px-3 py-1 rounded-md">Send Message</button>
             </>
           ) : (
             <>
               <button 
-                className="bg-blue-600 text-white px-3 py-1 rounded"
+                className="bg-blue-900 hover:bg-blue-800 text-white px-3 py-1 rounded-md"
                 onClick={() => onPublish(course.id)}
               >
                 Publish
               </button>
-              <button className="text-blue-600 hover:underline">View</button>
-              <button className="text-blue-600 hover:underline">Comment</button>
+              <button className="bg-gray-400 hover:bg-gray-300 text-white px-3 py-1 rounded-md">View</button>
+              <button className="bg-gray-400 hover:bg-gray-300 text-white px-3 py-1 rounded-md">Send Message</button>
             </>
           )}
         </div>
