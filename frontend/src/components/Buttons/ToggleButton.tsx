@@ -1,37 +1,33 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const PublishToggle = () => {
-  const [isPublished, setIsPublished] = useState(true);
+interface ToggleButtonProps {
+  onToggle: (status: boolean) => void;
+}
+
+const ToggleButton: React.FC<ToggleButtonProps> = ({ onToggle }) => {
+  const [isPublished, setIsPublished] = React.useState(false);
+
+  const handleToggle = (status: boolean) => {
+    setIsPublished(status);
+    onToggle(status);
+  };
 
   return (
-    <div className="flex justify-center items-center p-4">
-      <div className="relative bg-gray-200 rounded-full p-1 w-64">
-        <div
-          className={`absolute top-1 bottom-1 w-1/2 rounded-full transition-all duration-300 ease-in-out ${
-            isPublished ? 'left-1 bg-blue-800' : 'left-1/2 bg-blue-800'
-          }`}
-        ></div>
-        <div className="relative flex">
-          <button
-            className={`w-1/2 py-2 text-sm font-medium rounded-full transition-colors duration-300 ${
-              !isPublished ? 'text-white' : 'text-white'
-            }`}
-            onClick={() => setIsPublished(false)}
-          >
-            Unpublish
-          </button>
-          <button
-            className={`w-1/2 py-2 text-sm font-medium rounded-full transition-colors duration-300 ${
-              isPublished ? 'text-white' : 'text-white'
-            }`}
-            onClick={() => setIsPublished(true)}
-          >
-            Publish
-          </button>
-        </div>
-      </div>
+    <div className="flex space-x-4">
+      <button
+        className={`px-4 py-2 rounded ${!isPublished ? 'bg-blue-600 text-white' : 'bg-gray-300'}`}
+        onClick={() => handleToggle(false)}
+      >
+        Unpublish
+      </button>
+      <button
+        className={`px-4 py-2 rounded ${isPublished ? 'bg-blue-600 text-white' : 'bg-gray-300'}`}
+        onClick={() => handleToggle(true)}
+      >
+        Publish
+      </button>
     </div>
   );
 };
 
-export default PublishToggle;
+export default ToggleButton;

@@ -1,76 +1,43 @@
-'use client';
+"use client";
 
-import React, { useState } from "react";
-import CourseTable from "@/components/CourseTable/CourseTable";
-import PublishToggle from "@/components/Buttons/ToggleButton";
+import React, { useState } from 'react';
+import ToggleButton from '@/components/Buttons/ToggleButton';
+import CourseTable from '@/components/CourseTable/CourseTable';
 
-interface CourseData {
-  courseName: string;
-  profilePicture: string;
-  courseCreater: string;
-  publish: string; 
-  level: "Beginner" | "Intermediate" | "Advanced";
+interface Course {
+  id: number;
+  creator: string;
+  name: string;
+  level: 'Beginner' | 'Intermediate' | 'Advanced';
+  isPublished: boolean;
 }
 
-const courseData: CourseData[] = [
-  {
-    courseCreater: "Candice Schiner",
-    profilePicture: "/api/placeholder/40/40",
-    courseName: "Computer Network",
-    publish: " ",
-    level: "Beginner",
-  },
-  {
-    courseCreater: "John Doe",
-    profilePicture: "/api/placeholder/40/40",
-    courseName: "Materials Science",
-    publish: " ",
-    level: "Intermediate",
-  },
-  {
-    courseCreater: "Candice Schiner",
-    profilePicture: "/api/placeholder/40/40",
-    courseName: "Computer Network",
-    publish: " ",
-    level: "Advanced",
-  },
-];
+const CoursePage: React.FC = () => {
+  const [isPublished, setIsPublished] = useState(false);
 
-const CoursesPage: React.FC = () => {
-  const [isPublished, setIsPublished] = useState<boolean>(true);
+  const [courses, setCourses] = useState<Course[]>([
+    { id: 1, creator: 'Candice Schiner', name: 'Computer Network', level: 'Beginner', isPublished: false },
+    { id: 2, creator: 'John Doe', name: 'Materials Science', level: 'Intermediate', isPublished: false },
+    { id: 3, creator: 'Candice Schiner', name: 'Computer Network', level: 'Advanced', isPublished: true },
+  ]);
 
-  const handlePublishToggle = (course: CourseData) => {
-    // Implement publish logic here
-    console.log(`Toggled publish for ${course.courseName}`);
+  const handleToggle = (status: boolean) => {
+    setIsPublished(status);
+  };
+
+  const handlePublish = (courseId: number) => {
+    setCourses(courses.map(course =>
+      course.id === courseId ? { ...course, isPublished: true } : course
+    ));
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <main className="flex-1 flex flex-col overflow-hidden p-6 bg-white rounded-lg shadow-md mx-6 my-6">
-        <div className="flex justify-between items-center mb-6 border-b pb-4">
-          <h2 className="text-2xl font-semibold text-gray-800">
-            Manage Courses
-          </h2>
-        </div>
-        <div className="">
-          <PublishToggle />
-        </div>
-
-        <div className="mb-6">
-          <input
-            type="text"
-            placeholder="Search name..."
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <CourseTable
-          data={courseData}
-          onPublishClick={handlePublishToggle}
-        />
-      </main>
+    <div className="p-6">
+      <h2 className="text-2xl font-semibold mb-4">Manage Courses</h2>
+      <ToggleButton onToggle={handleToggle} />
+      <CourseTable courses={courses} isPublished={isPublished} onPublish={handlePublish} />
     </div>
   );
 };
 
-export default CoursesPage;
+export default CoursePage;

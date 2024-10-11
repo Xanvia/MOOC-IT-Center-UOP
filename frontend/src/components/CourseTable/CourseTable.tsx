@@ -1,86 +1,40 @@
-import React from "react";
-import Image from "next/image";
+import React from 'react';
+import CourseRow from './CourseRow';
 
-interface CourseData {
-  courseName: string;
-  profilePicture: string;
-  courseCreater: string;
-  publish: string; 
-  level: "Beginner" | "Intermediate" | "Advanced";
+interface Course {
+  id: number;
+  creator: string;
+  name: string;
+  level: 'Beginner' | 'Intermediate' | 'Advanced';
+  isPublished: boolean;
 }
 
 interface CourseTableProps {
-  data: CourseData[];
-  onPublishClick: (course: CourseData) => void; // New prop to handle button click
+  courses: Course[];
+  isPublished: boolean;
+  onPublish: (id: number) => void;
 }
 
-const CourseTable = ({
-  data,
-  onPublishClick,
-}: CourseTableProps) => {
-  return (
-    <div className="flex flex-col bg-white rounded-lg shadow-sm border border-gray-200">
-      <div className="overflow-auto max-h-[480px]">
-        <table className="min-w-full table-auto">
-          <thead className="bg-gray-100 sticky top-0">
-            <tr>
-              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                PROFILE
-              </th>
-              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                COURSE CREATER
-              </th>
-              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                COURSE
-              </th>
-              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                LEVEL
-              </th>
-              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                PUBLISH
-              </th>
-            </tr>
-          </thead>
+const CourseTable: React.FC<CourseTableProps> = ({ courses, isPublished, onPublish }) => {
+  const filteredCourses = courses.filter(course => course.isPublished === isPublished);
 
-          <tbody className="bg-white divide-y divide-gray-200">
-            {data.map((Course, index) => (
-              <tr key={index}>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <Image
-                    width={40}
-                    height={40}
-                    src={Course.profilePicture}
-                    alt={`${Course.courseName}'s profile`}
-                    className="h-10 w-10 rounded-full object-cover"
-                  />
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">{Course.courseCreater}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {Course.courseName}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        Course.level === "Beginner"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : Course.level === "Intermediate"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {Course.level}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <button className="bg-blue-800 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700">
-                    Publish
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+  return (
+    <div className="mt-4 overflow-x-auto">
+      <table className="min-w-full bg-white">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="px-6 py-3 text-left">Course Creator</th>
+            <th className="px-6 py-3 text-left">Course</th>
+            <th className="px-6 py-3 text-left">Level</th>
+            <th className="px-6 py-3 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredCourses.map(course => (
+            <CourseRow key={course.id} course={course} isPublished={isPublished} onPublish={onPublish} />
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
