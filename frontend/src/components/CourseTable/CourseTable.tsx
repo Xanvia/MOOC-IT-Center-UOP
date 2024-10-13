@@ -22,7 +22,7 @@ const CourseTable: React.FC<CourseTableProps> = ({ courses, isPublished, onPubli
     <div className="flex flex-col bg-white rounded-lg shadow-sm border border-gray-200">
       <div className="overflow-auto max-h-[480px]">
         <table className="min-w-full bg-white">
-          <thead className="bg-gray-100">
+          <thead className="bg-gray-100 sticky top-0 z-10">
             <tr>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Course Creator</th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Course</th>
