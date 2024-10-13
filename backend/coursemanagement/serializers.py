@@ -28,5 +28,5 @@ class CourseTeachersSerializer(serializers.ModelSerializer):
 
 class CoursePermissionsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CoursePermissions
+        model = CourseTeachers
         fields = "__all__"
