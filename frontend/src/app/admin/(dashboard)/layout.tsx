@@ -2,7 +2,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { Home, Users, GraduationCap } from "lucide-react";
+import { Home, Users, GraduationCap,Library } from "lucide-react";
 
 const Header = dynamic(() => import("@/components/layout/header"), {
   ssr: false,
@@ -24,6 +24,7 @@ export default function AdminLayout({
     { icon: Home, label: "Dashboard", href: "/admin" },
     { icon: GraduationCap, label: "Teachers", href: "/admin/teachers" },
     { icon: Users, label: "Students", href: "/admin/students" },
+    {icon: Library, label:"Courses",href:"/admin/courses"}
   ];
 
   return (
