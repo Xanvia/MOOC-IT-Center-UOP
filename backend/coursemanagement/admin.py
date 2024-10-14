@@ -11,7 +11,7 @@ class PaymentsAdmin(admin.ModelAdmin):
 
 
 class CourseTeachersAdmin(admin.ModelAdmin):
-    list_display = ["course", "teacher", "role"]
+    list_display = ["id", "course", "teacher", "role"]
 
 
 admin.site.register(CoursePermissions, CoursePermissionsAdmin)

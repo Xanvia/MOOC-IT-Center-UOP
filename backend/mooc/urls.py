@@ -25,6 +25,7 @@ from userprofiles.views import (
     CountryListAPIView,
     InstitutionsListAPIView,
 )
+from coursemanagement.views import PermissionsListAPIView
 
 
 urlpatterns = [
@@ -37,6 +38,7 @@ urlpatterns = [
     path(
         "api/institutions/", InstitutionsListAPIView.as_view(), name="institutions-list"
     ),
+    path("api/permissions/", PermissionsListAPIView.as_view(), name="permissions-list"),
 ]
 
 
