@@ -7,6 +7,6 @@ urlpatterns = [
         "<int:course_id>/add-teacher/", CourseTeacherViewSet.as_view({"post": "create"},), name="course-teacher-list"
     ),
     path(
-        "teacher/<int:pk>/permissions/", EditPermissionAPIView.as_view(), name="edit-permissions"
+        "teacher/<int:course_id>/permissions/", EditPermissionAPIView.as_view(), name="edit-permissions"
     ),
 ]

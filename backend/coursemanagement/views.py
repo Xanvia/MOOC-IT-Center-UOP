@@ -1,5 +1,9 @@
 from rest_framework import viewsets, generics
-from .serializers import CourseTeachersSerializer, EditCoursePermissionsSerializer,CoursePermissionsSerializer
+from .serializers import (
+    CourseTeachersSerializer,
+    EditCoursePermissionsSerializer,
+    CoursePermissionsSerializer,
+)
 from .models import CourseTeachers, CoursePermissions
 from .permissions import IsCourseCreator
 
@@ -25,10 +29,13 @@ class PermissionsListAPIView(generics.ListAPIView):
     serializer_class = CoursePermissionsSerializer
 
 
-
 class EditPermissionAPIView(generics.UpdateAPIView):
     serializer_class = EditCoursePermissionsSerializer
     queryset = CourseTeachers.objects.all()
+    permission_classes = [IsCourseCreator]
+
+    def get_object(self):
+        return self.queryset.get(course=self.kwargs.get("course_id"))
 
     def update(self, request, *args, **kwargs):
         response = super().update(request, partial=True, *args, **kwargs)
