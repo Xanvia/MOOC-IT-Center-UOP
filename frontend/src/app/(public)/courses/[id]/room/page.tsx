@@ -12,6 +12,7 @@ import { useGlobal } from "@/contexts/store";
 import { markAsComplete } from "@/services/course.service";
 import CodingQ from "@/components/Course/CodingQ/CodingQ";
 import Notifications from "@/components/Course/Discussion/Notification";
+import TheBreadcrumb from "@/components/TheBreadcrumb/TheBreadcrumb";
 
 const Page: React.FC = () => {
   const {
@@ -141,6 +142,14 @@ const Page: React.FC = () => {
       setExpandedSubtopics({ 0: true });
     }
   };
+  
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Courses', href: '/courses' },
+    { label: 'Course Name', href: `/courses/${item.id}` }, // Replace 'Course Name' with actual course name if available
+    { label: 'Course Room', href: `/courses/${item.id}/room` },
+    { label: item.name, href: `/courses/${item.id}/room` }, // Current topic
+  ];
 
   // const isLastItem = () => {
   //   const lastWeek = weeks[weeks.length - 1];
@@ -150,14 +159,20 @@ const Page: React.FC = () => {
   // };
   if (item.type == "Notifications") {
     return (
-      <div className="flex-grow p-4 mb-96 ml-96" key={item.id}>
+      <div className="flex flex-col p-4 mb-96 ml-96" key={item.id}>
+        <div className="mb-4">
+          <TheBreadcrumb items={breadcrumbItems} />
+        </div>
         <Notifications />
       </div>
     );
   }
 
   return (
-    <div className="flex-grow p-4 mb-96 ml-96" key={item.id}>
+    <div className="flex flex-col p-4 mb-96 ml-96" key={item.id}>
+      <div className="mb-4">
+        <TheBreadcrumb items={breadcrumbItems} />
+      </div>
       {item.type === "Note" ? (
         <Note selectedTopic={item} permissions={permissions} />
       ) : item.type === "Video" ? (
