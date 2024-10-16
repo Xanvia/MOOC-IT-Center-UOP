@@ -64,23 +64,101 @@ const Page: React.FC = () => {
     setIsFinished(selectedTopic.completed);
   }, [selectedTopic]);
 
-  // Handle loading state
-  if (isLoading) {
-    return <Loader />; // Show a loader while fetching data
-  }
-
   const findCurrentItemIndex = (weeks: Week[], currentItem: Item) => {
-    // logic remains unchanged...
+    for (let weekIndex = 0; weekIndex < weeks.length; weekIndex++) {
+      const week = weeks[weekIndex];
+      if (!week.chapters) continue;
+      for (
+        let chapterIndex = 0;
+        chapterIndex < week.chapters.length;
+        chapterIndex++
+      ) {
+        const chapter = week.chapters[chapterIndex];
+        if (!chapter.items) continue;
+        const itemIndex = chapter.items.findIndex(
+          (item) => item.id === currentItem.id
+        );
+        if (itemIndex !== -1) {
+          return { weekIndex, chapterIndex, itemIndex };
+        }
+      }
+    }
+    return null;
   };
 
   const handlePrev = () => {
-    // logic remains unchanged...
+    const currentIndex = findCurrentItemIndex(weeks, item);
+    if (!currentIndex) return;
+
+    let { weekIndex, chapterIndex, itemIndex } = currentIndex;
+
+    if (itemIndex > 0) {
+      setSelectedTopic(
+        weeks[weekIndex]?.chapters[chapterIndex]?.items?.[itemIndex - 1] ??
+          selectedTopic
+      );
+    } else if (chapterIndex > 0) {
+      const prevChapter = weeks[weekIndex]?.chapters[chapterIndex - 1];
+      setSelectedTopic(
+        prevChapter?.items?.[prevChapter.items.length - 1] ?? selectedTopic
+      );
+      setExpandedSubtopics((prev) => ({ ...prev, [chapterIndex - 1]: true }));
+    } else if (weekIndex > 0) {
+      const prevWeek = weeks[weekIndex - 1];
+      const prevChapter = prevWeek?.chapters[prevWeek.chapters.length - 1];
+      setSelectedTopic(
+        prevChapter?.items?.[prevChapter.items.length - 1] ?? selectedTopic
+      );
+      setExpandedWeek(weekIndex - 1);
+      setExpandedSubtopics({ [prevWeek.chapters.length - 1]: true });
+    }
   };
 
   const handleNext = () => {
-    // logic remains unchanged...
-  };
+    if (userRole === "student" && !isFinished && item.type != "Note") {
+      toast.warning(
+        `Please complete the current ${item.type}  before moving to the next`
+      );
+      return;
+    }
+    if (item.completed == false && userRole === "student") {
+      try {
+        console.log(item.id);
+        markAsComplete(String(item.id));
+        updateItemStatus(item.id, { completed: true });
+        toast.success("Marked as completed");
+      } catch {
+        toast.error("Error marking as completed");
+      }
+    }
 
+    const currentIndex = findCurrentItemIndex(weeks, item);
+    if (!currentIndex) return;
+
+    let { weekIndex, chapterIndex, itemIndex } = currentIndex;
+
+    if (
+      itemIndex <
+      (weeks[weekIndex]?.chapters[chapterIndex]?.items?.length ?? 0) - 1
+    ) {
+      setSelectedTopic(
+        weeks[weekIndex]?.chapters[chapterIndex]?.items?.[itemIndex + 1] ??
+          selectedTopic
+      );
+    } else if (chapterIndex < (weeks[weekIndex]?.chapters?.length ?? 0) - 1) {
+      setSelectedTopic(
+        weeks[weekIndex]?.chapters[chapterIndex + 1]?.items?.[0] ??
+          selectedTopic
+      );
+      setExpandedSubtopics((prev) => ({ ...prev, [chapterIndex + 1]: true }));
+    } else if (weekIndex < weeks.length - 1) {
+      setSelectedTopic(
+        weeks[weekIndex + 1]?.chapters?.[0]?.items?.[0] ?? selectedTopic
+      );
+      setExpandedWeek(weekIndex + 1);
+      setExpandedSubtopics({ 0: true });
+    }
+  };
   // Breadcrumbs with course name
   const breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Home', href: '/' },
