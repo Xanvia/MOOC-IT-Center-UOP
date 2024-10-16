@@ -159,6 +159,11 @@ const Page: React.FC = () => {
       setExpandedSubtopics({ 0: true });
     }
   };
+
+  if (isLoading) {
+    return <Loader />; // Show a loader while fetching data
+  }
+
   // Breadcrumbs with course name
   const breadcrumbItems: BreadcrumbItem[] = [
     { label: 'Home', href: '/' },
