@@ -13,6 +13,7 @@ import { markAsComplete } from "@/services/course.service";
 import CodingQ from "@/components/Course/CodingQ/CodingQ";
 import Notifications from "@/components/Course/Discussion/Notification";
 import TheBreadcrumb from "@/components/TheBreadcrumb/TheBreadcrumb";
+import { useParams } from "next/navigation";
 
 const Page: React.FC = () => {
   const {
@@ -29,7 +30,10 @@ const Page: React.FC = () => {
   } = useSelectedTopic();
   const [item, setItem] = useState<Item>({ ...selectedTopic });
   const [isFinished, setIsFinished] = useState<boolean>(false);
+  const [courseData, setCourseData] = useState({ name: "" });
   const { userRole } = useGlobal();
+  const params = useParams();
+  const courseId = params.id;
 
   useEffect(() => {
     setItem({ ...selectedTopic });
@@ -146,9 +150,9 @@ const Page: React.FC = () => {
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
     { label: 'Courses', href: '/courses' },
-    { label: 'Course Name', href: `/courses/${item.id}` }, // Replace 'Course Name' with actual course name if available
-    { label: 'Course Room', href: `/courses/${item.id}/room` },
-    { label: item.name, href: `/courses/${item.id}/room` }, // Current topic
+    { label: "Course Home", href: `/courses/${courseId}` }, // Replace 'Course Name' with actual course name if available
+    { label: 'Course Room', href: `/courses/${courseId}/room` },
+    { label: item.name, href: `/courses/${courseId}/room` }, // Current topic
   ];
 
   // const isLastItem = () => {
