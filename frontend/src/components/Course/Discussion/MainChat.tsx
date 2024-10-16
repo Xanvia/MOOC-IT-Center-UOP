@@ -133,7 +133,7 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
   };
 
   return (
-    <div className="space-y-4 h-full">
+    <div className="space-y-4 h-full mt-12">
       {/* Tab Navigation */}
       <div className="flex space-x-4">
         <button
