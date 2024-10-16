@@ -36,12 +36,25 @@ const Page: React.FC = () => {
   } = useSelectedTopic();
   const [item, setItem] = useState<Item>({ ...selectedTopic });
   const [isFinished, setIsFinished] = useState<boolean>(false);
-  const [courseData, setCourseData] = useState<{ name: string | null, canEdit?: boolean }>({ name: null });
+  const [courseData, setCourseData] = useState<{
+    name: string | null;
+    canEdit?: boolean;
+  }>({ name: null });
   const { userRole } = useGlobal();
   const params = useParams();
   const courseId = params.id;
   const [isLoading, setIsLoading] = useState(true); // For loading state
 
+  useEffect(() => {
+    if (!item.has_started && item.id !== 0 && userRole === "student") {
+      try {
+        startComponent(String(item.id));
+        updateItemStatus(item.id, { has_started: true });
+      } catch {
+        // console.log("Starting Component");
+      }
+    }
+  }, [item]);
   // Fetch course data using useEffect
   useEffect(() => {
     const loadCourseData = async () => {
@@ -166,10 +179,13 @@ const Page: React.FC = () => {
 
   // Breadcrumbs with course name
   const breadcrumbItems: BreadcrumbItem[] = [
-    { label: 'Home', href: '/' },
-    { label: 'Courses', href: '/courses' },
-    { label: courseData.name || 'Unnamed Course', href: `/courses/${courseId}` }, // Use courseData.name
-    { label: 'Course Room', href: `/courses/${courseId}/room` },
+    { label: "Home", href: "/" },
+    { label: "Courses", href: "/courses" },
+    {
+      label: courseData.name || "Unnamed Course",
+      href: `/courses/${courseId}`,
+    }, // Use courseData.name
+    { label: "Course Room", href: `/courses/${courseId}/room` },
     { label: item.name, href: `/courses/${courseId}/room` }, // Current topic
   ];
 
@@ -202,9 +218,17 @@ const Page: React.FC = () => {
           setIsFinished={setIsFinished}
         />
       ) : item.type === "Quiz" ? (
-        <Quiz item={item} permissions={permissions} setIsFinished={setIsFinished} />
+        <Quiz
+          item={item}
+          permissions={permissions}
+          setIsFinished={setIsFinished}
+        />
       ) : item.type === "Code" ? (
-        <CodingQ permissions={permissions} item={item} userRole={userRole || "student"} />
+        <CodingQ
+          permissions={permissions}
+          item={item}
+          userRole={userRole || "student"}
+        />
       ) : (
         <div>No content available</div>
       )}

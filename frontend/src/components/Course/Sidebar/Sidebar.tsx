@@ -13,6 +13,7 @@ import {
   fetchCourseContent,
   getProgress,
   createCodingQ,
+  startComponent,
 } from "@/services/course.service";
 import { useParams, useRouter } from "next/navigation";
 import Loader from "@/components/Loarder/Loarder";
@@ -86,6 +87,12 @@ const Sidebar: React.FC = () => {
       try {
         const progress = await getProgress(courseId as string);
         setProgress(progress.progress);
+        if (progress.progress === 0 && weeks[0].chapters[0].items) {
+          const firstItem = weeks[0].chapters[0].items[0];
+          if (!firstItem.has_started) {
+            startComponent(String(firstItem.id));
+          }
+        }
         if (progress?.current_component) {
           const {
             week: weekId,
@@ -233,7 +240,7 @@ const Sidebar: React.FC = () => {
       chapterIndex: number,
       itemIndex: number,
       itemId: string,
-      itemType: "Note" | "Video" | "Quiz" | "Code" 
+      itemType: "Note" | "Video" | "Quiz" | "Code"
     ) => {
       try {
         const response = await deleteComponent(itemType, itemId);
