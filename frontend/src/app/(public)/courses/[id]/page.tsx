@@ -5,33 +5,24 @@ import CourseHeader from "@/components/Course/CourseHome/CourseDescriptionHeader
 import CourseHStat from "@/components/Course/CourseHome/CourseHStat";
 import ReccomendedCourses from "@/components/Course/CourseCard/ReccomendedCourses";
 import CourseDetailsTabs from "@/components/Course/CourseHome/Tabs/CourseDetailsTabs";
-import Breadcrumb from "@/components/Course/CourseHome/Breadcrumb";
+import TheBreadcrumb from "@/components/TheBreadcrumb/TheBreadcrumb"; // Import the Breadcrumb component
+
 import { CourseData } from "@/components/Course/course.types";
 import { fetchCourseData } from "@/services/course.service";
 import Loader from "@/components/Loarder/Loarder";
 import { useGlobal } from "@/contexts/store";
 
 interface BreadcrumbItem {
-  breadcrumb: string;
-  href?: string;
+  label: string;
+  href: string;
 }
-
-const breadcrumbs: BreadcrumbItem[] = [
-  { breadcrumb: "Home", href: "/" },
-  { breadcrumb: "> Courses", href: "/courses" },
-  { breadcrumb: "> Basic Web Programming", href: "/courses/1" },
-];
 
 export default function CoursesHome() {
   const params = useParams();
-
   const { userRole } = useGlobal();
-  const [courseData, setCourseData] = useState<CourseData | undefined>(
-    undefined
-  );
+  const [courseData, setCourseData] = useState<CourseData | undefined>(undefined);
   const [reload, setReload] = useState(false);
   const [isEdit, setIsEdit] = useState(courseData?.canEdit || false);
-
   const courseId = params.id;
 
   useEffect(() => {
@@ -45,7 +36,6 @@ export default function CoursesHome() {
         console.error(error);
       }
     };
-
     loadCourseData();
   }, [courseId, reload]);
 
@@ -65,9 +55,18 @@ export default function CoursesHome() {
     return <Loader />;
   }
 
+  // Define breadcrumb items
+  const breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Home', href: '/' },
+    { label: 'Courses', href: '/courses' },
+    { label: courseData.name, href: `/courses/${courseId}` },
+  ];
+
   return (
     <>
-      <Breadcrumb breadcrumbs={breadcrumbs} />
+      <div className="container mx-auto px-4 mt-8">
+        <TheBreadcrumb items={breadcrumbItems} />
+      </div>
       <CourseHeader
         isEdit={isEdit}
         courseData={courseData}
@@ -81,7 +80,6 @@ export default function CoursesHome() {
         ratings={4.5}
         level={courseData.difficulty}
       />
-
       <div className="bg-white shadow-sm mt-10">
         <div className="container mx-auto p-8">
           <CourseDetailsTabs
@@ -91,7 +89,6 @@ export default function CoursesHome() {
           />
         </div>
       </div>
-
       <ReccomendedCourses />
     </>
   );
