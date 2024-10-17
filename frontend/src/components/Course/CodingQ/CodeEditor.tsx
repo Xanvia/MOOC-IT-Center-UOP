@@ -97,8 +97,8 @@ const CodeEditor: React.FC<Props> = ({
           await saveCode(codeID, code || "", grade);
         }
       }
-    } catch (err) {
-      toast.error("Error submitting code");
+    } catch (err: any) {
+      toast.error(err);
     }
   };
 

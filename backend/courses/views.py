@@ -682,7 +682,6 @@ class StudentCodingViewSet(viewsets.ModelViewSet):
     serializer_class = StudentCodingSerializer
 
     def submit_code(self, request, *args, **kwargs):
-        student = request.user
         request.data["coding_assignment"] = kwargs["pk"]
         response = super().create(request, *args, **kwargs)
         response.data = {
