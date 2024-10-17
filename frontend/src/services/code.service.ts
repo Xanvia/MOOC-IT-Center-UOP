@@ -61,7 +61,12 @@ export const submitCode = async (
     for (let index = 0; index < testCases.length; index++) {
       const testCase = testCases[index];
       const response = await runCode(code, testCase.stdin, language_id);
-      const passed = response.stdout.trim() === testCase.expected_output;
+      const normalize = (str: string) => str.trim().replace(/\s+/g, " "); // Replace multiple spaces/newlines with a single space
+
+      const responseOutput = normalize(response.stdout);
+      const expectedOutput = normalize(testCase.expected_output);
+
+      const passed = responseOutput === expectedOutput;
 
       results.push({
         input: testCase.stdin,

@@ -103,6 +103,10 @@ const CodeEditor: React.FC<Props> = ({
     return grade;
   };
 
+  const passedTests = testResults.filter((test) => test.passed).length;
+  const totalTests = testResults.length;
+  const scorePercentage =
+    totalTests > 0 ? ((passedTests / totalTests) * 100).toFixed(2) : "0";
   const handleSubmit = async () => {
     try {
       if (code) {
@@ -118,8 +122,8 @@ const CodeEditor: React.FC<Props> = ({
           await saveCode(codeID, code || "", grade);
         }
       }
-    } catch (err) {
-      toast.error("Error submitting code");
+    } catch (err: any) {
+      toast.error(err);
     }
   };
 
@@ -243,6 +247,40 @@ const CodeEditor: React.FC<Props> = ({
           <h2 className="text-xl font-bold mb-2">Output</h2>
           <pre className="p-4 bg-gray-100 rounded">{output}</pre>
         </div>
+
+        {testResults.length > 0 && (
+          <div className="mt-10">
+            <h2 className="text-xl font-bold mb-2">Test Results</h2>
+            <ul>
+              {testResults.map((result) => (
+                <li
+                  key={result.id}
+                  className={`px-2 mb-2 rounded-md border-2 flex items-center ${
+                    result.status === "passed"
+                      ? "border-green-500 bg-green-100 text-green-800"
+                      : "border-red-500 bg-red-100 text-red-800"
+                  }`}
+                >
+                  <span className="flex-1">{result.name}</span>
+                  {/* Status Icon */}
+                  {result.status === "passed" ? (
+                    <span className="text-green-600 font-bold">&#10003;</span> // Checkmark icon
+                  ) : (
+                    <span className="text-red-600 font-bold text-xs">
+                      &#10060;
+                    </span> // Cross icon
+                  )}
+                </li>
+              ))}
+            </ul>
+
+            {/* Display Final Score */}
+            <div className="mt-4 p-4 rounded-md bg-blue-100 text-blue-800 border-2 border-blue-500">
+              <h3 className="text-lg font-bold">Total Score</h3>
+              <p className="text-xl">{`${passedTests} out of ${totalTests} test cases passed (${scorePercentage}%)`}</p>
+            </div>
+          </div>
+        )}
 
         {/* Teacher Mode - Test Cases Section */}
         {userRole === "teacher" && (
