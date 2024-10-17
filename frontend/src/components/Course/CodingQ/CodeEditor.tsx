@@ -108,7 +108,7 @@ const CodeEditor: React.FC<Props> = ({
       if (code) {
         const results = await submitCode(
           code,
-          testCases,
+          savedTestCases,
           languageData.find((lang) => lang.name === language)?.id || 0
         );
         setOutput(results.map((result) => result.actual_output).join("\n"));
@@ -123,7 +123,7 @@ const CodeEditor: React.FC<Props> = ({
     }
   };
 
-  const saveAsTestCase = () => {
+  const saveAsTestCase = async () => {
     if (!output) {
       toast.error("Please run the code first to generate output");
       return;
@@ -133,9 +133,14 @@ const CodeEditor: React.FC<Props> = ({
       stdin: inputs.join("\n"),
       expected_output: output,
     };
-
-    setSavedTestCases([...savedTestCases, newTestCase]);
-    toast.success("Test case saved successfully");
+    const newTestCases = [...savedTestCases, newTestCase];
+    try {
+      await addStarterCode(codeID, code || "", newTestCases);
+      setSavedTestCases(newTestCases);
+      toast.success("Test case saved successfully");
+    } catch (error) {
+      toast.error("Error saving test case");
+    }
   };
 
   const deleteTestCase = async (index: number) => {
