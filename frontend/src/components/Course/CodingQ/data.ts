@@ -1,3 +1,14 @@
+export const languageData = [
+  { id: 46, name: "Bash (5.0.0)" },
+  { id: 71, name: "Python" },
+  { id: 63, name: "JavaScript" },
+  { id: 62, name: "Java" },
+  { id: 80, name: "R" },
+  { id: 75, name: "C" },
+  { id: 76, name: "C++" },
+];
+
+
 export const languageOptions = [
   {
     display: "JavaScript",

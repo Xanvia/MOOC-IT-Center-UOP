@@ -1,3 +1,4 @@
+import test from "node:test";
 import axiosInstance from "../lib/axiosInstance";
 import {
   CreateCourseData,
@@ -383,7 +384,6 @@ export const addDetailsCode = async (
   code_id: number,
   question: string,
   explanation: string,
-  test_cases: TestCase[],
   duration: number,
   grading_type: string,
   starter_code: string,
@@ -395,7 +395,6 @@ export const addDetailsCode = async (
       {
         question,
         explanation,
-        test_cases,
         duration,
         grading_type,
         starter_code,
@@ -408,12 +407,14 @@ export const addDetailsCode = async (
   }
 };
 
-export const addStarterCode = async (code_id: number, starter_code: string) => {
+export const addStarterCode = async (code_id: number, starter_code: string, testCases:TestCase[]) => {
   try {
+    console.log(testCases);
     const response = await axiosInstance.put(
       `/course/week/chapter/code/${code_id}/`,
       {
         starter_code,
+        test_cases: testCases,
       }
     );
     return response.data;
