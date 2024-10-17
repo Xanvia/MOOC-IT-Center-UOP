@@ -8,7 +8,6 @@ export const languageData = [
   { id: 76, name: "C++" },
 ];
 
-
 export const languageOptions = [
   {
     display: "JavaScript",
@@ -76,26 +75,31 @@ export const languageOptions = [
     value: "java",
     starter_code: `
   import java.util.Scanner;
-  
-  public class Solution {
+
+  public class Main {
       // Define your function here
       public static int functionName(int a, int b) {
           // Implement your logic here
           // This function should take input parameters and process them,
           // returning the desired output.
-          return 0; // Replace this with your logic
+          return a + b; // Replace this with your logic
       }
-  
+
       public static void main(String[] args) {
           // Read input from stdin (for Judge0 execution).
           Scanner scanner = new Scanner(System.in);
-          String input = scanner.nextLine().trim();
-          String[] parts = input.split(" ");
-  
+        
+          StringBuilder input = new StringBuilder();
+          while (scanner.hasNextLine()) {   // Read all lines until the end of input
+              input.append(scanner.nextLine()).append("\\n");  // Collect input
+          }
+          
+          String[] parts = input.toString().trim().split("\\\\s+"); // Split input by spaces/whitespace
+
           // Convert input as necessary
           int a = Integer.parseInt(parts[0]); // First number
           int b = Integer.parseInt(parts[1]); // Second number
-  
+
           // Call your function and print the result
           int result = functionName(a, b);
           System.out.println(result); // Output the result to stdout

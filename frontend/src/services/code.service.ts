@@ -41,8 +41,11 @@ export const runCode = async (
       "/submissions?base64_encoded=false&wait=true",
       requestBody
     );
+    console.log(response);
+    console.log(input)
     return response.data; // Return stdout or other relevant information
   } catch (error: any) {
+    console.log(error);
     console.error(error.response?.data);
     throw new Error(error.response?.data.message ?? "Error running code");
   }

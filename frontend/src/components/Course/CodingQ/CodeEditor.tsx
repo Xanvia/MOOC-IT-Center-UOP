@@ -83,7 +83,7 @@ const CodeEditor: React.FC<Props> = ({
           languageData.find((lang) => lang.name === language)?.id || 0
         );
         if (!result.stdout) {
-          setOutput(result.stderr);
+          console.log(result.stderr);
         } else {
           setOutput(result.stdout);
         }
@@ -169,7 +169,7 @@ const CodeEditor: React.FC<Props> = ({
   return (
     <div className="flex h-[600px] bg-gray-100">
       <div className="flex-1 p-4">
-        <div className="rounded shadow-md overflow-hidden h-[calc(100%-90px)]">
+        <div className="rounded shadow-md overflow-hidden h-[calc(130%-90px)]">
           <AceEditor
             mode={language.toLowerCase()}
             theme={isDarkMode ? "monokai" : "github"}

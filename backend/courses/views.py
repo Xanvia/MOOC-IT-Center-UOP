@@ -582,9 +582,9 @@ class CodingQuizViewSet(viewsets.ModelViewSet):
             },
         }
         return response
+    
 
     def update(self, request, *args, **kwargs):
-        print(request.data)
         response = super().update(request, partial=True, *args, **kwargs)
     
         response.data = {
@@ -721,7 +721,6 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         except Exception as e:
-            print(e)
             return Response(
                 {"status": "error", "message": "An unexpected error occurred"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
