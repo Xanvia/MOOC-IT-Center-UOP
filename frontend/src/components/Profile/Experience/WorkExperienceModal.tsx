@@ -116,18 +116,18 @@ const AddExperienceModal: React.FC<Props> = ({
   return (
     <>
       {workData ? (
-        <EditButton onClick={() => setIsOpen(true)} />
+        <EditButton onClick={toggleModal} />
       ) : (
-        <CreateButton onClick={() => setIsOpen(true)} text="Work" />
+        <CreateButton onClick={toggleModal} text="Work" />
       )}
 
       {isOpen && (
         <div
-          onMouseDown={() => setIsOpen(false)}
+          onMouseDown={handleInsideClick}
           className={`${ModalClassesBG} bg-opacity-10`}
         >
-          <div onMouseDown={(e) => e.stopPropagation()} className={XpCardModalClasses}>
-            <CloseButton onClick={() => setIsOpen(false)} />
+          <div onMouseDown={handleOutsideClick} className={XpCardModalClasses}>
+            <CloseButton onClick={toggleModal} />
             <div className="text-xl font-bold text-[#072569] text-center mb-2 mx-0">
               {CardTitle}
             </div>
