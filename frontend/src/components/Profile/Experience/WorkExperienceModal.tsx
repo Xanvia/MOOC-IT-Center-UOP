@@ -128,7 +128,7 @@ const AddExperienceModal: React.FC<Props> = ({
         >
           <div onMouseDown={handleOutsideClick} className={XpCardModalClasses}>
             <CloseButton onClick={toggleModal} />
-            <div className="text-xl font-bold text-[#072569] text-center mb-2 mx-0">
+            <div className="text-xl font-bold text-[#072569] text-center my-2 mx-0">
               {CardTitle}
             </div>
             <Formik
@@ -143,7 +143,7 @@ const AddExperienceModal: React.FC<Props> = ({
             >
               {({ setFieldValue }) => (
                 <Form>
-                  <div className="pt-6 grid grid-cols-1 gap-6 mx-12">
+                  <div className="pt-6 grid grid-cols-1 gap-6 mx-12 mt-8">
                     <div className={InputOuterDiv}>
                       <div className={InputInnerDiv}>
                         <Field
@@ -222,7 +222,7 @@ const AddExperienceModal: React.FC<Props> = ({
                     </div>
                   </div>
 
-                  <div className={`pl-[70px] pt-10 ${workData ? "mb-8" : "mb-12"}`}>
+                  <div className={`pl-[70px] pt-10 mt-8 ${workData ? "mb-8" : "mb-12"}`}>
                     <SolidButton type="submit" text="S U B M I T" />
                   </div>
                   {workData && (

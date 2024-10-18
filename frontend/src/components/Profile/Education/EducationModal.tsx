@@ -227,7 +227,7 @@ const EducationModal: React.FC<Props> = ({
                     </div>
                   </div>
                   <div
-                    className={`pl-[70px] pt-10 ${eduData ? "mb-8" : "mb-12"}`}
+                    className={`pl-[70px] mt-6 pt-10 ${eduData ? "mb-8" : "mb-12"}`}
                   >
                     <SolidButton
                       type="submit"
