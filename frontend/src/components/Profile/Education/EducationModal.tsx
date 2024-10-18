@@ -1,27 +1,25 @@
 "use client";
-import CreateButton from "@/components/Buttons/CreateButton";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { format } from "date-fns";
+import { toast } from "sonner";
+import CreateButton from "@/components/Buttons/CreateButton";
+import EditButton from "@/components/Buttons/EditButton";
+import MonthPicker from "../MonthPicker";
+import CloseButton from "@/components/Buttons/CloseButton";
+import SolidButton from "@/components/Buttons/SolidButton";
+import DeleteButton from "@/components/Buttons/DeleteButton";
+import DropDownInstitution from "@/components/DropDown/DropDownUni";
 import {
   InputFieldClasses,
   InputLabel,
   InputInnerDiv,
   InputOuterDiv,
-} from "@/components/components.styles";
-import {
   ModalClassesBG,
   XpCardModalClasses,
 } from "@/components/components.styles";
-import EditButton from "@/components/Buttons/EditButton";
-import MonthPicker from "../MonthPicker";
-import CloseButton from "@/components/Buttons/CloseButton";
-import SolidButton from "@/components/Buttons/SolidButton";
 import { Education } from "../types";
-import DeleteButton from "@/components/Buttons/DeleteButton";
-import { toast } from "sonner";
-import { format } from "date-fns";
-import DropDownInstitution from "@/components/DropDown/DropDownUni";
 import {
   addEducationData,
   deleteEducationData,
@@ -36,7 +34,22 @@ interface Props {
 
 interface FormData {
   degree: string;
+  field_of_study: string;
+  startDate: Date | null;
+  endDate: Date | null;
 }
+
+const validationSchema = Yup.object({
+  degree: Yup.string().required("Required"),
+  field_of_study: Yup.string().required("Required"),
+  startDate: Yup.date().required("Start date is required").nullable(),
+  endDate: Yup.date()
+    .nullable()
+    .test("endDate", "End date cannot be before start date", function (value) {
+      const { startDate } = this.parent;
+      return !value || value >= startDate; // If no end date is selected or end date is >= start date, validation passes
+    }),
+});
 
 const EducationModal: React.FC<Props> = ({
   CardTitle,
@@ -44,13 +57,12 @@ const EducationModal: React.FC<Props> = ({
   reloadData,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-
   const [institution, setInstitution] = useState(eduData?.institution || "");
   const [startDate, setStartDate] = useState<Date | null>(
-    eduData ? new Date(eduData.start_date) : null
+    eduData?.start_date ? new Date(eduData.start_date) : null
   );
   const [endDate, setEndDate] = useState<Date | null>(
-    eduData && eduData.end_date ? new Date(eduData.end_date) : null
+    eduData?.end_date ? new Date(eduData.end_date) : null
   );
 
   const toggleModal = () => {
@@ -68,13 +80,14 @@ const EducationModal: React.FC<Props> = ({
   const handleSubmit = async (values: FormData) => {
     if (institution === "") {
       toast.warning("Please select an institution");
+      return;
     }
     try {
       const data = {
         ...values,
         institution,
-        start_date: startDate ? format(startDate, "yyyy-MM") : null,
-        end_date: endDate ? format(endDate, "yyyy-MM") : null,
+        start_date: values.startDate ? format(values.startDate, "yyyy-MM") : null,
+        end_date: values.endDate ? format(values.endDate, "yyyy-MM") : null,
       };
       let response;
       if (eduData) {
@@ -95,7 +108,7 @@ const EducationModal: React.FC<Props> = ({
     try {
       if (eduData) {
         const response = await deleteEducationData(eduData.id);
-        toast.success("Work Experience Deleted");
+        toast.success("Education Entry Deleted");
         reloadData();
         setIsOpen(false);
       }
@@ -125,93 +138,110 @@ const EducationModal: React.FC<Props> = ({
             <Formik
               initialValues={{
                 degree: eduData?.degree || "",
+                field_of_study: eduData?.field_of_study || "",
+                startDate: startDate,
+                endDate: endDate,
               }}
-              validationSchema={Yup.object({
-                degree: Yup.string().required("Required"),
-              })}
+              validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
-              <Form>
-                <div className="pt-6 grid grid-cols-1 gap-6 mx-12">
-                  <DropDownInstitution
-                    label="Your Institution"
-                    addSelection={setInstitution}
-                    selectedInstitution={institution as string}
-                  />
-                  <div className={InputOuterDiv}>
-                    <div className={InputInnerDiv}>
-                      <Field
-                        type="text"
-                        name="field_of_study"
-                        className={InputFieldClasses}
-                        placeholder=" "
-                      />
-                      <ErrorMessage
-                        name="field"
-                        component="div"
-                        className="top-0 left-0 text-red-600 text-xs"
-                      />
-                      <label className={InputLabel}>Field Of Study</label>
+              {({ setFieldValue }) => (
+                <Form>
+                  <div className="pt-6 grid grid-cols-1 gap-6 mx-12">
+                    <DropDownInstitution
+                      label="Your Institution"
+                      addSelection={setInstitution}
+                      selectedInstitution={institution as string}
+                    />
+                    <div className={InputOuterDiv}>
+                      <div className={InputInnerDiv}>
+                        <Field
+                          type="text"
+                          name="field_of_study"
+                          className={InputFieldClasses}
+                          placeholder=" "
+                        />
+                        <ErrorMessage
+                          name="field_of_study"
+                          component="div"
+                          className="top-0 left-0 text-red-600 text-xs"
+                        />
+                        <label className={InputLabel}>Field Of Study</label>
+                      </div>
                     </div>
-                  </div>
-                  <div className={InputOuterDiv}>
-                    <div className={InputInnerDiv}>
-                      <Field
-                        type="text"
-                        name="degree"
-                        className={InputFieldClasses}
-                        placeholder=" "
-                      />
-                      <ErrorMessage
-                        name="degree"
-                        component="div"
-                        className="top-0 left-0 text-red-600 text-xs"
-                      />
-                      <label className={InputLabel}>Degree</label>
+                    <div className={InputOuterDiv}>
+                      <div className={InputInnerDiv}>
+                        <Field
+                          type="text"
+                          name="degree"
+                          className={InputFieldClasses}
+                          placeholder=" "
+                        />
+                        <ErrorMessage
+                          name="degree"
+                          component="div"
+                          className="top-0 left-0 text-red-600 text-xs"
+                        />
+                        <label className={InputLabel}>Degree</label>
+                      </div>
                     </div>
-                  </div>
-                  <div className={InputOuterDiv}>
-                    <div className={InputInnerDiv}>
-                      <span className="text-sm font-medium text-gray-400">
-                        From
-                      </span>
-                      <MonthPicker
-                        setDate={setStartDate}
-                        initialDate={eduData ? startDate : null}
-                        text="Start Date"
-                      />
+                    <div className={InputOuterDiv}>
+                      <div className={InputInnerDiv}>
+                        <span className="text-sm font-medium text-gray-400">
+                          From
+                        </span>
+                        <MonthPicker
+                          setDate={(date) => {
+                            setStartDate(date);
+                            setFieldValue("startDate", date);
+                          }}
+                          initialDate={eduData ? startDate : null}
+                          text="Start Date"
+                        />
+                        <ErrorMessage
+                          name="startDate"
+                          component="div"
+                          className="text-red-600 text-xs"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="py-4">
                     <div className={InputOuterDiv}>
                       <div className={InputInnerDiv}>
                         <span className="text-sm font-medium text-gray-400">
                           To
                         </span>
                         <MonthPicker
-                          setDate={setEndDate}
-                          initialDate={eduData ? endDate : null}
+                          setDate={(date) => {
+                            setEndDate(date);
+                            setFieldValue("endDate", date);
+                          }}
+                          initialDate={endDate}
                           text="End Date"
+                        />
+                        <ErrorMessage
+                          name="endDate"
+                          component="div"
+                          className="text-red-600 text-xs"
                         />
                       </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  className={`pl-[70px] pt-10 ${eduData ? "mb-8" : "mb-12"}`}
-                >
-                  <SolidButton
-                    type="submit"
-                    text="S U B M I T"
-                    onClick={() => {}}
-                  />
-                </div>
-                {eduData && (
-                  <div className="pl-[70px]  mb-10 ">
-                    <DeleteButton text="D E L E T E" onClick={handleDelete} />
+                  <div
+                    className={`pl-[70px] pt-10 ${eduData ? "mb-8" : "mb-12"}`}
+                  >
+                    <SolidButton
+                      type="submit"
+                      text="S U B M I T"
+                      onClick={() => {}}
+                    />
                   </div>
-                )}
-              </Form>
+                  {eduData && (
+                    <div className="pl-[70px]  mb-10 ">
+                      <DeleteButton text="D E L E T E" onClick={handleDelete} />
+                    </div>
+                  )}
+                </Form>
+              )}
             </Formik>
           </div>
         </div>
@@ -219,4 +249,5 @@ const EducationModal: React.FC<Props> = ({
     </>
   );
 };
+
 export default EducationModal;
