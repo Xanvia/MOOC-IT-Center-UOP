@@ -18,7 +18,7 @@ const EducationCard: React.FC<props> = ({ eduData, reload }) => {
             <h1>Add your Education Experience Here</h1>
           </div>
           <div className="text text-gray-600 mt-4">
-            <h1>Bsc Hons in Computer Science</h1>
+            <h1>Add your Degree/Diploma Here</h1>
           </div>
           <div className="text mt-2 text-right text-gray-500 font-medium mr-2">
             <h1>
