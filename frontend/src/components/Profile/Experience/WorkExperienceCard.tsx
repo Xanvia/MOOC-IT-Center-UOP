@@ -10,6 +10,9 @@ interface props {
 }
 
 const ExperienceCard: React.FC<props> = ({ workData, reload }) => {
+  const startDate = new Date(workData.start_date);
+  const endDate = workData.end_date ? new Date(workData.end_date) : null;
+
   return (
     <div className="relative flex Box bg-white md:rounded-lg shadow-md border-2 px-4 py-4 h-40 sm:w-5/6 w-full my-5 mb-8">
       <AddExperienceModal
@@ -31,9 +34,7 @@ const ExperienceCard: React.FC<props> = ({ workData, reload }) => {
             </span>
             To
             <span className="ml-5 text-primary">
-              {workData.end_date
-                ? getFormattedDate(workData.end_date)
-                : "Present"}
+              {endDate ? getFormattedDate(workData.end_date) : "Present"}
             </span>
           </h1>
         </div>
