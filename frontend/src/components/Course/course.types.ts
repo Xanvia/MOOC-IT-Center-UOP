@@ -1,11 +1,9 @@
 export enum CategoryEnum {
   All = 0,
-  UIDesign = 1,
-  Programming = 2,
-  Marketing = 3,
-  SoftSkill = 4,
-  Network = 5,
-  DataAnalyst = 6
+  Science = 1,
+  Engineering = 2,
+  Business = 3,
+  Health = 4,
 }
 
 export interface CreateCourseData {
@@ -61,11 +59,10 @@ export interface Instructor {
   profile_picture: string;
 }
 export const categoryLabels: { [key in CategoryEnum]: string } = {
-  [CategoryEnum.All]: 'All',
-  [CategoryEnum.UIDesign]: 'UI Design',
-  [CategoryEnum.Programming]: 'Programming',
-  [CategoryEnum.Marketing]: 'Marketing',
-  [CategoryEnum.SoftSkill]: 'Soft Skill',
-  [CategoryEnum.Network]: 'Network',
-  [CategoryEnum.DataAnalyst]: 'Data Analyst'
+  [CategoryEnum.All]: 'All Courses',
+  [CategoryEnum.Science]: 'Science',
+  [CategoryEnum.Engineering]: 'Engineering',
+  [CategoryEnum.Business]: 'Business',
+  [CategoryEnum.Health]: 'Health',
+
 };
