@@ -13,6 +13,7 @@ import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-r";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-github";
+import { set } from "jodit/types/core/helpers";
 
 interface TestCase {
   stdin: string;
@@ -83,7 +84,11 @@ const CodeEditor: React.FC<Props> = ({
           languageData.find((lang) => lang.name === language)?.id || 0
         );
         if (!result.stdout) {
-          console.log(result.stderr);
+          if (result.compile_output) {
+            setOutput(result.stderr + "\n" + result.compile_output);
+          }else{
+            setOutput(result.stderr);
+          }
         } else {
           setOutput(result.stdout);
         }
