@@ -4,7 +4,8 @@ import { runCode, submitCode } from "@/services/code.service";
 import SecondaryButton from "@/components/Buttons/SecondaryButton";
 import { toast } from "sonner";
 import { addStarterCode, saveCode } from "@/services/course.service";
-import { languageOptions } from "./data";
+import { languageData, languageOptions } from "./data";
+import { Plus, Trash2, Save } from "lucide-react";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-c_cpp";
@@ -12,18 +13,13 @@ import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-r";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-github";
+import { set } from "jodit/types/core/helpers";
 
-const languageData = [
-  { id: 46, name: "Bash (5.0.0)" },
-  { id: 71, name: "Python" },
-  { id: 63, name: "JavaScript" },
-  { id: 62, name: "Java" },
-  { id: 80, name: "R" },
-  { id: 75, name: "C" },
-  { id: 76, name: "C++" },
-];
+interface TestCase {
+  stdin: string;
+  expected_output: string;
+}
 
-// Define the TestResult interface within this file or import it if it's defined elsewhere
 interface TestResult {
   input: string;
   expected_output: string;
@@ -35,11 +31,11 @@ interface TestResult {
 }
 
 interface Props {
-  codeID: number;
-  initialCode?: string;
-  canEdit?: boolean;
+  initialCode: string;
+  canEdit: boolean;
   language: string;
-  testCases: { stdin: string; expected_output: string }[];
+  codeID: number;
+  testCases: TestCase[];
   userRole: string;
 }
 
@@ -51,16 +47,32 @@ const CodeEditor: React.FC<Props> = ({
   testCases,
   userRole,
 }) => {
-  const [code, setCode] = useState(
-    initialCode ||
-      languageOptions.find((language) => language === language)?.starter_code
-  );
-  const [output, setOutput] = useState("");
+  const [code, setCode] = useState<string>(initialCode || "");
+  const [output, setOutput] = useState<string>("");
   const [testResults, setTestResults] = useState<TestResult[]>([]);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [inputs, setInputs] = useState<string[]>([""]);
+  const [savedTestCases, setSavedTestCases] = useState<TestCase[]>(
+    testCases || []
+  );
 
   const handleEditorChange = (newCode: string) => {
     setCode(newCode);
+  };
+
+  const addInputField = () => {
+    setInputs([...inputs, ""]);
+  };
+
+  const updateInput = (index: number, value: string) => {
+    const newInputs = [...inputs];
+    newInputs[index] = value;
+    setInputs(newInputs);
+  };
+
+  const removeInput = (index: number) => {
+    const newInputs = inputs.filter((_, i) => i !== index);
+    setInputs(newInputs);
   };
 
   const handleRun = async () => {
@@ -68,50 +80,21 @@ const CodeEditor: React.FC<Props> = ({
       if (code) {
         const result = await runCode(
           code,
-          "",
+          inputs.join("\n"),
           languageData.find((lang) => lang.name === language)?.id || 0
         );
         if (!result.stdout) {
-          setOutput(result.stderr);
+          if (result.compile_output) {
+            setOutput(result.stderr + "\n" + result.compile_output);
+          }else{
+            setOutput(result.stderr);
+          }
         } else {
           setOutput(result.stdout);
         }
       }
     } catch (err) {
       toast.error("Error running code");
-    }
-  };
-
-  const handleSubmit = async () => {
-    try {
-      if (code) {
-        const results = await submitCode(
-          code,
-          testCases,
-          languageData.find((lang) => lang.name === language)?.id || 0
-        );
-        setOutput(results.map((result) => result.actual_output).join("\n"));
-        setTestResults(results);
-        if (userRole == "student") {
-          const grade = getGrade();
-          await saveCode(codeID, code || "", grade);
-        }
-      }
-    } catch (err) {
-      toast.error("Error submitting code");
-    }
-  };
-
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
-  const handleSaveClick = async () => {
-    try {
-      await addStarterCode(codeID, code || "");
-      toast.success("Code Saved Successfully");
-    } catch (err) {
-      toast.error("Error adding question");
     }
   };
 
@@ -129,33 +112,71 @@ const CodeEditor: React.FC<Props> = ({
   const totalTests = testResults.length;
   const scorePercentage =
     totalTests > 0 ? ((passedTests / totalTests) * 100).toFixed(2) : "0";
+  const handleSubmit = async () => {
+    try {
+      if (code) {
+        const results = await submitCode(
+          code,
+          savedTestCases,
+          languageData.find((lang) => lang.name === language)?.id || 0
+        );
+        setOutput(results.map((result) => result.actual_output).join("\n"));
+        setTestResults(results);
+        if (userRole == "student") {
+          const grade = getGrade();
+          await saveCode(codeID, code || "", grade);
+        }
+      }
+    } catch (err: any) {
+      toast.error(err);
+    }
+  };
+
+  const saveAsTestCase = async () => {
+    if (!output) {
+      toast.error("Please run the code first to generate output");
+      return;
+    }
+
+    const newTestCase: TestCase = {
+      stdin: inputs.join("\n"),
+      expected_output: output,
+    };
+    const newTestCases = [...savedTestCases, newTestCase];
+    try {
+      await addStarterCode(codeID, code || "", newTestCases);
+      setSavedTestCases(newTestCases);
+      toast.success("Test case saved successfully");
+    } catch (error) {
+      toast.error("Error saving test case");
+    }
+  };
+
+  const deleteTestCase = async (index: number) => {
+    const newTestCases = savedTestCases.filter((_, i) => i !== index);
+    try {
+      await addStarterCode(codeID, code || "", newTestCases);
+      setSavedTestCases(newTestCases);
+    } catch (err) {
+      toast.error("Error deleting test case");
+    }
+  };
+
+  const handleSaveClick = async () => {
+    try {
+      await addStarterCode(codeID, code || "", testCases);
+      toast.success("Code saved successfully");
+    } catch (err) {
+      toast.error("Error saving code");
+    }
+  };
 
   return (
-    <div
-      className={`flex h-[600px] ${
-        isDarkMode ? "bg-gray-800 text-white" : "bg-gray-100"
-      }`}
-    >
+    <div className="flex h-[600px] bg-gray-100">
       <div className="flex-1 p-4">
-        {/* Theme Toggle Button */}
-        {/* <button
-          onClick={toggleTheme}
-          className={`px-4 py-2 ${
-            isDarkMode ? "bg-blue-600" : "bg-blue-500"
-          } text-white rounded-md`}
-        >
-          Toggle Theme
-        </button> */}
-
-        {/* AceEditor Component */}
-        <div
-          className={`rounded shadow-md overflow-hidden`}
-          style={{ height: "calc(100% - 90px)" }}
-        >
+        <div className="rounded shadow-md overflow-hidden h-[calc(130%-90px)]">
           <AceEditor
-            mode={
-              languageOptions.find((lang) => lang.display === language)?.value
-            }
+            mode={language.toLowerCase()}
             theme={isDarkMode ? "monokai" : "github"}
             value={code}
             onChange={handleEditorChange}
@@ -173,43 +194,65 @@ const CodeEditor: React.FC<Props> = ({
             }}
           />
         </div>
-
-        {/* Run and Submit Buttons */}
-        <div className="mt-6 flex flex-wrap items-center gap-4">
-          <button
-            onClick={handleRun}
-            className={`px-4 py-2 ${
-              isDarkMode ? "bg-green-600" : "bg-green-500"
-            } text-white rounded-md hover:opacity-90 transition-opacity flex items-center gap-2`}
-          >
-            <span>Run</span>
-          </button>
-
-          <button
-            onClick={handleSubmit}
-            className={`px-4 py-2 ${
-              isDarkMode ? "bg-blue-600" : "bg-blue-500"
-            } text-white rounded-md hover:opacity-90 transition-opacity flex items-center gap-2`}
-          >
-            <span>Submit</span>
-          </button>
-
-          {canEdit && <SecondaryButton text="SAVE" onClick={handleSaveClick} />}
-        </div>
       </div>
 
-      {/* Output and Test Results Display */}
-      <div className={`flex-1 p-4 ${isDarkMode ? "bg-gray-700" : "bg-white"}`}>
-        <h2 className="text-xl font-bold mb-4">Output</h2>
-        <pre
-          className={`p-4 rounded ${
-            isDarkMode ? "bg-gray-600" : "bg-gray-100"
-          }`}
-        >
-          {output}
-        </pre>
+      <div className="flex-1 p-4 bg-white">
+        {/* Input Section */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-xl font-bold">Inputs</h2>
+            <button
+              onClick={addInputField}
+              className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600"
+            >
+              <Plus size={16} />
+            </button>
+          </div>
 
-        {/* Display Test Results */}
+          {inputs.map((input, index) => (
+            <div key={index} className="flex gap-2 mb-2">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => updateInput(index, e.target.value)}
+                className="flex-1 p-2 border rounded"
+                placeholder={`Input ${index + 1}`}
+              />
+              {inputs.length > 1 && (
+                <button
+                  onClick={() => removeInput(index)}
+                  className="p-2 text-red-500 hover:text-red-600"
+                >
+                  <Trash2 size={16} />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Buttons Section */}
+        <div className="flex gap-2 mb-6">
+          <button
+            onClick={handleRun}
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+          >
+            Run
+          </button>
+          <button
+            onClick={handleSubmit}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Submit
+          </button>
+          {canEdit && <SecondaryButton text="Save" onClick={handleSaveClick} />}
+        </div>
+
+        {/* Output Section */}
+        <div className="mb-6">
+          <h2 className="text-xl font-bold mb-2">Output</h2>
+          <pre className="p-4 bg-gray-100 rounded">{output}</pre>
+        </div>
+
         {testResults.length > 0 && (
           <div className="mt-10">
             <h2 className="text-xl font-bold mb-2">Test Results</h2>
@@ -240,6 +283,46 @@ const CodeEditor: React.FC<Props> = ({
             <div className="mt-4 p-4 rounded-md bg-blue-100 text-blue-800 border-2 border-blue-500">
               <h3 className="text-lg font-bold">Total Score</h3>
               <p className="text-xl">{`${passedTests} out of ${totalTests} test cases passed (${scorePercentage}%)`}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Teacher Mode - Test Cases Section */}
+        {userRole === "teacher" && (
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-xl font-bold">Test Cases</h2>
+              {output && (
+                <button
+                  onClick={saveAsTestCase}
+                  className="flex items-center gap-1 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                  <Save size={16} />
+                  Save as Test Case
+                </button>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              {savedTestCases.map((testCase, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between items-start p-3 bg-gray-50 rounded"
+                >
+                  <div>
+                    <p className="font-semibold">Input:</p>
+                    <pre className="text-sm">{testCase.stdin}</pre>
+                    <p className="font-semibold mt-2">Expected Output:</p>
+                    <pre className="text-sm">{testCase.expected_output}</pre>
+                  </div>
+                  <button
+                    onClick={() => deleteTestCase(index)}
+                    className="text-red-500 hover:text-red-600"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         )}

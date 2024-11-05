@@ -398,7 +398,7 @@ class StudentCodingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentCodingAnswer
-        fields = ["coding_assignment", "code", "result", "grade"]
+        fields = ["coding_assignment", "code", "grade"]
 
     def validate(self, attrs):
         # check if student has already answered this quiz
@@ -411,7 +411,7 @@ class StudentCodingSerializer(serializers.ModelSerializer):
         attrs["enrollement"] = enrollement
         try:
             StudentCodingAnswer.objects.get(
-                enrollement__student=user, coding_assignment=coding_assignment
+                enrollement=enrollement, coding_assignment=coding_assignment
             )
             raise serializers.ValidationError("You have already submitted this quiz")
         except StudentCodingAnswer.DoesNotExist:
@@ -456,8 +456,8 @@ class MessageSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         request = self.context.get("request")
         representation = super().to_representation(instance)
-        
-        if ( instance.user == request.user ):
+
+        if instance.user == request.user:
             representation["user"] = "me"
         else:
             representation["user"] = (
@@ -475,14 +475,15 @@ class ReplySerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         request = self.context.get("request")
         representation = super().to_representation(instance)
-        
-        if ( instance.user == request.user ):
+
+        if instance.user == request.user:
             representation["user"] = "me"
         else:
             representation["user"] = (
                 instance.user.first_name[0] + " " + instance.user.last_name
             )
         return representation
+
 
 class ItemChatSerializer(serializers.ModelSerializer):
 
@@ -493,15 +494,16 @@ class ItemChatSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         request = self.context.get("request")
         representation = super().to_representation(instance)
-       
-        if ( instance.user == request.user ):
+
+        if instance.user == request.user:
             representation["user"] = "me"
         else:
             representation["user"] = (
                 instance.user.first_name[0] + " " + instance.user.last_name
             )
         return representation
-    
+
+
 class ThreadMessageSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -511,8 +513,8 @@ class ThreadMessageSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         request = self.context.get("request")
         representation = super().to_representation(instance)
-       
-        if ( instance.user == request.user ):
+
+        if instance.user == request.user:
             representation["user"] = "me"
         else:
             representation["user"] = (
