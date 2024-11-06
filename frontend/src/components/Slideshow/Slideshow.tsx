@@ -1,3 +1,4 @@
+// components/Slideshow/Slideshow.tsx
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
@@ -136,7 +137,7 @@ const Slideshow = () => {
         <ChevronRight className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
       </button>
 
-      {/* Dots Navigation */}
+      Dots Navigation
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-0 flex space-x-3">
         {slides.map((_, index) => (
           <button
