@@ -5,7 +5,7 @@ import SolidButton from "../Buttons/SolidButton";
 export default function AddTeachersModal() {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedNames, setSelectedNames] = useState<string[]>([]);
-    
+    const [searchTerm, setSearchTerm] = useState("");
     const namesList = ["Alice", "Bob", "Charlie", "David", "Eve"];
   
     const toggleModal = () => {
@@ -15,14 +15,18 @@ export default function AddTeachersModal() {
     const handleNameSelect = (name: string) => {
       setSelectedNames((prevSelected) =>
         prevSelected.includes(name)
-          ? prevSelected.filter((n) => n !== name) // Unselect if already selected
-          : [...prevSelected, name] // Add if not selected
+          ? prevSelected.filter((n) => n !== name) 
+          : [...prevSelected, name] 
       );
     };
+    
+    const filteredNames = namesList.filter((name) =>
+        name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
   
     const handleDone = () => {
       console.log("Selected names:", selectedNames);
-      setIsOpen(false); // Close modal on done
+      setIsOpen(false); 
     };
   
     return (
@@ -46,8 +50,18 @@ export default function AddTeachersModal() {
               <CloseButton onClick={toggleModal} />
               <h2 className="text-xl font-bold mb-4 text-center">Add The Teachers</h2>
               
-              <div className="space-y-2 mb-4">
-                {namesList.map((name) => (
+              <input
+              type="text"
+              placeholder="Search names..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            
+            <div className="space-y-2 mb-4 max-h-40 overflow-y-auto">
+              {filteredNames.length > 0 ? (
+                filteredNames.map((name) => (
                   <label key={name} className="flex items-center space-x-2">
                     <input
                       type="checkbox"
@@ -57,8 +71,11 @@ export default function AddTeachersModal() {
                     />
                     <span>{name}</span>
                   </label>
-                ))}
-              </div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-center">No results found</p>
+              )}
+            </div>
   
               <div className="flex justify-end">
                 <SolidButton type="submit" text="S U B M I T" />
