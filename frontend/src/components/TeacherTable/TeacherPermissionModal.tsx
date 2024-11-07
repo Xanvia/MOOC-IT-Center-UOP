@@ -39,7 +39,7 @@ const TeacherPermissionModal: React.FC<TeacherPermissionModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10"
       onMouseDown={handleInsideClick}
     >
       <div

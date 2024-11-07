@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import CloseButton from "../Buttons/CloseButton";  
+import CloseButton from "../Buttons/CloseButton"; 
+import SolidButton from "../Buttons/SolidButton"; 
 
 export default function AddTeachersModal() {
     const [isOpen, setIsOpen] = useState(false);
@@ -28,9 +29,9 @@ export default function AddTeachersModal() {
       <>
         <button
           onClick={toggleModal}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-4 py-2 bg-blue-800 text-white rounded hover:bg-blue-900"
         >
-          Open Modal
+          Add Teachers
         </button>
   
         {isOpen && (
@@ -39,11 +40,11 @@ export default function AddTeachersModal() {
             onClick={toggleModal}
           >
             <div
-              className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full relative"
+              className="bg-white py-10 px-5 sm:px-16 rounded-lg shadow-lg relative max-w-xl w-full"
               onClick={(e) => e.stopPropagation()}
             >
               <CloseButton onClick={toggleModal} />
-              <h2 className="text-xl font-bold mb-4 text-center">Select Names</h2>
+              <h2 className="text-xl font-bold mb-4 text-center">Add The Teachers</h2>
               
               <div className="space-y-2 mb-4">
                 {namesList.map((name) => (
@@ -59,12 +60,9 @@ export default function AddTeachersModal() {
                 ))}
               </div>
   
-              <button
-                onClick={handleDone}
-                className="mt-4 w-full py-2 bg-green-500 text-white rounded hover:bg-green-600"
-              >
-                Done
-              </button>
+              <div className="flex justify-end">
+                <SolidButton type="submit" text="S U B M I T" />
+            </div>
             </div>
           </div>
         )}
