@@ -10,7 +10,19 @@ export default function AddTeachersModal() {
     const [warningMessage, setWarningMessage] = useState("");
 
     const namesList = [
-        { name: "Alice", Occupation: "Bank of Celon" },
+        { name: "Aliasssssssce in chanos sdsds", Occupation: "Bank of Celodddddddd naefpo askndddd" },
+        { name: "Bob", Occupation: "TM Institute" },
+        { name: "David", Occupation: "Professor" },
+        { name: "Aliasssssssce in chanos sdsds", Occupation: "Bank of Celodddddddd naefpo askndddd" },
+        { name: "Bob", Occupation: "TM Institute" },
+        { name: "David", Occupation: "Professor" },
+        { name: "Aliasssssssce in chanos sdsds", Occupation: "Bank of Celodddddddd naefpo askndddd" },
+        { name: "Bob", Occupation: "TM Institute" },
+        { name: "David", Occupation: "Professor" },
+        { name: "Aliasssssssce in chanos sdsds", Occupation: "Bank of Celodddddddd naefpo askndddd" },
+        { name: "Bob", Occupation: "TM Institute" },
+        { name: "David", Occupation: "Professor" },
+        { name: "Aliasssssssce in chanos sdsds", Occupation: "Bank of Celodddddddd naefpo askndddd" },
         { name: "Bob", Occupation: "TM Institute" },
         { name: "David", Occupation: "Professor" },
     ];
@@ -67,16 +79,16 @@ export default function AddTeachersModal() {
 
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-10"
+                    className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50"
                     onClick={toggleModal}
                 >
                     <div
-                        className="bg-white py-10 px-5 sm:px-16 rounded-lg shadow-lg relative"
-                        style={{ maxWidth: "800px", width: "100%" }}
+                        className="bg-white py-10 px-5 sm:px-16 rounded-lg shadow-lg relative max-w-6xl w-full"
                         onClick={(e) => e.stopPropagation()}
+                        
                     >
                         <CloseButton onClick={toggleModal} />
-                        <h2 className="text-xl font-bold mb-4 text-center">Add The Teachers</h2>
+                        <h2 className="text-xl font-bold mb-6 text-center ">Assign the Teacher to the Course </h2>
 
                         <input
                             type="text"
@@ -85,7 +97,7 @@ export default function AddTeachersModal() {
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full p-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
-
+                        <div className="max-h-60 overflow-y-auto">  
                         <table className="w-full mb-4">
                             <thead>
                                 <tr>
@@ -110,7 +122,7 @@ export default function AddTeachersModal() {
                                             <td className="p-2 text-right space-x-2">
                                                 <button
                                                     onClick={() => handleAddTeacher(teacher.name)}
-                                                    className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                                    className="px-3 py-1 bg-blue-700 text-white rounded hover:bg-blue-800  mb-1"
                                                 >
                                                     {selectedNames.includes(teacher.name) ? "Unselect Teacher" : "Select Teacher"}
                                                 </button>
@@ -122,6 +134,7 @@ export default function AddTeachersModal() {
                                                 </button>
                                             </td>
                                         </tr>
+                                        
                                     ))
                                 ) : (
                                     <tr>
@@ -132,7 +145,7 @@ export default function AddTeachersModal() {
                                 )}
                             </tbody>
                         </table>
-
+                        </div>
                         <div className="mt-8">
 
                           {warningMessage && (
@@ -140,7 +153,7 @@ export default function AddTeachersModal() {
                           )}
 
                           <div className="flex justify-end">
-                              <SolidButton onClick={handleDone} type="submit" text="SUBMIT" />
+                              <SolidButton onClick={handleDone} type="submit" text="ADD the Teacher" />
                           </div>
                         </div>
                     </div>
