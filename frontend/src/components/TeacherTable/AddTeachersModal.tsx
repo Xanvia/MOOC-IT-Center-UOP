@@ -7,15 +7,17 @@ export default function AddTeachersModal() {
     const [confirmationOpen, setConfirmationOpen] = useState(false);
     const [selectedNames, setSelectedNames] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [warningMessage, setWarningMessage] = useState("");
 
     const namesList = [
-        { name: "Alice", work: "Bank of Celon" },
-        { name: "Bob", work: "TM Institute" },
-        { name: "David", work: "Professor" },
+        { name: "Alice", Occupation: "Bank of Celon" },
+        { name: "Bob", Occupation: "TM Institute" },
+        { name: "David", Occupation: "Professor" },
     ];
 
     const toggleModal = () => {
         setIsOpen(!isOpen);
+        setWarningMessage(""); // Reset the warning message when modal is closed
     };
 
     const handleAddTeacher = (name: string) => {
@@ -24,6 +26,7 @@ export default function AddTeachersModal() {
                 ? prevSelected.filter((n) => n !== name)
                 : [...prevSelected, name]
         );
+        setWarningMessage(""); // Clear warning message when a teacher is selected
     };
 
     const handleViewTeacher = (name: string) => {
@@ -35,13 +38,18 @@ export default function AddTeachersModal() {
     );
 
     const handleDone = () => {
-        setConfirmationOpen(true); // Open confirmation modal
+        if (selectedNames.length === 0) {
+            setWarningMessage("Please select a teacher"); // Set warning message if no names are selected
+        } else {
+            setConfirmationOpen(true); // Open confirmation modal
+        }
     };
 
     const handleConfirmSubmit = () => {
         console.log("Selected names:", selectedNames);
         setIsOpen(false); // Close main modal
         setConfirmationOpen(false); // Close confirmation modal
+        setSelectedNames([]); // Reset selected names
     };
 
     const handleCancelSubmit = () => {
@@ -63,7 +71,8 @@ export default function AddTeachersModal() {
                     onClick={toggleModal}
                 >
                     <div
-                        className="bg-white py-10 px-5 sm:px-16 rounded-lg shadow-lg relative max-w-xl w-full"
+                        className="bg-white py-10 px-5 sm:px-16 rounded-lg shadow-lg relative"
+                        style={{ maxWidth: "800px", width: "100%" }}
                         onClick={(e) => e.stopPropagation()}
                     >
                         <CloseButton onClick={toggleModal} />
@@ -81,7 +90,7 @@ export default function AddTeachersModal() {
                             <thead>
                                 <tr>
                                     <th className="text-left font-semibold p-2">Name</th>
-                                    <th className="text-left font-semibold p-2">Work</th>
+                                    <th className="text-left font-semibold p-2">Occupation</th>
                                     <th className="text-right font-semibold p-2">Actions</th>
                                 </tr>
                             </thead>
@@ -97,19 +106,19 @@ export default function AddTeachersModal() {
                                             }`}
                                         >
                                             <td className="p-2">{teacher.name}</td>
-                                            <td className="p-2">{teacher.work}</td>
+                                            <td className="p-2">{teacher.Occupation}</td>
                                             <td className="p-2 text-right space-x-2">
                                                 <button
                                                     onClick={() => handleAddTeacher(teacher.name)}
                                                     className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
                                                 >
-                                                    {selectedNames.includes(teacher.name) ? "Added" : "Add"}
+                                                    {selectedNames.includes(teacher.name) ? "Unselect Teacher" : "Select Teacher"}
                                                 </button>
                                                 <button
                                                     onClick={() => handleViewTeacher(teacher.name)}
                                                     className="px-3 py-1 bg-gray-400 text-white rounded hover:bg-gray-500"
                                                 >
-                                                    View
+                                                    View Profile
                                                 </button>
                                             </td>
                                         </tr>
@@ -124,8 +133,15 @@ export default function AddTeachersModal() {
                             </tbody>
                         </table>
 
-                        <div className="flex justify-end">
-                            <SolidButton onClick={handleDone} type="submit" text="SUBMIT" />
+                        <div className="mt-8">
+
+                          {warningMessage && (
+                              <p className="text-red-500 text-center mb-4">{warningMessage}</p>
+                          )}
+
+                          <div className="flex justify-end">
+                              <SolidButton onClick={handleDone} type="submit" text="SUBMIT" />
+                          </div>
                         </div>
                     </div>
                 </div>
