@@ -4,6 +4,7 @@ import SolidButton from "../Buttons/SolidButton";
 
 export default function AddTeachersModal() {
     const [isOpen, setIsOpen] = useState(false);
+    const [confirmationOpen, setConfirmationOpen] = useState(false);
     const [selectedNames, setSelectedNames] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -11,7 +12,6 @@ export default function AddTeachersModal() {
         { name: "Alice", work: "Bank of Celon" },
         { name: "Bob", work: "TM Institute" },
         { name: "David", work: "Professor" },
-        // Add more teachers as needed
     ];
 
     const toggleModal = () => {
@@ -21,8 +21,8 @@ export default function AddTeachersModal() {
     const handleAddTeacher = (name: string) => {
         setSelectedNames((prevSelected) =>
             prevSelected.includes(name)
-                ? prevSelected.filter((n) => n !== name) // Remove if already selected
-                : [...prevSelected, name] // Add if not already selected
+                ? prevSelected.filter((n) => n !== name)
+                : [...prevSelected, name]
         );
     };
 
@@ -35,8 +35,17 @@ export default function AddTeachersModal() {
     );
 
     const handleDone = () => {
+        setConfirmationOpen(true); // Open confirmation modal
+    };
+
+    const handleConfirmSubmit = () => {
         console.log("Selected names:", selectedNames);
-        setIsOpen(false);
+        setIsOpen(false); // Close main modal
+        setConfirmationOpen(false); // Close confirmation modal
+    };
+
+    const handleCancelSubmit = () => {
+        setConfirmationOpen(false); // Close confirmation modal
     };
 
     return (
@@ -83,7 +92,7 @@ export default function AddTeachersModal() {
                                             key={teacher.name}
                                             className={`border-b ${
                                                 selectedNames.includes(teacher.name)
-                                                    ? "border-blue-500 bg-blue-50" // Apply blue border and background if selected
+                                                    ? "border-blue-500 bg-blue-50"
                                                     : ""
                                             }`}
                                         >
@@ -117,6 +126,28 @@ export default function AddTeachersModal() {
 
                         <div className="flex justify-end">
                             <SolidButton onClick={handleDone} type="submit" text="SUBMIT" />
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {confirmationOpen && (
+                <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-20">
+                    <div className="bg-white py-6 px-10 rounded-lg shadow-lg w-80 text-center">
+                        <h3 className="text-lg font-semibold mb-4">Are you sure to submit?</h3>
+                        <div className="flex justify-center space-x-4">
+                            <button
+                                onClick={handleConfirmSubmit}
+                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                            >
+                                Yes
+                            </button>
+                            <button
+                                onClick={handleCancelSubmit}
+                                className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
+                            >
+                                No
+                            </button>
                         </div>
                     </div>
                 </div>
