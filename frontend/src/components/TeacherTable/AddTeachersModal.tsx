@@ -6,11 +6,11 @@ export default function AddTeachersModal() {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedNames, setSelectedNames] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    
+
     const namesList = [
-        { name: "Alice", Occupation: "Bank of Celon" },
-        { name: "Bob", Occupation: "TM Institute" },
-        { name: "David", Occupation: "Professor" },
+        { name: "Alice", work: "Bank of Celon" },
+        { name: "Bob", work: "TM Institute" },
+        { name: "David", work: "Professor" },
         // Add more teachers as needed
     ];
 
@@ -20,7 +20,9 @@ export default function AddTeachersModal() {
 
     const handleAddTeacher = (name: string) => {
         setSelectedNames((prevSelected) =>
-            prevSelected.includes(name) ? prevSelected : [...prevSelected, name]
+            prevSelected.includes(name)
+                ? prevSelected.filter((n) => n !== name) // Remove if already selected
+                : [...prevSelected, name] // Add if not already selected
         );
     };
 
@@ -70,30 +72,36 @@ export default function AddTeachersModal() {
                             <thead>
                                 <tr>
                                     <th className="text-left font-semibold p-2">Name</th>
-                                    <th className="text-left font-semibold p-2">Occupation</th>
+                                    <th className="text-left font-semibold p-2">Work</th>
                                     <th className="text-right font-semibold p-2">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {filteredNames.length > 0 ? (
                                     filteredNames.map((teacher) => (
-                                        <tr key={teacher.name} className="border-b">
+                                        <tr
+                                            key={teacher.name}
+                                            className={`border-b ${
+                                                selectedNames.includes(teacher.name)
+                                                    ? "border-blue-500 bg-blue-50" // Apply blue border and background if selected
+                                                    : ""
+                                            }`}
+                                        >
                                             <td className="p-2">{teacher.name}</td>
-                                            <td className="p-2">{teacher.Occupation}</td>
+                                            <td className="p-2">{teacher.work}</td>
                                             <td className="p-2 text-right space-x-2">
+                                                <button
+                                                    onClick={() => handleAddTeacher(teacher.name)}
+                                                    className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                                >
+                                                    {selectedNames.includes(teacher.name) ? "Added" : "Add"}
+                                                </button>
                                                 <button
                                                     onClick={() => handleViewTeacher(teacher.name)}
                                                     className="px-3 py-1 bg-gray-400 text-white rounded hover:bg-gray-500"
                                                 >
                                                     View
                                                 </button>
-                                                <button
-                                                    onClick={() => handleAddTeacher(teacher.name)}
-                                                    className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                                                >
-                                                    Add
-                                                </button>
-                                                
                                             </td>
                                         </tr>
                                     ))
