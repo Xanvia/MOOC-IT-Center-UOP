@@ -1,11 +1,11 @@
 import React from "react";
 import Head from "next/head";
 
-const QuizzesManagementPage = () => {
+const QuizzesGradePage = () => {
   return (
     <div className="flex h-screen bg-gray-50">
         <Head>
-            <title>OpenEd - Quizzes / Students</title>
+            <title>OpenEd - Quizzes Grades</title>
             <link rel="icon" href="/favicon.ico" />
         </Head>
         
@@ -17,4 +17,4 @@ const QuizzesManagementPage = () => {
   );
 };
 
-export default QuizzesManagementPage;
+export default QuizzesGradePage;
