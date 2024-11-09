@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CourseTeacherViewSet,EditPermissionAPIView,AdminStatisticApiView
+from .views import CourseTeacherViewSet,EditPermissionAPIView
 
 
 urlpatterns = [

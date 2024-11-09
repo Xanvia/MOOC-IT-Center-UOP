@@ -4,9 +4,11 @@ from .serializers import (
     CourseTeachersSerializer,
     EditCoursePermissionsSerializer,
     CoursePermissionsSerializer,
+    StudentQuizSerializer,
 )
 from .models import CourseTeachers, CoursePermissions
 from .permissions import IsCourseCreator
+from courses.models import Course, Progress
 
 
 class CourseTeacherViewSet(viewsets.ModelViewSet):
@@ -48,3 +50,7 @@ class EditPermissionAPIView(generics.UpdateAPIView):
 
         return response
     
+
+class StudentQuizListAPIView(generics.ListAPIView):
+    queryset = Progress.objects.all()
+    serializer_class = StudentQuizSerializer
