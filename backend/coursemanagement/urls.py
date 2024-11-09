@@ -5,6 +5,8 @@ from .views import (
     StudentQuizListAPIView,
     StudentCodingDetailAPIView,
     StudentQuizDetailAPIView,
+    GradeCodingAPIView,
+    GradeQuizAPIView,
 )
 
 
@@ -32,4 +34,6 @@ urlpatterns = [
     path(
         "code/<int:pk>", StudentCodingDetailAPIView.as_view(), name="submission-details"
     ),
+    path("grade-quiz/<int:pk>", GradeQuizAPIView.as_view(), name="grade-quiz"),
+    path("grade-code/<int:pk>", GradeCodingAPIView.as_view(), name="grade-code"),
 ]

@@ -86,3 +86,30 @@ class StudentQuizDetailAPIView(generics.RetrieveAPIView):
 class StudentCodingDetailAPIView(generics.RetrieveAPIView):
     queryset = StudentCodingAnswer.objects.all()
     serializer_class = StudentCodeDetailSerializer
+
+
+
+class GradeQuizAPIView(generics.UpdateAPIView):
+    queryset = StudentQuiz.objects.all()
+    serializer_class = StudentQuizDetailSerializer
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "message": "Quiz graded successfully",
+        }
+        return response
+    
+
+class GradeCodingAPIView(generics.UpdateAPIView):
+    queryset = StudentCodingAnswer.objects.all()
+    serializer_class = StudentCodeDetailSerializer
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "message": "Coding question graded successfully",
+        }
+        return response
