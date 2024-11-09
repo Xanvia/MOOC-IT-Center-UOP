@@ -5,10 +5,18 @@ from .serializers import (
     EditCoursePermissionsSerializer,
     CoursePermissionsSerializer,
     StudentQuizSerializer,
+    StudentCodeDetailSerializer,
+    StudentQuizDetailSerializer,
 )
 from .models import CourseTeachers, CoursePermissions
 from .permissions import IsCourseCreator
-from courses.models import Course, Progress,Enrollment
+from courses.models import (
+    Course,
+    Progress,
+    Enrollment,
+    StudentCodingAnswer,
+    StudentQuiz,
+)
 
 
 class CourseTeacherViewSet(viewsets.ModelViewSet):
@@ -57,9 +65,24 @@ class StudentQuizListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         try:
-            enrollement = Enrollment.objects.get(course=self.kwargs.get("course_id"), student=self.kwargs.get("student_id"))
+            enrollement = Enrollment.objects.get(
+                course=self.kwargs.get("course_id"),
+                student=self.kwargs.get("student_id"),
+            )
         except Enrollment.DoesNotExist:
             return Response({"error": "Enrollment not found"}, status=404)
-        return self.queryset.filter(
-            enrollment = enrollement
-        )
+        return self.queryset.filter(enrollment=enrollement)
+
+
+class StudentQuizDetailAPIView(generics.RetrieveAPIView):
+    queryset = StudentQuiz.objects.all()
+    serializer_class = StudentQuizDetailSerializer
+
+    def get_object(self):
+        print("here")
+        return super().get_object()
+
+
+class StudentCodingDetailAPIView(generics.RetrieveAPIView):
+    queryset = StudentCodingAnswer.objects.all()
+    serializer_class = StudentCodeDetailSerializer
