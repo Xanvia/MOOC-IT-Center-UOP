@@ -14,6 +14,15 @@ export default function AddTeachersModal() {
         { name: "Alice", Occupation: "Bank Officer" },
         { name: "Bob", Occupation: "TM Institute" },
         { name: "David", Occupation: "Professor" },
+        { name: "Alice", Occupation: "Bank Officer" },
+        { name: "Bob", Occupation: "TM Institute" },
+        { name: "David", Occupation: "Professor" },
+        { name: "Alice", Occupation: "Bank Officer" },
+        { name: "Bob", Occupation: "TM Institute" },
+        { name: "David", Occupation: "Professor" },
+        { name: "Alice", Occupation: "Bank Officer" },
+        { name: "Bob", Occupation: "TM Institute" },
+        { name: "David", Occupation: "Professor" },
         // Add other names as needed
     ];
 
@@ -69,7 +78,7 @@ export default function AddTeachersModal() {
 
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-40"
+                    className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50"
                     onClick={toggleModal}
                 >
                     <div
@@ -88,11 +97,11 @@ export default function AddTeachersModal() {
                         />
                         <div className="max-h-60 overflow-y-auto">
                             <table className="w-full mb-4">
-                                <thead>
+                                <thead className="bg-gray-100">
                                     <tr>
-                                        <th className="text-left font-semibold p-2">Name</th>
-                                        <th className="text-left font-semibold p-2">Occupation</th>
-                                        <th className="text-right font-semibold p-2">Actions</th>
+                                        <th className="text-left font-semibold p-2 sticky top-0 bg-gray-100">Name</th>
+                                        <th className="text-left font-semibold p-2 sticky top-0 bg-gray-100">Occupation</th>
+                                        <th className="text-right font-semibold p-2 sticky top-0 bg-gray-100">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -114,8 +123,8 @@ export default function AddTeachersModal() {
                                                         className="px-3 py-1 bg-blue-700 text-white rounded hover:bg-blue-800 mb-1"
                                                     >
                                                         {selectedNames.includes(teacher.name)
-                                                            ? "Remove the Teacher"
-                                                            : "Add the Teacher"}
+                                                            ? "Unselect Teacher"
+                                                            : "Select Teacher"}
                                                     </button>
                                                     <button
                                                         onClick={() => handleViewTeacher(teacher.name)}
@@ -144,7 +153,7 @@ export default function AddTeachersModal() {
             )}
 
             {confirmationOpen && (
-                <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-20">
                     <div className="bg-white py-6 px-10 rounded-lg shadow-lg w-80 text-center">
                         <h3 className="text-lg font-semibold mb-4">{confirmationMessage}</h3>
                         <div className="flex justify-center space-x-4">
