@@ -78,7 +78,7 @@ export default function AddTeachersModal() {
 
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50"
+                    className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-30"
                     onClick={toggleModal}
                 >
                     <div
@@ -153,7 +153,7 @@ export default function AddTeachersModal() {
             )}
 
             {confirmationOpen && (
-                <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-20">
+                <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
                     <div className="bg-white py-6 px-10 rounded-lg shadow-lg w-80 text-center">
                         <h3 className="text-lg font-semibold mb-4">{confirmationMessage}</h3>
                         <div className="flex justify-center space-x-4">
