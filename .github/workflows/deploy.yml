@@ -20,4 +20,4 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          ssh -o StrictHostKeyChecking=no deployment_user@${{ secrets.SERVER_IP }} 'bash ./deploy.sh'
+          ssh -o  StrictHostKeyChecking=no -p {{secrets.SERVER_PORT}} deployment_user@${{ secrets.SERVER_IP }} 'bash ./deploy.sh'
