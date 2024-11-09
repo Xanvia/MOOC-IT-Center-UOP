@@ -19,7 +19,7 @@ from .views import (
     MessageViewSet,
     ReplyViewSet,
     ItemChatViewSet,
-    ThreadMessageViewSet
+    ThreadMessageViewSet,
 )
 
 router = DefaultRouter()
@@ -42,6 +42,11 @@ urlpatterns = [
     ),
     path(
         "my-courses/", CourseViewSet.as_view({"get": "my_courses"}), name="my-courses"
+    ),
+    path(
+        "unpublished/",
+        CourseViewSet.as_view({"get": "unpublished"}),
+        name="course-unpublished",
     ),
     # get course detials, update course details, delete course
     path(
@@ -197,6 +202,12 @@ urlpatterns = [
         ItemChatViewSet.as_view({"put": "update", "delete": "destroy"}),
         name="chat-detail",
     ),
-    path("itemchat/<int:pk>/thread/", ThreadMessageViewSet.as_view({"get": "list", "post": "create"})),
-    path("thread/<int:pk>/", ThreadMessageViewSet.as_view({"put": "update", "delete": "destroy"})),
+    path(
+        "itemchat/<int:pk>/thread/",
+        ThreadMessageViewSet.as_view({"get": "list", "post": "create"}),
+    ),
+    path(
+        "thread/<int:pk>/",
+        ThreadMessageViewSet.as_view({"put": "update", "delete": "destroy"}),
+    ),
 ]

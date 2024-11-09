@@ -93,6 +93,10 @@ class CourseViewSet(viewsets.ModelViewSet):
                     .filter_queryset(queryset)
                     .filter(enrollment__student=self.request.user)
                 )
+        elif self.action == "unpublished":
+            return super().filter_queryset(queryset).filter(status="unpublished")
+        
+    
         return super().filter_queryset(queryset)
 
     def retrieve(self, request, *args, **kwargs):
@@ -140,6 +144,17 @@ class CourseViewSet(viewsets.ModelViewSet):
         return response
 
     def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "data": {
+                "courses": response.data,
+            },
+        }
+        return response
+    
+    def unpublished(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
         response.data = {
