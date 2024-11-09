@@ -40,7 +40,7 @@ const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({ data }) => 
     <div className="flex flex-col bg-white rounded-lg shadow-sm border border-gray-200">
       <div className="overflow-auto max-h-[480px]">
         <table className="min-w-full table-auto">
-          <thead className="bg-gray-100 sticky top-0">
+          <thead className="bg-gray-100 sticky top-0" style={{ zIndex: 1 }}>
             <tr>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Profile</th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Name</th>

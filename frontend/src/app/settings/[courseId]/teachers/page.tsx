@@ -1,6 +1,8 @@
+"use client";
 import React from "react";
 import Head from "next/head";
 import TeacherSettingsTable from "@/components/TeacherTable/TeacherSettings";
+import AddTeachersModal from "@/components/TeacherTable/AddTeachersModal";
 
 interface TeacherData {
   name: string;
@@ -42,6 +44,7 @@ const TeachersPage = () => {
           <h2 className="text-2xl font-semibold text-gray-800">
             Manage Teachers
           </h2>
+          <AddTeachersModal/>
         </div>
         <div className="mb-6">
           <input
