@@ -44,7 +44,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS", "localhost"), "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = [os.getenv("HOST"),os.getenv("HOST2")] 
 
 
 # Application definition
@@ -102,14 +102,14 @@ WSGI_APPLICATION = "mooc.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 if os.getenv("DJANGO_ENV") == "production":
-    DATABASES = {
+   DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
             "NAME": os.getenv("DB_NAME"),
             "USER": os.getenv("DB_USER"),
             "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": os.getenv("DB_HOST", "postgres"),
-            "PORT": os.getenv("DB_PORT", "5432"),
+            "HOST": os.getenv("DB_HOST"),
+            "PORT": os.getenv("DB_PORT"),
         }
     }
 else:
