@@ -1,7 +1,13 @@
 from rest_framework import serializers
 from .models import CourseTeachers, CoursePermissions
 from django.contrib.auth.models import User
-from courses.models import Progress,StudentCodingAnswer,StudentQuiz,Quiz,CodingAssignment
+from courses.models import (
+    Progress,
+    StudentCodingAnswer,
+    StudentQuiz,
+    Quiz,
+    CodingAssignment,
+)
 
 
 class CourseTeachersSerializer(serializers.ModelSerializer):
@@ -64,48 +70,48 @@ class StudentQuizSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Progress
-        fields = ['id', 'completed', 'quiz_details']
+        fields = ["completed", "quiz_details"]
 
     def get_quiz_details(self, instance):
         component = instance.component
-
         result = {
-            'name': component.name,
-            'type': component.type,
-            'grade': None,
-            'graded': False,
-            'student_submission_id': None
+            "name": component.name,
+            "type": component.type,
+            "grade": None,
+            "graded": False,
+            "student_submission_id": None,
         }
 
         # Get enrollment
         enrollment = instance.enrollment
-
         # Check if component is Quiz
-        if isinstance(component, Quiz):
+        if instance.component.type == "Quiz":
             try:
                 student_quiz = StudentQuiz.objects.get(
-                    enrollement=enrollment,
-                    quiz=component
+                    enrollement=enrollment, quiz=component
                 )
-                result.update({
-                    'grade': student_quiz.score,
-                    'graded': student_quiz.graded,
-                    'student_submission_id': student_quiz.id
-                })
+                result.update(
+                    {
+                        "grade": student_quiz.score,
+                        "graded": student_quiz.graded,
+                        "student_submission_id": student_quiz.id,
+                    }
+                )
             except StudentQuiz.DoesNotExist:
                 pass
 
-        elif isinstance(component, CodingAssignment):
+        if instance.component.type == "Code":
             try:
                 student_coding = StudentCodingAnswer.objects.get(
-                    enrollement=enrollment,
-                    coding_assignment=component
+                    enrollement=enrollment, coding_assignment=component
                 )
-                result.update({
-                    'grade': float(student_coding.grade),
-                    'graded': True if student_coding.grade is not None else False,
-                    'student_submission_id': student_coding.id
-                })
+                result.update(
+                    {
+                        "grade": float(student_coding.grade),
+                        "graded": True if student_coding.grade is not None else False,
+                        "student_submission_id": student_coding.id,
+                    }
+                )
             except StudentCodingAnswer.DoesNotExist:
                 pass
 
@@ -113,10 +119,11 @@ class StudentQuizSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         if not instance.completed:
-            return None
-            
-        if not isinstance(instance.component, (Quiz, CodingAssignment)):
-            return None
+            pass
+
+        if instance.component.type != "Quiz":
+            if instance.component.type != "Code":
+                pass
 
         representation = super().to_representation(instance)
         return representation
