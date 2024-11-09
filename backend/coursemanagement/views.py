@@ -33,6 +33,24 @@ class CourseTeacherViewSet(viewsets.ModelViewSet):
             "message": "Teacher added to course",
         }
         return response
+    
+    def filter_queryset(self,queryset):
+    
+        # Filter the queryset to only include teachers for the specified course.
+        course_id = self.kwargs.get("course_id")
+
+        return  super().filter_queryset(queryset).filter(course_id)
+
+    
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "data": {
+                "courseTeachers": response.data,
+            },
+        }
+        return response
 
 
 class PermissionsListAPIView(generics.ListAPIView):
