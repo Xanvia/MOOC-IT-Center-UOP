@@ -36,4 +36,7 @@ urlpatterns = [
     ),
     path("grade-quiz/<int:pk>", GradeQuizAPIView.as_view(), name="grade-quiz"),
     path("grade-code/<int:pk>", GradeCodingAPIView.as_view(), name="grade-code"),
+     path(
+        "<int:course_id>/teacher/", CourseTeacherViewSet.as_view({"get": "list"},), name="course-teachers-list"
+    ),
 ]
