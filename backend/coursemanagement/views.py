@@ -4,9 +4,11 @@ from .serializers import (
     CourseTeachersSerializer,
     EditCoursePermissionsSerializer,
     CoursePermissionsSerializer,
+    StudentQuizSerializer,
 )
 from .models import CourseTeachers, CoursePermissions
 from .permissions import IsCourseCreator
+from courses.models import Course, Progress,Enrollment
 
 
 class CourseTeacherViewSet(viewsets.ModelViewSet):
@@ -47,22 +49,17 @@ class EditPermissionAPIView(generics.UpdateAPIView):
         }
 
         return response
-    
-class AdminStatisticApiView(generics.GenericAPIView):
-    def get(self, request, *args, **kwargs):
-        total_students = Student.objects.count()
-        total_teachers = Teacher.objects.count()
-        total_courses = Course.objects.count()
-        total_paid_students = Student.objects.filter(is_paid=True).count()
 
-        # Add other statistics or any additional data processing here as needed
 
-        data = {
-            'total_students': total_students,
-            'total_teachers': total_teachers,
-            'total_courses': total_courses,
-            'total_paid_students': total_paid_students,
-        }
+class StudentQuizListAPIView(generics.ListAPIView):
+    queryset = Progress.objects.all()
+    serializer_class = StudentQuizSerializer
 
-        return Response(data)
-
+    def get_queryset(self):
+        try:
+            enrollement = Enrollment.objects.get(course=self.kwargs.get("course_id"), student=self.kwargs.get("student_id"))
+        except Enrollment.DoesNotExist:
+            return Response({"error": "Enrollment not found"}, status=404)
+        return self.queryset.filter(
+            enrollment = enrollement
+        )

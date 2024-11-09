@@ -1,6 +1,13 @@
 from rest_framework import serializers
 from .models import CourseTeachers, CoursePermissions
 from django.contrib.auth.models import User
+from courses.models import (
+    Progress,
+    StudentCodingAnswer,
+    StudentQuiz,
+    Quiz,
+    CodingAssignment,
+)
 
 
 class CourseTeachersSerializer(serializers.ModelSerializer):
@@ -56,3 +63,67 @@ class CoursePermissionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CoursePermissions
         fields = "__all__"
+
+
+class StudentQuizSerializer(serializers.ModelSerializer):
+    quiz_details = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Progress
+        fields = ["completed", "quiz_details"]
+
+    def get_quiz_details(self, instance):
+        component = instance.component
+        result = {
+            "name": component.name,
+            "type": component.type,
+            "grade": None,
+            "graded": False,
+            "student_submission_id": None,
+        }
+
+        # Get enrollment
+        enrollment = instance.enrollment
+        # Check if component is Quiz
+        if instance.component.type == "Quiz":
+            try:
+                student_quiz = StudentQuiz.objects.get(
+                    enrollement=enrollment, quiz=component
+                )
+                result.update(
+                    {
+                        "grade": student_quiz.score,
+                        "graded": student_quiz.graded,
+                        "student_submission_id": student_quiz.id,
+                    }
+                )
+            except StudentQuiz.DoesNotExist:
+                pass
+
+        if instance.component.type == "Code":
+            try:
+                student_coding = StudentCodingAnswer.objects.get(
+                    enrollement=enrollment, coding_assignment=component
+                )
+                result.update(
+                    {
+                        "grade": float(student_coding.grade),
+                        "graded": True if student_coding.grade is not None else False,
+                        "student_submission_id": student_coding.id,
+                    }
+                )
+            except StudentCodingAnswer.DoesNotExist:
+                pass
+
+        return result
+
+    def to_representation(self, instance):
+        if not instance.completed:
+            pass
+
+        if instance.component.type != "Quiz":
+            if instance.component.type != "Code":
+                pass
+
+        representation = super().to_representation(instance)
+        return representation

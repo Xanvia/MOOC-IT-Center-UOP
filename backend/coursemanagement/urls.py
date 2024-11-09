@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CourseTeacherViewSet,EditPermissionAPIView,AdminStatisticApiView
+from .views import CourseTeacherViewSet,EditPermissionAPIView,StudentQuizListAPIView
 
 
 urlpatterns = [
@@ -9,6 +9,5 @@ urlpatterns = [
     path(
         "teacher/<int:course_id>/permissions/", EditPermissionAPIView.as_view(), name="edit-permissions"
     ),
-    path('api/admin-statistics/', AdminStatisticApiView.as_view(), name='admin-statistics'
-    ),
+    path("<int:course_id>/quizes/<int:student_id>/", StudentQuizListAPIView.as_view(), name="student-quizes"),
 ]

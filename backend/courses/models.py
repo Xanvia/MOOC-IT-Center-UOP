@@ -199,6 +199,7 @@ class StudentCodingAnswer(models.Model):
     coding_assignment = models.ForeignKey(CodingAssignment, on_delete=models.CASCADE)
     code = models.TextField()
     grade = models.DecimalField(max_digits=5, decimal_places=2)
+    graded = models.BooleanField(default=False)
 
 
 class VideoFile(models.Model):
