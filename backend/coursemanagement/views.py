@@ -48,21 +48,3 @@ class EditPermissionAPIView(generics.UpdateAPIView):
 
         return response
     
-class AdminStatisticApiView(generics.GenericAPIView):
-    def get(self, request, *args, **kwargs):
-        total_students = Student.objects.count()
-        total_teachers = Teacher.objects.count()
-        total_courses = Course.objects.count()
-        total_paid_students = Student.objects.filter(is_paid=True).count()
-
-        # Add other statistics or any additional data processing here as needed
-
-        data = {
-            'total_students': total_students,
-            'total_teachers': total_teachers,
-            'total_courses': total_courses,
-            'total_paid_students': total_paid_students,
-        }
-
-        return Response(data)
-

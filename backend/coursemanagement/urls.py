@@ -9,6 +9,6 @@ urlpatterns = [
     path(
         "teacher/<int:course_id>/permissions/", EditPermissionAPIView.as_view(), name="edit-permissions"
     ),
-    path('api/admin-statistics/', AdminStatisticApiView.as_view(), name='admin-statistics'
-    ),
+    # path('api/admin-statistics/', AdminStatisticApiView.as_view(), name='admin-statistics'
+    # ),
 ]
