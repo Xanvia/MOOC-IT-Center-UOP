@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions, viewsets
+from rest_framework import generics, permissions, viewsets, status
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import (
@@ -23,7 +23,7 @@ from .models import (
     WorkExperience,
     Institution,
 )
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
 from django.core.exceptions import PermissionDenied
 
 
@@ -308,3 +308,19 @@ class InstitutionsListAPIView(generics.ListAPIView):
             {"status": "success", "data": {"institutions": response.data}},
             status=status.HTTP_200_OK,
         )
+
+class StudentListView(generics.ListAPIView):
+    serializer_class = UserSerializer  # Define your serializer
+    pagination_class = None  # If no pagination is needed
+
+    def get_queryset(self):
+        student_group = Group.objects.get(name="student")  # Get the "student" group
+        return User.objects.filter(groups=student_group)  # Filter users in the "student" group
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return Response(
+            {"status": "success", "data": {"students": response.data}},
+            status=status.HTTP_200_OK,
+        )
+
