@@ -48,6 +48,8 @@ urlpatterns = [
         EducationApiView.as_view({"put": "update", "delete": "destroy"}),
         name="education-detail",
     ),
-    
+    path('admin/students/', 
+         StudentListView.as_view(), 
+         name='student-list'),
 ]
 
