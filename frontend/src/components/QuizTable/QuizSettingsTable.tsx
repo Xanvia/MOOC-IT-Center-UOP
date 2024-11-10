@@ -59,7 +59,7 @@ const QuizSettingsTable = ({
                     onClick={() => onManageQuizClick(quiz)}
                     className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600"
                   >
-                    Manage Quiz
+                    Grade Quiz
                   </button>
                 </td>
               </tr>
