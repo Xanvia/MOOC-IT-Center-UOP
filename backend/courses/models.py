@@ -244,7 +244,7 @@ class Reply(models.Model):
 
 
 class ThreadMessage(models.Model):
-   
+
     chat = models.ForeignKey(ItemChat, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField()
@@ -252,3 +252,11 @@ class ThreadMessage(models.Model):
 
     def __str__(self):
         return self.message
+
+
+class LastSeen(models.Model):
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    chat = models.ForeignKey(ItemChat, on_delete=models.CASCADE)
+    last_seen = models.DateTimeField(auto_now_add=True)

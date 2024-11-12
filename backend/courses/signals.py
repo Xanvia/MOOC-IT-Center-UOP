@@ -25,6 +25,7 @@ from courses.models import (
     ItemChat,
     Reply,
     ThreadMessage,
+    LastSeen,
 )
 
 
@@ -49,8 +50,19 @@ def assign_permissions(sender, **kwargs):
         ItemChat,
         Reply,
         ThreadMessage,
+        LastSeen,
     ]
-    student_models = [Progress, StudentQuiz, StudentCodingAnswer, Enrollment,Message,Reply,ItemChat,ThreadMessage]
+    student_models = [
+        Progress,
+        StudentQuiz,
+        StudentCodingAnswer,
+        Enrollment,
+        Message,
+        Reply,
+        ItemChat,
+        ThreadMessage,
+        LastSeen,
+    ]
 
     # Get the groups
     admin = Group.objects.get(name="admin")
