@@ -145,7 +145,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
 
-
+        response = super().list(request, *args, **kwargs)
         response.data = {
             "status": "success",
             "data": {
