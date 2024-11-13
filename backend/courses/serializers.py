@@ -529,3 +529,11 @@ class LastSeenSerializer(serializers.ModelSerializer):
     class Meta:
         model = LastSeen
         fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["new_messages"] = False
+        last_message = ItemChat.objects.filter(id=instance.chat.id).last()
+        if last_message and instance.last_seen < last_message.created_at:
+            representation["new_messages"] = True
+        return representation
