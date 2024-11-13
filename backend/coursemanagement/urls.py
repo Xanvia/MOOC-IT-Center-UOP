@@ -20,7 +20,7 @@ urlpatterns = [
         name="course-teacher-list",
     ),
     path(
-        "<int:course_id>/teacher/<int:teacher_id>/permissions/",
+        "<int:course_id>/teacher-permissions/<int:teacher_id>/",
         EditPermissionAPIView.as_view(),
         name="edit-permissions",
     ),
