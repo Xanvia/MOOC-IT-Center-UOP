@@ -264,7 +264,7 @@ class StudentSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         try:
-            representation["profile_image"] = instance.userprofile.profile_image.url
+            representation["profile_picture"] = instance.userprofile.profile_image.url
         except ValueError:
             representation["profile_picture"] = instance.userprofile.profile_picture
         return representation
