@@ -216,3 +216,17 @@ class AdminMessagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdminMessages
         fields = "__all__"
+
+
+class GetCoursePermissionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CourseTeachers
+        fields = ["permissions"]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["permissions"] = [
+            permission.label for permission in instance.permissions.all()
+        ]
+        return representation
+

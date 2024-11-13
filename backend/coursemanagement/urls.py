@@ -7,6 +7,7 @@ from .views import (
     StudentQuizDetailAPIView,
     GradeCodingAPIView,
     GradeQuizAPIView,
+    TeacherPermissionsRetrieveAPIView,
 )
 
 
@@ -19,7 +20,7 @@ urlpatterns = [
         name="course-teacher-list",
     ),
     path(
-        "teacher/<int:course_id>/permissions/",
+        "<int:course_id>/teacher/<int:teacher_id>/permissions/",
         EditPermissionAPIView.as_view(),
         name="edit-permissions",
     ),
@@ -36,7 +37,16 @@ urlpatterns = [
     ),
     path("grade-quiz/<int:pk>", GradeQuizAPIView.as_view(), name="grade-quiz"),
     path("grade-code/<int:pk>", GradeCodingAPIView.as_view(), name="grade-code"),
-     path(
-        "<int:course_id>/teacher/", CourseTeacherViewSet.as_view({"get": "list"},), name="course-teachers-list"
+    path(
+        "<int:course_id>/teacher/",
+        CourseTeacherViewSet.as_view(
+            {"get": "list"},
+        ),
+        name="course-teachers-list",
+    ),
+    path(
+        "<int:course_id>/teacher-permissions/<int:teacher_id>/",
+        TeacherPermissionsRetrieveAPIView.as_view(),
+        name="teacher-permissions",
     ),
 ]
