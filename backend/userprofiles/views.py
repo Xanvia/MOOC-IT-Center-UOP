@@ -11,6 +11,7 @@ from .serializers import (
     WorkExperienceSerializer,
     EducationSerializer,
     InstitutionSerializer,
+    StudentSerializer,
 )
 from .utils import google_authenticate
 from django.contrib.auth import authenticate
@@ -311,8 +312,8 @@ class InstitutionsListAPIView(generics.ListAPIView):
 
 
 class StudentListView(generics.ListAPIView):
-    serializer_class = UserSerializer  # Define your serializer
-    pagination_class = None  # If no pagination is needed
+    serializer_class = StudentSerializer
+    pagination_class = None
 
     def get_queryset(self):
         student_group = Group.objects.get(name="student")  # Get the "student" group
@@ -326,4 +327,3 @@ class StudentListView(generics.ListAPIView):
             {"status": "success", "data": {"students": response.data}},
             status=status.HTTP_200_OK,
         )
-

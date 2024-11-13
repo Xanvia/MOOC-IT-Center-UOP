@@ -248,3 +248,22 @@ class EducationSerializer(serializers.ModelSerializer):
             institution, _ = Institution.objects.get_or_create(label=institution_name)
             instance.institution = institution
         return super().update(instance, validated_data)
+
+
+class StudentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            "first_name",
+            "last_name",
+            "email",
+        ]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        try:
+            representation["profile_picture"] = instance.userprofile.profile_image.url
+        except ValueError:
+            representation["profile_picture"] = instance.userprofile.profile_picture
+        return representation

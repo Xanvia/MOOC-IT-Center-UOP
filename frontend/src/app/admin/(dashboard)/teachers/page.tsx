@@ -1,37 +1,34 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { Plus } from "lucide-react";
 import TeacherTable from "@/components/TeacherTable/TeacherTable";
+import { getAllTeachers } from "@/services/admin.service";
 
 interface TeacherData {
-  name: string;
-  profilePicture: string; // URL for the profile picture
-  headline: string; // Changed from 'course' to match the table header
-  institution: string; // Changed from 'faculty' to match the table header
-  courses: string; // Changed from 'department' to match the table header
-  status: "Active" | "Inactive";
+  first_name: string;
+  last_name: string;
+  email: string;
+  profile_picture: string;
+  courses_count: number;
+  institution: string;
 }
 
-const teachersData: TeacherData[] = [
-  {
-    name: "Candice Schiner",
-    profilePicture: "/api/placeholder/40/40", // Using a placeholder, replace with actual URL
-    headline: "Computer Network Specialist",
-    institution: "University of Technology",
-    courses: "Introduction to Computer Networks, Advanced Networking",
-    status: "Active",
-  },
-  {
-    name: "John Doe",
-    profilePicture: "/api/placeholder/40/40", // Using a placeholder, replace with actual URL
-    headline: "Materials Science Professor",
-    institution: "Engineering Institute",
-    courses: "Material Science, Advanced Materials",
-    status: "Active",
-  },
-];
-
 const TeachersPage = () => {
+  const [teachersData, setTeachersData] = useState<TeacherData[]>([]);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const teachers = await getAllTeachers();
+        setTeachersData(teachers);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchStudents();
+  }, []);
   return (
     <div className="flex h-screen bg-gray-50">
       <Head>

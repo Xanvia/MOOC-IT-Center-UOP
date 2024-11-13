@@ -85,6 +85,7 @@ class CourseSerializer(serializers.ModelSerializer):
         representation["instructors"] = instructors
         representation["category"] = InterestSerializer(instance.category).data
         representation["institution"] = instance.institution.label
+        representation["course_creator"] = instance.course_creator.first_name + " " + instance.course_creator.last_name
 
         if request and request.user.is_authenticated:
             user = request.user
@@ -108,7 +109,6 @@ class CourseSerializer(serializers.ModelSerializer):
                     ).exists()
             else:
                 representation["canEdit"] = False
-
         return representation
 
 
@@ -556,20 +556,18 @@ class CheckUpdatesSerializer(serializers.ModelSerializer):
             last_seen_announcements = last_seen.last_seen_announcement
             last_seen_discussions = last_seen.last_seen_discussion
             latest_announcement = (
-                Announcement.objects.filter(course=course).order_by("-created_at").first()
+                Announcement.objects.filter(course=course)
+                .order_by("-created_at")
+                .first()
             )
             latest_discussion = (
-                Message.objects.filter(course=course)
-                .order_by("-time")
-                .first()
+                Message.objects.filter(course=course).order_by("-time").first()
             )
         except AttributeError:
             return {
-            "new_announcements": True,
-            "new_discussions": True,
-        }
-
-        
+                "new_announcements": True,
+                "new_discussions": True,
+            }
 
         if latest_announcement and (
             not last_seen_announcements
@@ -578,8 +576,7 @@ class CheckUpdatesSerializer(serializers.ModelSerializer):
             new_announcements = True
 
         if latest_discussion and (
-            not last_seen_discussions
-            or latest_discussion.time > last_seen_discussions
+            not last_seen_discussions or latest_discussion.time > last_seen_discussions
         ):
             new_discussions = True
         return {
@@ -594,4 +591,32 @@ class UpdateLastSeenSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LastSeenCourse
-        fields = ['last_seen_announcement', 'last_seen_discussion']
+        fields = ["last_seen_announcement", "last_seen_discussion"]
+
+
+class CourseCreatorsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "email"]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        if instance.userprofile.profile_image:
+            representation["profile_picture"] = (
+                instance.userprofile.profile_image.url
+            )
+        else:
+            representation["profile_picture"] = (
+                instance.userprofile.profile_picture
+                if instance.userprofile
+                else None
+            )
+        representation["courses_count"] = Course.objects.filter(
+            course_creator=instance
+        ).count()
+        
+        course = Course.objects.filter(course_creator=instance).first()
+        if course:
+            representation["institution"] = course.institution.label
+        return representation

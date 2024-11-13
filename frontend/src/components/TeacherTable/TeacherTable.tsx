@@ -2,12 +2,12 @@ import React from "react";
 import Image from "next/image";
 
 export interface TeacherData {
-  name: string;
-  profilePicture: string;  // URL for the profile picture
-  headline: string;        // Changed from 'course' to match the table header
-  institution: string;     // Changed from 'faculty' to match the table header
-  courses: string;         // Changed from 'department' to match the table header
-  status: "Active" | "Inactive";
+  first_name: string;
+  last_name: string;
+  email: string;
+  profile_picture: string;
+  institution: string;
+  courses_count: number;
 }
 
 export interface TeacherTableProps {
@@ -28,13 +28,13 @@ const TeacherTable = ({ data }: TeacherTableProps) => {
                 Name
               </th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                Headline
+                Email
               </th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
                 Institution
               </th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                Courses
+                Active Courses
               </th>
             </tr>
           </thead>
@@ -44,23 +44,23 @@ const TeacherTable = ({ data }: TeacherTableProps) => {
               <tr key={index}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <Image
-                    src={teacher.profilePicture}
-                    alt={`${teacher.name}'s profile`}
+                    src={teacher.profile_picture}
+                    alt={`${teacher.first_name}'s profile`}
                     className="h-10 w-10 rounded-full object-cover"
                     width={40}
                     height={40}
                   />
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">{teacher.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {teacher.headline}
+                  {teacher.first_name} {teacher.last_name}
                 </td>
+                <td className="px-6 py-4 whitespace-nowrap">{teacher.email}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {teacher.institution}
                 </td>
-                {/* <td className="px-6 py-4 whitespace-nowrap">
-                  {teacher.courses}
-                </td> */}
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {teacher.courses_count}
+                </td>
               </tr>
             ))}
           </tbody>

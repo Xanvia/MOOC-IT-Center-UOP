@@ -2,12 +2,10 @@ import React from "react";
 import Image from "next/image";
 
 interface Student {
-  profilePicture: string;
-  name: string;
-  course: string;
-  year: string;
-  grades: string;
-  status: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  profile_picture: string;
 }
 
 interface StudentTableProps {
@@ -25,20 +23,20 @@ const StudentTable = ({ data }: StudentTableProps) => {
                 Profile
               </th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                Name
+                First Name
               </th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                Course
+                Last Name
               </th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                Year
+                Email
               </th>
-              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
+              {/* <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
                 Grades
               </th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
                 Status
-              </th>
+              </th> */}
             </tr>
           </thead>
 
@@ -49,20 +47,22 @@ const StudentTable = ({ data }: StudentTableProps) => {
                   <Image
                     width={40}
                     height={40}
-                    src={student.profilePicture}
-                    alt={`${student.name}'s profile`}
+                    src={student.profile_picture}
+                    alt={`${student.first_name}'s profile`}
                     className="h-10 w-10 rounded-full object-cover"
                   />
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">{student.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {student.course}
+                  {student.first_name}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">{student.year}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
+                  {student.last_name}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">{student.email}</td>
+                {/* <td className="px-6 py-4 whitespace-nowrap">
                   {student.grades}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                </td> */}
+                {/* <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-semibold ${
                       student.status === "Active"
@@ -74,7 +74,7 @@ const StudentTable = ({ data }: StudentTableProps) => {
                   >
                     {student.status}
                   </span>
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>
