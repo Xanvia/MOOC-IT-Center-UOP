@@ -40,16 +40,19 @@ class CourseTeachersSerializer(serializers.ModelSerializer):
         representation["email"] = instance.teacher.email
         representation["role"] = instance.role
 
-        if instance.teacher.userprofile.profile_image:
-            representation["profile_picture"] = (
-                instance.teacher.userprofile.profile_image.url
-            )
-        else:
-            representation["profile_picture"] = (
-                instance.teacher.userprofile.profile_picture
-                if instance.teacher.userprofile
-                else None
-            )
+        try:
+            if instance.teacher.userprofile.profile_image:
+                representation["profile_picture"] = (
+                    instance.teacher.userprofile.profile_image.url
+                )
+            else:
+                representation["profile_picture"] = (
+                    instance.teacher.userprofile.profile_picture
+                    if instance.teacher.userprofile
+                    else None
+                )
+        except Exception:
+            representation["profile_picture"] = None
 
         return representation
 
