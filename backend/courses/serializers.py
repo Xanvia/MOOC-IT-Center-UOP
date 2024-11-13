@@ -615,4 +615,8 @@ class CourseCreatorsSerializer(serializers.ModelSerializer):
         representation["courses_count"] = Course.objects.filter(
             course_creator=instance
         ).count()
+        
+        course = Course.objects.filter(course_creator=instance).first()
+        if course:
+            representation["institution"] = course.institution.label
         return representation

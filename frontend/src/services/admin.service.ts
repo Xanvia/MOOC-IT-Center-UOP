@@ -8,3 +8,13 @@ export const getAllStudents = async () => {
     throw error;
   }
 };
+
+
+export const getAllTeachers = async () => { 
+    try {
+        const { data } = await axiosInstance.get("/admin/teachers");
+        return data.data.teachers;
+    } catch (error) {
+        throw error;
+    }
+    }
