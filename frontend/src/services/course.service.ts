@@ -407,7 +407,11 @@ export const addDetailsCode = async (
   }
 };
 
-export const addStarterCode = async (code_id: number, starter_code: string, testCases:TestCase[]) => {
+export const addStarterCode = async (
+  code_id: number,
+  starter_code: string,
+  testCases: TestCase[]
+) => {
   try {
     console.log(testCases);
     const response = await axiosInstance.put(
@@ -529,12 +533,24 @@ export const deleteThreadMessage = async (messageID: number) => {
   }
 };
 
-
 export const checkForUpdates = async (courseId: string) => {
   try {
-    const response = await axiosInstance.get(`/course/check-updates/${courseId}/`);
+    const response = await axiosInstance.get(
+      `/course/check-updates/${courseId}/`
+    );
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
   }
-}
+};
+
+export const updateLastSeen = async (courseId: string, action: string) => {
+  try {
+    const response = await axiosInstance.put(`/course/last-seen/${courseId}/`, {
+      action: action,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};

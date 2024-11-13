@@ -25,7 +25,6 @@ from .models import (
 )
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import PermissionDenied
-from django.utils import timezone
 
 
 class UserRegistrationApiView(generics.CreateAPIView):

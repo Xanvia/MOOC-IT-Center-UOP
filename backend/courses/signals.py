@@ -26,6 +26,7 @@ from courses.models import (
     Reply,
     ThreadMessage,
     LastSeen,
+    LastSeenCourse,
 )
 
 
@@ -51,6 +52,7 @@ def assign_permissions(sender, **kwargs):
         Reply,
         ThreadMessage,
         LastSeen,
+        LastSeenCourse
     ]
     student_models = [
         Progress,
@@ -62,6 +64,7 @@ def assign_permissions(sender, **kwargs):
         ItemChat,
         ThreadMessage,
         LastSeen,
+        LastSeenCourse
     ]
 
     # Get the groups

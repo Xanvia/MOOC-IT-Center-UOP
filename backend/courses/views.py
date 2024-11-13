@@ -59,6 +59,8 @@ from .permissons import (
     AnnouncemantAccess,
 )
 from coursemanagement.models import CourseTeachers
+from django.utils import timezone
+
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -1052,6 +1054,7 @@ class CheckUpdatesRetrieveView(generics.RetrieveAPIView):
     queryset = Course.objects.all()
 
     
+
 class UpdateLastSeenView(generics.UpdateAPIView):
     serializer_class = UpdateLastSeenSerializer
     queryset = LastSeenCourse.objects.all()
@@ -1060,22 +1063,36 @@ class UpdateLastSeenView(generics.UpdateAPIView):
         course_id = self.kwargs.get("pk")
         user = request.user
 
-        last_seen = LastSeenCourse.objects.filter(user=user, course=course_id).first()
-        response.data["course"] = course_id
-        response.data["user"] = user.id
-        if last_seen:
-            response = super().update(request, partial=True, *args, **kwargs)
-            response_data = {
-                "status": "success",
-                "message": "Last seen updated successfully",
-            }
-            response.data = response_data
+        # Get or create the LastSeenCourse instance for the user and course
+        last_seen, created = LastSeenCourse.objects.get_or_create(
+            user=user, course_id=course_id
+        )
+
+        if created:
+            message = "Last seen created successfully with both timestamps updated."
         else:
-            response = super().create(request, *args, **kwargs)
-            response_data = {
-                "status": "success",
-                "message": "Last seen created successfully",
-            }
-            response.data = response_data
-        return response
-    
+            # Update the specified field based on the action
+            action = request.data.get('action')
+            if action == 'announcements':
+                last_seen.last_seen_announcement = timezone.now()
+                message = "Last seen announcement timestamp updated successfully."
+            elif action == 'discussions':
+                last_seen.last_seen_discussion = timezone.now()
+                message = "Last seen discussion timestamp updated successfully."
+            else:
+                return Response(
+                    {"status": "error", "message": "Invalid action"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        last_seen.save()
+
+        response_data = {
+            "status": "success",
+            "message": message,
+            "course": course_id,
+            "user": user.id,
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
+

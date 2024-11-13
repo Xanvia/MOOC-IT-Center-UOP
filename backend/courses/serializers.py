@@ -573,16 +573,15 @@ class CheckUpdatesSerializer(serializers.ModelSerializer):
 
         if latest_announcement and (
             not last_seen_announcements
-            or latest_announcement.created_at > last_seen_announcements.last_seen
+            or latest_announcement.created_at > last_seen_announcements
         ):
             new_announcements = True
 
         if latest_discussion and (
             not last_seen_discussions
-            or latest_discussion.created_at > last_seen_discussions.last_seen
+            or latest_discussion.time > last_seen_discussions
         ):
             new_discussions = True
-
         return {
             "new_announcements": new_announcements,
             "new_discussions": new_discussions,
@@ -590,8 +589,9 @@ class CheckUpdatesSerializer(serializers.ModelSerializer):
 
 
 class UpdateLastSeenSerializer(serializers.ModelSerializer):
-    
+    last_seen_announcement = serializers.DateTimeField(required=False)
+    last_seen_discussion = serializers.DateTimeField(required=False)
+
     class Meta:
         model = LastSeenCourse
-        fields = "__all__"
-
+        fields = ['last_seen_announcement', 'last_seen_discussion']
