@@ -587,3 +587,11 @@ class CheckUpdatesSerializer(serializers.ModelSerializer):
             "new_announcements": new_announcements,
             "new_discussions": new_discussions,
         }
+
+
+class UpdateLastSeenSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = LastSeenCourse
+        fields = "__all__"
+

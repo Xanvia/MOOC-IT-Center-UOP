@@ -18,6 +18,7 @@ from .models import (
     ItemChat,
     ThreadMessage,
     LastSeen,
+    LastSeenCourse,
 )
 from .serializers import (
     CourseSerializer,
@@ -41,6 +42,7 @@ from .serializers import (
     ThreadMessageSerializer,
     LastSeenSerializer,
     CheckUpdatesSerializer,
+    UpdateLastSeenSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -1022,7 +1024,7 @@ class LastSeenViewSet(viewsets.ModelViewSet):
             .filter_queryset(queryset)
             .filter(user=self.request.user, chat=chat_id)
         )
-
+    
     def create_or_update(self, request, *args, **kwargs):
         chat_id = self.kwargs.get("pk")
         user = request.user
@@ -1045,9 +1047,35 @@ class LastSeenViewSet(viewsets.ModelViewSet):
             response.data = response_data
         return response
     
-
 class CheckUpdatesRetrieveView(generics.RetrieveAPIView):
     serializer_class = CheckUpdatesSerializer
     queryset = Course.objects.all()
 
+    
+class UpdateLastSeenView(generics.UpdateAPIView):
+    serializer_class = UpdateLastSeenSerializer
+    queryset = LastSeenCourse.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        course_id = self.kwargs.get("pk")
+        user = request.user
+
+        last_seen = LastSeenCourse.objects.filter(user=user, course=course_id).first()
+        response.data["course"] = course_id
+        response.data["user"] = user.id
+        if last_seen:
+            response = super().update(request, partial=True, *args, **kwargs)
+            response_data = {
+                "status": "success",
+                "message": "Last seen updated successfully",
+            }
+            response.data = response_data
+        else:
+            response = super().create(request, *args, **kwargs)
+            response_data = {
+                "status": "success",
+                "message": "Last seen created successfully",
+            }
+            response.data = response_data
+        return response
     
