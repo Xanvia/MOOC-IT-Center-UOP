@@ -14,6 +14,7 @@ import {
   getProgress,
   createCodingQ,
   startComponent,
+  checkForUpdates,
 } from "@/services/course.service";
 import { useParams, useRouter } from "next/navigation";
 import Loader from "@/components/Loarder/Loarder";
@@ -40,6 +41,8 @@ const Sidebar: React.FC = () => {
   const [progress, setProgress] = useState<number>(0);
   const [progressLoaded, setProgressLoaded] = useState<boolean>(false);
   const [reload, setReload] = useState(false);
+  const [newAnnouncements, setNewAnnouncements] = useState<boolean>(false);
+  const [newDiscussions, setNewDiscussions] = useState<boolean>(false);
 
   const reloadData = () => {
     setReload((prevState) => !prevState);
@@ -65,6 +68,25 @@ const Sidebar: React.FC = () => {
 
     loadCourseContent();
   }, [courseId, router, reload]);
+
+  useEffect(() => {
+    const checkUpdates = async () => {
+      if (!courseId) return;
+      try {
+        const updates = await checkForUpdates(courseId as string);
+        setNewAnnouncements(updates.new_announcements);
+        setNewDiscussions(updates.new_discussions);
+      } catch (error: any) {
+        console.error("Failed to check for updates:", error);
+      }
+    };
+
+    checkUpdates();
+    // Set up polling interval
+    const interval = setInterval(checkUpdates, 30000); // Check every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [courseId]);
 
   // Fetch progress after weeks is loaded
   useEffect(() => {
@@ -334,6 +356,9 @@ const Sidebar: React.FC = () => {
             </svg>
             <span className="font-semibold">Notifications & Discussions</span>
           </div>
+          {(newAnnouncements || newDiscussions) && (
+            <div className="w-2 h-2 rounded-full bg-red-500"></div>
+          )}
         </div>
 
         {userRole === "student" && (
