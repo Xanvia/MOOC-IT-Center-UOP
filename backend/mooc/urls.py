@@ -24,12 +24,16 @@ from userprofiles.views import (
     InterestListAPIView,
     CountryListAPIView,
     InstitutionsListAPIView,
+    StudentListView,
 )
 from coursemanagement.views import PermissionsListAPIView
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('api/admin/students/', 
+         StudentListView.as_view(), 
+         name='student-list'),
     path("api/user/", include("userprofiles.urls")),
     path("api/course/", include("courses.urls")),
     path("api/course/manage/", include("coursemanagement.urls")),

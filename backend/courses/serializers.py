@@ -595,3 +595,5 @@ class UpdateLastSeenSerializer(serializers.ModelSerializer):
     class Meta:
         model = LastSeenCourse
         fields = ['last_seen_announcement', 'last_seen_discussion']
+
+
