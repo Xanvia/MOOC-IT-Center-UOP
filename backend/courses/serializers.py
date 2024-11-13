@@ -21,6 +21,8 @@ from .models import (
     Message,
     Reply,
     ThreadMessage,
+    LastSeen,
+    LastSeenCourse,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -521,3 +523,75 @@ class ThreadMessageSerializer(serializers.ModelSerializer):
                 instance.user.first_name[0] + " " + instance.user.last_name
             )
         return representation
+
+
+class LastSeenSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = LastSeen
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["new_messages"] = False
+        last_message = ItemChat.objects.filter(id=instance.chat.id).last()
+        if last_message and instance.last_seen < last_message.created_at:
+            representation["new_messages"] = True
+        return representation
+
+
+class CheckUpdatesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Course
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        user = self.context.get("request").user
+        course = instance
+        new_announcements = False
+        new_discussions = False
+        try:
+            last_seen = LastSeenCourse.objects.filter(user=user, course=course).first()
+            last_seen_announcements = last_seen.last_seen_announcement
+            last_seen_discussions = last_seen.last_seen_discussion
+            latest_announcement = (
+                Announcement.objects.filter(course=course).order_by("-created_at").first()
+            )
+            latest_discussion = (
+                Message.objects.filter(course=course)
+                .order_by("-time")
+                .first()
+            )
+        except AttributeError:
+            return {
+            "new_announcements": True,
+            "new_discussions": True,
+        }
+
+        
+
+        if latest_announcement and (
+            not last_seen_announcements
+            or latest_announcement.created_at > last_seen_announcements
+        ):
+            new_announcements = True
+
+        if latest_discussion and (
+            not last_seen_discussions
+            or latest_discussion.time > last_seen_discussions
+        ):
+            new_discussions = True
+        return {
+            "new_announcements": new_announcements,
+            "new_discussions": new_discussions,
+        }
+
+
+class UpdateLastSeenSerializer(serializers.ModelSerializer):
+    last_seen_announcement = serializers.DateTimeField(required=False)
+    last_seen_discussion = serializers.DateTimeField(required=False)
+
+    class Meta:
+        model = LastSeenCourse
+        fields = ['last_seen_announcement', 'last_seen_discussion']

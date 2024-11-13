@@ -16,7 +16,9 @@ from .models import (
     Message,
     Reply,
     ItemChat,
-    ThreadMessage
+    ThreadMessage,
+    LastSeen,
+    LastSeenCourse,
 )
 from .serializers import (
     CourseSerializer,
@@ -37,7 +39,10 @@ from .serializers import (
     MessageSerializer,
     ReplySerializer,
     ItemChatSerializer,
-    ThreadMessageSerializer
+    ThreadMessageSerializer,
+    LastSeenSerializer,
+    CheckUpdatesSerializer,
+    UpdateLastSeenSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -54,6 +59,8 @@ from .permissons import (
     AnnouncemantAccess,
 )
 from coursemanagement.models import CourseTeachers
+from django.utils import timezone
+
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -95,8 +102,7 @@ class CourseViewSet(viewsets.ModelViewSet):
                 )
         elif self.action == "unpublished":
             return super().filter_queryset(queryset).filter(status="unpublished")
-        
-    
+
         return super().filter_queryset(queryset)
 
     def retrieve(self, request, *args, **kwargs):
@@ -153,7 +159,7 @@ class CourseViewSet(viewsets.ModelViewSet):
             },
         }
         return response
-    
+
     def unpublished(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
@@ -597,11 +603,10 @@ class CodingQuizViewSet(viewsets.ModelViewSet):
             },
         }
         return response
-    
 
     def update(self, request, *args, **kwargs):
         response = super().update(request, partial=True, *args, **kwargs)
-    
+
         response.data = {
             "status": "success",
             "message": "Quiz Details Added successfully",
@@ -846,8 +851,7 @@ class ReplyViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Thread created successfully",
-            "data": response.data
-            
+            "data": response.data,
         }
         return response
 
@@ -895,7 +899,9 @@ class ItemChatViewSet(viewsets.ModelViewSet):
         if self.action == "destroy" or self.action == "update":
             return super().filter_queryset(queryset)
         return (
-            super().filter_queryset(queryset).filter(component=self.kwargs["component_id"])
+            super()
+            .filter_queryset(queryset)
+            .filter(component=self.kwargs["component_id"])
         )
 
     def create(self, request, *args, **kwargs):
@@ -956,11 +962,7 @@ class ThreadMessageViewSet(viewsets.ModelViewSet):
     def filter_queryset(self, queryset):
         if self.action == "destroy" or self.action == "update":
             return super().filter_queryset(queryset)
-        return (
-            super()
-            .filter_queryset(queryset)
-            .filter(chat=self.kwargs["pk"])
-        )
+        return super().filter_queryset(queryset).filter(chat=self.kwargs["pk"])
 
     def create(self, request, *args, **kwargs):
         request.data["chat"] = kwargs["pk"]
@@ -1011,3 +1013,86 @@ class ThreadMessageViewSet(viewsets.ModelViewSet):
             },
         }
         return response
+
+
+class LastSeenViewSet(viewsets.ModelViewSet):
+    queryset = LastSeen.objects.all()
+    serializer_class = LastSeenSerializer
+
+    def filter_queryset(self, queryset):
+        chat_id = self.kwargs.get("pk")
+        return (
+            super()
+            .filter_queryset(queryset)
+            .filter(user=self.request.user, chat=chat_id)
+        )
+    
+    def create_or_update(self, request, *args, **kwargs):
+        chat_id = self.kwargs.get("pk")
+        user = request.user
+
+        last_seen = LastSeen.objects.filter(user=user, chat=chat_id).first()
+
+        if last_seen:
+            response = super().update(request, partial=True, *args, **kwargs)
+            response_data = {
+                "status": "success",
+                "message": "Last seen updated successfully",
+            }
+            response.data = response_data
+        else:
+            response = super().create(request, *args, **kwargs)
+            response_data = {
+                "status": "success",
+                "message": "Last seen created successfully",
+            }
+            response.data = response_data
+        return response
+    
+class CheckUpdatesRetrieveView(generics.RetrieveAPIView):
+    serializer_class = CheckUpdatesSerializer
+    queryset = Course.objects.all()
+
+    
+
+class UpdateLastSeenView(generics.UpdateAPIView):
+    serializer_class = UpdateLastSeenSerializer
+    queryset = LastSeenCourse.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        course_id = self.kwargs.get("pk")
+        user = request.user
+
+        # Get or create the LastSeenCourse instance for the user and course
+        last_seen, created = LastSeenCourse.objects.get_or_create(
+            user=user, course_id=course_id
+        )
+
+        if created:
+            message = "Last seen created successfully with both timestamps updated."
+        else:
+            # Update the specified field based on the action
+            action = request.data.get('action')
+            if action == 'announcements':
+                last_seen.last_seen_announcement = timezone.now()
+                message = "Last seen announcement timestamp updated successfully."
+            elif action == 'discussions':
+                last_seen.last_seen_discussion = timezone.now()
+                message = "Last seen discussion timestamp updated successfully."
+            else:
+                return Response(
+                    {"status": "error", "message": "Invalid action"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        last_seen.save()
+
+        response_data = {
+            "status": "success",
+            "message": message,
+            "course": course_id,
+            "user": user.id,
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
+

@@ -14,6 +14,7 @@ import DiscussionThread from "./Discussion";
 import ThreadView from "./Thread";
 import { Trash } from "lucide-react";
 import { toast } from "sonner";
+import { updateLastSeen } from "@/services/course.service";
 
 interface MainChatProps {
   onThreadSelect: (discussion: Discussion) => void;
@@ -51,7 +52,7 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
         console.error("Failed to fetch announcements:", error);
       }
     })();
-  }, [params.id,reload]);
+  }, [params.id, reload]);
 
   useEffect(() => {
     (async () => {
@@ -68,6 +69,12 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
       }
     })();
   }, [params.id, reload]);
+
+  useEffect(() => {
+    return () => {
+      updateLastSeen(params.id as string, activeTab);
+    };
+  }, [activeTab]);
 
   const reloadData = () => {
     setReload((prevState) => !prevState);
@@ -201,7 +208,9 @@ export default function MainChat({ onThreadSelect }: MainChatProps) {
                 key={announcement.id}
                 className="relative p-4 bg-yellow-50 rounded-lg shadow"
               >
-                <h3 className="font-bold text-lg">{announcement.title} {announcement.id}</h3>
+                <h3 className="font-bold text-lg">
+                  {announcement.title} {announcement.id}
+                </h3>
                 {announcement.canEdit && (
                   <Trash
                     className="absolute top-2 right-2 w-6 h-6 text-gray-500 cursor-pointer"

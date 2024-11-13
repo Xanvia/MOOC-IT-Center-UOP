@@ -23,7 +23,7 @@ from .models import (
     WorkExperience,
     Institution,
 )
-from django.contrib.auth.models import User,Group
+from django.contrib.auth.models import User, Group
 from django.core.exceptions import PermissionDenied
 
 
@@ -309,13 +309,16 @@ class InstitutionsListAPIView(generics.ListAPIView):
             status=status.HTTP_200_OK,
         )
 
+
 class StudentListView(generics.ListAPIView):
     serializer_class = UserSerializer  # Define your serializer
     pagination_class = None  # If no pagination is needed
 
     def get_queryset(self):
         student_group = Group.objects.get(name="student")  # Get the "student" group
-        return User.objects.filter(groups=student_group)  # Filter users in the "student" group
+        return User.objects.filter(
+            groups=student_group
+        )  # Filter users in the "student" group
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
