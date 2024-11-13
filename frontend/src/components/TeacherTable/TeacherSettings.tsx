@@ -2,8 +2,12 @@
 
 import React, { useState } from "react";
 import PermissionModal from "./TeacherPermissionModal";
-import { getTeacherPermissions } from "@/services/settings.service";
+import {
+  getTeacherPermissions,
+  updatePermissions,
+} from "@/services/settings.service";
 import { useParams } from "next/navigation";
+import { toast } from "sonner";
 export interface TeacherData {
   id: string;
   name: string;
@@ -51,14 +55,18 @@ const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({
   };
 
   // Mock function to save permissions for a specific teacher
-  const saveTeacherPermissions = async (
-    teacherId: string,
-    updatedPermissions: Permission[]
-  ) => {
+  const handleSavePermissions = async () => {
     try {
+      await updatePermissions(
+        selectedTeacher?.id as string,
+        params.courseId as string,
+        permissions
+      );
+      toast.success("Permissions updated successfully");
     } catch (error) {
-      console.error("Error saving teacher permissions:", error);
+      console.error("Error updating permissions:", error);
     }
+    setIsModalOpen(false);
   };
 
   const handlePermissionsClick = (teacher: TeacherData) => {
@@ -67,17 +75,14 @@ const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({
     setIsModalOpen(true);
   };
 
-  const handleSavePermissions = () => {
-    if (selectedTeacher) {
-      // saveTeacherPermissions(selectedTeacher?.id, permissions); // Save updated permissions for the selected teacher
-    }
-    setIsModalOpen(false);
-  };
-
   const handlePermissionChange = (id: string, checked: boolean) => {
-    // setPermissions(permissions.map((perm) =>
-    //   perm.id === id ? { ...perm, checked } : perm
-    // ));
+    setPermissions((prevPermissions) =>
+      prevPermissions.map((permission) =>
+        permission.id === id
+          ? { ...permission, checked } // Update checked state for the specific permission
+          : permission
+      )
+    );
   };
 
   return (

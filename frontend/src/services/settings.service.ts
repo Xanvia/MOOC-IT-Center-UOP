@@ -1,6 +1,12 @@
 import { Inter } from "next/font/google";
 import axiosInstance from "../lib/axiosInstance";
 
+type Permission = {
+  id: string;
+  label: string;
+  checked: boolean;
+};
+
 export const getAllCourseTeachers = async (courseId: string) => {
   try {
     const { data } = await axiosInstance.get(
@@ -46,6 +52,28 @@ export const getTeacherPermissions = async (
     return mappedPermissions;
   } catch (error) {
     console.error("Error fetching or mapping teacher permissions:", error);
+    throw error;
+  }
+};
+
+export const updatePermissions = async (
+  teacherId: string,
+  courseId: string,
+  updatedPermissions: Permission[]
+) => {
+  try {
+    const permissions = updatedPermissions
+      .filter((permission) => permission.checked)
+      .map((permission) => permission.label);
+
+    await axiosInstance.put(
+      `/course/manage/${courseId}/teacher-permissions/${teacherId}/`,
+      {
+        permissions,
+      }
+    );
+  } catch (error) {
+    console.error("Error updating teacher permissions:", error);
     throw error;
   }
 };
