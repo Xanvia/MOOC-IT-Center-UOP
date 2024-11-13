@@ -1,5 +1,8 @@
 import React from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Eye } from "lucide-react";
+import Courses from "@/app/(public)/courses/page";
 
 interface Course {
   id: number;
@@ -42,23 +45,25 @@ const CourseRow: React.FC<CourseRowProps> = ({
         <div className="flex space-x-9">
           {isPublished ? (
             <>
-              <button className="bg-gray-400 hover:bg-gray-300 text-white px-3 py-1 rounded-md">
-                View
-              </button>
+              <Link href={`courses/${course.id}`}>
+                <Eye size={20} className="text-blue-500 my-2" />
+              </Link>
+
               <button className="bg-gray-400 hover:bg-gray-300 text-white px-3 py-1 rounded-md">
                 Send Message
               </button>
             </>
           ) : (
             <>
+              <Link href={`/courses/${course.id}`}>
+                <Eye size={24} className="text-blue-500 my-1" />
+              </Link>
+
               <button
                 className="bg-blue-900 hover:bg-blue-800 text-white px-3 py-1 rounded-md"
                 onClick={() => onPublish(course.id)}
               >
                 Publish
-              </button>
-              <button className="bg-gray-400 hover:bg-gray-300 text-white px-3 py-1 rounded-md">
-                View
               </button>
               <button className="bg-gray-400 hover:bg-gray-300 text-white px-3 py-1 rounded-md">
                 Send Message

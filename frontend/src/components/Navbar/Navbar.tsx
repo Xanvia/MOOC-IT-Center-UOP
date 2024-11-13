@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ProfileButton from "./ProfileButton";
 import Link from "next/link";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import {
   MobileLinkClasses,
   MobileMenuClasses,
@@ -15,11 +15,11 @@ import {
 import Loader from "../Loarder/Loarder";
 import { useGlobal } from "../../contexts/store";
 
-const Login = dynamic(() => import('../Login/Login'), { ssr: false });
-const Register = dynamic(() => import('../Register/Register'), { ssr: false });
+const Login = dynamic(() => import("../Login/Login"), { ssr: false });
+const Register = dynamic(() => import("../Register/Register"), { ssr: false });
 
 const Navbar = () => {
-  const { isLoggedIn, isLoading } = useGlobal();
+  const { isLoggedIn, isLoading, userRole } = useGlobal();
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -119,9 +119,17 @@ const Navbar = () => {
                     FAQ
                   </Link>
                   {isLoggedIn && (
-                    <Link href="/courses" className={SecondaryButtonClass}>
-                      My Courses
-                    </Link>
+                    <>
+                      {userRole === "admin" ? (
+                        <Link href="/admin" className={SecondaryButtonClass}>
+                          Dashboard
+                        </Link>
+                      ) : (
+                        <Link href="/courses" className={SecondaryButtonClass}>
+                          My Courses
+                        </Link>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
