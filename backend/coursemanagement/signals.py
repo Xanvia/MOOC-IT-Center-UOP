@@ -3,11 +3,17 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
-from coursemanagement.models import CourseTeachers, CoursePermissions, Payments
+from coursemanagement.models import (
+    CourseTeachers,
+    CoursePermissions,
+    Payments,
+    AdminMessages,
+)
+
 
 @receiver(post_migrate)
 def assign_permissions(sender, **kwargs):
-    admin_teacher_models = [CourseTeachers, CoursePermissions]
+    admin_teacher_models = [CourseTeachers, CoursePermissions, AdminMessages]
     student_models = [Payments]
 
     # Get the groups
@@ -33,4 +39,3 @@ def assign_permissions(sender, **kwargs):
         # Assign the permissions to the student group
         for permission in permissions:
             student.permissions.add(permission)
-
