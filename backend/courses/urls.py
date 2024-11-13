@@ -20,6 +20,7 @@ from .views import (
     ReplyViewSet,
     ItemChatViewSet,
     ThreadMessageViewSet,
+    LastSeenViewSet,
 )
 
 router = DefaultRouter()
@@ -209,5 +210,9 @@ urlpatterns = [
     path(
         "thread/<int:pk>/",
         ThreadMessageViewSet.as_view({"put": "update", "delete": "destroy"}),
+    ),
+    path(
+        "item-chat/last-seen/<int:pk>/",
+        LastSeenViewSet.as_view({"put": "update", "get": "retrieve"}),
     ),
 ]

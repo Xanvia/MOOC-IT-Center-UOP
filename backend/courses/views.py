@@ -16,7 +16,8 @@ from .models import (
     Message,
     Reply,
     ItemChat,
-    ThreadMessage
+    ThreadMessage,
+    LastSeen,
 )
 from .serializers import (
     CourseSerializer,
@@ -37,7 +38,8 @@ from .serializers import (
     MessageSerializer,
     ReplySerializer,
     ItemChatSerializer,
-    ThreadMessageSerializer
+    ThreadMessageSerializer,
+    LastSeenSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -95,8 +97,7 @@ class CourseViewSet(viewsets.ModelViewSet):
                 )
         elif self.action == "unpublished":
             return super().filter_queryset(queryset).filter(status="unpublished")
-        
-    
+
         return super().filter_queryset(queryset)
 
     def retrieve(self, request, *args, **kwargs):
@@ -153,7 +154,7 @@ class CourseViewSet(viewsets.ModelViewSet):
             },
         }
         return response
-    
+
     def unpublished(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
 
@@ -597,11 +598,10 @@ class CodingQuizViewSet(viewsets.ModelViewSet):
             },
         }
         return response
-    
 
     def update(self, request, *args, **kwargs):
         response = super().update(request, partial=True, *args, **kwargs)
-    
+
         response.data = {
             "status": "success",
             "message": "Quiz Details Added successfully",
@@ -846,8 +846,7 @@ class ReplyViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Thread created successfully",
-            "data": response.data
-            
+            "data": response.data,
         }
         return response
 
@@ -895,7 +894,9 @@ class ItemChatViewSet(viewsets.ModelViewSet):
         if self.action == "destroy" or self.action == "update":
             return super().filter_queryset(queryset)
         return (
-            super().filter_queryset(queryset).filter(component=self.kwargs["component_id"])
+            super()
+            .filter_queryset(queryset)
+            .filter(component=self.kwargs["component_id"])
         )
 
     def create(self, request, *args, **kwargs):
@@ -956,11 +957,7 @@ class ThreadMessageViewSet(viewsets.ModelViewSet):
     def filter_queryset(self, queryset):
         if self.action == "destroy" or self.action == "update":
             return super().filter_queryset(queryset)
-        return (
-            super()
-            .filter_queryset(queryset)
-            .filter(chat=self.kwargs["pk"])
-        )
+        return super().filter_queryset(queryset).filter(chat=self.kwargs["pk"])
 
     def create(self, request, *args, **kwargs):
         request.data["chat"] = kwargs["pk"]
@@ -1009,5 +1006,49 @@ class ThreadMessageViewSet(viewsets.ModelViewSet):
             "data": {
                 "thread_messages": response.data,
             },
+        }
+        return response
+
+
+class LastSeenViewSet(viewsets.ModelViewSet):
+    queryset = LastSeen.objects.all()
+    serializer_class = LastSeenSerializer
+
+    def filter_queryset(self, queryset):
+        chat_id = self.kwargs.get("pk")
+        return (
+            super()
+            .filter_queryset(queryset)
+            .filter(user=self.request.user, chat=chat_id)
+        )
+
+    def create_or_update(self, request, *args, **kwargs):
+        chat_id = self.kwargs.get("pk")
+        user = request.user
+
+        last_seen = LastSeen.objects.filter(user=user, chat=chat_id).first()
+
+        if last_seen:
+            response = super().update(request, partial=True, *args, **kwargs)
+            response_data = {
+                "status": "success",
+                "message": "Last seen updated successfully",
+            }
+            response.data = response_data
+        else:
+            response = super().create(request, *args, **kwargs)
+            response_data = {
+                "status": "success",
+                "message": "Last seen created successfully",
+            }
+            response.data = response_data
+        return response
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        response.data = {
+            "status": "success",
+            "data": response.data,
         }
         return response

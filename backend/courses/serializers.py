@@ -21,6 +21,7 @@ from .models import (
     Message,
     Reply,
     ThreadMessage,
+    LastSeen,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -521,3 +522,10 @@ class ThreadMessageSerializer(serializers.ModelSerializer):
                 instance.user.first_name[0] + " " + instance.user.last_name
             )
         return representation
+
+
+class LastSeenSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = LastSeen
+        fields = "__all__"
