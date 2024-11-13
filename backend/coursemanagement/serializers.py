@@ -221,7 +221,7 @@ class AdminMessagesSerializer(serializers.ModelSerializer):
 class GetCoursePermissionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseTeachers
-        fields = ["id"]
+        fields = ["permissions"]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
