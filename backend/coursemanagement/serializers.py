@@ -217,4 +217,6 @@ class AdminMessagesSerializer(serializers.ModelSerializer):
         model = AdminMessages
         fields = "__all__"
 class GetCoursePermissionsSerializer(serializers.ModelSerializer):
-     
+    class Meta:
+        model = CourseTeachers
+        fields = ['id', 'course', 'teacher', 'permissions'] 
