@@ -8,6 +8,7 @@ from .serializers import (
     StudentCodeDetailSerializer,
     StudentQuizDetailSerializer,
     AdminMessagesSerializer,
+    GetCoursePermissionsSerializer,
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions,AdminMessages
@@ -185,12 +186,21 @@ class AdminMessagesViewSet(viewsets.ModelViewSet):
             },
         }
         return response
-class TeacherPermissionsListAPIView(generics.UpdateAPIView):
-    serializer_class = EditCoursePermissionsSerializer
+
+class TeacherPermissionsRetrieveAPIView(generics.Retrieve):
+    serializer_class = GetCoursePermissionsSerializer
     queryset = CourseTeachers.objects.all()
     permission_classes = [IsCourseCreator]
 
     def get_object(self):
         return self.queryset.get(course=self.kwargs.get("course_id"))
+    
+    def retrieve(self, request, *args, **kwargs):
+        response =super().retrieve(request, *args, **kwargs)
+        response.data ={
+            "status":"success",
+            "data":response.data,
+        }
+        return response
 
     
