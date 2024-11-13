@@ -33,3 +33,12 @@ class CourseTeachers(models.Model):
 
     def __str__(self):
         return self.teacher.username
+
+
+class AdminMessages(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    message = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.course.title

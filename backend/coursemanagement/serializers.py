@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CourseTeachers, CoursePermissions
+from .models import CourseTeachers, CoursePermissions, AdminMessages
 from django.contrib.auth.models import User
 from courses.models import (
     Progress,
@@ -8,7 +8,7 @@ from courses.models import (
     Quiz,
     CodingAssignment,
     Question,
-    Answer
+    Answer,
 )
 
 
@@ -131,84 +131,88 @@ class StudentQuizSerializer(serializers.ModelSerializer):
         return representation
 
 
-
 class QuestionAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ['id', 'text', 'is_correct']
+        fields = ["id", "text", "is_correct"]
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     answers = serializers.SerializerMethodField()
     student_answer = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = Question
-        fields = ['id', 'text', 'question_type', 'score', 'answers', 'student_answer']
-    
+        fields = ["id", "text", "question_type", "score", "answers", "student_answer"]
+
     def get_answers(self, question):
         # For open-ended questions, don't return answer choices
         if question.question_type == Question.OPENN_ENDED:
             return None
-            
+
         return QuestionAnswerSerializer(question.answers.all(), many=True).data
-    
+
     def get_student_answer(self, question):
-        student_quiz = self.context.get('student_quiz')
+        student_quiz = self.context.get("student_quiz")
         if not student_quiz:
             return None
-            
+
         # Find student's answer for this question from the JSONField
         student_answer = next(
-            (ans for ans in student_quiz.student_answers if ans.get('question_id') == question.id),
-            None
+            (
+                ans
+                for ans in student_quiz.student_answers
+                if ans.get("question_id") == question.id
+            ),
+            None,
         )
-        
+
         if not student_answer:
             return None
-            
+
         if question.question_type == Question.OPENN_ENDED:
-            return {
-                'text': student_answer.get('answer')
-            }
+            return {"text": student_answer.get("answer")}
         elif question.question_type == Question.MULTIPLE_CORRECT:
-            return {
-                'selected_answers': student_answer.get('answer', [])
-            }
+            return {"selected_answers": student_answer.get("answer", [])}
         else:  # SINGLE_CORRECT
-            return {
-                'selected_answer': student_answer.get('answer')
-            }
+            return {"selected_answer": student_answer.get("answer")}
+
 
 class StudentQuizDetailSerializer(serializers.ModelSerializer):
     questions = serializers.SerializerMethodField()
-    quiz_name = serializers.CharField(source='quiz.name')
-    deadline = serializers.DateTimeField(source='quiz.deadline')
-    duration = serializers.DurationField(source='quiz.duration')
-    
+    quiz_name = serializers.CharField(source="quiz.name")
+    deadline = serializers.DateTimeField(source="quiz.deadline")
+    duration = serializers.DurationField(source="quiz.duration")
+
     class Meta:
         model = StudentQuiz
         fields = [
-            'id', 
-            'quiz_name',
-            'deadline', 
-            'duration',
-            'score',
-            'graded',
-            'completed_at',
-            'questions'
+            "id",
+            "quiz_name",
+            "deadline",
+            "duration",
+            "score",
+            "graded",
+            "completed_at",
+            "questions",
         ]
-    
+
     def get_questions(self, student_quiz):
         questions = student_quiz.quiz.questions.all()
         # Pass the student_quiz instance to the QuestionSerializer context
         serializer = QuestionSerializer(
-            questions, 
-            many=True, 
-            context={'student_quiz': student_quiz}
+            questions, many=True, context={"student_quiz": student_quiz}
         )
         return serializer.data
+
 
 class StudentCodeDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentCodingAnswer
+        fields = "__all__"
+
+
+class AdminMessagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdminMessages
         fields = "__all__"

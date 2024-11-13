@@ -7,9 +7,10 @@ from .serializers import (
     StudentQuizSerializer,
     StudentCodeDetailSerializer,
     StudentQuizDetailSerializer,
+    AdminMessagesSerializer,
 )
 from courses.serializers import CourseSerializer
-from .models import CourseTeachers, CoursePermissions
+from .models import CourseTeachers, CoursePermissions,AdminMessages
 from .permissions import IsCourseCreator
 from courses.models import (
     Course,
@@ -154,3 +155,33 @@ class PublishCourseAPIView(generics.UpdateAPIView):
             {"status": "success", "message": "Course published successfully"},
             status=200,
         )
+
+
+class AdminMessagesViewSet(viewsets.ModelViewSet):
+    serializer_class = AdminMessagesSerializer
+    queryset = AdminMessages.objects.all()
+
+    def create(self, request, *args, **kwargs):
+
+        request.data["course"] = kwargs.get("course_id")
+        response = super().create(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "message": "Message sent to the course creator",
+        }
+        return response
+    
+    def filter_queryset(self,queryset):
+        course_id = self.kwargs.get("course_id")
+        return  super().filter_queryset(queryset).filter(course_id=course_id)
+
+    
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "data": {
+                "adminMessages": response.data,
+            },
+        }
+        return response
