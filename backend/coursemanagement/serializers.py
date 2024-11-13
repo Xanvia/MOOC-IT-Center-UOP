@@ -216,3 +216,5 @@ class AdminMessagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdminMessages
         fields = "__all__"
+class GetCoursePermissionsSerializer(serializers.ModelSerializer):
+     

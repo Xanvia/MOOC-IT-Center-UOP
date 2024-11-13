@@ -185,3 +185,12 @@ class AdminMessagesViewSet(viewsets.ModelViewSet):
             },
         }
         return response
+class TeacherPermissionsListAPIView(generics.UpdateAPIView):
+    serializer_class = EditCoursePermissionsSerializer
+    queryset = CourseTeachers.objects.all()
+    permission_classes = [IsCourseCreator]
+
+    def get_object(self):
+        return self.queryset.get(course=self.kwargs.get("course_id"))
+
+    
