@@ -85,6 +85,7 @@ class CourseSerializer(serializers.ModelSerializer):
         representation["instructors"] = instructors
         representation["category"] = InterestSerializer(instance.category).data
         representation["institution"] = instance.institution.label
+        representation["course_creator"] = instance.course_creator.first_name + " " + instance.course_creator.last_name
 
         if request and request.user.is_authenticated:
             user = request.user
@@ -108,7 +109,6 @@ class CourseSerializer(serializers.ModelSerializer):
                     ).exists()
             else:
                 representation["canEdit"] = False
-
         return representation
 
 

@@ -9,12 +9,29 @@ export const getAllStudents = async () => {
   }
 };
 
+export const getAllTeachers = async () => {
+  try {
+    const { data } = await axiosInstance.get("/admin/teachers");
+    return data.data.teachers;
+  } catch (error) {
+    throw error;
+  }
+};
 
-export const getAllTeachers = async () => { 
-    try {
-        const { data } = await axiosInstance.get("/admin/teachers");
-        return data.data.teachers;
-    } catch (error) {
-        throw error;
-    }
-    }
+export const getAllPublishedCourses = async () => {
+  try {
+    const { data } = await axiosInstance.get("/course/");
+    return data.data.courses;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAllUnpublishedCourses = async () => {
+  try {
+    const { data } = await axiosInstance.get("/course/unpublished");
+    return data.data.courses;
+  } catch (error) {
+    throw error;
+  }
+};

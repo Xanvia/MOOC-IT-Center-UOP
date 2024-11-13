@@ -2,10 +2,9 @@ import React from 'react';
 
 interface Course {
   id: number;
-  creator: string;
+  course_creator: string;
   name: string;
-  level: 'Beginner' | 'Intermediate' | 'Advanced';
-  isPublished: boolean;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
 }
 
 interface CourseRowProps {
@@ -17,16 +16,16 @@ interface CourseRowProps {
 const CourseRow: React.FC<CourseRowProps> = ({ course, isPublished, onPublish }) => {
   return (
     <tr className="border-b">
-      <td className="px-6 py-4">{course.creator}</td>
+      <td className="px-6 py-4">{course.course_creator}</td>
       <td className="px-6 py-4">{course.name}</td>
       <td className="px-6 py-4">
         <span
           className={`px-2 py-1 rounded-full text-sm ${
-            course.level === 'Beginner' ? 'bg-yellow-200' :
-            course.level === 'Intermediate' ? 'bg-green-200' : 'bg-red-200'
+            course.difficulty === 'Beginner' ? 'bg-yellow-200' :
+            course.difficulty === 'Intermediate' ? 'bg-green-200' : 'bg-red-200'
           }`}
         >
-          {course.level}
+          {course.difficulty}
         </span>
       </td>
       <td className="px-6 py-4">

@@ -3,10 +3,9 @@ import CourseRow from './CourseRow';
 
 interface Course {
   id: number;
-  creator: string;
+  course_creator: string;
   name: string;
-  level: 'Beginner' | 'Intermediate' | 'Advanced';
-  isPublished: boolean;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
 }
 
 interface CourseTableProps {
@@ -16,7 +15,6 @@ interface CourseTableProps {
 }
 
 const CourseTable: React.FC<CourseTableProps> = ({ courses, isPublished, onPublish }) => {
-  const filteredCourses = courses.filter(course => course.isPublished === isPublished);
 
   return (
     <div className="flex flex-col bg-white rounded-lg shadow-sm border border-gray-200">
@@ -31,7 +29,7 @@ const CourseTable: React.FC<CourseTableProps> = ({ courses, isPublished, onPubli
             </tr>
           </thead>
           <tbody>
-            {filteredCourses.map(course => (
+            {courses.map(course => (
               <CourseRow key={course.id} course={course} isPublished={isPublished} onPublish={onPublish} />
             ))}
           </tbody>
