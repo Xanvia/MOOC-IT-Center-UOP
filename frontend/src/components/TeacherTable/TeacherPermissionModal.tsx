@@ -2,13 +2,13 @@
 
 import React, { useState } from "react";
 import SolidButton from "../Buttons/SolidButton";
-import CloseButton from "../Buttons/CloseButton"; 
+import CloseButton from "../Buttons/CloseButton";
 
-interface Permission {
+type Permission = {
   id: string;
   label: string;
   checked: boolean;
-}
+};
 
 interface TeacherPermissionModalProps {
   isOpen: boolean;
@@ -52,6 +52,14 @@ const TeacherPermissionModal: React.FC<TeacherPermissionModalProps> = ({
     setIsConfirmationOpen(false);
   };
 
+  // Utility function to format the label
+  const formatPermissionLabel = (label: string) => {
+    return label
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
   // If modal is not open, return null
   if (!isOpen) return null;
 
@@ -84,7 +92,9 @@ const TeacherPermissionModal: React.FC<TeacherPermissionModalProps> = ({
                 }
                 className="mr-2"
               />
-              <label htmlFor={permission.id}>{permission.label}</label>
+              <label htmlFor={permission.id}>
+                {formatPermissionLabel(permission.label)}
+              </label>
             </div>
           ))}
         </div>
@@ -97,7 +107,9 @@ const TeacherPermissionModal: React.FC<TeacherPermissionModalProps> = ({
         {isConfirmationOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
             <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
-              <h3 className="text-lg font-semibold mb-4">Are you sure to Submit?</h3>
+              <h3 className="text-lg font-semibold mb-4">
+                Are you sure to Submit?
+              </h3>
               <div className="flex justify-around mt-4">
                 <button
                   className="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-900"

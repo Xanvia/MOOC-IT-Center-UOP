@@ -7,6 +7,7 @@ import { getAllCourseTeachers } from "@/services/settings.service";
 import { useParams } from "next/navigation";
 
 interface TeacherData {
+  id: string;
   name: string;
   profile_picture: string;
   email: string;
@@ -27,7 +28,6 @@ const TeachersPage = () => {
     const fetchStudents = async () => {
       try {
         const teachers = await getAllCourseTeachers(params.courseId as string);
-        console.log(teachers);
         setTeachersData(teachers);
       } catch (error) {
         console.error(error);

@@ -1,15 +1,22 @@
 "use client";
 
 import React, { useState } from "react";
-import { Permission } from "@/components/Course/types";
 import PermissionModal from "./TeacherPermissionModal";
-
+import { getTeacherPermissions } from "@/services/settings.service";
+import { useParams } from "next/navigation";
 export interface TeacherData {
+  id: string;
   name: string;
   profile_picture: string;
   email: string;
   role: keyof typeof Roles;
 }
+
+type Permission = {
+  id: string;
+  label: string;
+  checked: boolean;
+};
 
 export interface TeacherSettingsTableProps {
   data: TeacherData[];
@@ -24,22 +31,20 @@ const Roles = {
 const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({
   data,
 }) => {
+  const params = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState<TeacherData | null>(
     null
   );
-  const [permissions, setPermissions] = useState([]);
+  const [permissions, setPermissions] = useState<Permission[]>([]);
 
   const fetchTeacherPermissions = async (teacherId: string) => {
     try {
-      // Fetch permissions for the specific teacher from the API
-      const response = await fetch(`/api/permissions/?teacher_id=${teacherId}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch permissions");
-      }
-      const data = await response.json();
-
-      // Update permissions state based on fetched data
+      const permissions = await getTeacherPermissions(
+        teacherId,
+        params.courseId as string
+      );
+      setPermissions(permissions);
     } catch (error) {
       console.error("Error fetching teacher permissions:", error);
     }
@@ -51,19 +56,6 @@ const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({
     updatedPermissions: Permission[]
   ) => {
     try {
-      const response = await fetch("/api/permissions/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          teacher_id: teacherId,
-          permissions: updatedPermissions,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to save permissions");
-      }
     } catch (error) {
       console.error("Error saving teacher permissions:", error);
     }
@@ -71,7 +63,7 @@ const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({
 
   const handlePermissionsClick = (teacher: TeacherData) => {
     setSelectedTeacher(teacher);
-    // fetchTeacherPermissions(teacher.id); // Fetch the permissions for the selected teacher
+    fetchTeacherPermissions(teacher?.id);
     setIsModalOpen(true);
   };
 

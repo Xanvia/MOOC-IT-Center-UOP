@@ -52,7 +52,7 @@ urlpatterns = [
         name="course-teachers-list",
     ),
     path(
-        "<int:course_id>/teacher-permissions/<int:teacher_id>/",
+        "<int:course_id>/get-teacher-permissions/<int:teacher_id>/",
         TeacherPermissionsRetrieveAPIView.as_view(),
         name="teacher-permissions",
     ),
