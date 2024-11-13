@@ -7,6 +7,7 @@ import { CourseData } from "../course.types";
 import { enrollCourse } from "@/services/course.service";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useGlobal } from "@/contexts/store";
 
 interface CourseHeaderProps {
   courseData: CourseData;
@@ -28,6 +29,7 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
     }
   };
   const router = useRouter();
+  const {userRole} = useGlobal();
 
   return (
     <>
@@ -70,7 +72,7 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
               />
             )}
 
-            {isEdit ? (
+            {isEdit || userRole == "admin"? (
               <PrimaryButton
                 text="C L A S S R O O M"
                 onClick={() => router.push(`/courses/${courseData.id}/room`)}

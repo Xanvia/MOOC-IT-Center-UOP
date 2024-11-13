@@ -1,5 +1,15 @@
 from rest_framework import permissions
-from .models import Enrollment, Course, Week,Chapter,Video,Quiz,Note,CodingAssignment,Announcement
+from .models import (
+    Enrollment,
+    Course,
+    Week,
+    Chapter,
+    Video,
+    Quiz,
+    Note,
+    CodingAssignment,
+    Announcement,
+)
 from coursemanagement.models import CourseTeachers, CoursePermissions
 
 
@@ -53,6 +63,9 @@ class CourseContentListAccess(permissions.BasePermission):
             if course_teacher and view_permission in course_teacher.permissions.all():
                 return True
 
+        if self.is_in_group(user, "admin"):
+            return True
+
         # Allow enrolled students
         if (
             self.is_in_group(user, "student")
@@ -69,6 +82,7 @@ class CousrseContentDeleteAccess(permissions.BasePermission):
     """
     Custom permission to allow only course creators to delete weeks.
     """
+
     def get_course_id(self, view):
         if "course_id" in view.kwargs:
             return view.kwargs["course_id"]
@@ -100,7 +114,6 @@ class CousrseContentDeleteAccess(permissions.BasePermission):
         # Only allow course creators (teachers) to delete
         course_id = self.get_course_id(view)
         course = Course.objects.get(pk=course_id)
-        
 
         if self.is_in_group(user, "teacher"):
             # Check if the user is the course creator
@@ -122,6 +135,7 @@ class CourseContentEditAccess(permissions.BasePermission):
     """
     Custom permission to allow only course creators to edit weeks.
     """
+
     def get_course_id(self, view):
         if "course_id" in view.kwargs:
             return view.kwargs["course_id"]
@@ -168,12 +182,13 @@ class CourseContentEditAccess(permissions.BasePermission):
             ).first()
             if course_teacher and edit_permission in course_teacher.permissions.all():
                 return True
-            
+
 
 class CourseContentCreateAccess(permissions.BasePermission):
     """
     Custom permission to allow only course creators to create weeks.
     """
+
     def get_course_id(self, view):
         if "course_id" in view.kwargs:
             return view.kwargs["course_id"]
@@ -219,7 +234,8 @@ class CourseContentCreateAccess(permissions.BasePermission):
             ).first()
             if course_teacher and create_permission in course_teacher.permissions.all():
                 return True
-            
+
+
 class CourseFileUploadAccess(permissions.BasePermission):
     """
     Custom permission to allow only course creators to upload files.
@@ -271,7 +287,7 @@ class CourseFileUploadAccess(permissions.BasePermission):
             ).first()
             if course_teacher and upload_permission in course_teacher.permissions.all():
                 return True
-            
+
 
 class EditPublicDetailsAccess(permissions.BasePermission):
     """
@@ -301,7 +317,7 @@ class EditPublicDetailsAccess(permissions.BasePermission):
             ).first()
             if course_teacher and edit_permission in course_teacher.permissions.all():
                 return True
-            
+
 
 class AnnouncemantAccess(permissions.BasePermission):
     """
@@ -315,9 +331,8 @@ class AnnouncemantAccess(permissions.BasePermission):
         if view.action == "list":
             return True
 
-
         if "course_id" in view.kwargs:
-           course = Course.objects.get(pk=view.kwargs["course_id"])
+            course = Course.objects.get(pk=view.kwargs["course_id"])
         else:
             announcement_id = view.kwargs["pk"]
             course = Course.objects.filter(announcement__id=announcement_id).first()
