@@ -250,7 +250,6 @@ class EducationSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-
 class StudentSerializer(serializers.ModelSerializer):
 
     class Meta:

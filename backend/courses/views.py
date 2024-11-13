@@ -43,6 +43,7 @@ from .serializers import (
     LastSeenSerializer,
     CheckUpdatesSerializer,
     UpdateLastSeenSerializer,
+    CourseCreatorsSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -60,7 +61,7 @@ from .permissons import (
 )
 from coursemanagement.models import CourseTeachers
 from django.utils import timezone
-
+from django.contrib.auth.models import User, Group
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -1026,7 +1027,7 @@ class LastSeenViewSet(viewsets.ModelViewSet):
             .filter_queryset(queryset)
             .filter(user=self.request.user, chat=chat_id)
         )
-    
+
     def create_or_update(self, request, *args, **kwargs):
         chat_id = self.kwargs.get("pk")
         user = request.user
@@ -1048,12 +1049,12 @@ class LastSeenViewSet(viewsets.ModelViewSet):
             }
             response.data = response_data
         return response
-    
+
+
 class CheckUpdatesRetrieveView(generics.RetrieveAPIView):
     serializer_class = CheckUpdatesSerializer
     queryset = Course.objects.all()
 
-    
 
 class UpdateLastSeenView(generics.UpdateAPIView):
     serializer_class = UpdateLastSeenSerializer
@@ -1072,11 +1073,11 @@ class UpdateLastSeenView(generics.UpdateAPIView):
             message = "Last seen created successfully with both timestamps updated."
         else:
             # Update the specified field based on the action
-            action = request.data.get('action')
-            if action == 'announcements':
+            action = request.data.get("action")
+            if action == "announcements":
                 last_seen.last_seen_announcement = timezone.now()
                 message = "Last seen announcement timestamp updated successfully."
-            elif action == 'discussions':
+            elif action == "discussions":
                 last_seen.last_seen_discussion = timezone.now()
                 message = "Last seen discussion timestamp updated successfully."
             else:
@@ -1096,3 +1097,20 @@ class UpdateLastSeenView(generics.UpdateAPIView):
 
         return Response(response_data, status=status.HTTP_200_OK)
 
+
+class ListCourseCreators(generics.ListAPIView):
+    serializer_class = CourseCreatorsSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        student_group = Group.objects.get(name="teacher")  # Get the "student" group
+        return User.objects.filter(
+            groups=student_group
+        )  # Filter users in the "student" group
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return Response(
+            {"status": "success", "data": {"teachers": response.data}},
+            status=status.HTTP_200_OK,
+        )

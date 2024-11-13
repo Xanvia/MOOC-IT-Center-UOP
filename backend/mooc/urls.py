@@ -26,14 +26,14 @@ from userprofiles.views import (
     InstitutionsListAPIView,
     StudentListView,
 )
+from courses.views import ListCourseCreators
 from coursemanagement.views import PermissionsListAPIView
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('api/admin/students/', 
-         StudentListView.as_view(), 
-         name='student-list'),
+    path("api/admin/students/", StudentListView.as_view(), name="student-list"),
+    path("api/admin/teachers/", ListCourseCreators.as_view(), name="teachers-list"),
     path("api/user/", include("userprofiles.urls")),
     path("api/course/", include("courses.urls")),
     path("api/course/manage/", include("coursemanagement.urls")),
