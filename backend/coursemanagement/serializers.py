@@ -33,6 +33,28 @@ class CourseTeachersSerializer(serializers.ModelSerializer):
         if CourseTeachers.objects.filter(course=course, teacher=teacher).exists():
             raise serializers.ValidationError("Teacher already added to course")
         return attrs
+    
+    def to_representation(self, instance):
+        representation =  super().to_representation(instance)
+        representation["name"] = instance.teacher.first_name + " " + instance.teacher.last_name
+        representation["email"] = instance.teacher.email
+        representation["role"] = instance.role
+
+        try:
+            if instance.teacher.userprofile.profile_image:
+                representation["profile_picture"] = (
+                    instance.teacher.userprofile.profile_image.url
+                )
+            else:
+                representation["profile_picture"] = (
+                    instance.teacher.userprofile.profile_picture
+                    if instance.teacher.userprofile
+                    else None
+                )
+        except Exception:
+            representation["profile_picture"] = None
+
+        return representation
 
 
 class EditCoursePermissionsSerializer(serializers.Serializer):

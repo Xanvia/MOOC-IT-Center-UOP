@@ -1,39 +1,88 @@
 "use client";
 
 import React, { useState } from "react";
-import PermissionModal from "./TeacherPermissionModal"; 
-
+import PermissionModal from "./TeacherPermissionModal";
+import {
+  getTeacherPermissions,
+  updatePermissions,
+} from "@/services/settings.service";
+import { useParams } from "next/navigation";
+import { toast } from "sonner";
 export interface TeacherData {
+  id: string;
   name: string;
-  profilePicture: string;
-  headline: string;
-  institution: string;
-  courses: string;
-  status: "Active" | "Inactive";
+  profile_picture: string;
+  email: string;
+  role: keyof typeof Roles;
 }
+
+type Permission = {
+  id: string;
+  label: string;
+  checked: boolean;
+};
 
 export interface TeacherSettingsTableProps {
   data: TeacherData[];
 }
 
-const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({ data }) => {
+const Roles = {
+  "non-editing_teacher": "Non-Editing Teacher",
+  editing_teacher: "Editing Teacher",
+  teacher: "Teacher",
+};
+
+const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({
+  data,
+}) => {
+  const params = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTeacher, setSelectedTeacher] = useState<TeacherData | null>(null);
-  const [permissions, setPermissions] = useState([
-    { id: "create_course", label: "Create Course", checked: false },
-    { id: "edit_course", label: "Edit Course", checked: false },
-    { id: "delete_course", label: "Delete Course", checked: false },
-  ]);
+  const [selectedTeacher, setSelectedTeacher] = useState<TeacherData | null>(
+    null
+  );
+  const [permissions, setPermissions] = useState<Permission[]>([]);
+
+  const fetchTeacherPermissions = async (teacherId: string) => {
+    try {
+      const permissions = await getTeacherPermissions(
+        teacherId,
+        params.courseId as string
+      );
+      setPermissions(permissions);
+    } catch (error) {
+      console.error("Error fetching teacher permissions:", error);
+    }
+  };
+
+  // Mock function to save permissions for a specific teacher
+  const handleSavePermissions = async () => {
+    try {
+      await updatePermissions(
+        selectedTeacher?.id as string,
+        params.courseId as string,
+        permissions
+      );
+      toast.success("Permissions updated successfully");
+    } catch (error) {
+      console.error("Error updating permissions:", error);
+    }
+    setIsModalOpen(false);
+  };
 
   const handlePermissionsClick = (teacher: TeacherData) => {
     setSelectedTeacher(teacher);
+    fetchTeacherPermissions(teacher?.id);
     setIsModalOpen(true);
   };
 
   const handlePermissionChange = (id: string, checked: boolean) => {
-    setPermissions(permissions.map(perm => 
-      perm.id === id ? { ...perm, checked } : perm
-    ));
+    setPermissions((prevPermissions) =>
+      prevPermissions.map((permission) =>
+        permission.id === id
+          ? { ...permission, checked } // Update checked state for the specific permission
+          : permission
+      )
+    );
   };
 
   return (
@@ -42,38 +91,55 @@ const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({ data }) => 
         <table className="min-w-full table-auto">
           <thead className="bg-gray-100 sticky top-0" style={{ zIndex: 1 }}>
             <tr>
-              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Profile</th>
-              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Headline</th>
-              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Institution</th>
-              {/* <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Courses</th> */}
-              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Permissions</th>
+              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
+                Profile
+              </th>
+              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
+                Email
+              </th>
+              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
+                Role
+              </th>
+              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
+                Permissions
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {data.map((teacher, index) => (
-              <tr key={index}>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <img
-                    src={teacher.profilePicture}
-                    alt={`${teacher.name}'s profile`}
-                    className="h-10 w-10 rounded-full object-cover"
-                  />
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">{teacher.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{teacher.headline}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{teacher.institution}</td>
-                {/* <td className="px-6 py-4 whitespace-nowrap">{teacher.courses}</td> */}
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <button
-                    className="bg-blue-800 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-900"
-                    onClick={() => handlePermissionsClick(teacher)}
-                  >
-                    Permissions
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {data.map(
+              (teacher, index) =>
+                teacher && (
+                  <tr key={index}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <img
+                        src={teacher.profile_picture}
+                        alt={`${teacher.name}'s profile`}
+                        className="h-10 w-10 rounded-full object-cover"
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {teacher?.name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {teacher.email}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {Roles[teacher.role] || teacher.role}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <button
+                        className="bg-blue-800 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-900"
+                        onClick={() => handlePermissionsClick(teacher)}
+                      >
+                        Permissions
+                      </button>
+                    </td>
+                  </tr>
+                )
+            )}
           </tbody>
         </table>
       </div>
@@ -83,6 +149,7 @@ const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({ data }) => 
         teacherName={selectedTeacher?.name || ""}
         permissions={permissions}
         onPermissionChange={handlePermissionChange}
+        onSavePermissions={handleSavePermissions} // Pass the function here
       />
     </div>
   );

@@ -19,8 +19,15 @@ urlpatterns = [
         ),
         name="course-teacher-list",
     ),
+     path(
+        "<int:course_id>/teachers/",
+        CourseTeacherViewSet.as_view(
+            {"get": "list"},
+        ),
+        name="course-teachers-list",
+    ),
     path(
-        "<int:course_id>/teacher/<int:teacher_id>/permissions/",
+        "<int:course_id>/teacher-permissions/<int:teacher_id>/",
         EditPermissionAPIView.as_view(),
         name="edit-permissions",
     ),
@@ -45,7 +52,7 @@ urlpatterns = [
         name="course-teachers-list",
     ),
     path(
-        "<int:course_id>/teacher-permissions/<int:teacher_id>/",
+        "<int:course_id>/get-teacher-permissions/<int:teacher_id>/",
         TeacherPermissionsRetrieveAPIView.as_view(),
         name="teacher-permissions",
     ),

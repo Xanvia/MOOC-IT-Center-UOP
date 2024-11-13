@@ -1,38 +1,41 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import TeacherSettingsTable from "@/components/TeacherTable/TeacherSettings";
 import AddTeachersModal from "@/components/TeacherTable/AddTeachersModal";
+import { getAllCourseTeachers } from "@/services/settings.service";
+import { useParams } from "next/navigation";
 
 interface TeacherData {
+  id: string;
   name: string;
-  profilePicture: string;
-  headline: string;
-  institution: string;
-  courses: string;
-  status: "Active" | "Inactive";
+  profile_picture: string;
+  email: string;
+  role: keyof typeof Roles;
 }
 
-const teachersData: TeacherData[] = [
-  {
-    name: "Candice Schiner",
-    profilePicture: "/api/placeholder/40/40",
-    headline: "Computer Network Specialist",
-    institution: "University of Technology",
-    courses: "Introduction to Computer Networks, Advanced Networking",
-    status: "Active",
-  },
-  {
-    name: "John Doe",
-    profilePicture: "/api/placeholder/40/40",
-    headline: "Materials Science Professor",
-    institution: "Engineering Institute",
-    courses: "Material Science, Advanced Materials",
-    status: "Active",
-  },
-];
+const Roles = {
+  "non-editing_teacher": "Non-Editing Teacher",
+  editing_teacher: "Editing Teacher",
+  teacher: "Teacher",
+};
 
 const TeachersPage = () => {
+  const params = useParams();
+  const [teachersData, setTeachersData] = useState<TeacherData[]>([]);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const teachers = await getAllCourseTeachers(params.courseId as string);
+        setTeachersData(teachers);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchStudents();
+  }, []);
   return (
     <div className="flex h-screen bg-gray-50">
       <Head>
@@ -44,7 +47,7 @@ const TeachersPage = () => {
           <h2 className="text-2xl font-semibold text-gray-800">
             Manage Teachers
           </h2>
-          <AddTeachersModal/>
+          <AddTeachersModal />
         </div>
         <div className="mb-6">
           <input

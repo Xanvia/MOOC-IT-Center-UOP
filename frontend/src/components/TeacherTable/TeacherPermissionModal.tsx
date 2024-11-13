@@ -1,14 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import SolidButton from "../Buttons/SolidButton";
-import CloseButton from "../Buttons/CloseButton"; // Import the CloseButton component
+import CloseButton from "../Buttons/CloseButton";
 
-interface Permission {
+type Permission = {
   id: string;
   label: string;
   checked: boolean;
-}
+};
 
 interface TeacherPermissionModalProps {
   isOpen: boolean;
@@ -16,6 +16,7 @@ interface TeacherPermissionModalProps {
   teacherName: string;
   permissions: Permission[];
   onPermissionChange: (id: string, checked: boolean) => void;
+  onSavePermissions: () => void; // New prop for submitting
 }
 
 const TeacherPermissionModal: React.FC<TeacherPermissionModalProps> = ({
@@ -24,7 +25,10 @@ const TeacherPermissionModal: React.FC<TeacherPermissionModalProps> = ({
   teacherName,
   permissions,
   onPermissionChange,
+  onSavePermissions,
 }) => {
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+
   // Handle outside click to close modal
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -32,6 +36,28 @@ const TeacherPermissionModal: React.FC<TeacherPermissionModalProps> = ({
 
   const handleInsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     onClose();
+  };
+
+  const handleDoneClick = () => {
+    setIsConfirmationOpen(true);
+  };
+
+  const handleConfirmYes = () => {
+    setIsConfirmationOpen(false);
+    onSavePermissions(); // Submit the permissions
+    onClose(); // Close the modal after saving
+  };
+
+  const handleConfirmNo = () => {
+    setIsConfirmationOpen(false);
+  };
+
+  // Utility function to format the label
+  const formatPermissionLabel = (label: string) => {
+    return label
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
 
   // If modal is not open, return null
@@ -66,14 +92,41 @@ const TeacherPermissionModal: React.FC<TeacherPermissionModalProps> = ({
                 }
                 className="mr-2"
               />
-              <label htmlFor={permission.id}>{permission.label}</label>
+              <label htmlFor={permission.id}>
+                {formatPermissionLabel(permission.label)}
+              </label>
             </div>
           ))}
         </div>
 
         <div className="flex justify-end">
-          <SolidButton type="submit" text="D O N E" />
+          <SolidButton type="button" text="DONE" onClick={handleDoneClick} />
         </div>
+
+        {/* Confirmation Modal */}
+        {isConfirmationOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
+              <h3 className="text-lg font-semibold mb-4">
+                Are you sure to Submit?
+              </h3>
+              <div className="flex justify-around mt-4">
+                <button
+                  className="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-900"
+                  onClick={handleConfirmYes}
+                >
+                  Yes
+                </button>
+                <button
+                  className="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500"
+                  onClick={handleConfirmNo}
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
