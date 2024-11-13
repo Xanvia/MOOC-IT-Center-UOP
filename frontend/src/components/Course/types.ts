@@ -54,3 +54,9 @@ export interface Announcement {
   timestamp: string;
   canEdit: boolean;
 }
+
+export interface Permission {
+  id: string;
+  label: string;
+  checked: boolean;
+}

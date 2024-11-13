@@ -2,7 +2,7 @@
 
 import React from "react";
 import SolidButton from "../Buttons/SolidButton";
-import CloseButton from "../Buttons/CloseButton"; // Import the CloseButton component
+import CloseButton from "../Buttons/CloseButton"; 
 
 interface Permission {
   id: string;
@@ -72,7 +72,7 @@ const TeacherPermissionModal: React.FC<TeacherPermissionModalProps> = ({
         </div>
 
         <div className="flex justify-end">
-          <SolidButton type="submit" text="D O N E" />
+          <SolidButton type="button" text="DONE" onClick={onClose} />
         </div>
       </div>
     </div>
