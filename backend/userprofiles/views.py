@@ -23,8 +23,9 @@ from .models import (
     WorkExperience,
     Institution,
 )
-from django.contrib.auth.models import User,Group
+from django.contrib.auth.models import User, Group
 from django.core.exceptions import PermissionDenied
+from django.utils import timezone
 
 
 class UserRegistrationApiView(generics.CreateAPIView):
@@ -309,13 +310,16 @@ class InstitutionsListAPIView(generics.ListAPIView):
             status=status.HTTP_200_OK,
         )
 
+
 class StudentListView(generics.ListAPIView):
     serializer_class = UserSerializer  # Define your serializer
     pagination_class = None  # If no pagination is needed
 
     def get_queryset(self):
         student_group = Group.objects.get(name="student")  # Get the "student" group
-        return User.objects.filter(groups=student_group)  # Filter users in the "student" group
+        return User.objects.filter(
+            groups=student_group
+        )  # Filter users in the "student" group
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
@@ -324,3 +328,26 @@ class StudentListView(generics.ListAPIView):
             status=status.HTTP_200_OK,
         )
 
+
+class UpdateLastSeen(generics.UpdateAPIView):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+
+    def get_object(self):
+        user = self.request.user
+        return user.userprofile
+
+    def patch(self, request, *args, **kwargs):
+        action = kwargs.get("action")
+        user_profile = self.get_object()
+
+        if action == "announcement":
+            user_profile.announcement_last_read = timezone.now()
+        elif action == "discussion":
+            user_profile.discussion_last_read = timezone
+        user_profile.save()
+        data = {
+            "status": "success",
+            "message": "User last seen updated successfully",
+        }
+        return Response(data, status=status.HTTP_200_OK)
