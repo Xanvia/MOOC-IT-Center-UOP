@@ -533,7 +533,7 @@ export const deleteThreadMessage = async (messageID: number) => {
 export const checkForUpdates = async (courseId: string) => {
   try {
     const response = await axiosInstance.get(`/course/check-updates/${courseId}/`);
-    return response.data.data;
+    return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
   }

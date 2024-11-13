@@ -328,26 +328,3 @@ class StudentListView(generics.ListAPIView):
             status=status.HTTP_200_OK,
         )
 
-
-class UpdateLastSeen(generics.UpdateAPIView):
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
-
-    def get_object(self):
-        user = self.request.user
-        return user.userprofile
-
-    def patch(self, request, *args, **kwargs):
-        action = kwargs.get("action")
-        user_profile = self.get_object()
-
-        if action == "announcement":
-            user_profile.announcement_last_read = timezone.now()
-        elif action == "discussion":
-            user_profile.discussion_last_read = timezone
-        user_profile.save()
-        data = {
-            "status": "success",
-            "message": "User last seen updated successfully",
-        }
-        return Response(data, status=status.HTTP_200_OK)

@@ -260,3 +260,11 @@ class LastSeen(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     chat = models.ForeignKey(ItemChat, on_delete=models.CASCADE)
     last_seen = models.DateTimeField(auto_now_add=True)
+
+
+class LastSeenCourse(models.Model):
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    last_seen_announcement = models.DateTimeField(auto_now_add=True)
+    last_seen_discussion = models.DateTimeField(auto_now_add=True)

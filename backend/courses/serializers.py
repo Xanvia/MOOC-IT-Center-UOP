@@ -22,6 +22,7 @@ from .models import (
     Reply,
     ThreadMessage,
     LastSeen,
+    LastSeenCourse,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -546,26 +547,29 @@ class CheckUpdatesSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def to_representation(self, instance):
-        user = self.request.user
+        user = self.context.get("request").user
         course = instance
-        last_seen_announcements = LastSeen.objects.filter(
-            user=user, chat__course=course, chat__type="announcement"
-        ).first()
-        last_seen_discussions = LastSeen.objects.filter(
-            user=user, chat__course=course, chat__type="discussion"
-        ).first()
-
-        latest_announcement = (
-            Announcement.objects.filter(course=course).order_by("-created_at").first()
-        )
-        latest_discussion = (
-            ThreadMessage.objects.filter(chat__course=course)
-            .order_by("-created_at")
-            .first()
-        )
-
         new_announcements = False
         new_discussions = False
+        try:
+            last_seen = LastSeenCourse.objects.filter(user=user, course=course).first()
+            last_seen_announcements = last_seen.last_seen_announcement
+            last_seen_discussions = last_seen.last_seen_discussion
+            latest_announcement = (
+                Announcement.objects.filter(course=course).order_by("-created_at").first()
+            )
+            latest_discussion = (
+                Message.objects.filter(course=course)
+                .order_by("-time")
+                .first()
+            )
+        except AttributeError:
+            return {
+            "new_announcements": True,
+            "new_discussions": True,
+        }
+
+        
 
         if latest_announcement and (
             not last_seen_announcements
