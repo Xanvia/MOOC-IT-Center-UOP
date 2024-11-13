@@ -187,7 +187,7 @@ class AdminMessagesViewSet(viewsets.ModelViewSet):
         }
         return response
 
-class TeacherPermissionsRetrieveAPIView(generics.Retrieve):
+class TeacherPermissionsRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = GetCoursePermissionsSerializer
     queryset = CourseTeachers.objects.all()
     permission_classes = [IsCourseCreator]
