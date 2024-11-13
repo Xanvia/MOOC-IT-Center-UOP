@@ -123,8 +123,8 @@ export default function AddTeachersModal() {
                                                         className="px-3 py-1 bg-blue-700 text-white rounded hover:bg-blue-800 mb-1"
                                                     >
                                                         {selectedNames.includes(teacher.name)
-                                                            ? "Unselect Teacher"
-                                                            : "Select Teacher"}
+                                                            ? "Remove The Teacher"
+                                                            : "Add The Teacher"}
                                                     </button>
                                                     <button
                                                         onClick={() => handleViewTeacher(teacher.name)}
