@@ -8,6 +8,7 @@ from .serializers import (
     StudentCodeDetailSerializer,
     StudentQuizDetailSerializer,
 )
+from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions
 from .permissions import IsCourseCreator
 from courses.models import (
@@ -131,3 +132,25 @@ class GradeCodingAPIView(generics.UpdateAPIView):
             "message": "Coding question graded successfully",
         }
         return response
+    
+class PublishCourseAPIView(generics.UpdateAPIView):
+    queryset = Course.objects.all()
+    
+
+    def update(self, request, *args, **kwargs):
+
+        if not request.user.groups.filter(name="admin").exists():
+            return Response(
+                {"error": "You do not have permission to perform this action"},
+                status=403,
+            )
+
+
+        instance = self.get_object()
+        instance.status = "published"
+        instance.save()
+
+        return Response(
+            {"status": "success", "message": "Course published successfully"},
+            status=200,
+        )

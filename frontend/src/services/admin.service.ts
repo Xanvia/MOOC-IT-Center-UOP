@@ -35,3 +35,11 @@ export const getAllUnpublishedCourses = async () => {
     throw error;
   }
 };
+
+export const publishCourse = async (courseId: number) => {
+  try {
+    await axiosInstance.put(`/admin/publish/${courseId}/`);
+  } catch (error) {
+    throw error;
+  }
+};

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 interface Course {
   id: number;
@@ -14,6 +15,8 @@ interface CourseRowProps {
 }
 
 const CourseRow: React.FC<CourseRowProps> = ({ course, isPublished, onPublish }) => {
+  const router = useRouter();
+  
   return (
     <tr className="border-b">
       <td className="px-6 py-4">{course.course_creator}</td>

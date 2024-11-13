@@ -2,7 +2,11 @@
 import React, { useEffect, useState } from "react";
 import ToggleButton from "@/components/Buttons/ToggleButton";
 import CourseTable from "@/components/CourseTable/CourseTable";
-import { getAllPublishedCourses, getAllUnpublishedCourses } from "@/services/admin.service";
+import {
+  getAllPublishedCourses,
+  getAllUnpublishedCourses,
+  publishCourse,
+} from "@/services/admin.service";
 
 interface Course {
   id: number;
@@ -22,15 +26,20 @@ const CoursePage: React.FC = () => {
     setIsPublished(status);
   };
 
-  const handlePublish = (courseId: number) => {
-    setPublishedCourses(
-      publishedCourses.concat(
-        unpublishedCourses.filter((course) => course.id === courseId)
-      )
-    );
-    setUnpublishedCourses(
-      unpublishedCourses.filter((course) => course.id !== courseId)
-    );
+  const handlePublish = async (courseId: number) => {
+    try {
+      await publishCourse(courseId);
+      setPublishedCourses(
+        publishedCourses.concat(
+          unpublishedCourses.filter((course) => course.id === courseId)
+        )
+      );
+      setUnpublishedCourses(
+        unpublishedCourses.filter((course) => course.id !== courseId)
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
