@@ -82,7 +82,7 @@ const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({ data }) => 
 
   const handleSavePermissions = () => {
     if (selectedTeacher) {
-      saveTeacherPermissions(selectedTeacher.id, permissions); // Save updated permissions for the selected teacher
+      saveTeacherPermissions(selectedTeacher?.id, permissions); // Save updated permissions for the selected teacher
     }
     setIsModalOpen(false);
   };
@@ -134,10 +134,11 @@ const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({ data }) => 
       </div>
       <PermissionModal
         isOpen={isModalOpen}
-        onClose={handleSavePermissions}  // Pass handleSavePermissions instead of just close
+        onClose={() => setIsModalOpen(false)}
         teacherName={selectedTeacher?.name || ""}
         permissions={permissions}
         onPermissionChange={handlePermissionChange}
+        onSavePermissions={handleSavePermissions} // Pass the function here
       />
     </div>
   );
