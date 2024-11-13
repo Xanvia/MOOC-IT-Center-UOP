@@ -40,6 +40,7 @@ from .serializers import (
     ItemChatSerializer,
     ThreadMessageSerializer,
     LastSeenSerializer,
+    CheckUpdatesSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -1043,12 +1044,10 @@ class LastSeenViewSet(viewsets.ModelViewSet):
             }
             response.data = response_data
         return response
+    
 
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
+class CheckUpdatesRetrieveView(generics.RetrieveAPIView):
+    serializer_class = CheckUpdatesSerializer
+    queryset = Course.objects.all()
 
-        response.data = {
-            "status": "success",
-            "data": response.data,
-        }
-        return response
+    

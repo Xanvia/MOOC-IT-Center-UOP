@@ -537,3 +537,49 @@ class LastSeenSerializer(serializers.ModelSerializer):
         if last_message and instance.last_seen < last_message.created_at:
             representation["new_messages"] = True
         return representation
+
+
+class CheckUpdatesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Course
+        fields = "__all__"
+
+    def to_representation(self, instance):
+        user = self.request.user
+        course = instance
+        last_seen_announcements = LastSeen.objects.filter(
+            user=user, chat__course=course, chat__type="announcement"
+        ).first()
+        last_seen_discussions = LastSeen.objects.filter(
+            user=user, chat__course=course, chat__type="discussion"
+        ).first()
+
+        latest_announcement = (
+            Announcement.objects.filter(course=course).order_by("-created_at").first()
+        )
+        latest_discussion = (
+            ThreadMessage.objects.filter(chat__course=course)
+            .order_by("-created_at")
+            .first()
+        )
+
+        new_announcements = False
+        new_discussions = False
+
+        if latest_announcement and (
+            not last_seen_announcements
+            or latest_announcement.created_at > last_seen_announcements.last_seen
+        ):
+            new_announcements = True
+
+        if latest_discussion and (
+            not last_seen_discussions
+            or latest_discussion.created_at > last_seen_discussions.last_seen
+        ):
+            new_discussions = True
+
+        return {
+            "new_announcements": new_announcements,
+            "new_discussions": new_discussions,
+        }
