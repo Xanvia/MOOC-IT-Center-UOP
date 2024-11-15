@@ -269,7 +269,8 @@ class StudentListSerializer(serializers.ModelSerializer):
 
         components = Component.objects.filter(chapter__week__course=instance.course)
         try:
-            enrollement = Enrollment.objects.get(student=student.id, course=instance.id)
+            
+            enrollement = Enrollment.objects.get(student=student.id, course=instance.course.id)
             completed_components = components.filter(
                 progress__completed=True, progress__enrollment=enrollement.id
             )
@@ -286,7 +287,7 @@ class StudentListSerializer(serializers.ModelSerializer):
 
             representation["progress"] = progress_percentage
 
-        except Enrollment.DoesNotExist:
+        except Exception as e:
             raise serializers.ValidationError(
                 {"error": "You are not enrolled in this course"}
             )
