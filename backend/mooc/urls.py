@@ -31,6 +31,7 @@ from coursemanagement.views import (
     PermissionsListAPIView,
     PublishCourseAPIView,
     InitiatePaymentAPIView,
+    PaymentNotificationAPIView
 )
 
 
@@ -55,6 +56,11 @@ urlpatterns = [
     path(
         "api/payments/<int:enrollment_id>/initiate-payment/",
         InitiatePaymentAPIView.as_view(),
+        name="initiate-payment",
+    ),
+    path(
+        "api/payments/notify/",
+        PaymentNotificationAPIView.as_view(),
         name="initiate-payment",
     ),
 ]

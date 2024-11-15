@@ -12,6 +12,7 @@ from courses.models import (
     Enrollment,
     Component,
 )
+import uuid
 
 
 class CourseTeachersSerializer(serializers.ModelSerializer):
@@ -304,5 +305,6 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         enrollement = attrs.get("enrollement")
+        attrs["order_id"] = str(uuid.uuid4())
         attrs["amount"] = enrollement.course.price
         return super().validate(attrs)

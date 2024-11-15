@@ -239,11 +239,12 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
 
         response = super().create(request, *args, **kwargs)
         amount = response.data["amount"]
+        order_id = response.data["order_id"]
+
 
         appid = settings.MERCH_ID
         merchant_secret = settings.MERCH_SECRET 
         currency = "USD"
-        order_id = str(uuid.uuid4())
     
         hash_source = f"{appid}{order_id}{amount}{currency}{hashlib.md5(merchant_secret.encode()).hexdigest().upper()}"
         hash_value = hashlib.md5(hash_source.encode()).hexdigest().upper()
@@ -251,8 +252,8 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
         # Prepare the payload
         payload = {
             "merchant_id": appid,
-            "return_url": "http://127.0.0.1:8000/admin/coursemanagement/payments/",
-            "cancel_url": "http://127.0.0.1:8000/admin/coursemanagement/payments/",
+            "return_url": "http://localhost:3000/courses/1",
+            "cancel_url": "http://localhost:3000/courses/1/cancel",
             "notify_url": "http://127.0.0.1:8000/api/payments/notify/",
             "order_id": order_id,
             "items": "Course Enrollment",
@@ -264,7 +265,27 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
             "address": "Student Address",
             "city": "Student City",
             "country": "Sri Lanka",
-            "hash": hash_value,  # Include the computed hash
+            "hash": hash_value,  
+            "custom_1": request.user.id,
+            "custom_2": kwargs.get("enrollment_id"),
         }
 
         return Response({"payload": payload}, status=status.HTTP_200_OK)
+    
+
+class PaymentNotificationAPIView(views.APIView):
+    def post(self, request):
+        print("here")
+        order_id = request.data.get("order_id")
+        user_id = request.data.get("custom_1")
+        enrollment_id = request.data.get("custom_2")
+
+        payment = Payments.objects.get(order_id=order_id, student=user_id, enrollement=enrollment_id)
+        payment.status = "completed"
+        payment.payment_id = request.data.get("payment_id")
+        payment.save()
+
+        return Response(
+            {"status": "success", "message": "Payment completed successfully"},
+            status=status.HTTP_200_OK,
+        )
