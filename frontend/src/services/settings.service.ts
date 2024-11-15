@@ -77,3 +77,14 @@ export const updatePermissions = async (
     throw error;
   }
 };
+
+export const getCourseStudents = async (courseId: string) => {
+  try {
+    const { data } = await axiosInstance.get(
+      `/course/manage/${courseId}/students/`
+    );
+    return data.data.students;
+  } catch (error) {
+    throw error;
+  }
+};

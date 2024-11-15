@@ -1,103 +1,38 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import StudentSettingsTable from "@/components/Students/StudentsSettings";
+import { getCourseStudents } from "@/services/settings.service";
+import { useParams } from "next/navigation";
 
 interface StudentData {
+  id: string;
   name: string;
-  profilePicture: string;
-  course: string; // What they're studying
-  year: string; // Year of study
-  grades: string; // Current grades or academic standing
-  status: "Active" | "Alumni" | "On Leave";
+  email: string;
+  profile_picture: string;
+  progress: number;
 }
 
 interface StudentTableProps {
   data: StudentData[];
 }
 
-const studentsData: StudentData[] = [
-  {
-    name: "Emma Thompson",
-    profilePicture: "/api/placeholder/40/40",
-    course: "Computer Science",
-    year: "3rd Year",
-    grades: "A Average",
-    status: "Active",
-  },
-  {
-    name: "Marcus Johnson",
-    profilePicture: "/api/placeholder/40/40",
-    course: "Mechanical Engineering",
-    year: "4th Year",
-    grades: "B+ Average",
-    status: "Active",
-  },
-  {
-    name: "Sophia Chen",
-    profilePicture: "/api/placeholder/40/40",
-    course: "Business Administration",
-    year: "Graduate",
-    grades: "A- Average",
-    status: "Alumni",
-  },
-  {
-    name: "Lucas Patel",
-    profilePicture: "/api/placeholder/40/40",
-    course: "Psychology",
-    year: "2nd Year",
-    grades: "B Average",
-    status: "On Leave",
-  },
-  {
-    name: "Isabella Kim",
-    profilePicture: "/api/placeholder/40/40",
-    course: "Biology",
-    year: "1st Year",
-    grades: "A- Average",
-    status: "Active",
-  },
-  {
-    name: "Mohammed Al-Sayed",
-    profilePicture: "/api/placeholder/40/40",
-    course: "Architecture",
-    year: "3rd Year",
-    grades: "B+ Average",
-    status: "Active",
-  },
-  {
-    name: "Sarah O'Connor",
-    profilePicture: "/api/placeholder/40/40",
-    course: "English Literature",
-    year: "Graduate",
-    grades: "A Average",
-    status: "Alumni",
-  },
-  {
-    name: "David Zhang",
-    profilePicture: "/api/placeholder/40/40",
-    course: "Physics",
-    year: "4th Year",
-    grades: "A+ Average",
-    status: "Active",
-  },
-  {
-    name: "Anna Kowalski",
-    profilePicture: "/api/placeholder/40/40",
-    course: "Chemistry",
-    year: "2nd Year",
-    grades: "B Average",
-    status: "Active",
-  },
-  {
-    name: "James Wilson",
-    profilePicture: "/api/placeholder/40/40",
-    course: "History",
-    year: "3rd Year",
-    grades: "B- Average",
-    status: "On Leave",
-  },
-];
 const StudentsPage = () => {
+  const [studentsData, setStudentsData] = useState<StudentData[]>([]);
+  const params = useParams();
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const teachers = await getCourseStudents(params.courseId as string);
+        setStudentsData(teachers);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchStudents();
+  }, []);
+
   return (
     <div className="flex h-screen bg-gray-50">
       <Head>
