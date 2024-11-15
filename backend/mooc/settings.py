@@ -24,6 +24,9 @@ MEDIA_URL = "/media/"
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
+MERCH_ID = os.getenv("MERCH_ID")
+MERCH_SECRET = os.getenv("MERCH_SECRET")
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=2),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=2),

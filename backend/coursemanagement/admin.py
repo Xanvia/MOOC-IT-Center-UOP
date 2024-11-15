@@ -7,7 +7,7 @@ class CoursePermissionsAdmin(admin.ModelAdmin):
 
 
 class PaymentsAdmin(admin.ModelAdmin):
-    list_display = ["user", "enrollement", "amount", "date"]
+    list_display = ["student", "enrollement", "amount", "date"]
 
 
 class CourseTeachersAdmin(admin.ModelAdmin):

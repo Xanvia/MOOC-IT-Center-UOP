@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CourseTeachers, CoursePermissions, AdminMessages
+from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
 from django.contrib.auth.models import User
 from courses.models import (
     Progress,
@@ -12,6 +12,7 @@ from courses.models import (
     Enrollment,
     Component,
 )
+import uuid
 
 
 class CourseTeachersSerializer(serializers.ModelSerializer):
@@ -295,3 +296,15 @@ class StudentListSerializer(serializers.ModelSerializer):
         except ValueError:
             representation["profile_picture"] = student.userprofile.profile_picture
         return representation
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payments
+        fields = "__all__"
+
+    def validate(self, attrs):
+        enrollement = attrs.get("enrollement")
+        attrs["order_id"] = str(uuid.uuid4())
+        attrs["amount"] = enrollement.course.price
+        return super().validate(attrs)

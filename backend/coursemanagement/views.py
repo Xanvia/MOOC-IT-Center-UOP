@@ -1,6 +1,8 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, views, status
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
+import hashlib
+import uuid
 from .serializers import (
     CourseTeachersSerializer,
     EditCoursePermissionsSerializer,
@@ -11,9 +13,10 @@ from .serializers import (
     AdminMessagesSerializer,
     GetCoursePermissionsSerializer,
     StudentListSerializer,
+    PaymentSerializer,
 )
 from courses.serializers import CourseSerializer
-from .models import CourseTeachers, CoursePermissions, AdminMessages
+from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
 from .permissions import IsCourseCreator
 from courses.models import (
     Course,
@@ -22,6 +25,7 @@ from courses.models import (
     StudentCodingAnswer,
     StudentQuiz,
 )
+from django.conf import settings
 
 
 class CourseTeacherViewSet(viewsets.ModelViewSet):
@@ -96,7 +100,11 @@ class StudentQuizListAPIView(generics.ListAPIView):
         )
 
     def filter_queryset(self, queryset):
-        return super().filter_queryset(queryset).exclude(component__type__in=["Note", "Video"])
+        return (
+            super()
+            .filter_queryset(queryset)
+            .exclude(component__type__in=["Note", "Video"])
+        )
 
 
 class StudentQuizDetailAPIView(generics.RetrieveAPIView):
@@ -218,3 +226,65 @@ class CourseStudentsListAPIView(generics.ListAPIView):
             },
         }
         return response
+
+
+class InitiatePaymentAPIView(generics.CreateAPIView):
+    queryset = Payments.objects.all()
+    serializer_class = PaymentSerializer
+
+    def create(self, request, *args, **kwargs):
+
+        request.data["student"] = request.user.id
+        request.data["enrollement"] = kwargs.get("enrollment_id")
+
+        response = super().create(request, *args, **kwargs)
+        amount = response.data["amount"]
+        order_id = response.data["order_id"]
+
+
+        appid = settings.MERCH_ID
+        merchant_secret = settings.MERCH_SECRET 
+        currency = "USD"
+    
+        hash_source = f"{appid}{order_id}{amount}{currency}{hashlib.md5(merchant_secret.encode()).hexdigest().upper()}"
+        hash_value = hashlib.md5(hash_source.encode()).hexdigest().upper()
+
+        # Prepare the payload
+        payload = {
+            "merchant_id": appid,
+            "return_url": "http://localhost:3000/courses/1",
+            "cancel_url": "http://localhost:3000/courses/1/cancel",
+            "notify_url": "http://127.0.0.1:8000/api/payments/notify/",
+            "order_id": order_id,
+            "items": "Course Enrollment",
+            "currency": currency,
+            "amount": amount,
+            "first_name": request.user.first_name,
+            "last_name": request.user.last_name,
+            "email": request.user.email,
+            "address": "Student Address",
+            "city": "Student City",
+            "country": "Sri Lanka",
+            "hash": hash_value,  
+            "custom_1": request.user.id,
+            "custom_2": kwargs.get("enrollment_id"),
+        }
+
+        return Response({"payload": payload}, status=status.HTTP_200_OK)
+    
+
+class PaymentNotificationAPIView(views.APIView):
+    def post(self, request):
+        order_id = request.data.get("order_id")
+        user_id = request.data.get("custom_1")
+        enrollment_id = request.data.get("custom_2")
+
+        payment = Payments.objects.get(order_id=order_id, student=user_id, enrollement=enrollment_id)
+        payment.status = "completed"
+        payment.payment_id = request.data.get("payment_id")
+        payment.save()
+
+        return Response(
+            {"status": "success", "message": "Payment completed successfully"},
+            status=status.HTTP_200_OK,
+        )

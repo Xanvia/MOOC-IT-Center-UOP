@@ -55,4 +55,5 @@ urlpatterns = [
         TeacherPermissionsRetrieveAPIView.as_view(),
         name="teacher-permissions",
     ),
+ 
 ]

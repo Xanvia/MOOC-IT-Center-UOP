@@ -554,3 +554,14 @@ export const updateLastSeen = async (courseId: string, action: string) => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const initiatePaymentBe = async (enrollmentId: number) => {
+  try {
+    const response = await axiosInstance.post(
+      `/payments/${enrollmentId}/initiate-payment/`
+    );
+    return response;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};

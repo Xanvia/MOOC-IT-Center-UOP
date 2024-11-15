@@ -4,7 +4,7 @@ import Image from "next/image";
 import PrimaryButton from "@/components/Buttons/PrimaryButton";
 import CourseDescEditModal from "./CourseDescEditModal";
 import { CourseData } from "../course.types";
-import { enrollCourse } from "@/services/course.service";
+import { enrollCourse, initiatePaymentBe } from "@/services/course.service";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useGlobal } from "@/contexts/store";
@@ -22,14 +22,40 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
 }) => {
   const handleEnroll = async () => {
     try {
-      await enrollCourse(courseData.id);
+      const enrollementId = await enrollCourse(courseData.id);
       toast.success("Enrolled in course successfully");
     } catch (error: any) {
       toast.error("Error enrolling in course");
     }
   };
   const router = useRouter();
-  const {userRole} = useGlobal();
+  const { userRole } = useGlobal();
+
+  async function initiatePayment(enrollmentId: number) {
+    try {
+      // Fetch the payload from your backend
+      const response = await initiatePaymentBe(enrollmentId);
+      const payload = response.data.payload;
+      console.log(payload);
+      // Create a form and submit it to the PayHere API
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = "https://sandbox.payhere.lk/pay/checkout";
+
+      for (const [key, value] of Object.entries(payload)) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = value as string;
+        form.appendChild(input);
+      }
+
+      document.body.appendChild(form);
+      form.submit();
+    } catch (error) {
+      console.error("Error initiating payment:", error);
+    }
+  }
 
   return (
     <>
@@ -72,7 +98,7 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
               />
             )}
 
-            {isEdit || userRole == "admin"? (
+            {isEdit || userRole == "admin" ? (
               <PrimaryButton
                 text="C L A S S R O O M"
                 onClick={() => router.push(`/courses/${courseData.id}/room`)}
@@ -85,6 +111,7 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
                     onClick={() =>
                       router.push(`/courses/${courseData.id}/room`)
                     }
+                    // onClick={() => initiatePayment(2)}
                   />
                 ) : (
                   <PrimaryButton text="E N R O L" onClick={handleEnroll} />
