@@ -261,11 +261,12 @@ class StudentListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Enrollment
-        fields = ["student", "id"]
+        fields = ["student"]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         student = instance.student
+        representation["id"] = student.id
         representation["name"] = student.first_name + " " + student.last_name
         representation["email"] = student.email
         representation.pop("student")

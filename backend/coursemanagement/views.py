@@ -1,5 +1,6 @@
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
+from rest_framework.exceptions import NotFound
 from .serializers import (
     CourseTeachersSerializer,
     EditCoursePermissionsSerializer,
@@ -12,7 +13,7 @@ from .serializers import (
     StudentListSerializer,
 )
 from courses.serializers import CourseSerializer
-from .models import CourseTeachers, CoursePermissions,AdminMessages
+from .models import CourseTeachers, CoursePermissions, AdminMessages
 from .permissions import IsCourseCreator
 from courses.models import (
     Course,
@@ -37,14 +38,12 @@ class CourseTeacherViewSet(viewsets.ModelViewSet):
             "message": "Teacher added to course",
         }
         return response
-    
-    def filter_queryset(self,queryset):
-    
-        course_id = self.kwargs.get("course_id")
-        return  super().filter_queryset(queryset).filter(course_id = course_id)
-        
 
-    
+    def filter_queryset(self, queryset):
+
+        course_id = self.kwargs.get("course_id")
+        return super().filter_queryset(queryset).filter(course_id=course_id)
+
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         response.data = {
@@ -91,7 +90,7 @@ class StudentQuizListAPIView(generics.ListAPIView):
                 student=self.kwargs.get("student_id"),
             )
         except Enrollment.DoesNotExist:
-            return Response({"error": "Enrollment not found"}, status=404)
+            raise NotFound("Student not enrolled in this course")
         return self.queryset.filter(enrollment=enrollement)
 
 
@@ -109,7 +108,6 @@ class StudentCodingDetailAPIView(generics.RetrieveAPIView):
     serializer_class = StudentCodeDetailSerializer
 
 
-
 class GradeQuizAPIView(generics.UpdateAPIView):
     queryset = StudentQuiz.objects.all()
     serializer_class = StudentQuizDetailSerializer
@@ -121,7 +119,7 @@ class GradeQuizAPIView(generics.UpdateAPIView):
             "message": "Quiz graded successfully",
         }
         return response
-    
+
 
 class GradeCodingAPIView(generics.UpdateAPIView):
     queryset = StudentCodingAnswer.objects.all()
@@ -134,10 +132,10 @@ class GradeCodingAPIView(generics.UpdateAPIView):
             "message": "Coding question graded successfully",
         }
         return response
-    
+
+
 class PublishCourseAPIView(generics.UpdateAPIView):
     queryset = Course.objects.all()
-    
 
     def update(self, request, *args, **kwargs):
 
@@ -146,7 +144,6 @@ class PublishCourseAPIView(generics.UpdateAPIView):
                 {"error": "You do not have permission to perform this action"},
                 status=403,
             )
-
 
         instance = self.get_object()
         instance.status = "published"
@@ -171,12 +168,11 @@ class AdminMessagesViewSet(viewsets.ModelViewSet):
             "message": "Message sent to the course creator",
         }
         return response
-    
-    def filter_queryset(self,queryset):
-        course_id = self.kwargs.get("course_id")
-        return  super().filter_queryset(queryset).filter(course_id=course_id)
 
-    
+    def filter_queryset(self, queryset):
+        course_id = self.kwargs.get("course_id")
+        return super().filter_queryset(queryset).filter(course_id=course_id)
+
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         response.data = {
@@ -187,6 +183,7 @@ class AdminMessagesViewSet(viewsets.ModelViewSet):
         }
         return response
 
+
 class TeacherPermissionsRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = GetCoursePermissionsSerializer
     queryset = CourseTeachers.objects.all()
@@ -194,23 +191,23 @@ class TeacherPermissionsRetrieveAPIView(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.queryset.get(course=self.kwargs.get("course_id"))
-    
+
     def retrieve(self, request, *args, **kwargs):
-        response =super().retrieve(request, *args, **kwargs)
-        response.data ={
-            "status":"success",
-            "data":response.data,
+        response = super().retrieve(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "data": response.data,
         }
         return response
 
-    
+
 class CourseStudentsListAPIView(generics.ListAPIView):
     queryset = Enrollment.objects.all()
     serializer_class = StudentListSerializer
 
     def get_queryset(self):
         return self.queryset.filter(course=self.kwargs.get("course_id"))
-    
+
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         response.data = {
