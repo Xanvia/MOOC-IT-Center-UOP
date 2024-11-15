@@ -1,6 +1,7 @@
 from rest_framework import viewsets, generics, views, status
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
+import requests
 import uuid
 from .serializers import (
     CourseTeachersSerializer,
@@ -238,21 +239,47 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
         response = super().create(request, *args, **kwargs)
         amount = response.data["amount"]
 
-        transaction_id = str(uuid.uuid4())
+        appid = "4OVxg4aBaTo4JEVh6oKv1N3LF"
 
-        payment_link = (
-            f"https://sandbox.payhere.lk/pay/checkout"
-            f"?merchant_id=<YOUR_MERCHANT_ID>"
-            f"&return_url=<YOUR_RETURN_URL>"
-            f"&cancel_url=<YOUR_CANCEL_URL>"
-            f"&notify_url=<YOUR_NOTIFY_URL>"
-            f"&order_id={transaction_id}"
-            f"&items=Course Enrollment"
-            f"&amount={amount}"
-            f"&currency=LKR"
-            f"&first_name={request.user.first_name}"
-            f"&last_name={request.user.last_name}"
-            f"&email={request.user.email}"
+        order_id = str(uuid.uuid4())
+
+        # Prepare payload for the PayHere API
+        payload = {
+            "merchant_id": appid,
+            "return_url": "http://127.0.0.1:8000/admin/coursemanagement/payments/",
+            "cancel_url": "http://127.0.0.1:8000/admin/coursemanagement/payments/",
+            "notify_url": "http://127.0.0.1:8000/api/payments/notify/",
+            "order_id": order_id,  # Corrected this line
+            "items": "Course Enrollment",
+            "currency": "LKR",
+            "amount": amount,
+            "first_name": request.user.first_name,
+            "last_name": request.user.last_name,
+            "email": request.user.email,
+            "address": "Student Address",
+            "city": "Student City",
+            "country": "Sri Lanka",
+        }
+
+        # Make the POST request to PayHere Checkout API
+        payment_res = requests.post(
+            "https://sandbox.payhere.lk/pay/checkout", json=payload
         )
 
-        return Response({"payment_link": payment_link}, status=status.HTTP_200_OK)
+        # Handle the response from PayHere
+        if payment_res.status_code == 200:
+            payment_data = payment_res.json().get("data", {})
+            payment_url = payment_data.get("payment_url")
+            if payment_url:
+                return Response({"payment_url": payment_url}, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"error": "Payment URL not received"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        else:
+            print(payment_res.text)
+            return Response(
+                {"error": "Failed to initiate payment"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
