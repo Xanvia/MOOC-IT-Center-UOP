@@ -52,8 +52,11 @@ const QuizzesGradePage = () => {
   const [grades, setGrades] = useState<number[]>(new Array(dummyOpenEndedQuiz.questions.length).fill(0));
 
   const handleGradeChange = (index: number, value: string) => {
+    const parsedValue = parseFloat(value);
+  
+    // Update the grade only if the value is a valid number
     const updatedGrades = [...grades];
-    updatedGrades[index] = parseFloat(value);
+    updatedGrades[index] = isNaN(parsedValue) ? 0 : parsedValue;
     setGrades(updatedGrades);
   };
 
@@ -129,9 +132,7 @@ const QuizzesGradePage = () => {
                 <p><strong>Student's Answer:</strong> {q.studentAnswer}</p>
                 <label className="block font-medium mt-4 mb-1">Grade this answer:</label>
                 <input
-                  type="number"
-                  min={0}
-                  max={10}
+                  type="text"
                   value={grades[index]}
                   onChange={(e) => handleGradeChange(index, e.target.value)}
                   className="border p-2 rounded w-24"
