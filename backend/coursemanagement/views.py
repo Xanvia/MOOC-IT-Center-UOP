@@ -275,7 +275,6 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
 
 class PaymentNotificationAPIView(views.APIView):
     def post(self, request):
-        print("here")
         order_id = request.data.get("order_id")
         user_id = request.data.get("custom_1")
         enrollment_id = request.data.get("custom_2")
