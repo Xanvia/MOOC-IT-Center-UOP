@@ -203,3 +203,19 @@ class TeacherPermissionsRetrieveAPIView(generics.RetrieveAPIView):
         return response
 
     
+class CourseStudentsListAPIView(generics.ListAPIView):
+    queryset = Enrollment.objects.all()
+    serializer_class = CourseSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(course=self.kwargs.get("course_id"))
+    
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "data": {
+                "students": response.data,
+            },
+        }
+        return response
