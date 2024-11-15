@@ -91,6 +91,7 @@ const QuizzesGradePage = () => {
             Switch to {quiz.type === "MCQ" ? "Open-ended" : "MCQ"} Quiz
           </button>
         </div>
+        <h1 className="text-2xl font-bold mb-4">Introduction to Web Quiz 1</h1>
 
         {quiz.questions.map((q, index) => (
           <div key={index} className="border p-4 mb-4 bg-white rounded shadow-sm">
