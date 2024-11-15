@@ -129,7 +129,12 @@ const QuizzesGradePage = () => {
             </ul>
             ) : (
               <div className="mt-2">
-                <p><strong>Student's Answer:</strong> {q.studentAnswer}</p>
+                <label className="block font-medium mb-1">Student's Answer:</label>
+                  <textarea
+                    readOnly
+                    value={Array.isArray(q.studentAnswer) ? q.studentAnswer.join(" ") : q.studentAnswer} // Handle both string and array of strings
+                    className="border p-2 rounded w-full bg-gray-100 text-gray-800"
+                  />
                 <label className="block font-medium mt-4 mb-1">Grade this answer:</label>
                 <input
                   type="text"
