@@ -91,16 +91,17 @@ class StudentQuizListAPIView(generics.ListAPIView):
             )
         except Enrollment.DoesNotExist:
             raise NotFound("Student not enrolled in this course")
-        return self.queryset.filter(enrollment=enrollement)
+        return self.queryset.filter(
+            enrollment=enrollement,
+        )
+
+    def filter_queryset(self, queryset):
+        return super().filter_queryset(queryset).exclude(component__type__in=["Note", "Video"])
 
 
 class StudentQuizDetailAPIView(generics.RetrieveAPIView):
     queryset = StudentQuiz.objects.all()
     serializer_class = StudentQuizDetailSerializer
-
-    def get_object(self):
-        print("here")
-        return super().get_object()
 
 
 class StudentCodingDetailAPIView(generics.RetrieveAPIView):
