@@ -85,7 +85,9 @@ class CourseSerializer(serializers.ModelSerializer):
         representation["instructors"] = instructors
         representation["category"] = InterestSerializer(instance.category).data
         representation["institution"] = instance.institution.label
-        representation["course_creator"] = instance.course_creator.first_name + " " + instance.course_creator.last_name
+        representation["course_creator"] = (
+            instance.course_creator.first_name + " " + instance.course_creator.last_name
+        )
 
         if request and request.user.is_authenticated:
             user = request.user
@@ -603,19 +605,15 @@ class CourseCreatorsSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         if instance.userprofile.profile_image:
-            representation["profile_picture"] = (
-                instance.userprofile.profile_image.url
-            )
+            representation["profile_picture"] = instance.userprofile.profile_image.url
         else:
             representation["profile_picture"] = (
-                instance.userprofile.profile_picture
-                if instance.userprofile
-                else None
+                instance.userprofile.profile_picture if instance.userprofile else None
             )
         representation["courses_count"] = Course.objects.filter(
             course_creator=instance
         ).count()
-        
+
         course = Course.objects.filter(course_creator=instance).first()
         if course:
             representation["institution"] = course.institution.label

@@ -9,6 +9,7 @@ from .serializers import (
     StudentQuizDetailSerializer,
     AdminMessagesSerializer,
     GetCoursePermissionsSerializer,
+    StudentListSerializer,
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions,AdminMessages
@@ -205,7 +206,7 @@ class TeacherPermissionsRetrieveAPIView(generics.RetrieveAPIView):
     
 class CourseStudentsListAPIView(generics.ListAPIView):
     queryset = Enrollment.objects.all()
-    serializer_class = CourseSerializer
+    serializer_class = StudentListSerializer
 
     def get_queryset(self):
         return self.queryset.filter(course=self.kwargs.get("course_id"))

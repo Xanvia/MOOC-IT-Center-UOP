@@ -9,6 +9,8 @@ from courses.models import (
     CodingAssignment,
     Question,
     Answer,
+    Enrollment,
+    Component,
 )
 
 
@@ -33,10 +35,12 @@ class CourseTeachersSerializer(serializers.ModelSerializer):
         if CourseTeachers.objects.filter(course=course, teacher=teacher).exists():
             raise serializers.ValidationError("Teacher already added to course")
         return attrs
-    
+
     def to_representation(self, instance):
-        representation =  super().to_representation(instance)
-        representation["name"] = instance.teacher.first_name + " " + instance.teacher.last_name
+        representation = super().to_representation(instance)
+        representation["name"] = (
+            instance.teacher.first_name + " " + instance.teacher.last_name
+        )
         representation["email"] = instance.teacher.email
         representation["role"] = instance.role
 
@@ -252,3 +256,46 @@ class GetCoursePermissionsSerializer(serializers.ModelSerializer):
         ]
         return representation
 
+
+class StudentListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Enrollment
+        fields = ["student"]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        student = instance.student
+        representation["student"] = {
+            "name": student.first_name + " " + student.last_name,
+            "email": student.email,
+        }
+        components = Component.objects.filter(chapter__week__course=instance.course)
+        try:
+            enrollement = Enrollment.objects.get(student=student.id, course=instance.id)
+            completed_components = components.filter(
+                progress__completed=True, progress__enrollment=enrollement.id
+            )
+            progress_percentage = round(
+                (completed_components.count() / components.count()) * 100
+                if components.count() > 0
+                else 0
+            )
+
+            # Identify the current component
+            current_component = components.filter(
+                progress__completed=False, progress__enrollment__student=student.id
+            ).first()
+
+            representation["progress"] = progress_percentage
+
+        except Enrollment.DoesNotExist:
+            raise serializers.ValidationError(
+                {"error": "You are not enrolled in this course"}
+            )
+
+        try:
+            representation["profile_picture"] = student.userprofile.profile_image.url
+        except ValueError:
+            representation["profile_picture"] = student.userprofile.profile_picture
+        return representation
