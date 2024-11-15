@@ -511,6 +511,9 @@ class EnrollementViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "message": "Enrolled successfully",
+            "data": {
+                "id": response.data["id"],
+            },
         }
         return response
 

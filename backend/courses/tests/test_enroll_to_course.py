@@ -32,11 +32,8 @@ class EnrollCourseTest(APITestCase):
         cls.group = Group.objects.get(name="teacher")
         cls.user.groups.add(cls.group)
         cls.user.save()
-        cls.student_data = {
-            "username": "test_user2",
-            "email": "test@gmail.com"
-        }
-        cls.student= User.objects.create_user(**cls.student_data)
+        cls.student_data = {"username": "test_user2", "email": "test@gmail.com"}
+        cls.student = User.objects.create_user(**cls.student_data)
         student_group = Group.objects.get(name="student")
         cls.student.groups.add(student_group)
         cls.token = str(AccessToken.for_user(cls.student))
@@ -46,7 +43,6 @@ class EnrollCourseTest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
         self.url = reverse("enroll-course", args=[1])
 
-
     def test_enroll_success(self):
         institution = Institution.objects.get(id=1)
         category = Interest.objects.get(id=1)
@@ -55,7 +51,7 @@ class EnrollCourseTest(APITestCase):
             "category": category,
             "institution": institution,
             "difficulty": "beginner",
-            "course_creator": self.user
+            "course_creator": self.user,
         }
 
         course = Course.objects.create(**course_data)
@@ -63,4 +59,11 @@ class EnrollCourseTest(APITestCase):
         self.url = reverse("enroll-course", args=[course_id])
         response = self.client.post(self.url)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data, {"status": "success", "message": "Enrolled successfully"})
+        self.assertEqual(
+            response.data,
+            {
+                "status": "success",
+                "message": "Enrolled successfully",
+                "data": {"id": response.data["data"]["id"]},
+            },
+        )

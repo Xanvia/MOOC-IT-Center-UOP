@@ -29,6 +29,7 @@ class Course(models.Model):
     payment_type = models.CharField(
         max_length=50, choices=PAYMENT_TYPE_CHOICES, default="trial"
     )
+    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
 
 class Week(models.Model):

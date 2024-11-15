@@ -14,14 +14,14 @@ class Payments(models.Model):
         ("FAILED", "Failed"),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
     enrollement = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=STATUS, default="PENDING")
 
     def __str__(self):
-        return self.user.username
+        return self.student.username
 
 
 class CourseTeachers(models.Model):

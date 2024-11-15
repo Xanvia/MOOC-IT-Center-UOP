@@ -27,14 +27,22 @@ from userprofiles.views import (
     StudentListView,
 )
 from courses.views import ListCourseCreators
-from coursemanagement.views import PermissionsListAPIView,PublishCourseAPIView
+from coursemanagement.views import (
+    PermissionsListAPIView,
+    PublishCourseAPIView,
+    InitiatePaymentAPIView,
+)
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/admin/students/", StudentListView.as_view(), name="student-list"),
     path("api/admin/teachers/", ListCourseCreators.as_view(), name="teachers-list"),
-    path("api/admin/publish/<int:pk>/", PublishCourseAPIView.as_view(), name="publish-course"),
+    path(
+        "api/admin/publish/<int:pk>/",
+        PublishCourseAPIView.as_view(),
+        name="publish-course",
+    ),
     path("api/user/", include("userprofiles.urls")),
     path("api/course/", include("courses.urls")),
     path("api/course/manage/", include("coursemanagement.urls")),
@@ -44,6 +52,11 @@ urlpatterns = [
         "api/institutions/", InstitutionsListAPIView.as_view(), name="institutions-list"
     ),
     path("api/permissions/", PermissionsListAPIView.as_view(), name="permissions-list"),
+    path(
+        "api/payments/<int:enrollment_id>/initiate-payment/",
+        InitiatePaymentAPIView.as_view(),
+        name="initiate-payment",
+    ),
 ]
 
 
