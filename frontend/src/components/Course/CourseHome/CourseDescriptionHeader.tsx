@@ -108,10 +108,10 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
                 {courseData.isEnrolled ? (
                   <PrimaryButton
                     text="R E S U M E"
-                    // onClick={() =>
-                    //   router.push(`/courses/${courseData.id}/room`)
-                    // }
-                    onClick={() => initiatePayment(2)}
+                    onClick={() =>
+                      router.push(`/courses/${courseData.id}/room`)
+                    }
+                    // onClick={() => initiatePayment(2)}
                   />
                 ) : (
                   <PrimaryButton text="E N R O L" onClick={handleEnroll} />
