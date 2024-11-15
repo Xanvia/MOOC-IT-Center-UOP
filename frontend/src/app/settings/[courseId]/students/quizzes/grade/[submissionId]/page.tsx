@@ -5,7 +5,8 @@ import Head from "next/head";
 interface Question {
   question: string;
   studentAnswer: string | string[]; // Single string for open-ended, array for MCQs
-  correctAnswer?: string[]; // Optional for open-ended
+  correctAnswer?: string[]; // Optional for open-ended questions
+  options?: string[]; // Options for MCQ questions
   grade?: number; // Only for open-ended
 }
 
@@ -18,21 +19,18 @@ const dummyMCQQuiz: GradedQuiz = {
   type: "MCQ",
   questions: [
     {
-      question: "Which of the following are programming languages?",
-      studentAnswer: ["Python", "HTML"],
-      correctAnswer: ["Python", "JavaScript", "Java"],
+      question: "Which of the following highly uses the concept of an array?",
+      studentAnswer: ["Caching"], // Selected by the student
+      correctAnswer: ["Spatial locality"], // Correct answer
+      options: ["Binary Search tree", "Caching", "Spatial locality", "Scheduling of Processes"]
     },
     {
-      question: "Select the primary colors.",
-      studentAnswer: ["Red", "Green"],
-      correctAnswer: ["Red", "Blue", "Yellow"],
-    },
-    {
-      question: "Which numbers are even?",
-      studentAnswer: ["2", "4", "5"],
-      correctAnswer: ["2", "4", "6"],
-    },
-  ],
+      question: "Which one of the following is the size of int arr[9] assuming that int is of 4 bytes?",
+      studentAnswer: ["35"], // Selected by the student
+      correctAnswer: ["36"], // Correct answer
+      options: ["9", "36", "35", "None of the above"]
+    }
+  ]
 };
 
 const dummyOpenEndedQuiz: GradedQuiz = {
@@ -40,8 +38,7 @@ const dummyOpenEndedQuiz: GradedQuiz = {
   questions: [
     {
       question: "Explain the significance of the Industrial Revolution.",
-      studentAnswer:
-        "The Industrial Revolution was a turning point in modern history.",
+      studentAnswer: "The Industrial Revolution was a turning point in modern history.",
     },
     {
       question: "Describe the process of photosynthesis.",
@@ -98,19 +95,34 @@ const QuizzesGradePage = () => {
 
             {quiz.type === "MCQ" ? (
               <ul className="mt-2 space-y-1">
-              {q.correctAnswer?.map((option, idx) => (
-                <li key={idx} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    readOnly
-                    checked={Array.isArray(q.studentAnswer) && q.studentAnswer.includes(option)}
-                    className="form-checkbox text-blue-600"
-                  />
-                  <label className={`text-gray-700 ${q.correctAnswer && q.correctAnswer.includes(option) ? "font-semibold text-green-600" : ""}`}>
-                    {option}
-                  </label>
-                </li>
-              ))}
+              {q.options?.map((option, idx) => { // Use optional chaining to check if options exist
+                const isCorrectAnswer = q.correctAnswer?.includes(option);
+                const isStudentAnswer = Array.isArray(q.studentAnswer) && q.studentAnswer.includes(option);
+            
+                return (
+                  <li key={idx} className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      readOnly
+                      checked={isStudentAnswer}
+                      className="form-radio text-blue-600"
+                    />
+                    <label
+                      className={`text-gray-700 ${
+                        isCorrectAnswer && isStudentAnswer
+                          ? "font-semibold text-purple-600" // Both correct and student answer
+                          : isCorrectAnswer
+                          ? "font-semibold text-green-600" // Only correct answer
+                          : isStudentAnswer
+                          ? "font-semibold text-red-600" // Incorrect student answer
+                          : ""
+                      }`}
+                    >
+                      {option}
+                    </label>
+                  </li>
+                );
+              }) || <p>No options available</p>} {/* Display message if options are undefined */}
             </ul>
             ) : (
               <div className="mt-2">
