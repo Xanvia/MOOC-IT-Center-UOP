@@ -29,9 +29,7 @@ urlpatterns = [
     ),
     path(
         "<int:course_id>/students/",
-        CourseTeacherViewSet.as_view(
-            {"get": "list"},
-        ),
+        CourseStudentsListAPIView.as_view(),
         name="course-students-list",
     ),
     path(

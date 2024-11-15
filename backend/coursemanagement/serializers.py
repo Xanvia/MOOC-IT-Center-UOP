@@ -261,15 +261,15 @@ class StudentListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Enrollment
-        fields = ["student"]
+        fields = ["student", "id"]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         student = instance.student
-        representation["student"] = {
-            "name": student.first_name + " " + student.last_name,
-            "email": student.email,
-        }
+        representation["name"] = student.first_name + " " + student.last_name
+        representation["email"] = student.email
+        representation.pop("student")
+
         components = Component.objects.filter(chapter__week__course=instance.course)
         try:
             enrollement = Enrollment.objects.get(student=student.id, course=instance.id)
