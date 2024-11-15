@@ -25,7 +25,7 @@ const TeachersPage = () => {
   const [teachersData, setTeachersData] = useState<TeacherData[]>([]);
 
   useEffect(() => {
-    const fetchStudents = async () => {
+    const fetchTeachers = async () => {
       try {
         const teachers = await getAllCourseTeachers(params.courseId as string);
         setTeachersData(teachers);
@@ -34,7 +34,7 @@ const TeachersPage = () => {
       }
     };
 
-    fetchStudents();
+    fetchTeachers();
   }, []);
   return (
     <div className="flex h-screen bg-gray-50">

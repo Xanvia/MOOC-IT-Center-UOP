@@ -98,7 +98,7 @@ class StudentQuizSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Progress
-        fields = ["completed", "quiz_details"]
+        fields = ["quiz_details"]
 
     def get_quiz_details(self, instance):
         component = instance.component
@@ -107,7 +107,8 @@ class StudentQuizSerializer(serializers.ModelSerializer):
             "type": component.type,
             "grade": None,
             "graded": False,
-            "student_submission_id": None,
+            "id": None,
+            "completed": instance.completed,
         }
 
         # Get enrollment
@@ -122,13 +123,12 @@ class StudentQuizSerializer(serializers.ModelSerializer):
                     {
                         "grade": student_quiz.score,
                         "graded": student_quiz.graded,
-                        "student_submission_id": student_quiz.id,
+                        "id": student_quiz.id,
                     }
                 )
             except StudentQuiz.DoesNotExist:
                 pass
-
-        if instance.component.type == "Code":
+        elif instance.component.type == "Code":
             try:
                 student_coding = StudentCodingAnswer.objects.get(
                     enrollement=enrollment, coding_assignment=component
@@ -137,24 +137,19 @@ class StudentQuizSerializer(serializers.ModelSerializer):
                     {
                         "grade": float(student_coding.grade),
                         "graded": True if student_coding.grade is not None else False,
-                        "student_submission_id": student_coding.id,
+                        "id": student_coding.id,
                     }
                 )
             except StudentCodingAnswer.DoesNotExist:
                 pass
-
         return result
 
     def to_representation(self, instance):
         if not instance.completed:
-            pass
-
-        if instance.component.type != "Quiz":
-            if instance.component.type != "Code":
-                pass
+            return
 
         representation = super().to_representation(instance)
-        return representation
+        return representation["quiz_details"]
 
 
 class QuestionAnswerSerializer(serializers.ModelSerializer):
@@ -261,11 +256,12 @@ class StudentListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Enrollment
-        fields = ["student", "id"]
+        fields = ["student"]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         student = instance.student
+        representation["id"] = student.id
         representation["name"] = student.first_name + " " + student.last_name
         representation["email"] = student.email
         representation.pop("student")

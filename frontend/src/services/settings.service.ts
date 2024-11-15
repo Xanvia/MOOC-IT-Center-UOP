@@ -77,3 +77,28 @@ export const updatePermissions = async (
     throw error;
   }
 };
+
+export const getCourseStudents = async (courseId: string) => {
+  try {
+    const { data } = await axiosInstance.get(
+      `/course/manage/${courseId}/students/`
+    );
+    return data.data.students;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getStudetnQuizzes = async (
+  studentId: string,
+  courseId: string
+) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/manage/${courseId}/quizes/${studentId}/`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

@@ -1,13 +1,13 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface StudentData {
+  id: string;
   name: string;
-  profilePicture: string;
-  course: string; // What they're studying
-  year: string; // Year of study
-  grades: string; // Current grades or academic standing
-  status: "Active" | "Alumni" | "On Leave";
+  email: string;
+  profile_picture: string;
+  progress: number;
 }
 
 interface StudentSettingsTableProps {
@@ -32,17 +32,17 @@ const StudentSettingsTable = ({
                 Name
               </th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                Course
+                Email
               </th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
-                Year
+                Progress
               </th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
                 Manage Grade
               </th>
-              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
+              {/* <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">
                 Status
-              </th>
+              </th> */}
             </tr>
           </thead>
 
@@ -53,22 +53,24 @@ const StudentSettingsTable = ({
                   <Image
                     width={40}
                     height={40}
-                    src={student.profilePicture}
+                    src={student.profile_picture}
                     alt={`${student.name}'s profile`}
                     className="h-10 w-10 rounded-full object-cover"
                   />
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">{student.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {student.course}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">{student.year}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <button className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">
-                    Manage Grade
-                  </button>
+                <td className="px-6 py-4 whitespace-nowrap">{student.email}</td>
+                <td className="px-12 py-4 whitespace-nowrap">
+                  {student.progress} %
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
+                  <Link href={`students/quizzes/${student.id}/`}>
+                    <button className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">
+                      Manage Grade
+                    </button>
+                  </Link>
+                </td>
+                {/* <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-semibold ${
                       student.status === "Active"
@@ -80,7 +82,7 @@ const StudentSettingsTable = ({
                   >
                     {student.status}
                   </span>
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>
