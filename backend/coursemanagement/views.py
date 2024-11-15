@@ -1,6 +1,7 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, views, status
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
+import uuid
 from .serializers import (
     CourseTeachersSerializer,
     EditCoursePermissionsSerializer,
@@ -13,7 +14,7 @@ from .serializers import (
     StudentListSerializer,
 )
 from courses.serializers import CourseSerializer
-from .models import CourseTeachers, CoursePermissions, AdminMessages
+from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
 from .permissions import IsCourseCreator
 from courses.models import (
     Course,
@@ -96,7 +97,11 @@ class StudentQuizListAPIView(generics.ListAPIView):
         )
 
     def filter_queryset(self, queryset):
-        return super().filter_queryset(queryset).exclude(component__type__in=["Note", "Video"])
+        return (
+            super()
+            .filter_queryset(queryset)
+            .exclude(component__type__in=["Note", "Video"])
+        )
 
 
 class StudentQuizDetailAPIView(generics.RetrieveAPIView):
@@ -218,3 +223,43 @@ class CourseStudentsListAPIView(generics.ListAPIView):
             },
         }
         return response
+
+
+class InitiatePaymentAPIView(views.APIView):
+
+    def post(self, request, *args, **kwargs):
+        course_id = request.data.get("course_id")
+        amount = request.data.get("amount")
+
+        try:
+            enrollment, created = Enrollment.objects.get_or_create(
+                course_id=course_id, student=request.user
+            )
+        except Enrollment.DoesNotExist:
+            return Response(
+                {"error": "Enrollment not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        transaction_id = str(uuid.uuid4())
+
+        payment = Payments.objects.create(
+            user=request.user, enrollement=enrollment, amount=amount
+        )
+
+        # Generate PayHere payment link
+        payment_link = (
+            f"https://sandbox.payhere.lk/pay/checkout"
+            f"?merchant_id=<YOUR_MERCHANT_ID>"
+            f"&return_url=<YOUR_RETURN_URL>"
+            f"&cancel_url=<YOUR_CANCEL_URL>"
+            f"&notify_url=<YOUR_NOTIFY_URL>"
+            f"&order_id={transaction_id}"
+            f"&items=Course Enrollment"
+            f"&amount={amount}"
+            f"&currency=LKR"
+            f"&first_name={request.user.first_name}"
+            f"&last_name={request.user.last_name}"
+            f"&email={request.user.email}"
+        )
+
+        return Response({"payment_link": payment_link}, status=status.HTTP_200_OK)
