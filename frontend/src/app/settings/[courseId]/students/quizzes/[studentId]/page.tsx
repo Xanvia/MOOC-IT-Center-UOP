@@ -1,14 +1,38 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import QuizSettingsTable from "@/components/QuizTable/QuizSettingsTable";
+import { useParams } from "next/navigation";
+import { getStudetnQuizzes } from "@/services/settings.service";
+
+interface QuizData {
+  name: string;
+  type: "Quiz" | "Code";
+  grade: number;
+  graded : boolean;
+  id : string;
+}
 
 const QuizzesManagementPage = () => {
-  const quizData = [
-    { quizName: "Math Quiz", grade: "A", status: "Active" as const },
-    { quizName: "Science Quiz", grade: "B", status: "Completed" as const },
-    { quizName: "History Quiz", grade: "A+", status: "Inactive" as const },
-  ];
+  const params = useParams();
+  const [quizData, setQuizData] = useState<QuizData[]>([]);
+
+  useEffect(() => {
+    const fetchQuizzes = async () => {
+      try {
+        const quizzes = await getStudetnQuizzes(
+          params.studentId as string,
+          params.courseId as string
+        );
+        console.log(quizzes);
+        setQuizData(quizzes);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchQuizzes();
+  }, []);
 
   return (
     <div className="flex h-screen bg-gray-50">
