@@ -135,13 +135,15 @@ const QuizzesGradePage = () => {
                     value={Array.isArray(q.studentAnswer) ? q.studentAnswer.join(" ") : q.studentAnswer} // Handle both string and array of strings
                     className="border p-2 rounded w-full bg-gray-100 text-gray-800"
                   />
-                <label className="block font-medium mt-4 mb-1">Grade this answer:</label>
-                <input
-                  type="text"
-                  value={grades[index]}
-                  onChange={(e) => handleGradeChange(index, e.target.value)}
-                  className="border p-2 rounded w-24"
-                />
+                <div className="w-4/4 mt-2 mr-2 text-right">
+                  <label className="block font-medium mb-1">Grade this answer:</label>
+                  <input
+                    type="text"
+                    value={grades[index]}
+                    onChange={(e) => handleGradeChange(index, e.target.value)}
+                    className="border p-2 rounded w-20 text-center"
+                  />
+                </div>
               </div>
             )}
           </div>
