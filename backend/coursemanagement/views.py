@@ -261,25 +261,4 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
             "country": "Sri Lanka",
         }
 
-        # Make the POST request to PayHere Checkout API
-        payment_res = requests.post(
-            "https://sandbox.payhere.lk/pay/checkout", json=payload
-        )
-
-        # Handle the response from PayHere
-        if payment_res.status_code == 200:
-            payment_data = payment_res.json().get("data", {})
-            payment_url = payment_data.get("payment_url")
-            if payment_url:
-                return Response({"payment_url": payment_url}, status=status.HTTP_200_OK)
-            else:
-                return Response(
-                    {"error": "Payment URL not received"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-        else:
-            print(payment_res.text)
-            return Response(
-                {"error": "Failed to initiate payment"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+        return Response({"payload": payload}, status=status.HTTP_200_OK)
