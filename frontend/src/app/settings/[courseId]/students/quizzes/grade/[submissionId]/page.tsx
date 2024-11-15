@@ -131,7 +131,7 @@ const QuizzesGradePage = () => {
 
         <button
           onClick={handleFinalizeGrade}
-          className="mt-6 w-full bg-blue-500 text-white px-6 py-2 rounded shadow hover:bg-blue-600"
+          className="mt-6 w-50% bg-blue-500 text-white px-6 py-2 rounded shadow hover:bg-blue-600"
         >
           Finalize Grade
         </button>
