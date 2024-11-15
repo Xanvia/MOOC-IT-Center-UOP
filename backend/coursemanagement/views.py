@@ -1,7 +1,7 @@
 from rest_framework import viewsets, generics, views, status
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
-import requests
+import hashlib
 import uuid
 from .serializers import (
     CourseTeachersSerializer,
@@ -25,6 +25,7 @@ from courses.models import (
     StudentCodingAnswer,
     StudentQuiz,
 )
+from django.conf import settings
 
 
 class CourseTeacherViewSet(viewsets.ModelViewSet):
@@ -239,19 +240,23 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
         response = super().create(request, *args, **kwargs)
         amount = response.data["amount"]
 
-        appid = "4OVxg4aBaTo4JEVh6oKv1N3LF"
-
+        appid = settings.MERCH_ID
+        merchant_secret = settings.MERCH_SECRET 
+        currency = "USD"
         order_id = str(uuid.uuid4())
+    
+        hash_source = f"{appid}{order_id}{amount}{currency}{hashlib.md5(merchant_secret.encode()).hexdigest().upper()}"
+        hash_value = hashlib.md5(hash_source.encode()).hexdigest().upper()
 
-        # Prepare payload for the PayHere API
+        # Prepare the payload
         payload = {
             "merchant_id": appid,
             "return_url": "http://127.0.0.1:8000/admin/coursemanagement/payments/",
             "cancel_url": "http://127.0.0.1:8000/admin/coursemanagement/payments/",
             "notify_url": "http://127.0.0.1:8000/api/payments/notify/",
-            "order_id": order_id,  # Corrected this line
+            "order_id": order_id,
             "items": "Course Enrollment",
-            "currency": "LKR",
+            "currency": currency,
             "amount": amount,
             "first_name": request.user.first_name,
             "last_name": request.user.last_name,
@@ -259,6 +264,7 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
             "address": "Student Address",
             "city": "Student City",
             "country": "Sri Lanka",
+            "hash": hash_value,  # Include the computed hash
         }
 
         return Response({"payload": payload}, status=status.HTTP_200_OK)
