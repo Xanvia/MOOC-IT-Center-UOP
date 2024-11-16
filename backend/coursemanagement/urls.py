@@ -48,8 +48,8 @@ urlpatterns = [
     path(
         "code/<int:pk>", StudentCodingDetailAPIView.as_view(), name="submission-details"
     ),
-    path("grade-quiz/<int:pk>", GradeQuizAPIView.as_view(), name="grade-quiz"),
-    path("grade-code/<int:pk>", GradeCodingAPIView.as_view(), name="grade-code"),
+    path("<int:course_id>/grade-quiz/<int:pk>", GradeQuizAPIView.as_view(), name="grade-quiz"),
+    path("<int:course_id>/grade-code/<int:pk>", GradeCodingAPIView.as_view(), name="grade-code"),
     path(
         "<int:course_id>/get-teacher-permissions/<int:teacher_id>/",
         TeacherPermissionsRetrieveAPIView.as_view(),

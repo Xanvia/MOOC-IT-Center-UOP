@@ -11,7 +11,10 @@ interface StudentAnswerMC {
 }
 
 interface StudentAnswerOE {
-  text: string;
+  text: {
+    text: string;
+    grade: number;
+  };
 }
 
 interface Question {
@@ -28,7 +31,10 @@ interface QuizGraderProps {
 
 const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
   const [grades, setGrades] = useState<{ [key: number]: number }>(
-    questions.reduce((acc, q) => ({ ...acc, [q.id]: 0 }), {})
+    questions.reduce((acc, q) => ({
+      ...acc,
+      [q.id]: q.question_type === "OE" ? (q.student_answer as StudentAnswerOE).text.grade : 0
+    }), {})
   );
 
   const handleGradeChange = (questionId: number, value: string) => {
@@ -40,7 +46,7 @@ const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
   };
 
   const handleFinalizeGrade = () => {
-    // Here you would typically make an API call to save the grades
+    // Typically make an API call to save grades here
     console.log("Grades finalized:", grades);
   };
 
@@ -119,7 +125,7 @@ const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
         <label className="block font-medium mb-1">Student&apos;s Answers</label>
         <textarea
           readOnly
-          value={answer.text}
+          value={answer.text.text}
           className="border p-2 rounded w-full bg-gray-100 text-gray-800 min-h-[100px]"
         />
         <div className="mt-2 text-right">

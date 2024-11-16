@@ -26,6 +26,7 @@ from courses.models import (
     StudentQuiz,
 )
 from django.conf import settings
+from .permissions import GradePermissions
 
 
 class CourseTeacherViewSet(viewsets.ModelViewSet):
@@ -117,6 +118,7 @@ class StudentCodingDetailAPIView(generics.RetrieveAPIView):
 class GradeQuizAPIView(generics.UpdateAPIView):
     queryset = StudentQuiz.objects.all()
     serializer_class = StudentQuizDetailSerializer
+    permission_classes = [GradePermissions]
 
     def update(self, request, *args, **kwargs):
         response = super().update(request, *args, **kwargs)
@@ -130,6 +132,7 @@ class GradeQuizAPIView(generics.UpdateAPIView):
 class GradeCodingAPIView(generics.UpdateAPIView):
     queryset = StudentCodingAnswer.objects.all()
     serializer_class = StudentCodeDetailSerializer
+    permission_classes = [GradePermissions]
 
     def update(self, request, *args, **kwargs):
         response = super().update(request, *args, **kwargs)

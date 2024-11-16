@@ -148,8 +148,25 @@ class StudentQuizSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         if not instance.completed:
             return None
-
         representation = super().to_representation(instance)
+
+        course = instance.enrollment.course
+        user = self.context.get("request").user
+
+        if course.course_creator == user:
+            representation["quiz_details"]["can_grade"] = True
+        else:
+            course_teacher = CourseTeachers.objects.filter(
+                course=course, teacher=user
+            ).first()
+
+            has_grading_permission = (
+                course_teacher
+                and CoursePermissions.objects.filter(label="grade_assignments").first()
+                in course_teacher.permissions.all()
+            )
+            representation["quiz_details"]["can_grade"] = has_grading_permission
+
         return representation["quiz_details"]
 
 
