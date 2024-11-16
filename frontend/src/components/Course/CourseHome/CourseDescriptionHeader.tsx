@@ -24,10 +24,14 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
     try {
       const enrollementId = await enrollCourse(courseData.id);
       toast.success("Enrolled in course successfully");
+      
+      // Redirect to the payments page
+      router.push("/payments");
     } catch (error: any) {
       toast.error("Error enrolling in course");
     }
   };
+  
   const router = useRouter();
   const { userRole } = useGlobal();
 
