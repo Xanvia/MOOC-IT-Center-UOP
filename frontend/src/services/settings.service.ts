@@ -112,7 +112,23 @@ export const gradeQuiz = async (
   try {
     const response = await axiosInstance.put(
       `/course/manage/${course_id}/grade-quiz/${quizId}`,
-      { score:score, student_answers:student_answers }
+      { score: score, student_answers: student_answers }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const gradeCodeQuiz = async (
+  quizId: string,
+  course_id: string,
+  grade: number
+) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/manage/${course_id}/grade-code/${quizId}`,
+      { grade: grade }
     );
     return response.data;
   } catch (error) {

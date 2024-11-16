@@ -14,7 +14,8 @@ from .serializers import (
     GetCoursePermissionsSerializer,
     StudentListSerializer,
     PaymentSerializer,
-    GradeQuizSerializer
+    GradeQuizSerializer,
+    GradeCodeSerializer
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
@@ -132,7 +133,7 @@ class GradeQuizAPIView(generics.UpdateAPIView):
 
 class GradeCodingAPIView(generics.UpdateAPIView):
     queryset = StudentCodingAnswer.objects.all()
-    serializer_class = StudentCodeDetailSerializer
+    serializer_class = GradeCodeSerializer
     permission_classes = [GradePermissions]
 
     def update(self, request, *args, **kwargs):

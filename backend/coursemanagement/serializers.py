@@ -266,6 +266,7 @@ class StudentCodeDetailSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation["question"] = instance.coding_assignment.question
+        representation["language"] = instance.coding_assignment.language
         return representation
 
 
@@ -354,5 +355,16 @@ class GradeQuizSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs.get("score") is None:
             raise serializers.ValidationError("Score is required")
+        attrs["graded"] = True
+        return super().validate(attrs)
+    
+class GradeCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentCodingAnswer
+        fields = ["grade"]
+
+    def validate(self, attrs):
+        if attrs.get("grade") is None:
+            raise serializers.ValidationError("Grade is required")
         attrs["graded"] = True
         return super().validate(attrs)
