@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import { gradeQuiz } from "@/services/settings.service";
+import { useParams } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 interface StudentAnswerSC {
   selected_answer: string;
@@ -11,6 +14,7 @@ interface StudentAnswerMC {
 }
 
 interface StudentAnswerOE {
+  id: string;
   text: {
     text: string;
     grade: number;
@@ -27,29 +31,161 @@ interface Question {
 
 interface QuizGraderProps {
   questions: Question[];
+  grade: number;
+  courseId: string;
 }
 
-const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
-  const [grades, setGrades] = useState<{ [key: number]: number }>(
-    questions.reduce((acc, q) => ({
-      ...acc,
-      [q.id]: q.question_type === "OE" ? (q.student_answer as StudentAnswerOE).text.grade : 0
-    }), {})
+const QuizGrader: React.FC<QuizGraderProps> = ({
+  questions,
+  grade,
+  courseId,
+}) => {
+  const params = useParams();
+  const [grades, setGrades] = useState<{ [key: number]: number }>(() => {
+    return questions.reduce((acc, q) => {
+      let score = 0;
+      if (q.question_type === "OE") {
+        score = (q.student_answer as StudentAnswerOE).text.grade;
+      } else if (q.question_type === "SC") {
+        const answer = q.student_answer as StudentAnswerSC;
+        score = answer.selected_answer === answer.correct_answer ? q.score : 0;
+      } else if (q.question_type === "MC") {
+        const answer = q.student_answer as StudentAnswerMC;
+        score =
+          answer.selected_answers.every((ans) =>
+            answer.correct_answers.includes(ans)
+          ) && answer.selected_answers.length === answer.correct_answers.length
+            ? q.score
+            : 0;
+      }
+      return { ...acc, [q.id]: score };
+    }, {});
+  });
+
+  // Calculate total score based on all grades
+  const calculateTotalScore = () => {
+    return questions.reduce((total, q) => total + (grades[q.id] || 0), 0);
+  };
+
+  const [totalScore, setTotalScore] = useState<number>(calculateTotalScore());
+
+  // Initialize student answers with proper grades
+  const [studentAnswers, setStudentAnswers] = useState<any[]>(
+    questions.map((q) => ({
+      id: q.id,
+      answer: q.student_answer,
+      grade: grades[q.id] || 0,
+    }))
   );
+
+  useEffect(() => {
+    const initialGrades = questions.reduce<{ [key: number]: number }>(
+      (acc, q) => {
+        let score = 0;
+        if (q.question_type === "OE") {
+          score = (q.student_answer as StudentAnswerOE).text.grade;
+        } else if (q.question_type === "SC") {
+          const answer = q.student_answer as StudentAnswerSC;
+          score =
+            answer.selected_answer === answer.correct_answer ? q.score : 0;
+        } else if (q.question_type === "MC") {
+          const answer = q.student_answer as StudentAnswerMC;
+          score =
+            answer.selected_answers.every((ans) =>
+              answer.correct_answers.includes(ans)
+            ) &&
+            answer.selected_answers.length === answer.correct_answers.length
+              ? q.score
+              : 0;
+        }
+        return { ...acc, [q.id]: score };
+      },
+      {}
+    );
+
+    setGrades(initialGrades);
+    setStudentAnswers(
+      questions.map((q) => ({
+        id: q.id,
+        answer: q.student_answer,
+        grade: initialGrades[q.id] || 0,
+      }))
+    );
+    setTotalScore(
+      Object.values(initialGrades).reduce(
+        (sum: number, grade: number) => sum + grade,
+        0
+      )
+    );
+  }, [questions]);
 
   const handleGradeChange = (questionId: number, value: string) => {
     const parsedValue = parseFloat(value);
+    const newGrade = isNaN(parsedValue) ? 0 : parsedValue;
+
+    // Update grades
     setGrades((prev) => ({
       ...prev,
-      [questionId]: isNaN(parsedValue) ? 0 : parsedValue,
+      [questionId]: newGrade,
     }));
+
+    // Update student answers
+    setStudentAnswers((prev) =>
+      prev.map((answer) =>
+        answer.id === questionId ? { ...answer, grade: newGrade } : answer
+      )
+    );
+
+    // Update total score
+    const newGrades = {
+      ...grades,
+      [questionId]: newGrade,
+    };
+    setTotalScore(
+      Object.values(newGrades).reduce((sum, grade) => sum + grade, 0)
+    );
   };
 
-  const handleFinalizeGrade = () => {
-    // Typically make an API call to save grades here
-    console.log("Grades finalized:", grades);
-  };
+  const handleFinalizeGrade = async () => {
+    // Create formatted student answers that match backend structure
+    const formattedAnswers: { [key: string]: any } = {};
 
+    questions.forEach((question) => {
+      const id = question.id.toString();
+
+      if (question.question_type === "SC") {
+        // For single choice, just send the selected answer
+        formattedAnswers[id] = (
+          question.student_answer as StudentAnswerSC
+        ).selected_answer;
+      } else if (question.question_type === "MC") {
+        // For multiple choice, send the array of selected answers
+        formattedAnswers[id] = (
+          question.student_answer as StudentAnswerMC
+        ).selected_answers;
+      } else if (question.question_type === "OE") {
+        // For open ended, keep the text but update the grade
+        formattedAnswers[id] = {
+          text: (question.student_answer as StudentAnswerOE).text.text,
+          grade: grades[question.id], // Use the updated grade from our grades state
+        };
+      }
+    });
+
+    try {
+      await gradeQuiz(
+        params.submissionId as string,
+        courseId,
+        totalScore,
+        formattedAnswers
+      );
+      toast.success("Successfully updated grades.");
+    } catch (error) {
+      console.error("Failed to finalize grade:", error);
+      alert("Failed to update grades.");
+    }
+  };
+  // Rest of your component remains the same...
   const renderSingleChoice = (question: Question) => {
     const answer = question.student_answer as StudentAnswerSC;
     const isCorrect = answer.selected_answer === answer.correct_answer;
@@ -166,32 +302,11 @@ const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
           {question.question_type === "MC" && renderMultipleChoice(question)}
           {question.question_type === "OE" && renderOpenEnded(question)}
 
-          {/* Auto-graded score for SC and MC questions */}
           {(question.question_type === "SC" ||
             question.question_type === "MC") && (
             <div className="mt-4 text-right">
               <span className="font-medium">
-                Score:{" "}
-                {question.question_type === "SC"
-                  ? (question.student_answer as StudentAnswerSC)
-                      .selected_answer ===
-                    (question.student_answer as StudentAnswerSC).correct_answer
-                    ? question.score
-                    : 0
-                  : (
-                      question.student_answer as StudentAnswerMC
-                    ).selected_answers.every((ans) =>
-                      (
-                        question.student_answer as StudentAnswerMC
-                      ).correct_answers.includes(ans)
-                    ) &&
-                    (question.student_answer as StudentAnswerMC)
-                      .selected_answers.length ===
-                      (question.student_answer as StudentAnswerMC)
-                        .correct_answers.length
-                  ? question.score
-                  : 0}
-                /{question.score}
+                Score: {grades[question.id]}/{question.score}
               </span>
             </div>
           )}
@@ -200,8 +315,7 @@ const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
 
       <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg">
         <div className="text-lg font-medium">
-          Total Score:{" "}
-          {Object.values(grades).reduce((sum, grade) => sum + grade, 0)}/
+          Total Score: {totalScore}/
           {questions.reduce((sum, q) => sum + q.score, 0)}
         </div>
         <button

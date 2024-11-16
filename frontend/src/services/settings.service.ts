@@ -102,3 +102,20 @@ export const getStudetnQuizzes = async (
     throw error;
   }
 };
+
+export const gradeQuiz = async (
+  quizId: string,
+  course_id: string,
+  score: number,
+  student_answers: any
+) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/manage/${course_id}/grade-quiz/${quizId}`,
+      { score:score, student_answers:student_answers }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

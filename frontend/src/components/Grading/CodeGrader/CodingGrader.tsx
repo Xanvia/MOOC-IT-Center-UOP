@@ -18,6 +18,7 @@ interface CodingSubmission {
 
 interface CodingGraderProps {
   codingData: CodingSubmission;
+  courseId: string;
 }
 
 const CodingGrader: React.FC<CodingGraderProps> = ({ codingData }) => {
@@ -44,7 +45,7 @@ const CodingGrader: React.FC<CodingGraderProps> = ({ codingData }) => {
         {/* Student's Code Display */}
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-2">
-          Student&apos;s Solution
+            Student&apos;s Solution
           </h3>
           <div className="h-[300px] border rounded">
             <AceEditor

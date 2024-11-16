@@ -14,6 +14,7 @@ from .serializers import (
     GetCoursePermissionsSerializer,
     StudentListSerializer,
     PaymentSerializer,
+    GradeQuizSerializer
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
@@ -117,11 +118,11 @@ class StudentCodingDetailAPIView(generics.RetrieveAPIView):
 
 class GradeQuizAPIView(generics.UpdateAPIView):
     queryset = StudentQuiz.objects.all()
-    serializer_class = StudentQuizDetailSerializer
+    serializer_class = GradeQuizSerializer
     permission_classes = [GradePermissions]
 
     def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
+        response = super().update(request,partial=True *args, **kwargs)
         response.data = {
             "status": "success",
             "message": "Quiz graded successfully",

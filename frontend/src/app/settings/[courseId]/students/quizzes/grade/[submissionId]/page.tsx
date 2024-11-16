@@ -29,7 +29,7 @@ const GradingPage: React.FC = () => {
           const codeData = await getCodeSubmissions(
             params.submissionId as string
           );
-          console.log("codeData", codeData);
+
           const mappedData = {
             question: codeData.question, // Mapping 'code' to 'question' field
             studentCode: codeData.code, // Assuming the student's code is also stored here
@@ -74,9 +74,24 @@ const GradingPage: React.FC = () => {
     <div className="p-6 bg-gray-50 min-h-screen w-full">
       <h1 className="text-2xl font-bold mb-6">Assignment Grading</h1>
       {assignmentType === "Quiz" ? (
-        <QuizGrader questions={assignmentData.questions} />
+        <QuizGrader
+          questions={assignmentData.questions}
+          grade={assignmentData.score}
+          courseId={
+            Array.isArray(params.courseId)
+              ? params.courseId[0]
+              : params.courseId
+          }
+        />
       ) : (
-        <CodingGrader codingData={assignmentData} />
+        <CodingGrader
+          codingData={assignmentData}
+          courseId={
+            Array.isArray(params.courseId)
+              ? params.courseId[0]
+              : params.courseId
+          }
+        />
       )}
     </div>
   );

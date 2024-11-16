@@ -133,7 +133,6 @@ class StudentQuizSerializer(serializers.ModelSerializer):
                 student_coding = StudentCodingAnswer.objects.get(
                     enrollement=enrollment, coding_assignment=component
                 )
-                print(student_coding.graded)
                 result.update(
                     {
                         "grade": float(student_coding.grade),
@@ -212,7 +211,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
         # Handle the response based on the question type
         if question.question_type == Question.OPENN_ENDED:
-            return {"text": student_answer}
+            return { "id":question_id,"text": student_answer}
         elif question.question_type == Question.MULTIPLE_CORRECT:
             return {
                 "selected_answers": student_answer,
@@ -344,4 +343,16 @@ class PaymentSerializer(serializers.ModelSerializer):
         enrollement = attrs.get("enrollement")
         attrs["order_id"] = str(uuid.uuid4())
         attrs["amount"] = enrollement.course.price
+        return super().validate(attrs)
+
+
+class GradeQuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentQuiz
+        fields = ["score", "student_answers"]
+
+    def validate(self, attrs):
+        if attrs.get("score") is None:
+            raise serializers.ValidationError("Score is required")
+        attrs["graded"] = True
         return super().validate(attrs)
