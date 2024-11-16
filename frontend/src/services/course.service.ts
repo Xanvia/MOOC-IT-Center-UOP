@@ -449,7 +449,8 @@ export const submitQuiz = async (
 export const saveCode = async (
   code_id: number,
   code: string,
-  grade: number
+  grade: number,
+  test_results: any
 ) => {
   try {
     const response = await axiosInstance.post(
@@ -457,6 +458,7 @@ export const saveCode = async (
       {
         code,
         grade,
+        test_results,
       }
     );
     return response.data;
@@ -561,6 +563,28 @@ export const initiatePaymentBe = async (enrollmentId: number) => {
       `/payments/${enrollmentId}/initiate-payment/`
     );
     return response;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const getQuizSubmissions = async (submissionId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/manage/quiz/${submissionId}`
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const getCodeSubmissions = async (submissionId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/manage/code/${submissionId}`
+    );
+    return response.data.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
   }

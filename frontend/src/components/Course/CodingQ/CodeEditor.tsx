@@ -14,6 +14,7 @@ import "ace-builds/src-noconflict/mode-r";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-github";
 import { set } from "jodit/types/core/helpers";
+import test from "node:test";
 
 interface TestCase {
   stdin: string;
@@ -86,7 +87,7 @@ const CodeEditor: React.FC<Props> = ({
         if (!result.stdout) {
           if (result.compile_output) {
             setOutput(result.stderr + "\n" + result.compile_output);
-          }else{
+          } else {
             setOutput(result.stderr);
           }
         } else {
@@ -124,7 +125,7 @@ const CodeEditor: React.FC<Props> = ({
         setTestResults(results);
         if (userRole == "student") {
           const grade = getGrade();
-          await saveCode(codeID, code || "", grade);
+          await saveCode(codeID, code || "", grade, results);
         }
       }
     } catch (err: any) {

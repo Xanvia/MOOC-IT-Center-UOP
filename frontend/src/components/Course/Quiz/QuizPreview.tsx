@@ -107,14 +107,13 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
     const studentAnswers = createStudentAnswers();
 
     try {
-      // await submitQuiz(quizId, score, studentAnswers);
       setShowResults(true);
       setQuizSubmitted(true);
+      await submitQuiz(quizId, score, studentAnswers);
       setIsFinished(true);
       toast.success("Quiz Submitted");
     } catch (error) {
       console.error("Failed to submit quiz:", error);
-      // Handle error (e.g., show error message to user)
     }
   };
 

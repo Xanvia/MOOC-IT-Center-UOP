@@ -179,25 +179,22 @@ class QuestionSerializer(serializers.ModelSerializer):
         if not student_quiz:
             return None
 
-        # Find student's answer for this question from the JSONField
-        student_answer = next(
-            (
-                ans
-                for ans in student_quiz.student_answers
-                if ans.get("question_id") == question.id
-            ),
-            None,
-        )
+        # Assuming student_answers is a dictionary
+        student_answers = student_quiz.student_answers
+        question_id = str(question.id)  # Ensure question_id is a string to match the dictionary keys
 
-        if not student_answer:
+        # Get the answer for this question
+        student_answer = student_answers.get(question_id)
+        if student_answer is None:
             return None
 
+        # Handle the answer based on the question type
         if question.question_type == Question.OPENN_ENDED:
-            return {"text": student_answer.get("answer")}
+            return {"text": student_answer}
         elif question.question_type == Question.MULTIPLE_CORRECT:
-            return {"selected_answers": student_answer.get("answer", [])}
+            return {"selected_answers": student_answer}
         else:  # SINGLE_CORRECT
-            return {"selected_answer": student_answer.get("answer")}
+            return {"selected_answer": student_answer}
 
 
 class StudentQuizDetailSerializer(serializers.ModelSerializer):
