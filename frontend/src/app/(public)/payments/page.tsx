@@ -23,10 +23,18 @@ export default function Payments() {
           <p className="text-gray-600 mb-6">
             Offered by <span className="font-semibold  text-gray-800">University of Peradeniya</span>
           </p>
-          <p className="text-gray-600 mb-6">Payment: 300/=</p>
-          <button className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600">
-            Pay
+          <div className="flex flex-wrap items-center space-x-8 md:space-x-16 mb-3 ml-2">
+            <p className="text-gray-600">
+              Course Fee: <span className="text-blue-900 font-semibold">300/=</span>
+            </p>
+            <p className="text-gray-600">Fulltime Access
+            <span className="text-green-500 text-xl ml-2">✔️</span>
+            </p>
+          </div>
+          <button className="bg-blue-800 text-white px-6 py-2 rounded-md hover:bg-blue-900">
+            Proceed to Payments
           </button>
+          
         </div>
       ) : (
         // First Week Trial UI
@@ -35,8 +43,8 @@ export default function Payments() {
           <p className="text-gray-600 mb-6">
             Offered by <span className="font-semibold text-gray-800">University of Peradeniya</span>
           </p>
-          <p className="text-gray-600 my-6">You have to do payments before 12/10/2000</p>
-          <button className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">
+          <p className="text-gray-600 mt-6 mb-3">You have to do payments before <span className="font-semibold  text-gray-800"> 12/10/2000 </span></p>
+          <button className="bg-blue-800 text-white px-6 py-2 rounded-md hover:bg-blue-900">
             Start Your Free Trial
           </button>
           
