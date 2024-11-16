@@ -43,7 +43,9 @@ const CodingGrader: React.FC<CodingGraderProps> = ({ codingData }) => {
 
         {/* Student's Code Display */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2">Student's Solution</h3>
+          <h3 className="text-lg font-semibold mb-2">
+          Student&apos;s Solution
+          </h3>
           <div className="h-[300px] border rounded">
             <AceEditor
               mode="javascript"

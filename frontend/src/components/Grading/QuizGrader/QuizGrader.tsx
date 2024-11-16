@@ -116,7 +116,7 @@ const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
 
     return (
       <div className="mt-2">
-        <label className="block font-medium mb-1">Student's Answer:</label>
+        <label className="block font-medium mb-1">Student&apos;s Answers</label>
         <textarea
           readOnly
           value={answer.text}
