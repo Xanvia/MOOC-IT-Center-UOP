@@ -402,7 +402,7 @@ class StudentCodingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentCodingAnswer
-        fields = ["coding_assignment", "code", "grade"]
+        fields = ["coding_assignment", "code", "grade","test_results"]
 
     def validate(self, attrs):
         # check if student has already answered this quiz

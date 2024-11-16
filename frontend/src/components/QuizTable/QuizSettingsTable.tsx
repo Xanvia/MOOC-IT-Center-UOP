@@ -42,25 +42,25 @@ const QuizSettingsTable = ({
           <tbody className="bg-white divide-y divide-gray-200">
             {data.map((quiz, index) => (
               <tr key={index}>
-                <td className="px-6 py-4 whitespace-nowrap">{quiz.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{quiz.grade}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{quiz?.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{quiz?.grade}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      quiz.graded
+                      quiz?.graded
                         ? "bg-green-100 text-green-800"
-                        : !quiz.graded
+                        : !quiz?.graded
                         ? "bg-blue-100 text-blue-800"
                         : "bg-yellow-100 text-yellow-800"
                     }`}
                   >
-                    {quiz.graded ? "Graded" : "Not Finalized Grading"}
+                    {quiz?.graded ? "Graded" : "Not Finalized Grading"}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <Link href={`grade/${quiz.id}`}>
+                  <Link href={`grade/${quiz?.id}/?type=${quiz?.type}`}>
                     <button
-                      onClick={() => onManageQuizClick(quiz)}
+                      onClick={() => {}}
                       className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600"
                     >
                       Grade Quiz

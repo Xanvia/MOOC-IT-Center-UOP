@@ -79,7 +79,6 @@ export const submitCode = async (
         name: `Test Case ${index + 1}`,
       });
     }
-
     return results;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Error submitting code");

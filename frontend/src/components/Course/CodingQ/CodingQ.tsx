@@ -9,9 +9,10 @@ interface Props {
   permissions: Permissions;
   item: Item;
   userRole: string;
+  setIsFinished: (isFinished: boolean) => void;
 }
 
-const CodingQ: React.FC<Props> = ({ permissions, item,userRole }) => {
+const CodingQ: React.FC<Props> = ({ permissions, item,userRole ,setIsFinished}) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const { canEdit } = permissions;
 
@@ -48,6 +49,7 @@ const CodingQ: React.FC<Props> = ({ permissions, item,userRole }) => {
           codeID={item.id}
           testCases={item.content.test_cases}
           userRole={userRole}
+          setIsFinished={setIsFinished}
         />
       )}
     </div>

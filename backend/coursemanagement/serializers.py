@@ -114,7 +114,6 @@ class StudentQuizSerializer(serializers.ModelSerializer):
 
         # Get enrollment
         enrollment = instance.enrollment
-        # Check if component is Quiz
         if instance.component.type == "Quiz":
             try:
                 student_quiz = StudentQuiz.objects.get(
@@ -134,10 +133,11 @@ class StudentQuizSerializer(serializers.ModelSerializer):
                 student_coding = StudentCodingAnswer.objects.get(
                     enrollement=enrollment, coding_assignment=component
                 )
+                print(student_coding.graded)
                 result.update(
                     {
                         "grade": float(student_coding.grade),
-                        "graded": True if student_coding.grade is not None else False,
+                        "graded": student_coding.graded is True,
                         "id": student_coding.id,
                     }
                 )
@@ -147,7 +147,7 @@ class StudentQuizSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         if not instance.completed:
-            return
+            return None
 
         representation = super().to_representation(instance)
         return representation["quiz_details"]
@@ -165,7 +165,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ["id", "text", "question_type", "score", "answers", "student_answer"]
+        fields = ["id", "text", "question_type", "score", "answers","student_answer"]
 
     def get_answers(self, question):
         # For open-ended questions, don't return answer choices
@@ -179,25 +179,39 @@ class QuestionSerializer(serializers.ModelSerializer):
         if not student_quiz:
             return None
 
-        # Find student's answer for this question from the JSONField
-        student_answer = next(
-            (
-                ans
-                for ans in student_quiz.student_answers
-                if ans.get("question_id") == question.id
-            ),
-            None,
-        )
+        # Assuming student_answers is a dictionary
+        student_answers = student_quiz.student_answers
+        question_id = str(question.id)  # Ensure question_id is a string to match the dictionary keys
 
-        if not student_answer:
+        # Get the student's answer for this question
+        student_answer = student_answers.get(question_id)
+        if student_answer is None:
             return None
 
+        # Fetch correct answers from the Answer model
+        correct_answers = question.answers.filter(is_correct=True).values_list(
+            "text", flat=True
+        )
+
+        # Handle the response based on the question type
         if question.question_type == Question.OPENN_ENDED:
-            return {"text": student_answer.get("answer")}
+            return {"text": student_answer}
         elif question.question_type == Question.MULTIPLE_CORRECT:
-            return {"selected_answers": student_answer.get("answer", [])}
+            return {
+                "selected_answers": student_answer,
+                "correct_answers": list(correct_answers),
+            }
         else:  # SINGLE_CORRECT
-            return {"selected_answer": student_answer.get("answer")}
+            return {
+                "selected_answer": student_answer,
+                "correct_answer": correct_answers.first(),
+            }
+        
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation.pop("answers")
+        return representation
+
 
 
 class StudentQuizDetailSerializer(serializers.ModelSerializer):
@@ -232,6 +246,11 @@ class StudentCodeDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentCodingAnswer
         fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["question"] = instance.coding_assignment.question
+        return representation
 
 
 class AdminMessagesSerializer(serializers.ModelSerializer):
@@ -269,7 +288,8 @@ class StudentListSerializer(serializers.ModelSerializer):
 
         components = Component.objects.filter(chapter__week__course=instance.course)
         try:
-            enrollement = Enrollment.objects.get(student=student.id, course=instance.id)
+            
+            enrollement = Enrollment.objects.get(student=student.id, course=instance.course.id)
             completed_components = components.filter(
                 progress__completed=True, progress__enrollment=enrollement.id
             )
@@ -286,7 +306,7 @@ class StudentListSerializer(serializers.ModelSerializer):
 
             representation["progress"] = progress_percentage
 
-        except Enrollment.DoesNotExist:
+        except Exception as e:
             raise serializers.ValidationError(
                 {"error": "You are not enrolled in this course"}
             )

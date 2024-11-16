@@ -201,6 +201,7 @@ class StudentCodingAnswer(models.Model):
     code = models.TextField()
     grade = models.DecimalField(max_digits=5, decimal_places=2)
     graded = models.BooleanField(default=False)
+    test_results = models.JSONField(default=list, blank=True, null=True)
 
 
 class VideoFile(models.Model):

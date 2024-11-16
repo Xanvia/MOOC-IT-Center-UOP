@@ -9,30 +9,47 @@ interface QuizData {
   name: string;
   type: "Quiz" | "Code";
   grade: number;
-  graded : boolean;
-  id : string;
+  graded: boolean;
+  id: string;
 }
 
 const QuizzesManagementPage = () => {
   const params = useParams();
-  const [quizData, setQuizData] = useState<QuizData[]>([]);
+  const [quizData, setQuizData] = useState<QuizData[]>([]); // Start with dummy data
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchQuizzes = async () => {
+      setLoading(true);
+      setError(null);
       try {
         const quizzes = await getStudetnQuizzes(
           params.studentId as string,
           params.courseId as string
         );
-        console.log(quizzes);
         setQuizData(quizzes);
       } catch (error) {
         console.error(error);
+        setError("Failed to fetch quizzes. Showing default data.");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchQuizzes();
-  }, []);
+  }, [params.studentId, params.courseId]);
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+
+
+  const handleManageQuizClick = (quiz: QuizData) => {
+    console.log("Managing quiz:", quiz);
+  };
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -49,13 +66,28 @@ const QuizzesManagementPage = () => {
         <div className="mb-6">
           <input
             type="text"
+            value={searchQuery}
+            onChange={handleSearch}
             placeholder="Search name..."
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
-        {/* Pass quizData to QuizSettingsTable and an empty function for onManageQuizClick */}
-        <QuizSettingsTable data={quizData} onManageQuizClick={() => {}} />
+        {loading ? (
+          <p>Loading quizzes...</p>
+        ) : (
+          <>
+            {error && <p className="text-red-500">{error}</p>}
+            {quizData.length > 0 ? (
+              <QuizSettingsTable
+                data={quizData}
+                onManageQuizClick={handleManageQuizClick}
+              />
+            ) : (
+              <p>No quizzes found.</p>
+            )}
+          </>
+        )}
       </main>
     </div>
   );

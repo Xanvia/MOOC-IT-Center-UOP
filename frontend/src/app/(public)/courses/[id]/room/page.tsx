@@ -136,7 +136,6 @@ const Page: React.FC = () => {
     }
     if (item.completed == false && userRole === "student") {
       try {
-        console.log(item.id);
         markAsComplete(String(item.id));
         updateItemStatus(item.id, { completed: true });
         toast.success("Marked as completed");
@@ -228,6 +227,7 @@ const Page: React.FC = () => {
           permissions={permissions}
           item={item}
           userRole={userRole || "student"}
+          setIsFinished={setIsFinished}
         />
       ) : (
         <div>No content available</div>

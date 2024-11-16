@@ -610,7 +610,7 @@ class CodingQuizViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         response = super().update(request, partial=True, *args, **kwargs)
-
+        
         response.data = {
             "status": "success",
             "message": "Quiz Details Added successfully",
