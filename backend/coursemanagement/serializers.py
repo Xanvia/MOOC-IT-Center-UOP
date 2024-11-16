@@ -133,7 +133,6 @@ class StudentQuizSerializer(serializers.ModelSerializer):
                 student_coding = StudentCodingAnswer.objects.get(
                     enrollement=enrollment, coding_assignment=component
                 )
-                print(student_coding.graded)
                 result.update(
                     {
                         "grade": float(student_coding.grade),
@@ -148,8 +147,25 @@ class StudentQuizSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         if not instance.completed:
             return None
-
         representation = super().to_representation(instance)
+
+        course = instance.enrollment.course
+        user = self.context.get("request").user
+
+        if course.course_creator == user:
+            representation["quiz_details"]["can_grade"] = True
+        else:
+            course_teacher = CourseTeachers.objects.filter(
+                course=course, teacher=user
+            ).first()
+
+            has_grading_permission = (
+                course_teacher
+                and CoursePermissions.objects.filter(label="grade_assignments").first()
+                in course_teacher.permissions.all()
+            )
+            representation["quiz_details"]["can_grade"] = has_grading_permission
+
         return representation["quiz_details"]
 
 
@@ -195,7 +211,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
         # Handle the response based on the question type
         if question.question_type == Question.OPENN_ENDED:
-            return {"text": student_answer}
+            return { "id":question_id,"text": student_answer}
         elif question.question_type == Question.MULTIPLE_CORRECT:
             return {
                 "selected_answers": student_answer,
@@ -250,6 +266,7 @@ class StudentCodeDetailSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation["question"] = instance.coding_assignment.question
+        representation["language"] = instance.coding_assignment.language
         return representation
 
 
@@ -327,4 +344,27 @@ class PaymentSerializer(serializers.ModelSerializer):
         enrollement = attrs.get("enrollement")
         attrs["order_id"] = str(uuid.uuid4())
         attrs["amount"] = enrollement.course.price
+        return super().validate(attrs)
+
+
+class GradeQuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentQuiz
+        fields = ["score", "student_answers"]
+
+    def validate(self, attrs):
+        if attrs.get("score") is None:
+            raise serializers.ValidationError("Score is required")
+        attrs["graded"] = True
+        return super().validate(attrs)
+    
+class GradeCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentCodingAnswer
+        fields = ["grade"]
+
+    def validate(self, attrs):
+        if attrs.get("grade") is None:
+            raise serializers.ValidationError("Grade is required")
+        attrs["graded"] = True
         return super().validate(attrs)

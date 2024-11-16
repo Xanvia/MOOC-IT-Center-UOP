@@ -1,4 +1,6 @@
 "use client";
+import { gradeCodeQuiz } from "@/services/settings.service";
+import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import AceEditor from "react-ace";
 
@@ -14,22 +16,36 @@ interface CodingSubmission {
   studentCode: string;
   testCases: TestCase[];
   autoGrade: number;
+  language: string;
 }
 
 interface CodingGraderProps {
   codingData: CodingSubmission;
+  courseId: string;
 }
 
-const CodingGrader: React.FC<CodingGraderProps> = ({ codingData }) => {
+const CodingGrader: React.FC<CodingGraderProps> = ({
+  codingData,
+  courseId,
+}) => {
+  const params = useParams();
   const [approvedGrade, setApprovedGrade] = useState<number>(
     codingData?.autoGrade
   );
   const [isGradeApproved, setIsGradeApproved] = useState(false);
 
-  const handleGradeApproval = () => {
-    setIsGradeApproved(true);
-    // Here you would typically make an API call to save the approved grade
-    console.log("Grade approved:", approvedGrade);
+  const handleGradeApproval = async () => {
+    try {
+      await gradeCodeQuiz(
+        params.submissionId as string,
+        courseId as string,
+        approvedGrade
+      );
+      setIsGradeApproved(true);
+      console.log("Grade approved:", approvedGrade);
+    } catch (error) {
+      console.error("Failed to approve grade:", error);
+    }
   };
 
   const passedTests = codingData.testCases.filter((test) => test.passed).length;
@@ -44,11 +60,11 @@ const CodingGrader: React.FC<CodingGraderProps> = ({ codingData }) => {
         {/* Student's Code Display */}
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-2">
-          Student&apos;s Solution
+            Student&apos;s Solution
           </h3>
           <div className="h-[300px] border rounded">
             <AceEditor
-              mode="javascript"
+              mode={codingData.language?.toLowerCase()}
               theme="github"
               value={codingData.studentCode}
               readOnly={true}

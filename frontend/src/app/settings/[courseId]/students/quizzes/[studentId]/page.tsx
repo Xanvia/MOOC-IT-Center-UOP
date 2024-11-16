@@ -11,6 +11,7 @@ interface QuizData {
   grade: number;
   graded: boolean;
   id: string;
+  can_grade: boolean;
 }
 
 const QuizzesManagementPage = () => {
@@ -29,6 +30,7 @@ const QuizzesManagementPage = () => {
           params.studentId as string,
           params.courseId as string
         );
+        console.log("Quizzes:", quizzes);
         setQuizData(quizzes);
       } catch (error) {
         console.error(error);

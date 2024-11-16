@@ -14,6 +14,8 @@ from .serializers import (
     GetCoursePermissionsSerializer,
     StudentListSerializer,
     PaymentSerializer,
+    GradeQuizSerializer,
+    GradeCodeSerializer
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
@@ -26,6 +28,7 @@ from courses.models import (
     StudentQuiz,
 )
 from django.conf import settings
+from .permissions import GradePermissions
 
 
 class CourseTeacherViewSet(viewsets.ModelViewSet):
@@ -116,10 +119,11 @@ class StudentCodingDetailAPIView(generics.RetrieveAPIView):
 
 class GradeQuizAPIView(generics.UpdateAPIView):
     queryset = StudentQuiz.objects.all()
-    serializer_class = StudentQuizDetailSerializer
+    serializer_class = GradeQuizSerializer
+    permission_classes = [GradePermissions]
 
     def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
+        response = super().update(request,partial=True *args, **kwargs)
         response.data = {
             "status": "success",
             "message": "Quiz graded successfully",
@@ -129,7 +133,8 @@ class GradeQuizAPIView(generics.UpdateAPIView):
 
 class GradeCodingAPIView(generics.UpdateAPIView):
     queryset = StudentCodingAnswer.objects.all()
-    serializer_class = StudentCodeDetailSerializer
+    serializer_class = GradeCodeSerializer
+    permission_classes = [GradePermissions]
 
     def update(self, request, *args, **kwargs):
         response = super().update(request, *args, **kwargs)

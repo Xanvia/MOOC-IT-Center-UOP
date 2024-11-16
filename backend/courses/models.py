@@ -186,7 +186,7 @@ class Answer(models.Model):
 class StudentQuiz(models.Model):
     enrollement = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    score = models.IntegerField(default=0)
+    score = models.DecimalField(max_digits=5, decimal_places=2)
     graded = models.BooleanField(default=False)
     completed_at = models.DateTimeField(auto_now_add=True)
     student_answers = models.JSONField(default=list)

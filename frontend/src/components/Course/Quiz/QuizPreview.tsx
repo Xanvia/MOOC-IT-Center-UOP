@@ -84,12 +84,21 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
   };
 
   const createStudentAnswers = () => {
-    const studentAnswers: { [key: number]: string | string[] } = {};
+    const studentAnswers: {
+      [key: number]: string | string[] | { text: string; grade: number };
+    } = {};
     questions.forEach((question, index) => {
       const selectedAnswer = selectedAnswers[index];
       if (question.question_type === "SC" || question.question_type === "OE") {
         if (selectedAnswer !== undefined) {
-          studentAnswers[question.id] = selectedAnswer as string;
+          if (question.question_type === "OE") {
+            studentAnswers[question.id] = {
+              text: selectedAnswer as string,
+              grade: 0,
+            };
+          } else {
+            studentAnswers[question.id] = selectedAnswer as string;
+          }
         }
       } else if (question.question_type === "MC") {
         if (selectedAnswer instanceof Set) {
