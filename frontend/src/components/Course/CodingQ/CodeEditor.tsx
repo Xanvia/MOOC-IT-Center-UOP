@@ -38,6 +38,7 @@ interface Props {
   codeID: number;
   testCases: TestCase[];
   userRole: string;
+  setIsFinished: (isFinished: boolean) => void;
 }
 
 const CodeEditor: React.FC<Props> = ({
@@ -47,6 +48,7 @@ const CodeEditor: React.FC<Props> = ({
   codeID,
   testCases,
   userRole,
+  setIsFinished,
 }) => {
   const [code, setCode] = useState<string>(initialCode || "");
   const [output, setOutput] = useState<string>("");
@@ -126,6 +128,8 @@ const CodeEditor: React.FC<Props> = ({
         if (userRole == "student") {
           const grade = getGrade();
           await saveCode(codeID, code || "", grade, results);
+          setIsFinished(true);
+          toast.success("Code submitted successfully");
         }
       }
     } catch (err: any) {
@@ -146,6 +150,7 @@ const CodeEditor: React.FC<Props> = ({
     const newTestCases = [...savedTestCases, newTestCase];
     try {
       await addStarterCode(codeID, code || "", newTestCases);
+      console.log(newTestCases, "New Test Cases");
       setSavedTestCases(newTestCases);
       toast.success("Test case saved successfully");
     } catch (error) {
@@ -177,7 +182,7 @@ const CodeEditor: React.FC<Props> = ({
       <div className="flex-1 p-4">
         <div className="rounded shadow-md overflow-hidden h-[calc(130%-90px)]">
           <AceEditor
-            mode={language.toLowerCase()}
+            mode={language?.toLowerCase()}
             theme={isDarkMode ? "monokai" : "github"}
             value={code}
             onChange={handleEditorChange}

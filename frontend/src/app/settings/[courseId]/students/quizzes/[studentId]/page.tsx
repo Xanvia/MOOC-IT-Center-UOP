@@ -13,17 +13,9 @@ interface QuizData {
   id: string;
 }
 
-const dummyQuizzes: QuizData[] = [
-  { name: "JavaScript Basics", type: "Quiz", grade: 85, graded: true, id: "q1" },
-  { name: "React Components", type: "Code", grade: 90, graded: true, id: "q2" },
-  { name: "Node.js Overview", type: "Quiz", grade: 78, graded: false, id: "q3" },
-  { name: "CSS Styling", type: "Quiz", grade: 92, graded: true, id: "q4" },
-  { name: "Data Structures", type: "Code", grade: 88, graded: false, id: "q5" },
-];
-
 const QuizzesManagementPage = () => {
   const params = useParams();
-  const [quizData, setQuizData] = useState<QuizData[]>(dummyQuizzes); // Start with dummy data
+  const [quizData, setQuizData] = useState<QuizData[]>([]); // Start with dummy data
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -53,9 +45,7 @@ const QuizzesManagementPage = () => {
     setSearchQuery(event.target.value);
   };
 
-  const filteredQuizzes = quizData.filter((quiz) =>
-    quiz.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+
 
   const handleManageQuizClick = (quiz: QuizData) => {
     console.log("Managing quiz:", quiz);
@@ -88,9 +78,9 @@ const QuizzesManagementPage = () => {
         ) : (
           <>
             {error && <p className="text-red-500">{error}</p>}
-            {filteredQuizzes.length > 0 ? (
+            {quizData.length > 0 ? (
               <QuizSettingsTable
-                data={filteredQuizzes}
+                data={quizData}
                 onManageQuizClick={handleManageQuizClick}
               />
             ) : (

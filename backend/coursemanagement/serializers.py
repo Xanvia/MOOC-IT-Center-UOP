@@ -114,7 +114,6 @@ class StudentQuizSerializer(serializers.ModelSerializer):
 
         # Get enrollment
         enrollment = instance.enrollment
-        # Check if component is Quiz
         if instance.component.type == "Quiz":
             try:
                 student_quiz = StudentQuiz.objects.get(
@@ -134,10 +133,11 @@ class StudentQuizSerializer(serializers.ModelSerializer):
                 student_coding = StudentCodingAnswer.objects.get(
                     enrollement=enrollment, coding_assignment=component
                 )
+                print(student_coding.graded)
                 result.update(
                     {
                         "grade": float(student_coding.grade),
-                        "graded": True if student_coding.grade is not None else False,
+                        "graded": student_coding.graded is True,
                         "id": student_coding.id,
                     }
                 )
@@ -147,7 +147,7 @@ class StudentQuizSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         if not instance.completed:
-            return
+            return None
 
         representation = super().to_representation(instance)
         return representation["quiz_details"]
@@ -246,6 +246,11 @@ class StudentCodeDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentCodingAnswer
         fields = "__all__"
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["question"] = instance.coding_assignment.question
+        return representation
 
 
 class AdminMessagesSerializer(serializers.ModelSerializer):

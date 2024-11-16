@@ -21,12 +21,28 @@ const GradingPage: React.FC = () => {
       setLoading(true);
       try {
         if (assignmentType === "Quiz") {
-          const quizData = await getQuizSubmissions(params.submissionId as string);
-          console.log(quizData);
+          const quizData = await getQuizSubmissions(
+            params.submissionId as string
+          );
           setAssignmentData(quizData);
         } else if (assignmentType === "Code") {
-          const codeData = await getCodeSubmissions(params.submissionId as string);
-          setAssignmentData(codeData);
+          const codeData = await getCodeSubmissions(
+            params.submissionId as string
+          );
+          console.log("codeData", codeData);
+          const mappedData = {
+            question: codeData.question, // Mapping 'code' to 'question' field
+            studentCode: codeData.code, // Assuming the student's code is also stored here
+            testCases: codeData.test_results.map((testResult: any) => ({
+              stdin: testResult.stdin,
+              expected_output: testResult.expected_output,
+              actual_output: testResult.actual_output,
+              passed: testResult.passed,
+            })),
+            autoGrade: parseFloat(codeData.grade), // Map grade as a number
+          };
+
+          setAssignmentData(mappedData);
         }
       } catch (error) {
         console.error("Failed to fetch assignment data:", error);

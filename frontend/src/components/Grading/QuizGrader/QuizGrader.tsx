@@ -33,9 +33,9 @@ const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
 
   const handleGradeChange = (questionId: number, value: string) => {
     const parsedValue = parseFloat(value);
-    setGrades(prev => ({
+    setGrades((prev) => ({
       ...prev,
-      [questionId]: isNaN(parsedValue) ? 0 : parsedValue
+      [questionId]: isNaN(parsedValue) ? 0 : parsedValue,
     }));
   };
 
@@ -57,9 +57,11 @@ const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
             readOnly
             className="form-radio text-blue-600"
           />
-          <span className={`${
-            isCorrect ? "text-green-600" : "text-red-600"
-          } font-medium`}>
+          <span
+            className={`${
+              isCorrect ? "text-green-600" : "text-red-600"
+            } font-medium`}
+          >
             {answer.selected_answer}
           </span>
         </div>
@@ -74,9 +76,10 @@ const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
 
   const renderMultipleChoice = (question: Question) => {
     const answer = question.student_answer as StudentAnswerMC;
-    const allCorrect = answer.selected_answers.every(ans => 
-      answer.correct_answers.includes(ans)
-    ) && answer.selected_answers.length === answer.correct_answers.length;
+    const allCorrect =
+      answer.selected_answers.every((ans) =>
+        answer.correct_answers.includes(ans)
+      ) && answer.selected_answers.length === answer.correct_answers.length;
 
     return (
       <div className="mt-2">
@@ -88,11 +91,13 @@ const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
               readOnly
               className="form-checkbox text-blue-600"
             />
-            <span className={`${
-              answer.correct_answers.includes(selected) 
-                ? "text-green-600" 
-                : "text-red-600"
-            } font-medium`}>
+            <span
+              className={`${
+                answer.correct_answers.includes(selected)
+                  ? "text-green-600"
+                  : "text-red-600"
+              } font-medium`}
+            >
               {selected}
             </span>
           </div>
@@ -108,7 +113,7 @@ const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
 
   const renderOpenEnded = (question: Question) => {
     const answer = question.student_answer as StudentAnswerOE;
-    
+
     return (
       <div className="mt-2">
         <label className="block font-medium mb-1">Student's Answer:</label>
@@ -118,7 +123,9 @@ const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
           className="border p-2 rounded w-full bg-gray-100 text-gray-800 min-h-[100px]"
         />
         <div className="mt-2 text-right">
-          <label className="block font-medium mb-1">Grade (out of {question.score}):</label>
+          <label className="block font-medium mb-1">
+            Grade (out of {question.score}):
+          </label>
           <input
             type="number"
             value={grades[question.id]}
@@ -136,7 +143,10 @@ const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
   return (
     <div className="space-y-6">
       {questions.map((question) => (
-        <div key={question.id} className="border p-4 mb-4 bg-white rounded shadow-sm">
+        <div
+          key={question.id}
+          className="border p-4 mb-4 bg-white rounded shadow-sm"
+        >
           <div className="flex justify-between items-start mb-2">
             <h3 className="font-semibold text-lg">{question.text}</h3>
             <span className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded">
@@ -151,19 +161,31 @@ const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
           {question.question_type === "OE" && renderOpenEnded(question)}
 
           {/* Auto-graded score for SC and MC questions */}
-          {(question.question_type === "SC" || question.question_type === "MC") && (
+          {(question.question_type === "SC" ||
+            question.question_type === "MC") && (
             <div className="mt-4 text-right">
               <span className="font-medium">
-                Score: {question.question_type === "SC" 
-                  ? ((question.student_answer as StudentAnswerSC).selected_answer === 
-                     (question.student_answer as StudentAnswerSC).correct_answer ? question.score : 0)
-                  : ((question.student_answer as StudentAnswerMC).selected_answers.every(ans => 
-                      (question.student_answer as StudentAnswerMC).correct_answers.includes(ans)
-                    ) && 
-                    (question.student_answer as StudentAnswerMC).selected_answers.length === 
-                    (question.student_answer as StudentAnswerMC).correct_answers.length 
-                      ? question.score : 0)
-                }/{question.score}
+                Score:{" "}
+                {question.question_type === "SC"
+                  ? (question.student_answer as StudentAnswerSC)
+                      .selected_answer ===
+                    (question.student_answer as StudentAnswerSC).correct_answer
+                    ? question.score
+                    : 0
+                  : (
+                      question.student_answer as StudentAnswerMC
+                    ).selected_answers.every((ans) =>
+                      (
+                        question.student_answer as StudentAnswerMC
+                      ).correct_answers.includes(ans)
+                    ) &&
+                    (question.student_answer as StudentAnswerMC)
+                      .selected_answers.length ===
+                      (question.student_answer as StudentAnswerMC)
+                        .correct_answers.length
+                  ? question.score
+                  : 0}
+                /{question.score}
               </span>
             </div>
           )}
@@ -172,7 +194,8 @@ const QuizGrader: React.FC<QuizGraderProps> = ({ questions }) => {
 
       <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg">
         <div className="text-lg font-medium">
-          Total Score: {Object.values(grades).reduce((sum, grade) => sum + grade, 0)}/
+          Total Score:{" "}
+          {Object.values(grades).reduce((sum, grade) => sum + grade, 0)}/
           {questions.reduce((sum, q) => sum + q.score, 0)}
         </div>
         <button

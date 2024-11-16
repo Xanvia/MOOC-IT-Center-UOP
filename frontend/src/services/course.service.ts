@@ -584,7 +584,7 @@ export const getCodeSubmissions = async (submissionId: string) => {
     const response = await axiosInstance.get(
       `/course/manage/code/${submissionId}`
     );
-    return response.data.data;
+    return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
   }

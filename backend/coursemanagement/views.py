@@ -100,11 +100,8 @@ class StudentQuizListAPIView(generics.ListAPIView):
         )
 
     def filter_queryset(self, queryset):
-        return (
-            super()
-            .filter_queryset(queryset)
-            .exclude(component__type__in=["Note", "Video"])
-        )
+        queryset = super().filter_queryset(queryset).exclude(component__type__in=["Note", "Video"])
+        return queryset.exclude(completed=False)
 
 
 class StudentQuizDetailAPIView(generics.RetrieveAPIView):
