@@ -12,24 +12,20 @@ import {
 const GradingPage: React.FC = () => {
   const searchParams = useSearchParams();
   const params = useParams();
-  const [assignmentData, setAssignmentData] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const assigmentType = searchParams.get("type");
+  const [assignmentData, setAssignmentData] = useState<any>(null); // Using `any` for flexibility
+  const [loading, setLoading] = useState(true);
+  const assignmentType = searchParams.get("type");
 
   useEffect(() => {
     const fetchAssignmentData = async () => {
       setLoading(true);
       try {
-        if (assigmentType === "Quiz") {
-          const quizData = await getQuizSubmissions(
-            params.submissionId as string
-          );
+        if (assignmentType === "Quiz") {
+          const quizData = await getQuizSubmissions(params.submissionId as string);
           console.log(quizData);
           setAssignmentData(quizData);
-        } else if (assigmentType === "Code") {
-          const codeData = await getCodeSubmissions(
-            params.submissionId as string
-          );
+        } else if (assignmentType === "Code") {
+          const codeData = await getCodeSubmissions(params.submissionId as string);
           setAssignmentData(codeData);
         }
       } catch (error) {
@@ -40,19 +36,20 @@ const GradingPage: React.FC = () => {
     };
 
     fetchAssignmentData();
-  }, []);
+  }, [assignmentType, params.submissionId]);
 
   if (loading) {
     return (
-      <div className="p-6 bg-gray-50 min-h-screen w-full flex justify-center items-center">
-        <p className="text-lg text-gray-600">Loading assignment data...</p>
+      <div className="p-6 bg-gray-50 min-h-screen w-full flex items-center justify-center">
+        <span>Loading assignment data...</span>
       </div>
     );
   }
+
   if (!assignmentData) {
     return (
-      <div className="p-6 bg-gray-50 min-h-screen w-full flex justify-center items-center">
-        <p className="text-lg text-red-600">Failed to load assignment data.</p>
+      <div className="p-6 bg-gray-50 min-h-screen w-full flex items-center justify-center">
+        <span>Failed to load assignment data.</span>
       </div>
     );
   }
@@ -60,8 +57,8 @@ const GradingPage: React.FC = () => {
   return (
     <div className="p-6 bg-gray-50 min-h-screen w-full">
       <h1 className="text-2xl font-bold mb-6">Assignment Grading</h1>
-      {assigmentType === "Quiz" ? (
-        <QuizGrader quizData={assignmentData} />
+      {assignmentType === "Quiz" ? (
+        <QuizGrader questions={assignmentData.questions} />
       ) : (
         <CodingGrader codingData={assignmentData} />
       )}

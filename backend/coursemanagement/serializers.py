@@ -165,7 +165,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ["id", "text", "question_type", "score", "answers", "student_answer"]
+        fields = ["id", "text", "question_type", "score", "answers","student_answer"]
 
     def get_answers(self, question):
         # For open-ended questions, don't return answer choices
@@ -183,18 +183,35 @@ class QuestionSerializer(serializers.ModelSerializer):
         student_answers = student_quiz.student_answers
         question_id = str(question.id)  # Ensure question_id is a string to match the dictionary keys
 
-        # Get the answer for this question
+        # Get the student's answer for this question
         student_answer = student_answers.get(question_id)
         if student_answer is None:
             return None
 
-        # Handle the answer based on the question type
+        # Fetch correct answers from the Answer model
+        correct_answers = question.answers.filter(is_correct=True).values_list(
+            "text", flat=True
+        )
+
+        # Handle the response based on the question type
         if question.question_type == Question.OPENN_ENDED:
             return {"text": student_answer}
         elif question.question_type == Question.MULTIPLE_CORRECT:
-            return {"selected_answers": student_answer}
+            return {
+                "selected_answers": student_answer,
+                "correct_answers": list(correct_answers),
+            }
         else:  # SINGLE_CORRECT
-            return {"selected_answer": student_answer}
+            return {
+                "selected_answer": student_answer,
+                "correct_answer": correct_answers.first(),
+            }
+        
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation.pop("answers")
+        return representation
+
 
 
 class StudentQuizDetailSerializer(serializers.ModelSerializer):
