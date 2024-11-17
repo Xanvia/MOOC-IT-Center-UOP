@@ -117,14 +117,16 @@ class Migration(migrations.Migration):
                 ('difficulty', models.CharField(max_length=255)),
                 ('status', models.CharField(default='unpublished', max_length=255)),
                 ('payment_type', models.CharField(choices=[('free', 'Free'), ('paid', 'Completely Paid'), ('trial', '1 Week Free Trial and Paid')], default='trial', max_length=50)),
-<<<<<<< HEAD
                 ('price', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
+<<<<<<< HEAD
 <<<<<<< HEAD
                 ('finished', models.BooleanField(default=False)),
 =======
 =======
 >>>>>>> 810f922 (fix:migrations)
 >>>>>>> 73ba8c9 (fix:migrations)
+=======
+>>>>>>> fc5fab2 (feat: migartions)
                 ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='userprofiles.interest')),
                 ('course_creator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
                 ('institution', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='userprofiles.institution')),
@@ -147,8 +149,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date_enrolled', models.DateTimeField(auto_now_add=True)),
-<<<<<<< HEAD
                 ('paid', models.BooleanField(default=False)),
+<<<<<<< HEAD
 <<<<<<< HEAD
                 ('certificate_url', models.CharField(blank=True, max_length=255, null=True)),
                 ('certificate_id', models.CharField(blank=True, max_length=255, null=True)),
@@ -157,6 +159,8 @@ class Migration(migrations.Migration):
 =======
 >>>>>>> 810f922 (fix:migrations)
 >>>>>>> 73ba8c9 (fix:migrations)
+=======
+>>>>>>> fc5fab2 (feat: migartions)
                 ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.course')),
                 ('student', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
@@ -176,7 +180,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-<<<<<<< HEAD
             name='LastSeen',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -197,8 +200,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-=======
->>>>>>> 810f922 (fix:migrations)
             name='Message',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -261,10 +262,7 @@ class Migration(migrations.Migration):
                 ('code', models.TextField()),
                 ('grade', models.DecimalField(decimal_places=2, max_digits=5)),
                 ('graded', models.BooleanField(default=False)),
-<<<<<<< HEAD
                 ('test_results', models.JSONField(blank=True, default=list, null=True)),
-=======
->>>>>>> 810f922 (fix:migrations)
                 ('enrollement', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.enrollment')),
                 ('coding_assignment', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.codingassignment')),
             ],
@@ -281,11 +279,7 @@ class Migration(migrations.Migration):
             name='StudentQuiz',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-<<<<<<< HEAD
                 ('score', models.DecimalField(decimal_places=2, max_digits=5)),
-=======
-                ('score', models.IntegerField(default=0)),
->>>>>>> 810f922 (fix:migrations)
                 ('graded', models.BooleanField(default=False)),
                 ('grade_approved', models.BooleanField(default=False)),
                 ('completed_at', models.DateTimeField(auto_now_add=True)),
