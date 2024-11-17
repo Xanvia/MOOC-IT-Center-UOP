@@ -8,6 +8,8 @@ import { enrollCourse, initiatePaymentBe } from "@/services/course.service";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useGlobal } from "@/contexts/store";
+import PaymentModal from "@/components/payment/paymentModel/paymentsModel";
+import { set } from "jodit/types/core/helpers";
 
 interface CourseHeaderProps {
   courseData: CourseData;
@@ -20,18 +22,20 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
   reloadData,
   isEdit,
 }) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [enrollementId, setEnrollementId] = useState<number | null>(null);
+
   const handleEnroll = async () => {
     try {
+      setModalOpen(true);
       const enrollementId = await enrollCourse(courseData.id);
+      setEnrollementId(1);
       toast.success("Enrolled in course successfully");
-      
-      // Redirect to the payments page
-      router.push("/payments");
     } catch (error: any) {
       toast.error("Error enrolling in course");
     }
   };
-  
+
   const router = useRouter();
   const { userRole } = useGlobal();
 
@@ -124,6 +128,16 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
             )}
           </div>
         </div>
+        <PaymentModal
+          isOpen={isModalOpen}
+          onClose={() => setModalOpen(false)}
+          title={courseData.name}
+          provider={courseData.institution}
+          description={courseData.description}
+          fee={courseData.price}
+          trialAvailable={false}
+          onClick={() => initiatePayment(2)}
+        />
       </div>
     </>
   );

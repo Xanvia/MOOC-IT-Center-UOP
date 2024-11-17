@@ -5,7 +5,7 @@ export enum CategoryEnum {
   Marketing = 3,
   SoftSkill = 4,
   Network = 5,
-  DataAnalyst = 6
+  DataAnalyst = 6,
 }
 
 export interface CreateCourseData {
@@ -43,6 +43,7 @@ export interface CourseData {
   isEnrolled?: boolean;
   canEdit?: boolean;
   instructors: Instructor[];
+  price: number;
 }
 
 export interface UpdateCourseData {
@@ -61,11 +62,11 @@ export interface Instructor {
   profile_picture: string;
 }
 export const categoryLabels: { [key in CategoryEnum]: string } = {
-  [CategoryEnum.All]: 'All',
-  [CategoryEnum.UIDesign]: 'UI Design',
-  [CategoryEnum.Programming]: 'Programming',
-  [CategoryEnum.Marketing]: 'Marketing',
-  [CategoryEnum.SoftSkill]: 'Soft Skill',
-  [CategoryEnum.Network]: 'Network',
-  [CategoryEnum.DataAnalyst]: 'Data Analyst'
+  [CategoryEnum.All]: "All",
+  [CategoryEnum.UIDesign]: "UI Design",
+  [CategoryEnum.Programming]: "Programming",
+  [CategoryEnum.Marketing]: "Marketing",
+  [CategoryEnum.SoftSkill]: "Soft Skill",
+  [CategoryEnum.Network]: "Network",
+  [CategoryEnum.DataAnalyst]: "Data Analyst",
 };
