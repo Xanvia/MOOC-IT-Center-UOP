@@ -25,22 +25,13 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
   const [isModalOpen, setModalOpen] = useState(false);
   const [enrollementId, setEnrollementId] = useState<number | null>(null);
 
-  const handleEnroll = async () => {
-    try {
-      setModalOpen(true);
-      const enrollementId = await enrollCourse(courseData.id);
-      setEnrollementId(1);
-      toast.success("Enrolled in course successfully");
-    } catch (error: any) {
-      toast.error("Error enrolling in course");
-    }
-  };
-
   const router = useRouter();
   const { userRole } = useGlobal();
 
   async function initiatePayment(enrollmentId: number) {
     try {
+      const enrollementId = await enrollCourse(courseData.id);
+      setEnrollementId(enrollementId);
       // Fetch the payload from your backend
       const response = await initiatePaymentBe(enrollmentId);
       const payload = response.data.payload;
@@ -122,7 +113,10 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
                     // onClick={() => initiatePayment(2)}
                   />
                 ) : (
-                  <PrimaryButton text="E N R O L" onClick={handleEnroll} />
+                  <PrimaryButton
+                    text="E N R O L"
+                    onClick={() => setModalOpen(true)}
+                  />
                 )}
               </>
             )}
