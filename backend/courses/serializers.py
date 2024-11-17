@@ -92,13 +92,14 @@ class CourseSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             user = request.user
             try:
-                Enrollment.objects.get(student=user, course=instance)
-                payment = Payments.get(student=user, enrollement=instance)
-                if payment.status == "SUCCESS":
+                enrollement = Enrollment.objects.get(student=user, course=instance)
+                if enrollement.paid:
                     representation["isEnrolled"] = True
                 else:
                     representation["isEnrolled"] = False
             except Enrollment.DoesNotExist:
+                representation["isEnrolled"] = False
+            except Payments.DoesNotExist:
                 representation["isEnrolled"] = False
 
             # check if user is a teacher
@@ -268,7 +269,6 @@ class EnrollementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
         fields = "__all__"
-
 
 
 class AnswerSerializer(serializers.ModelSerializer):

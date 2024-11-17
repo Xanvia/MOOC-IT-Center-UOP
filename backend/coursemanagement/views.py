@@ -15,7 +15,7 @@ from .serializers import (
     StudentListSerializer,
     PaymentSerializer,
     GradeQuizSerializer,
-    GradeCodeSerializer
+    GradeCodeSerializer,
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
@@ -103,7 +103,11 @@ class StudentQuizListAPIView(generics.ListAPIView):
         )
 
     def filter_queryset(self, queryset):
-        queryset = super().filter_queryset(queryset).exclude(component__type__in=["Note", "Video"])
+        queryset = (
+            super()
+            .filter_queryset(queryset)
+            .exclude(component__type__in=["Note", "Video"])
+        )
         return queryset.exclude(completed=False)
 
 
@@ -123,7 +127,7 @@ class GradeQuizAPIView(generics.UpdateAPIView):
     permission_classes = [GradePermissions]
 
     def update(self, request, *args, **kwargs):
-        response = super().update(request,partial=True *args, **kwargs)
+        response = super().update(request, partial=True * args, **kwargs)
         response.data = {
             "status": "success",
             "message": "Quiz graded successfully",
@@ -243,19 +247,20 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
         amount = response.data["amount"]
         order_id = response.data["order_id"]
 
-
+        enrollement = Enrollment.objects.get(id=kwargs.get("enrollment_id"))
+        course_id = enrollement.course.id
         appid = settings.MERCH_ID
-        merchant_secret = settings.MERCH_SECRET 
+        merchant_secret = settings.MERCH_SECRET
         currency = "USD"
-    
+
         hash_source = f"{appid}{order_id}{amount}{currency}{hashlib.md5(merchant_secret.encode()).hexdigest().upper()}"
         hash_value = hashlib.md5(hash_source.encode()).hexdigest().upper()
 
         # Prepare the payload
         payload = {
             "merchant_id": appid,
-            "return_url": "http://localhost:3000/courses/1",
-            "cancel_url": "http://localhost:3000/courses/1/cancel",
+            "return_url": f"http://localhost:3000/courses/{course_id}/room",
+            "cancel_url": f"http://localhost:3000/courses/{course_id}",
             "notify_url": "http://127.0.0.1:8000/api/payments/notify/",
             "order_id": order_id,
             "items": "Course Enrollment",
@@ -267,13 +272,13 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
             "address": "Student Address",
             "city": "Student City",
             "country": "Sri Lanka",
-            "hash": hash_value,  
+            "hash": hash_value,
             "custom_1": request.user.id,
             "custom_2": kwargs.get("enrollment_id"),
         }
 
         return Response({"payload": payload}, status=status.HTTP_200_OK)
-    
+
 
 class PaymentNotificationAPIView(views.APIView):
     def post(self, request):
@@ -281,7 +286,9 @@ class PaymentNotificationAPIView(views.APIView):
         user_id = request.data.get("custom_1")
         enrollment_id = request.data.get("custom_2")
 
-        payment = Payments.objects.get(order_id=order_id, student=user_id, enrollement=enrollment_id)
+        payment = Payments.objects.get(
+            order_id=order_id, student=user_id, enrollement=enrollment_id
+        )
         payment.status = "completed"
         payment.payment_id = request.data.get("payment_id")
         payment.save()
