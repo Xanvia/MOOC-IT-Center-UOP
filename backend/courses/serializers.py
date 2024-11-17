@@ -26,7 +26,7 @@ from .models import (
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
-from coursemanagement.models import CourseTeachers
+from coursemanagement.models import CourseTeachers, Payments
 
 
 class CourseTeacherSerializer(serializers.ModelSerializer):
@@ -92,9 +92,14 @@ class CourseSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             user = request.user
             try:
-                Enrollment.objects.get(student=user, course=instance)
-                representation["isEnrolled"] = True
+                enrollement = Enrollment.objects.get(student=user, course=instance)
+                if enrollement.paid:
+                    representation["isEnrolled"] = True
+                else:
+                    representation["isEnrolled"] = False
             except Enrollment.DoesNotExist:
+                representation["isEnrolled"] = False
+            except Payments.DoesNotExist:
                 representation["isEnrolled"] = False
 
             # check if user is a teacher
@@ -265,19 +270,6 @@ class EnrollementSerializer(serializers.ModelSerializer):
         model = Enrollment
         fields = "__all__"
 
-    def validate(self, attrs):
-        # check if user has an enrollement with this course already
-        request = self.context.get("request")
-        user = request.user
-        course = attrs.get("course")
-        try:
-            Enrollment.objects.get(student=user, course=course)
-            raise serializers.ValidationError("You are already enrolled in this course")
-        except Enrollment.DoesNotExist:
-            pass
-        # TODO: check if user has an payment object that has not linked with an enrollement object
-        return super().validate(attrs)
-
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -402,7 +394,7 @@ class StudentCodingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentCodingAnswer
-        fields = ["coding_assignment", "code", "grade","test_results"]
+        fields = ["coding_assignment", "code", "grade", "test_results"]
 
     def validate(self, attrs):
         # check if student has already answered this quiz

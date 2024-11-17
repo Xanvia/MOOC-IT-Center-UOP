@@ -66,11 +66,10 @@ class CourseContentListAccess(permissions.BasePermission):
         if self.is_in_group(user, "admin"):
             return True
 
-        # Allow enrolled students
         if (
             self.is_in_group(user, "student")
             and Enrollment.objects.filter(
-                course_id=course_id, student_id=user.id
+                course_id=course_id, student_id=user.id, paid=True
             ).exists()
         ):
             return True

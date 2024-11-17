@@ -8,6 +8,8 @@ import { enrollCourse, initiatePaymentBe } from "@/services/course.service";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useGlobal } from "@/contexts/store";
+import PaymentModal from "@/components/payment/paymentModel/paymentsModel";
+import { set } from "jodit/types/core/helpers";
 
 interface CourseHeaderProps {
   courseData: CourseData;
@@ -20,19 +22,16 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
   reloadData,
   isEdit,
 }) => {
-  const handleEnroll = async () => {
-    try {
-      const enrollementId = await enrollCourse(courseData.id);
-      toast.success("Enrolled in course successfully");
-    } catch (error: any) {
-      toast.error("Error enrolling in course");
-    }
-  };
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [enrollementId, setEnrollementId] = useState<number | null>(null);
+
   const router = useRouter();
   const { userRole } = useGlobal();
 
   async function initiatePayment(enrollmentId: number) {
     try {
+      const enrollementId = await enrollCourse(courseData.id);
+      setEnrollementId(enrollementId);
       // Fetch the payload from your backend
       const response = await initiatePaymentBe(enrollmentId);
       const payload = response.data.payload;
@@ -114,12 +113,25 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
                     // onClick={() => initiatePayment(2)}
                   />
                 ) : (
-                  <PrimaryButton text="E N R O L" onClick={handleEnroll} />
+                  <PrimaryButton
+                    text="E N R O L"
+                    onClick={() => setModalOpen(true)}
+                  />
                 )}
               </>
             )}
           </div>
         </div>
+        <PaymentModal
+          isOpen={isModalOpen}
+          onClose={() => setModalOpen(false)}
+          title={courseData.name}
+          provider={courseData.institution}
+          description={courseData.description}
+          fee={courseData.price}
+          trialAvailable={false}
+          onClick={() => initiatePayment(2)}
+        />
       </div>
     </>
   );

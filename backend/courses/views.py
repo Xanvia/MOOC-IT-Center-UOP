@@ -501,13 +501,32 @@ class EnrollementViewSet(viewsets.ModelViewSet):
     serializer_class = EnrollementSerializer
     queryset = Enrollment.objects.all()
 
+    def check_already_enrolled(self, request, *args, **kwargs):
+        course = Course.objects.get(id=kwargs["course_id"])
+        student = request.user
+        enrollment = Enrollment.objects.filter(course=course, student=student).first()
+        if enrollment:
+            return enrollment.id
+        return None
+
     def enroll(self, request, *args, **kwargs):
         student = request.user
+
+        enrollement_id = self.check_already_enrolled(request, *args, **kwargs)
+        if enrollement_id:
+            return Response(
+                {
+                    "status": "success",
+                    "message": "You are already enrolled",
+                    "data": {"id": enrollement_id},
+                },
+                status=status.HTTP_200_OK,
+            )
+
         request.data["course"] = kwargs["course_id"]
         request.data["student"] = student.id
 
         response = super().create(request, *args, **kwargs)
-
         response.data = {
             "status": "success",
             "message": "Enrolled successfully",
@@ -610,7 +629,7 @@ class CodingQuizViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         response = super().update(request, partial=True, *args, **kwargs)
-        
+
         response.data = {
             "status": "success",
             "message": "Quiz Details Added successfully",
