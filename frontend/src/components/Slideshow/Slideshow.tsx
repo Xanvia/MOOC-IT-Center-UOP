@@ -104,7 +104,7 @@ const Slideshow = () => {
             </div>
             
             {/* Content */}
-            <div className="absolute inset-0 z-20 flex items-center">
+            <div className="absolute inset-0 z-20 flex items-center p-20">
               <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="max-w-2xl text-white space-y-6">
                   <h2 className="text-4xl sm:text-5xl font-bold leading-tight">
@@ -126,13 +126,13 @@ const Slideshow = () => {
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2 rounded-full bg-black/30 hover:bg-black/50 transition-colors group"
+        className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/30 hover:bg-black/50 transition-colors group"
       >
         <ChevronLeft className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-2 rounded-full bg-black/30 hover:bg-black/50 transition-colors group"
+        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/30 hover:bg-black/50 transition-colors group"
       >
         <ChevronRight className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
       </button>
