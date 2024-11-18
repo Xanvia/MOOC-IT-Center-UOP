@@ -17,7 +17,7 @@ const slides: Slide[] = [
     id: 1,
     title: "Learn Without Limits",
     description: "Build skills with courses, certificates, and degrees online from world-class universities and companies.",
-    bgColor: "from-blue-900/90",
+    bgColor: "from-purple-900/90",
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&h=400&fit=crop",
     buttonText: "Explore Courses"
   },
@@ -73,7 +73,7 @@ const Slideshow = () => {
 
   return (
     <div 
-      className="relative w-full h-[450px] bg-blue-800 overflow-hidden"
+      className="relative w-full h-[350px] bg-blue-800 overflow-hidden"
       onMouseEnter={() => setIsAutoPlaying(false)}
       onMouseLeave={() => setIsAutoPlaying(true)}
     >
