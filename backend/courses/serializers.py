@@ -66,7 +66,7 @@ class CourseSerializer(serializers.ModelSerializer):
             data["institution"] = institution
 
         if request and request.method == "PATCH":
-            allowed_fields = {"outcomes", "specifications", "description"}
+            allowed_fields = {"outcomes", "specifications", "description","syllabus"}
             # Filter the data to only include allowed fields
             data = {key: value for key, value in data.items() if key in allowed_fields}
         return data

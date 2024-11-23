@@ -22,6 +22,7 @@ class Course(models.Model):
     faculty = models.CharField(max_length=255, blank=True, null=True)
     department = models.CharField(max_length=255, blank=True, null=True)
     outcomes = models.JSONField(default=list, blank=True, null=True)
+    syllabus = models.JSONField(default=list, blank=True, null=True)
     header_image = models.ImageField(upload_to="course_images/", blank=True, null=True)
     duration = models.CharField(max_length=255, blank=True, null=True)
     difficulty = models.CharField(max_length=255)
