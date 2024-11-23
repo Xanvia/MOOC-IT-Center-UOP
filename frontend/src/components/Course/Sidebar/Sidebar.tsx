@@ -20,14 +20,17 @@ import { useParams, useRouter } from "next/navigation";
 import Loader from "@/components/Loarder/Loarder";
 import { toast } from "sonner";
 import { useGlobal } from "@/contexts/store";
-import { ChevronLeft, ChevronRight, Bell } from "lucide-react";
+import { Menu, Bell } from "lucide-react";
 
 interface SidebarProps {
   onCollapsedChange: (collapsed: boolean) => void;
   isCollapsed: boolean;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ onCollapsedChange, isCollapsed }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  onCollapsedChange,
+  isCollapsed,
+}) => {
   const {
     selectedTopic,
     setSelectedTopic,
@@ -346,18 +349,14 @@ const Sidebar: React.FC<SidebarProps> = ({ onCollapsedChange, isCollapsed }) => 
     >
       <div
         className={`relative h-full border-r bg-primary_light min-h-screen border-gray-200 pb-20 mb-96 ${
-          isCollapsed ? "p-2" : "p-8"
+          isCollapsed ? "p-2" : "p-2"
         }`}
       >
         <button
           onClick={toggleSidebar}
-          className="absolute -right-3 top-4 bg-white rounded-full p-1 shadow-md hover:bg-gray-100 z-10"
+          className="p-2 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none"
         >
-          {isCollapsed ? (
-            <ChevronRight className="w-4 h-4" />
-          ) : (
-            <ChevronLeft className="w-4 h-4" />
-          )}
+          <Menu size={24} />
         </button>
 
         {!isCollapsed && (
