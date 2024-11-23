@@ -52,7 +52,12 @@ const CourseCard: React.FC<CourseCardProps> = ({
           <h5 className={CourseCardTitle}>{title}</h5>
           <CourseRatingLabel ratings="4.2" />
         </div>
-        <div className="w-full flex items-center justify-center py-2 border-t-2 font-semibold border-gray-200"> {institution}</div>
+        <div className="w-full flex items-center justify-center py-2 border-t-2 font-semibold border-gray-200 "> 
+          {truncateDescription(institution, 27)}
+          <span className="absolute top-full mt-1 hidden group-hover:flex px-2 py-1 text-sm text-white bg-gray-700 rounded shadow-lg">
+            {institution}
+          </span>
+        </div>
         <div className="flex item-center justify-center">Difficulty: {difficulty}</div>
         {/* <p
           className={CourseCardDescription}
@@ -60,7 +65,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
         ></p> */}
         <div className="space-x-4 mt-3 border-t-2 p-1 border-gray-200">
           <>
-          <Link href={`/courses/${id}`} className={CourseCardButtonClass}>
+          <Link href={`/courses/${id}/room`} className={CourseCardButtonClass}>
             Course Room
           </Link>
           <Link href={`/settings/${id}`} className={CourseCardButtonClass}>
