@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Share2,
   Download,
@@ -9,14 +9,37 @@ import {
   Star,
   FileBadge,
 } from "lucide-react";
+import { useParams } from "next/navigation";
+import { getCertificate } from "@/services/course.service";
 
-const CourseCompletion = ({
-  courseName = "Web Development Fundamentals",
-  completionDate = "November 23, 2024",
-  score = 95,
-  hoursSpent = 42,
-  certificateId = "CERT-2024-001",
-}) => {
+interface CertificateData {
+  course_name: string;
+  certificate_id: string;
+  student_name: string;
+  completion_date: string;
+  score: number;
+  hours_spent: number;
+}
+
+const CourseCompletion = () => {
+  const params = useParams();
+  const courseId = params.id;
+  const [certificateData, setCertificateData] =
+    useState<CertificateData | null>(null);
+
+  useEffect(() => {
+    const fetchCertificate = async () => {
+      try {
+        const data = await getCertificate(courseId as string);
+        console.log("Certificate Data:", data);
+        setCertificateData(data);
+      } catch (error) {
+        console.error("Error fetching certificate:", error);
+      }
+    };
+    fetchCertificate();
+  }, [courseId]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-8">
       <div className="max-w-4xl mx-auto">
@@ -29,7 +52,7 @@ const CourseCompletion = ({
             Congratulations! 🎉
           </h1>
           <p className="text-xl text-gray-600">
-            You've successfully completed {courseName}
+            You've successfully completed {certificateData?.course_name} course.
           </p>
         </div>
 
@@ -39,7 +62,7 @@ const CourseCompletion = ({
           <div className="bg-white/50 backdrop-blur-sm rounded-lg shadow-sm p-6">
             <div className="text-center">
               <Star className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-              <div className="text-3xl font-bold text-gray-900">{score}%</div>
+              <div className="text-3xl font-bold text-gray-900">{98}%</div>
               <div className="text-sm text-gray-500">Overall Score</div>
             </div>
           </div>
@@ -48,9 +71,7 @@ const CourseCompletion = ({
           <div className="bg-white/50 backdrop-blur-sm rounded-lg shadow-sm p-6">
             <div className="text-center">
               <Clock className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-              <div className="text-3xl font-bold text-gray-900">
-                {hoursSpent}h
-              </div>
+              <div className="text-3xl font-bold text-gray-900">{24}h</div>
               <div className="text-sm text-gray-500">Hours Spent</div>
             </div>
           </div>
@@ -60,7 +81,7 @@ const CourseCompletion = ({
             <div className="text-center">
               <FileBadge className="w-8 h-8 text-green-500 mx-auto mb-2" />
               <div className="text-3xl font-bold text-gray-900">
-                {certificateId}
+                {certificateData?.certificate_id}
               </div>
               <div className="text-sm text-gray-500">Certificate ID</div>
             </div>
@@ -76,7 +97,9 @@ const CourseCompletion = ({
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   Course Certificate
                 </h3>
-                <p className="text-gray-500">Completed on {completionDate}</p>
+                <p className="text-gray-500">
+                  Completed on {certificateData?.completion_date}
+                </p>
               </div>
             </div>
           </div>

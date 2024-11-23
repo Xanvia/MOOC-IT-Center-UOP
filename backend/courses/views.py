@@ -1146,7 +1146,7 @@ class GetCertifcateView(generics.RetrieveAPIView):
 
     def get_object(self):
         enrollement = Enrollment.objects.filter(
-            course=self.kwargs["course_id"], student=self.request.user
+            course=self.kwargs["pk"], student=self.request.user
         ).first()
         return enrollement
 
