@@ -1136,3 +1136,14 @@ class ListCourseCreators(generics.ListAPIView):
             {"status": "success", "data": {"teachers": response.data}},
             status=status.HTTP_200_OK,
         )
+
+
+class GetCertifcateView(generics.RetrieveAPIView):
+    serializer_class = CourseSerializer
+    queryset = Course.objects.all()
+
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+
+        response.data = {"status": "success", "data": response.data}
+        return response

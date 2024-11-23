@@ -131,6 +131,8 @@ class Enrollment(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     date_enrolled = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False)
+    certificate_url = models.CharField(max_length=255, blank=True, null=True)
+    certificate_id = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.student.username
