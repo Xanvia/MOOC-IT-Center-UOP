@@ -200,7 +200,7 @@ const Page: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col p-4 mt-4 mb-96 ml-96" key={item.id}>
+    <div className="flex flex-col p-4 mt-4 mb-96" key={item.id}>
       <div className="mb-4">
         <TheBreadcrumb items={breadcrumbItems} />
       </div>
