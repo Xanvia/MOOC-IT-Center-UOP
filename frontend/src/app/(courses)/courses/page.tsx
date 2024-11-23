@@ -52,6 +52,7 @@ export default function Courses() {
               <CourseCard
                 id={course.id}
                 institution= {course.institution}
+                difficulty = {course.difficulty}
                 image={course.header_image || ""}
                 title={course.name}
                 description={course.description}

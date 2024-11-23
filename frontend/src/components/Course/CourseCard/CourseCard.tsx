@@ -16,6 +16,7 @@ import {
 
 interface CourseCardProps {
   id: number;
+  difficulty: string;
   title: string;
   institution: string;
   description: string; 
@@ -25,7 +26,7 @@ interface CourseCardProps {
 const CourseCard: React.FC<CourseCardProps> = ({
   id,
   title,
-  description,
+  difficulty,
   institution,
   image,
 }) => {
@@ -45,18 +46,19 @@ const CourseCard: React.FC<CourseCardProps> = ({
         )}
         <div className={CourseCardImageClsx}></div>
       </div>
-
-      <div className="px-4 pt-2 flex flex-col">
+      
+      <div className="px-4 pt-2 flex flex-col ">
         <div className={CourseCardTitleContainerClsx}>
           <h5 className={CourseCardTitle}>{title}</h5>
           <CourseRatingLabel ratings="4.2" />
         </div>
-        
-        <p
+        <div className="w-full flex items-center justify-center py-2 border-t-2 font-semibold border-gray-200"> {institution}</div>
+        <div className="flex item-center justify-center">Difficulty: {difficulty}</div>
+        {/* <p
           className={CourseCardDescription}
           dangerouslySetInnerHTML={{ __html: truncateDescription(description) }}
-        ></p>
-        <div className="space-x-4 mt-2">
+        ></p> */}
+        <div className="space-x-4 mt-2 border-t-2  border-gray-200">
           <>
           <Link href={`/courses/${id}`} className={CourseCardButtonClass}>
             Course Room
@@ -66,7 +68,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
           </Link>
           </>
         </div>
-        <div className="w-full flex items-center justify-between py-2 px-2 border-t-2 border-gray-200">{institution} </div>
+        {/* <div className="w-full flex items-center justify-between py-2 px-2 border-t-2 border-gray-200"> </div> */}
         
         {/* <CourseStats /> */}
       </div>

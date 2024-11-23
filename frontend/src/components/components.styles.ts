@@ -389,7 +389,8 @@ export const CourseCardOuterClasses = clsx(
   "bg-clip-border",
   "text-gray-700",
   "shadow-lg",
-  "h-[350px]" 
+  "h-[350px]",
+  "overflow-hidden", 
 );
 
 export const CourseCardImageContainerClsx = clsx(
@@ -403,7 +404,7 @@ export const CourseCardImageContainerClsx = clsx(
   "bg-blue-gray-500",
   "bg-clip-border",
   "shadow-blue-gray-500/40",
-  "h-[150px]" // Fixed height for the image container
+  "h-[150px]", 
 );
 
 export const CourseCardImageClsx = clsx(
@@ -429,6 +430,7 @@ export const CourseCardTitleContainerClsx = clsx(
 export const CourseCardTitle = clsx(
   "block",
   "font-sans",
+  "font-semibold",
   "text-lg", // Slightly reduced font size
   "antialiased",
   "font-medium",
