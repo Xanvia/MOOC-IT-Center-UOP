@@ -389,7 +389,7 @@ export const CourseCardOuterClasses = clsx(
   "bg-clip-border",
   "text-gray-700",
   "shadow-lg",
-  "h-[350px]",
+  "h-[360px]",
   "overflow-hidden", 
 );
 

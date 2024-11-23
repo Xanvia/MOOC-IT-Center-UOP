@@ -58,7 +58,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
           className={CourseCardDescription}
           dangerouslySetInnerHTML={{ __html: truncateDescription(description) }}
         ></p> */}
-        <div className="space-x-4 mt-2 border-t-2  border-gray-200">
+        <div className="space-x-4 mt-3 border-t-2 p-1 border-gray-200">
           <>
           <Link href={`/courses/${id}`} className={CourseCardButtonClass}>
             Course Room
