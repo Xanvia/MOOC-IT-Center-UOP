@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
       <div className="container mx-auto">
         <h1>OpenEd</h1>
         <hr className="my-0 border-primary" />
-        <p className="text-gray-400 text-xs">description</p>
+        <p className="text-gray-400 text-xs">MOOC powered by IT Center UOP</p>
         <div className="flex flex-col items-center mt-20 md:flex-row md:justify-between">
           <p className="text-sm">
             &copy; {new Date().getFullYear()} All rights reserved.
