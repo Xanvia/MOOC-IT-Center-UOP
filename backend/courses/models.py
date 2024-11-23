@@ -30,6 +30,7 @@ class Course(models.Model):
         max_length=50, choices=PAYMENT_TYPE_CHOICES, default="trial"
     )
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    finished = models.BooleanField(default=False)
 
 
 class Week(models.Model):
@@ -130,6 +131,10 @@ class Enrollment(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     date_enrolled = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False)
+    certificate_url = models.CharField(max_length=255, blank=True, null=True)
+    certificate_id = models.CharField(max_length=255, blank=True, null=True)
+    completion_date = models.DateTimeField(blank=True, null=True)
+
 
     def __str__(self):
         return self.student.username

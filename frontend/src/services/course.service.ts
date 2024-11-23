@@ -589,3 +589,14 @@ export const getCodeSubmissions = async (submissionId: string) => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const getCertificate = async (courseId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/certificate/${courseId}/`
+    );
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};

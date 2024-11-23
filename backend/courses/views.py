@@ -19,6 +19,7 @@ from .models import (
     ThreadMessage,
     LastSeen,
     LastSeenCourse,
+
 )
 from .serializers import (
     CourseSerializer,
@@ -44,6 +45,7 @@ from .serializers import (
     CheckUpdatesSerializer,
     UpdateLastSeenSerializer,
     CourseCreatorsSerializer,
+    GetCertificateSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
@@ -1136,3 +1138,20 @@ class ListCourseCreators(generics.ListAPIView):
             {"status": "success", "data": {"teachers": response.data}},
             status=status.HTTP_200_OK,
         )
+
+
+class GetCertifcateView(generics.RetrieveAPIView):
+    serializer_class = GetCertificateSerializer
+    queryset = Course.objects.all()
+
+    def get_object(self):
+        enrollement = Enrollment.objects.filter(
+            course=self.kwargs["pk"], student=self.request.user
+        ).first()
+        return enrollement
+
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+
+        response.data = {"status": "success", "data": response.data}
+        return response

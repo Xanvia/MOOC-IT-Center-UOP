@@ -610,3 +610,33 @@ class CourseCreatorsSerializer(serializers.ModelSerializer):
         if course:
             representation["institution"] = course.institution.label
         return representation
+
+
+class GetCertificateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Enrollment
+        fields = ["student", "course","id"]
+
+    
+    def validate(self, attrs):
+        # first check if the course.finished is true
+        course = attrs.get("course")
+        if not course.finished:
+            raise serializers.ValidationError("Course is not finished yet")
+        # just check thre are no progress items for this cousre and enroolemnt, that are not completed
+        request = self.context.get("request")
+        user = request.user
+        enrollement = attrs.get("id")
+        progress = Progress.objects.filter(enrollment=enrollement, completed=False,student = user, component__chapter__week__course = course).first()
+        if progress:
+            raise serializers.ValidationError("You have not completed all the components in this course")
+        return super().validate(attrs)
+    
+    def to_representation(self, instance):
+        representation =  super().to_representation(instance)
+        representation["certificate_url"] = instance.certificate_url
+        representation["certificate_id"] = instance.certificate_id
+        representation["course_name"] = instance.course.name
+        representation["student_name"] = instance.student.first_name + " " + instance.student.last_name
+        return representation
