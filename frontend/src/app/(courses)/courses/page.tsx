@@ -51,6 +51,7 @@ export default function Courses() {
             <Link key={course.id} href={`courses/${course.id}`} >
               <CourseCard
                 id={course.id}
+                institution= {course.institution}
                 image={course.header_image || ""}
                 title={course.name}
                 description={course.description}
