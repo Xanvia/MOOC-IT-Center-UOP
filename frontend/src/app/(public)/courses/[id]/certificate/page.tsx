@@ -52,7 +52,7 @@ const CourseCompletion = () => {
             Congratulations! 🎉
           </h1>
           <p className="text-xl text-gray-600">
-            You've successfully completed {certificateData?.course_name} course.
+            You&apos;ve successfully completed {certificateData?.course_name} course.
           </p>
         </div>
 
