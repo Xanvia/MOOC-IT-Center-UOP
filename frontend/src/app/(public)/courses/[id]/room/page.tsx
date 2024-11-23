@@ -39,6 +39,7 @@ const Page: React.FC = () => {
   const [courseData, setCourseData] = useState<{
     name: string | null;
     canEdit?: boolean;
+    finished?: boolean;
   }>({ name: null });
   const { userRole } = useGlobal();
   const params = useParams();
@@ -55,17 +56,17 @@ const Page: React.FC = () => {
       }
     }
   }, [item]);
-  // Fetch course data using useEffect
+
   useEffect(() => {
     const loadCourseData = async () => {
       if (!courseId) return;
       try {
-        const data = await fetchCourseData(courseId as string); // Fetch the course data
-        setCourseData({ name: data.name, canEdit: data.canEdit });
+        const data = await fetchCourseData(courseId as string);
+        setCourseData({ name: data.name, canEdit: data.canEdit ,finished: data.finished});
       } catch (error) {
         console.error("Failed to fetch course data:", error);
       } finally {
-        setIsLoading(false); // Set loading to false after fetching
+        setIsLoading(false);
       }
     };
 
@@ -136,9 +137,11 @@ const Page: React.FC = () => {
     }
     if (item.completed == false && userRole === "student") {
       try {
-        markAsComplete(String(item.id));
-        updateItemStatus(item.id, { completed: true });
-        toast.success("Marked as completed");
+        if (item.id !== 0) {
+          markAsComplete(String(item.id));
+          updateItemStatus(item.id, { completed: true });
+          toast.success("Marked as completed");
+        }
       } catch {
         toast.error("Error marking as completed");
       }
@@ -169,6 +172,11 @@ const Page: React.FC = () => {
       );
       setExpandedWeek(weekIndex + 1);
       setExpandedSubtopics({ 0: true });
+    } else {
+      if (userRole === "student" && courseData.finished == true) {
+        // we need to redirect to obtain certificate page
+        window.location.href = `/courses/${courseId}/certificate`;
+      }
     }
   };
 
