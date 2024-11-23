@@ -22,7 +22,8 @@ from .views import (
     ThreadMessageViewSet,
     LastSeenViewSet,
     CheckUpdatesRetrieveView,
-    UpdateLastSeenView
+    UpdateLastSeenView,
+    GetCertifcateView
 )
 
 router = DefaultRouter()
@@ -219,4 +220,5 @@ urlpatterns = [
     ),
     path("check-updates/<int:pk>/", CheckUpdatesRetrieveView.as_view()),
     path("last-seen/<int:pk>/", UpdateLastSeenView.as_view()),
+    path("certificate/<int:pk>/", GetCertifcateView.as_view()),
 ]
