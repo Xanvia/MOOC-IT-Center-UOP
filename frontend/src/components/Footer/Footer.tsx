@@ -7,6 +7,11 @@ const Footer: React.FC = () => {
         <h1>OpenEd</h1>
         <hr className="my-0 border-primary" />
         <p className="text-gray-400 text-xs">MOOC powered by IT Center UOP</p>
+        <img
+            src="/images/uop log.png" 
+            alt="UOP Logo"
+            className="w-7 h-7"
+          />
         <div className="flex flex-col items-center mt-20 md:flex-row md:justify-between">
           <p className="text-sm">
             &copy; {new Date().getFullYear()} All rights reserved.
