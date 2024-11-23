@@ -360,9 +360,9 @@ const Sidebar: React.FC<SidebarProps> = ({
         </button>
 
         {!isCollapsed && (
-          <>
+          <div className="p-4">
             <div
-              className={`mb-4 p-4 rounded-lg cursor-pointer transition-all ${
+              className={`mb-4 p-2 rounded-lg cursor-pointer transition-all ${
                 selectedTopic.type === "Notifications"
                   ? "bg-blue-100 border-l-4 border-blue-500"
                   : "hover:bg-gray-100"
@@ -431,7 +431,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 Add Week +
               </button>
             )}
-          </>
+          </div>
         )}
 
         {isCollapsed && (

@@ -185,7 +185,6 @@ const Page: React.FC = () => {
       href: `/courses/${courseId}`,
     }, // Use courseData.name
     { label: "Course Room", href: `/courses/${courseId}/room` },
-    { label: item.name, href: `/courses/${courseId}/room` }, // Current topic
   ];
 
   if (item.type == "Notifications") {
