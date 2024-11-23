@@ -117,6 +117,16 @@ export const addOutcomes = async (courseId: number, outcomes: string[]) => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+export const addSyllabus = async (courseId: number, syllabus: string[]) => {
+  try {
+    const response = await axiosInstance.patch(`/course/${courseId}`, {
+      syllabus,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
 
 export const uploadImage = async (
   file: File,
