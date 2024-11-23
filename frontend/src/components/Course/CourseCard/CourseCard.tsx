@@ -1,8 +1,11 @@
-import React from "react";
+"use client";
+import React, { useState, Suspense, useEffect } from "react";
 import Link from "next/link";
 import CourseRatingLabel from "./CourseRatingLabel";
 import CourseStats from "./CourseStats";
 import Image from "next/image";
+import { CourseData } from "@/components/Course/course.types";
+import { fetchMyCourses } from "@/services/course.service";
 import {
   CourseCardImageContainerClsx,
   CourseCardOuterClasses,
@@ -23,7 +26,6 @@ const CourseCard: React.FC<CourseCardProps> = ({
   description,
   image,
 }) => {
-
   const truncateDescription = (text: string | null | undefined, maxLength: number = 80): string => {
     if (typeof text !== 'string') return ''; // Return empty string if text is not a string
     if (text.length <= maxLength) return text;
@@ -40,18 +42,18 @@ const CourseCard: React.FC<CourseCardProps> = ({
         )}
         <div className={CourseCardImageClsx}></div>
       </div>
-      
-      <div className="px-4 pt-2 flex flex-col ">
+
+      <div className="px-4 pt-2 flex flex-col">
         <div className={CourseCardTitleContainerClsx}>
           <h5 className={CourseCardTitle}>{title}</h5>
-          
           <CourseRatingLabel ratings="4.2" />
         </div>
         <p
           className={CourseCardDescription}
           dangerouslySetInnerHTML={{ __html: truncateDescription(description) }}
         ></p>
-        <div className="space-y-2 space-x-1 min-h-5">
+        <div className="space-x-4 mt-2">
+          {/* Single set of buttons */}
           <Link href="/courses/1" className={CourseCardButtonClass}>
             Course Room
           </Link>
@@ -59,7 +61,6 @@ const CourseCard: React.FC<CourseCardProps> = ({
             Settings
           </Link>
         </div>
-
         <CourseStats />
       </div>
     </div>

@@ -298,7 +298,7 @@ export const CourseCardButtonClass = clsx(
   "duration-200", // Sets transition duration to 0.2s
   "hover:bg-gray-200", // Darker background color on hover
   "mx-2",
-  "my-1",
+  "my-2",
 );
 
 
@@ -446,7 +446,7 @@ export const CourseCardDescription = clsx(
   "font-light",
   "overflow-hidden" ,// Hide overflow text
   "min-h-[50px]", // Fixed height for description
-  "mb-6"
+  "mb-2"
 );
 export const interestCloseButtonClasses = clsx(
   "text-gray-400",
