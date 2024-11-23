@@ -33,6 +33,7 @@ const GradingPage: React.FC = () => {
           const mappedData = {
             question: codeData.question, // Mapping 'code' to 'question' field
             studentCode: codeData.code, // Assuming the student's code is also stored here
+            graded : codeData.graded,
             testCases: codeData.test_results.map((testResult: any) => ({
               stdin: testResult.stdin,
               expected_output: testResult.expected_output,
@@ -41,7 +42,7 @@ const GradingPage: React.FC = () => {
             })),
             autoGrade: parseFloat(codeData.grade), // Map grade as a number
           };
-
+          console.log(mappedData);
           setAssignmentData(mappedData);
         }
       } catch (error) {
@@ -72,11 +73,20 @@ const GradingPage: React.FC = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen w-full">
+      <button
+        onClick={() => window.history.back()}
+        className="mb-4 px-4 py-2 bg-primary text-white rounded hover:bg-secondary"
+      >
+        Go Back
+      </button>
+
       <h1 className="text-2xl font-bold mb-6">Assignment Grading</h1>
       {assignmentType === "Quiz" ? (
         <QuizGrader
           questions={assignmentData.questions}
           grade={assignmentData.score}
+          gradedI={assignmentData.graded}
+          approvedI={assignmentData.grade_approved}
           courseId={
             Array.isArray(params.courseId)
               ? params.courseId[0]
@@ -86,6 +96,7 @@ const GradingPage: React.FC = () => {
       ) : (
         <CodingGrader
           codingData={assignmentData}
+          approved={assignmentData.graded}
           courseId={
             Array.isArray(params.courseId)
               ? params.courseId[0]

@@ -8,6 +8,7 @@ interface QuizData {
   graded: boolean;
   id: string;
   can_grade: boolean;
+  grade_approved: boolean;
 }
 
 interface QuizSettingsTableProps {
@@ -65,7 +66,7 @@ const QuizSettingsTable = ({
                       className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600"
                       disabled={!quiz?.can_grade}
                     >
-                      Grade Quiz
+                      Manage Grades
                     </button>
                   </Link>
                 </td>

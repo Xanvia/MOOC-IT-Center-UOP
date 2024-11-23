@@ -22,17 +22,19 @@ interface CodingSubmission {
 interface CodingGraderProps {
   codingData: CodingSubmission;
   courseId: string;
+  approved: boolean;
 }
 
 const CodingGrader: React.FC<CodingGraderProps> = ({
   codingData,
   courseId,
+  approved,
 }) => {
   const params = useParams();
   const [approvedGrade, setApprovedGrade] = useState<number>(
     codingData?.autoGrade
   );
-  const [isGradeApproved, setIsGradeApproved] = useState(false);
+  const [isGradeApproved, setIsGradeApproved] = useState(approved || false);
 
   const handleGradeApproval = async () => {
     try {
@@ -42,7 +44,6 @@ const CodingGrader: React.FC<CodingGraderProps> = ({
         approvedGrade
       );
       setIsGradeApproved(true);
-      console.log("Grade approved:", approvedGrade);
     } catch (error) {
       console.error("Failed to approve grade:", error);
     }

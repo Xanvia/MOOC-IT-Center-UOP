@@ -108,6 +108,7 @@ class StudentQuizSerializer(serializers.ModelSerializer):
             "type": component.type,
             "grade": None,
             "graded": False,
+            "grade_approved": False,
             "id": None,
             "completed": instance.completed,
         }
@@ -123,6 +124,7 @@ class StudentQuizSerializer(serializers.ModelSerializer):
                     {
                         "grade": student_quiz.score,
                         "graded": student_quiz.graded,
+                        "grade_approved": student_quiz.grade_approved,
                         "id": student_quiz.id,
                     }
                 )
@@ -137,6 +139,7 @@ class StudentQuizSerializer(serializers.ModelSerializer):
                     {
                         "grade": float(student_coding.grade),
                         "graded": student_coding.graded is True,
+                        "grade_approved": student_coding.graded is True,
                         "id": student_coding.id,
                     }
                 )
@@ -247,6 +250,7 @@ class StudentQuizDetailSerializer(serializers.ModelSerializer):
             "graded",
             "completed_at",
             "questions",
+            "grade_approved",
         ]
 
     def get_questions(self, student_quiz):
@@ -357,6 +361,11 @@ class GradeQuizSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Score is required")
         attrs["graded"] = True
         return super().validate(attrs)
+    
+    def update(self, instance, validated_data):
+        if instance.graded == True:
+            instance.grade_approved = True
+        return super().update(instance, validated_data)
     
 class GradeCodeSerializer(serializers.ModelSerializer):
     class Meta:
