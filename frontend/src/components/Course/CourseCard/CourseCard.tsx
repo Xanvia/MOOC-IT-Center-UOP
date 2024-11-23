@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import CourseRatingLabel from "./CourseRatingLabel";
 import CourseStats from "./CourseStats";
 import Image from "next/image";
@@ -9,6 +10,7 @@ import {
   CourseCardTitleContainerClsx,
   CourseCardTitle,
   CourseCardDescription,
+  CourseCardButtonClass,
 } from "@/components/components.styles";
 interface CourseCardProps {
   title: string;
@@ -49,14 +51,15 @@ const CourseCard: React.FC<CourseCardProps> = ({
           className={CourseCardDescription}
           dangerouslySetInnerHTML={{ __html: truncateDescription(description) }}
         ></p>
-        <div className="my-2">
-          <button
-            onClick={() => (window.location.href = "http://localhost:3000/courses/1/room")}
-            className="px-2 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
-          >
-            Course room
-          </button>
+        <div className="space-y-2 space-x-1 min-h-5">
+          <Link href="/courses/1" className={CourseCardButtonClass}>
+            Course Room
+          </Link>
+          <Link href="/courses/1" className={CourseCardButtonClass}>
+            Settings
+          </Link>
         </div>
+
         <CourseStats />
       </div>
     </div>
