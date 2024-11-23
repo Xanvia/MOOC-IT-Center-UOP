@@ -12,6 +12,7 @@ interface QuizData {
   graded: boolean;
   id: string;
   can_grade: boolean;
+  grade_approved: boolean;
 }
 
 const QuizzesManagementPage = () => {
@@ -46,8 +47,6 @@ const QuizzesManagementPage = () => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
-
-
 
   const handleManageQuizClick = (quiz: QuizData) => {
     console.log("Managing quiz:", quiz);

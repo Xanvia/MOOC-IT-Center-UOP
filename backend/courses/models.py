@@ -136,7 +136,6 @@ class Enrollment(models.Model):
     certificate_id = models.CharField(max_length=255, blank=True, null=True)
     completion_date = models.DateTimeField(blank=True, null=True)
 
-
     def __str__(self):
         return self.student.username
 
@@ -195,6 +194,7 @@ class StudentQuiz(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     score = models.DecimalField(max_digits=5, decimal_places=2)
     graded = models.BooleanField(default=False)
+    grade_approved = models.BooleanField(default=False)
     completed_at = models.DateTimeField(auto_now_add=True)
     student_answers = models.JSONField(default=list)
 
@@ -272,7 +272,7 @@ class LastSeen(models.Model):
 
 
 class LastSeenCourse(models.Model):
-    
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     last_seen_announcement = models.DateTimeField(auto_now_add=True)

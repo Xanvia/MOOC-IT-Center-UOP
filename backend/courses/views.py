@@ -19,7 +19,6 @@ from .models import (
     ThreadMessage,
     LastSeen,
     LastSeenCourse,
-
 )
 from .serializers import (
     CourseSerializer,

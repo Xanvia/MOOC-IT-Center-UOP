@@ -66,7 +66,7 @@ class CourseSerializer(serializers.ModelSerializer):
             data["institution"] = institution
 
         if request and request.method == "PATCH":
-            allowed_fields = {"outcomes", "specifications", "description","syllabus"}
+            allowed_fields = {"outcomes", "specifications", "description", "syllabus"}
             # Filter the data to only include allowed fields
             data = {key: value for key, value in data.items() if key in allowed_fields}
         return data
@@ -616,9 +616,8 @@ class GetCertificateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Enrollment
-        fields = ["student", "course","id"]
+        fields = ["student", "course", "id"]
 
-    
     def validate(self, attrs):
         # first check if the course.finished is true
         course = attrs.get("course")
@@ -628,15 +627,24 @@ class GetCertificateSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         user = request.user
         enrollement = attrs.get("id")
-        progress = Progress.objects.filter(enrollment=enrollement, completed=False,student = user, component__chapter__week__course = course).first()
+        progress = Progress.objects.filter(
+            enrollment=enrollement,
+            completed=False,
+            student=user,
+            component__chapter__week__course=course,
+        ).first()
         if progress:
-            raise serializers.ValidationError("You have not completed all the components in this course")
+            raise serializers.ValidationError(
+                "You have not completed all the components in this course"
+            )
         return super().validate(attrs)
-    
+
     def to_representation(self, instance):
-        representation =  super().to_representation(instance)
+        representation = super().to_representation(instance)
         representation["certificate_url"] = instance.certificate_url
         representation["certificate_id"] = instance.certificate_id
         representation["course_name"] = instance.course.name
-        representation["student_name"] = instance.student.first_name + " " + instance.student.last_name
+        representation["student_name"] = (
+            instance.student.first_name + " " + instance.student.last_name
+        )
         return representation

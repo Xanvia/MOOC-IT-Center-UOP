@@ -33,14 +33,20 @@ interface QuizGraderProps {
   questions: Question[];
   grade: number;
   courseId: string;
+  gradedI: boolean;
+  approvedI: boolean;
 }
 
 const QuizGrader: React.FC<QuizGraderProps> = ({
   questions,
   grade,
   courseId,
+  gradedI,
+  approvedI,
 }) => {
   const params = useParams();
+  const [graded, setGraded] = useState<boolean>(gradedI);
+  const [approved, setApproved] = useState<boolean>(approvedI);
   const [grades, setGrades] = useState<{ [key: number]: number }>(() => {
     return questions.reduce((acc, q) => {
       let score = 0;
@@ -179,6 +185,10 @@ const QuizGrader: React.FC<QuizGraderProps> = ({
         totalScore,
         formattedAnswers
       );
+      if (graded == true) {
+        setApproved(true);
+      }
+      setGraded(true);
       toast.success("Successfully updated grades.");
     } catch (error) {
       console.error("Failed to finalize grade:", error);
@@ -318,12 +328,30 @@ const QuizGrader: React.FC<QuizGraderProps> = ({
           Total Score: {totalScore}/
           {questions.reduce((sum, q) => sum + q.score, 0)}
         </div>
-        <button
-          onClick={handleFinalizeGrade}
-          className="bg-blue-500 text-white px-6 py-2 rounded shadow hover:bg-blue-600"
-        >
-          Finalize Grade
-        </button>
+        <div className="space-x-4">
+          <button
+            onClick={handleFinalizeGrade}
+            className={`${
+              graded
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600"
+            } text-white px-6 py-2 rounded shadow`}
+            disabled={graded}
+          >
+            {grade ? "Graded" : "Finalize Grade"}
+          </button>
+          <button
+            onClick={handleFinalizeGrade}
+            className={`${
+              approved
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-green-500 hover:bg-green-600"
+            } text-white px-6 py-2 rounded shadow`}
+            disabled={approved}
+          >
+            Approve Grades
+          </button>
+        </div>
       </div>
     </div>
   );
