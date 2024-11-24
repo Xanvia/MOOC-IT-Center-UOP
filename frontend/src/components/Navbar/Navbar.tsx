@@ -100,7 +100,7 @@ const Navbar = () => {
             </div>
             <div className={NavLinkContainer}>
               <div className="hidden sm:flex flex-shrink-0 items-center">
-                <h1 className="text-white text-3xl sm:font-bold">OpenEd</h1>
+                <h1 className="text-white text-3xl ml-0 sm:font-bold">OpenEd</h1>
               </div>
               <div className="hidden pt-2 lg:pl-20 md:ml-6 md:block lg:text-base font-medium text-sm">
                 <div className="flex space-x-4 min-h-11">
