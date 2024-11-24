@@ -54,7 +54,7 @@ const Navbar = () => {
     <>
       {isLoading ? <Loader /> : null}
       <nav className="bg-primary w-full fixed top-0 left-0 z-10">
-        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+        <div className="md:mx-20 px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             <div className="absolute inset-y-0 left-0 flex items-center md:hidden">
               <button
@@ -100,7 +100,9 @@ const Navbar = () => {
             </div>
             <div className={NavLinkContainer}>
               <div className="hidden sm:flex flex-shrink-0 items-center">
-                <h1 className="text-white text-3xl ml-0 sm:font-bold">OpenEd</h1>
+                <h1 className="text-white text-3xl ml-0 sm:font-bold">
+                  OpenEd
+                </h1>
               </div>
               <div className="hidden pt-2 lg:pl-20 md:ml-6 md:block lg:text-base font-medium text-sm">
                 <div className="flex space-x-4 min-h-11">
@@ -141,7 +143,7 @@ const Navbar = () => {
                   <Register />
                 </>
               ) : (
-                <div className="flex md:hidden absolute inset-y-0 right-0 items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                <div className="flex md:hidden absolute inset-y-0 right-0 items-center  sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                   <button
                     type="button"
                     className={NotificationButtonMobileClasses}
@@ -174,19 +176,19 @@ const Navbar = () => {
             </div>
 
             <div className="hidden absolute inset-y-0 right-0 md:flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <div className="flex space-x-4 min-h-11">
-              {isLoggedIn && (
-                    <>
-                      {userRole === "admin" ? (
-                        <Link href="/admin" className={SecondaryButtonClass}>
-                          Dashboard
-                        </Link>
-                      ) : (
-                        <Link href="/courses" className={SecondaryButtonClass}>
-                          My Courses
-                        </Link>
-                      )}
-                    </>
+              <div className="flex space-x-4 min-h-11 pt-2 pr-4">
+                {isLoggedIn && (
+                  <>
+                    {userRole === "admin" ? (
+                      <Link href="/admin" className={SecondaryButtonClass}>
+                        Dashboard
+                      </Link>
+                    ) : (
+                      <Link href="/courses" className={SecondaryButtonClass}>
+                        My Courses
+                      </Link>
+                    )}
+                  </>
                 )}
               </div>
               {/* <button type="button" className={NotificationButtonClasses}>
