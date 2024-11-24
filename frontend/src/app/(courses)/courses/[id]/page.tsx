@@ -11,6 +11,7 @@ import { CourseData } from "@/components/Course/course.types";
 import { fetchCourseData } from "@/services/course.service";
 import Loader from "@/components/Loarder/Loarder";
 import { useGlobal } from "@/contexts/store";
+import Footer from "@/components/Footer/Footer";
 
 interface BreadcrumbItem {
   label: string;
@@ -90,6 +91,7 @@ export default function CoursesHome() {
         </div>
       </div>
       <ReccomendedCourses />
+      <Footer />
     </>
   );
 }

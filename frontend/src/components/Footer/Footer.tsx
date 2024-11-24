@@ -2,15 +2,20 @@ import React from "react";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-primary  w-full text-white py-12 z-30 mt-32">
-      <div className="container mx-auto">
-        <h1>OpenEd</h1>
+    <footer className="bg-primary w-full text-white py-8 px-24 z-20 mt-32">
+      <div className="container">
         <hr className="my-0 border-primary" />
-        <p className="text-gray-400 text-xs">description</p>
-        <div className="flex flex-col items-center mt-20 md:flex-row md:justify-between">
+        <div className="flex flex-col space-y-2">
+          <img src="/images/uop log.png" alt="UOP Logo" className="w-32 h-32" />
+          <p className="text-gray-400 text-xs">powered by</p>
+          <p className="text-gray-400 text-xs">IT Center</p>
+          <p className="text-gray-400 text-md">University of Peradeniya</p>
+        </div>
+        <div className="flex flex-col items-center mt-12 md:flex-row md:justify-between">
           <p className="text-sm">
             &copy; {new Date().getFullYear()} All rights reserved.
           </p>
+
           <nav className="mt-4 md:mt-0">
             <ul className="flex space-x-4">
               <li>
