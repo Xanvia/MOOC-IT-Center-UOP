@@ -2,7 +2,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye } from "lucide-react";
-import Courses from "@/app/(public)/courses/page";
+
 
 interface Course {
   id: number;
