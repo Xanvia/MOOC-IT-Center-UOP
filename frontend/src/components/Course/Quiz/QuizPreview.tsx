@@ -143,17 +143,17 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
   };
 
   return (
-    <div className="questions-preview p-8 bg-white rounded-md">
-      <h2 className="text-2xl font-semibold p-4 mb-6">{quizTitle}</h2>
+    <div className="questions-preview mt-3 shadow-md p-8 bg-white border rounded-md">
+      <h2 className="text-2xl font-semibold p-4 mb-6 border-b-2">{quizTitle}</h2>
       {questions.map((q, index) => (
-        <div key={index} className="question mb-6 px-4">
-          <h3 className="text-lg font-semibold mb-2">{q.text}</h3>
+        <div key={index} className="question border rounded-md shadow-inner bg-gray-50 mb-6 px-4 py-2">
+          <h3 className="text-lg m-2 font-semibold border-b-2">{q.text}</h3>
           {q.question_type === "SC" || q.question_type === "MC" ? (
             <ul className="list-none">
               {q.answers.map((answer, i) => (
-                <li key={i} className="mb-2 ml-8">
+                <li key={i} className="ml-8">
                   <label
-                    className={`inline-flex px-5 py-2 items-center border rounded-md ${getAnswerStyle(
+                    className={`inline-flex px-5 py-1 items-center  ${getAnswerStyle(
                       index,
                       answer
                     )}`}
@@ -192,7 +192,7 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
               ))}
             </ul>
           ) : q.question_type === "OE" ? (
-            <div>
+            <div className="m-5">
               <textarea
                 name={`preview-question-${index}`}
                 value={(selectedAnswers[index] as string) || ""}
