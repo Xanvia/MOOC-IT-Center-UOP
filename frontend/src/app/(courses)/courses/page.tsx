@@ -59,30 +59,51 @@ export default function Courses() {
           )}
         </div>
 
-        {/* Tabs */}
-        <div className="flex justify-center space-x-4 mb-8 border-b-2 border-gray-200">
-          <button
-            className={`px-4 py-2 font-medium ${
-              activeTab === "inprogress"
-                ? "text-blue-600 border-b-2 border-blue-600"
-                : "text-gray-600"
-            }`}
-            onClick={() => setActiveTab("inprogress")}
-          >
-            In-progress Courses
-          </button>
-          <button
-            className={`px-4 py-2 font-medium ${
-              activeTab === "completed"
-                ? "text-blue-600 border-b-2 border-blue-600"
-                : "text-gray-600"
-            }`}
-            onClick={() => setActiveTab("completed")}
-          >
-            Completed Courses
-          </button>
-        </div>
+        {userRole === "student" && (
+          <>
+            {/* Tabs */}
+            <div className="flex justify-center border-b border-gray-200 mb-8">
+              <button
+                onClick={() => setActiveTab("inprogress")}
+                className={`px-4 py-2 font-medium ${
+                  activeTab === "inprogress"
+                    ? "border-b-2 border-blue-500 text-blue-500"
+                    : "text-gray-500"
+                }`}
+              >
+                In Progress
+              </button>
+              <button
+                onClick={() => setActiveTab("completed")}
+                className={`px-4 py-2 font-medium ${
+                  activeTab === "completed"
+                    ? "border-b-2 border-blue-500 text-blue-500"
+                    : "text-gray-500"
+                }`}
+              >
+                Completed
+              </button>
+            </div>
 
+            {/* Filtered Courses */}
+            <div className="grid grid-cols-1 py-10 ml-12 sm:grid-cols-2 xl:grid-cols-4 lg:grid-cols-3 justify-center items-center mx-10 sm:mx-36 lg:mx-36 gap-4 lg:gap-4 2xl:gap-10">
+              {filteredCourses.map((course) => (
+                <Link key={course.id} href={`courses/${course.id}`}>
+                  <CourseCard
+                    id={course.id}
+                    institution={course.institution}
+                    difficulty={course.difficulty}
+                    image={course.header_image || ""}
+                    title={course.name}
+                    description={course.description}
+                    userRole={userRole || ""}
+                    progress={course.progress || "0"}
+                  />
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
         {/* Course Cards */}
         <div className="grid grid-cols-1 py-10 ml-12 sm:grid-cols-2 xl:grid-cols-4 lg:grid-cols-3 justify-center items-center mx-10 sm:mx-36 lg:mx-36 gap-4 lg:gap-4 2xl:gap-10">
           {filteredCourses.map((course) => (
