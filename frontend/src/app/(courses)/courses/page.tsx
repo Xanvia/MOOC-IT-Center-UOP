@@ -58,6 +58,7 @@ export default function Courses() {
                 image={course.header_image || ""}
                 title={course.name}
                 description={course.description}
+                userRole={userRole || ""} // Pass the userRole as a prop
               />
             </Link>
           ))}

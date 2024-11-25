@@ -1,16 +1,14 @@
 "use client";
-import React, { useState, Suspense, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
-import CourseRatingLabel from "./CourseRatingLabel";
-import CourseStats from "./CourseStats";
 import Image from "next/image";
+import CourseRatingLabel from "./CourseRatingLabel";
 import {
   CourseCardImageContainerClsx,
   CourseCardOuterClasses,
   CourseCardImageClsx,
   CourseCardTitleContainerClsx,
   CourseCardTitle,
-  CourseCardDescription,
   CourseCardButtonClass,
 } from "@/components/components.styles";
 
@@ -19,8 +17,9 @@ interface CourseCardProps {
   difficulty: string;
   title: string;
   institution: string;
-  description: string; 
+  description: string;
   image: string;
+  userRole: string | null; // Add userRole to the props
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({
@@ -29,11 +28,12 @@ const CourseCard: React.FC<CourseCardProps> = ({
   difficulty,
   institution,
   image,
+  userRole, // Destructure userRole
 }) => {
   const truncateDescription = (text: string | null | undefined, maxLength: number = 80): string => {
-    if (typeof text !== 'string') return ''; // Return empty string if text is not a string
+    if (typeof text !== "string") return ""; // Return empty string if text is not a string
     if (text.length <= maxLength) return text;
-    return text.slice(0, maxLength).trim() + '...';
+    return text.slice(0, maxLength).trim() + "...";
   };
 
   return (
@@ -46,39 +46,32 @@ const CourseCard: React.FC<CourseCardProps> = ({
         )}
         <div className={CourseCardImageClsx}></div>
       </div>
-      
-      <div className="px-4 pt-2 flex flex-col ">
+
+      <div className="px-4 pt-2 flex flex-col">
         <div className={CourseCardTitleContainerClsx}>
           <h5 className={CourseCardTitle}>{title}</h5>
           <CourseRatingLabel ratings="4.2" />
         </div>
-        <div className="w-full flex items-center justify-center py-2 border-t-2 font-semibold border-gray-200 "> 
+        <div className="w-full flex items-center justify-center py-2 border-t-2 font-semibold border-gray-200">
           {truncateDescription(institution, 27)}
-          <span className="absolute top-full mt-1 hidden group-hover:flex px-2 py-1 text-sm text-white bg-gray-700 rounded shadow-lg">
-            {institution}
-          </span>
         </div>
         <div className="flex item-center justify-center">Difficulty: {difficulty}</div>
-        {/* <p
-          className={CourseCardDescription}
-          dangerouslySetInnerHTML={{ __html: truncateDescription(description) }}
-        ></p> */}
         <div className="space-x-4 mt-3 border-t-2 p-1 border-gray-200">
-          <>
-          <Link href={`/courses/${id}/room`} className={CourseCardButtonClass}>
-            Course Room
-          </Link>
-          <Link href={`/settings/${id}`} className={CourseCardButtonClass}>
-            Settings
-          </Link>
-          </>
+          {userRole === "teacher" && ( // Conditionally render buttons for teachers only
+            <>
+              <Link href={`/courses/${id}/room`} className={CourseCardButtonClass}>
+                Course Room
+              </Link>
+              <Link href={`/settings/${id}`} className={CourseCardButtonClass}>
+                Settings
+              </Link>
+            </>
+          )}
         </div>
-        {/* <div className="w-full flex items-center justify-between py-2 px-2 border-t-2 border-gray-200"> </div> */}
-        
-        {/* <CourseStats /> */}
       </div>
     </div>
   );
 };
 
 export default CourseCard;
+
