@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import CourseRatingLabel from "./CourseRatingLabel";
-import { BookOpen, Settings } from "lucide-react";
+import { BookOpen, Settings, Users } from "lucide-react";
 import {
   CourseCardImageContainerClsx,
   CourseCardOuterClasses,
@@ -60,29 +60,47 @@ const CourseCard: React.FC<CourseCardProps> = ({
         <div className="flex item-center justify-center">Difficulty: {difficulty}</div>
         <div className="space-x-4 mt-3 border-t-2 p-1 border-gray-200">
         {userRole === "teacher" && (
-            // Teacher-specific icons
+          <>
             <div className="flex space-x-4 justify-center mt-2">
               
-              <Link href={`/settings/${id}`} className="flex items-center space-x-2">
-                <Settings className="h-6 w-6 text-gray-600" />
-                <span className="absolute bottom-full mb-2 px-1 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                    go to Settings
-                  </span>
-              </Link>
+              {/* Number of Students Section */}
+              <div className="flex items-center space-x-2">
+                <Users className="h-5 w-5 text-blue-800" />
+                <span className="text-sm font-medium text-gray-700">25 Students</span>
+              </div>
+
+              {/* Settings Button */}
+
               <Link
-                  href={`/courses/${id}/room`}
-                  className="flex items-center space-x-2"
+                  href={`/settings/${id}`}
+                  className="relative group flex items-center justify-center w-10 h-10  bg-white rounded-full hover:bg-gray-100"
                 >
                   {/* Icon */}
-                  <BookOpen className="h-6 w-6 gray-600" />
-
+                  <Settings className="h-6 w-6 text-blue-800" />
+                  
                   {/* Tooltip */}
                   <span className="absolute bottom-full mb-2 px-1 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                    Go to Course Room
+                    Go to Settings
                   </span>
                 </Link>
+
+              {/* Course Room Button with Tooltip */}
+              <Link
+                href={`/courses/${id}/room`}
+                className="relative group flex items-center justify-center w-10 h-10 bg-white rounded-full hover:bg-gray-100"
+              >
+                {/* Icon */}
+                <BookOpen className="h-6 w-6 text-blue-800" />
+                
+                {/* Tooltip */}
+                <span className="absolute bottom-full mb-2 px-1 py-1 text-xs text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                  Go to Course Room
+                </span>
+              </Link>
+              
             </div>
-          )}
+          </>
+        )}
 
           {userRole === "student" && (
             // Dummy progress bar for students
