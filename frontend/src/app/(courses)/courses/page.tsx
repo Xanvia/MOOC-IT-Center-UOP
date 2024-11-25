@@ -67,7 +67,7 @@ export default function Courses() {
                 onClick={() => setActiveTab("inprogress")}
                 className={`px-4 py-2 font-medium ${
                   activeTab === "inprogress"
-                    ? "border-b-2 border-blue-500 text-blue-500"
+                    ? "border-b-2 border-blue-800 text-blue-900"
                     : "text-gray-500"
                 }`}
               >
@@ -77,7 +77,7 @@ export default function Courses() {
                 onClick={() => setActiveTab("completed")}
                 className={`px-4 py-2 font-medium ${
                   activeTab === "completed"
-                    ? "border-b-2 border-blue-500 text-blue-500"
+                    ? "border-b-2 border-blue-800 text-blue-900"
                     : "text-gray-500"
                 }`}
               >
