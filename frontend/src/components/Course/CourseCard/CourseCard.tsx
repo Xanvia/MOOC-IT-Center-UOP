@@ -20,8 +20,8 @@ interface CourseCardProps {
   institution: string;
   description: string;
   image: string;
-  userRole: string | null; // Add userRole to the props
-  progress: string | null;
+  userRole?: string | null; // Add userRole to the props
+  progress?: string | null;
 }
 
 const CourseCard: React.FC<CourseCardProps> = ({
