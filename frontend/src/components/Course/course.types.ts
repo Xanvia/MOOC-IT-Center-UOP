@@ -44,6 +44,7 @@ export interface CourseData {
   canEdit?: boolean;
   instructors: Instructor[];
   price: number;
+  progress?: string;
 }
 
 export interface UpdateCourseData {

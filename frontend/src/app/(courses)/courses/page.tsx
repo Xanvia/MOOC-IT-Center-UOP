@@ -59,6 +59,7 @@ export default function Courses() {
                 title={course.name}
                 description={course.description}
                 userRole={userRole || ""} // Pass the userRole as a prop
+                progress={course.progress || "0"}
               />
             </Link>
           ))}
