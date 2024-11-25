@@ -95,6 +95,8 @@ class CourseSerializer(serializers.ModelSerializer):
                 enrollement = Enrollment.objects.get(student=user, course=instance)
                 if enrollement.paid:
                     representation["isEnrolled"] = True
+                    progress = ProgressTrackSerializer(instance, context=self.context).data
+                    representation["progress"] = progress.get("progress")
                 else:
                     representation["isEnrolled"] = False
             except Enrollment.DoesNotExist:
@@ -319,6 +321,7 @@ class ProgressTrackSerializer(serializers.ModelSerializer):
         fields = ["id"]
 
     def to_representation(self, instance):
+        print(instance)
         representation = super().to_representation(instance)
         components = Component.objects.filter(chapter__week__course=instance)
 
