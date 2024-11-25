@@ -67,6 +67,19 @@ const CourseCard: React.FC<CourseCardProps> = ({
               </Link>
             </>
           )}
+          {userRole === "student" && (
+            // Dummy progress bar for students
+            <div className="mt-2">
+              <h3 className="text-sm font-semibold text-gray-600">Progress</h3>
+              <div className="relative h-2 mt-2 bg-gray-300 rounded">
+                <div
+                  className="absolute top-0 left-0 h-full bg-blue-600 rounded"
+                  style={{ width: "50%" }} // Dummy progress of 50%
+                ></div>
+              </div>
+              <p className="mt-1 text-xs text-gray-500">50% completed</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
