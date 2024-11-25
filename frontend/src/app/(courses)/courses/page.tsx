@@ -13,6 +13,9 @@ import { useGlobal } from "@/contexts/store"; // Assuming useGlobal is in this f
 export default function Courses() {
   const { userRole } = useGlobal(); // Get user role from global context
   const [courses, setCourses] = useState<CourseData[]>([]);
+  const [activeTab, setActiveTab] = useState<"inprogress" | "completed">(
+    "inprogress"
+  ); // State for active tab
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -33,6 +36,13 @@ export default function Courses() {
     { label: "Courses", href: "/courses" },
   ];
 
+  // Filter courses based on active tab
+  const filteredCourses = courses.filter((course) => {
+    const progress = course.progress ? Number(course.progress) : 0; // Convert to number, defaulting to 0
+    return activeTab === "inprogress"
+      ? progress < 100 // Courses in progress
+      : progress === 100; // Completed courses
+  });
   return (
     <>
       <div className="container mx-auto px-4 mt-20">
@@ -48,8 +58,34 @@ export default function Courses() {
             </Suspense>
           )}
         </div>
+
+        {/* Tabs */}
+        <div className="flex justify-center space-x-4 mb-8 border-b-2 border-gray-200">
+          <button
+            className={`px-4 py-2 font-medium ${
+              activeTab === "inprogress"
+                ? "text-blue-600 border-b-2 border-blue-600"
+                : "text-gray-600"
+            }`}
+            onClick={() => setActiveTab("inprogress")}
+          >
+            In-progress Courses
+          </button>
+          <button
+            className={`px-4 py-2 font-medium ${
+              activeTab === "completed"
+                ? "text-blue-600 border-b-2 border-blue-600"
+                : "text-gray-600"
+            }`}
+            onClick={() => setActiveTab("completed")}
+          >
+            Completed Courses
+          </button>
+        </div>
+
+        {/* Course Cards */}
         <div className="grid grid-cols-1 py-10 ml-12 sm:grid-cols-2 xl:grid-cols-4 lg:grid-cols-3 justify-center items-center mx-10 sm:mx-36 lg:mx-36 gap-4 lg:gap-4 2xl:gap-10">
-          {courses.map((course) => (
+          {filteredCourses.map((course) => (
             <Link key={course.id} href={`courses/${course.id}`}>
               <CourseCard
                 id={course.id}
