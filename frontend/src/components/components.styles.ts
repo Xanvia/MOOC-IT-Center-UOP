@@ -282,6 +282,27 @@ export const SecondaryButtonClass = clsx(
   "border-white-800"
 );
 
+export const CourseCardButtonClass = clsx(
+  "inline-block", // Ensures block-level appearance
+  "px-3", // Smaller horizontal padding
+  "py-1", // Smaller vertical padding
+  "bg-gray-100", // Light background for the button
+  "border", // Adds a border
+  "border-gray-300", // Border color
+  "rounded", // Slightly rounded corners
+  "text-center", // Centers the text
+  "text-sm", // Smaller text size
+  "text-black", // Default text color
+  "no-underline", // Removes underline for links
+  "transition", // Enables smooth transition for hover effects
+  "duration-200", // Sets transition duration to 0.2s
+  "hover:bg-gray-200", // Darker background color on hover
+  "mx-2",
+  "my-2",
+);
+
+
+
 export const SolidButtonClasses = clsx(
   "bg-primary",
   "px-5",
@@ -368,7 +389,8 @@ export const CourseCardOuterClasses = clsx(
   "bg-clip-border",
   "text-gray-700",
   "shadow-lg",
-  "h-[350px]" 
+  "h-[360px]",
+  "overflow-hidden", 
 );
 
 export const CourseCardImageContainerClsx = clsx(
@@ -382,7 +404,7 @@ export const CourseCardImageContainerClsx = clsx(
   "bg-blue-gray-500",
   "bg-clip-border",
   "shadow-blue-gray-500/40",
-  "h-[150px]" // Fixed height for the image container
+  "h-[150px]", 
 );
 
 export const CourseCardImageClsx = clsx(
@@ -408,6 +430,7 @@ export const CourseCardTitleContainerClsx = clsx(
 export const CourseCardTitle = clsx(
   "block",
   "font-sans",
+  "font-semibold",
   "text-lg", // Slightly reduced font size
   "antialiased",
   "font-medium",
@@ -425,7 +448,7 @@ export const CourseCardDescription = clsx(
   "font-light",
   "overflow-hidden" ,// Hide overflow text
   "min-h-[50px]", // Fixed height for description
-  "mb-6"
+  "mb-2"
 );
 export const interestCloseButtonClasses = clsx(
   "text-gray-400",
