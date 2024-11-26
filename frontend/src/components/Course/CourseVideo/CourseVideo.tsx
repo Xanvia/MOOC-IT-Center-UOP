@@ -455,7 +455,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
               placeholder="Enter question"
               value={newQuestion}
               onChange={(e) => setNewQuestion(e.target.value)}
-              className="flex-grow p-2 border border-gray-300 rounded-lg"
+              className="flex-grow w-full p-2 border border-gray-300 rounded-lg"
             />
           </div>
           <div className="mb-4">
