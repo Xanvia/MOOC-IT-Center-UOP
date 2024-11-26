@@ -470,7 +470,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
                 {index === newOptions.length - 1 && (
                   <button
                     onClick={addNewOption}
-                    className="bg-blue-900 text-white px-4 py-2 rounded"
+                    className="bg-primary text-white px-4 py-2 rounded-lg  hover:bg-white  hover:text-black border border-white-800"
                   >
                     Add Option
                   </button>
