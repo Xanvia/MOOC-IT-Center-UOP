@@ -364,12 +364,12 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
 
         {isPlaying && !currentMCQ && isHovering && (
           <button
-            onClick={handlePlayPause}
-            className="absolute inset-0 w-full h-full flex items-center justify-center"
-            style={{ zIndex: 2 }}
-          >
-            <PauseIcon className="w-20 h-20 text-white opacity-80" />
-          </button>
+          onClick={handlePlayPause}
+          className="absolute inset-0 w-full h-full flex items-center justify-center"
+          style={{ zIndex: 2, opacity: isPlaying ? 0 : 1 }} // Set opacity to 0 when playing, 1 when paused
+        >
+          <Play className="w-20 h-20 text-white opacity-80" />
+        </button>
         )}
 
         {/* Controls container */}
