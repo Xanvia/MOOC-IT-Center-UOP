@@ -305,6 +305,37 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       onMouseEnter={handleMouseEnter} // Start showing controls when hovering
       onMouseLeave={handleMouseLeave} // Hide controls when not hovering
     >
+      <div className="flex items-center justify-between my-4">
+        {/* Title */}
+        <h2 className="text-2xl font-semibold mb-2">{title}</h2>
+
+        {/* Buttons */}
+        {isEdit &&
+          (isPreview ? (
+            <EditButtonPrimary text="Edit" onClick={togglePreview} />
+          ) : (
+            <SecondaryButton text="Go to Preview Mode" onClick={togglePreview} />
+          ))}
+      </div>
+
+      {!isPreview && permissions.canUploadFiles && (
+        <div className="my-4">
+          <input
+            type="file"
+            accept="video/*"
+            onChange={handleFileUpload}
+            className="hidden"
+            id="file-upload"
+          />
+          <label htmlFor="file-upload">
+            <SecondaryButton
+              text="Upload New Video" // Change the text here to whatever you want
+              onClick={() => document.getElementById("file-upload")?.click()} // This will trigger the file input click
+            />
+          </label>
+        </div>
+      )}
+
       <div
         className="bg-black rounded-lg overflow-hidden relative w-[800px]"
         style={{ zIndex: 1 }}
@@ -323,7 +354,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
         {!isPlaying && !currentMCQ && (
           <button
             onClick={handlePlayPause}
-            className="absolute inset-0 w-full h-full flex items-center justify-center"
+            className="absolute inset-0 w-full  h-full flex items-center justify-center"
             style={{ zIndex: 2 }}
           >
             <Play className="w-20 h-20 text-white opacity-80" />
@@ -415,33 +446,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
         </div>
       </div>
 
-      <center>
-        <h2 className="text-xl font-bold mt-4 mb-2">{title}</h2>
-        {isEdit &&
-          (isPreview ? (
-            <EditButtonPrimary text="Edit" onClick={togglePreview} />
-          ) : (
-            <SecondaryButton text="Go to Preview Mode" onClick={togglePreview} />
-          ))}
-
-        {!isPreview && permissions.canUploadFiles && (
-          <div className="mt-4">
-            <input
-              type="file"
-              accept="video/*"
-              onChange={handleFileUpload}
-              className="hidden"
-              id="file-upload"
-            />
-            <label htmlFor="file-upload">
-              <SecondaryButton
-                text="Upload New Video" // Change the text here to whatever you want
-                onClick={() => document.getElementById("file-upload")?.click()} // This will trigger the file input click
-              />
-            </label>
-          </div>
-        )}
-      </center>
+      
 
       {/* Teacher Mode: Add/Edit MCQs */}
       {!isPreview && (
@@ -471,36 +476,36 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
                 {index < newOptions.length - 1 && (
                   <div className="relative group">
                   {/* Button */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        // Create a new array without the option at the current index
-                        const updatedOptions = newOptions.filter((_, i) => i !== index);
-                        setNewOptions(updatedOptions);
-                  
-                        // Adjust correct answer if needed
-                        if (newCorrectAnswer === index) {
-                          setNewCorrectAnswer(0); // Reset to first option
-                        } else if (newCorrectAnswer > index) {
-                          // Shift correct answer index if deleted option was before it
-                          setNewCorrectAnswer(newCorrectAnswer - 1);
-                        }
-                      }}
-                      className="bg-white border rounded-lg text-red-500 hover:text-red-700 p-2"
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // Create a new array without the option at the current index
+                      const updatedOptions = newOptions.filter((_, i) => i !== index);
+                      setNewOptions(updatedOptions);
+                
+                      // Adjust correct answer if needed
+                      if (newCorrectAnswer === index) {
+                        setNewCorrectAnswer(0); // Reset to first option
+                      } else if (newCorrectAnswer > index) {
+                        // Shift correct answer index if deleted option was before it
+                        setNewCorrectAnswer(newCorrectAnswer - 1);
+                      }
+                    }}
+                    className="bg-white border rounded-lg text-red-500 hover:text-red-700 p-2"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
+                      <path
+                        fillRule="evenodd"
+                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
                 
                   {/* Tooltip */}
                   <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">
@@ -615,22 +620,25 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
                   </div>
                 </div>
                 <div className="space-y-1">
-                              {mcq.options.map((option, index) => (
-                                <div 
-                                  key={index} 
-                                  className={`p-2 rounded  ${
-                                    index === mcq.correctAnswer 
-                                    ? "bg-green-100 text-green-800" 
-                                    : "bg-gray-100 text-gray-800"
-                                  }`}
-                                >
-                                  {index + 1}. {option}
-                                  {index === mcq.correctAnswer && (
-                                    <span className="ml-2 text-xs text-green-600">(Correct Answer)</span>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
+                  {mcq.options
+                    .filter((option) => option !== undefined && option.trim() !== "") // Filter out blank or undefined options
+                    .map((option, index) => (
+                      <div
+                        key={index}
+                        className={`p-2 rounded ${
+                          index === mcq.correctAnswer
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {index + 1}. {option}
+                        {index === mcq.correctAnswer && (
+                          <span className="ml-2 text-xs text-green-600">(Correct Answer)</span>
+                        )}
+                      </div>
+                    ))}
+                </div>
+
                             <p className="text-sm text-gray-500 mt-2">
                               Timestamp: {formatTime(mcq.timestamp)}
                             </p>
