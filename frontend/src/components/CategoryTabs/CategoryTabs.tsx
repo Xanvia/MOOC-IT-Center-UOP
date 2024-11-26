@@ -7,11 +7,20 @@ interface CategoryTabsProps {
 
 const CategoryTabs: React.FC<CategoryTabsProps> = ({ onCategoryChange }) => {
   const [activeCategory, setActiveCategory] = useState<CategoryEnum>(CategoryEnum.All);
+  const [showAllCategories, setShowAllCategories] = useState(false);
 
   const handleCategoryClick = (category: CategoryEnum) => {
     setActiveCategory(category);
     onCategoryChange(category);
   };
+  const toggleShowAll = () => {
+    setShowAllCategories((prev) => !prev);
+  };
+  const categoryEntries = Object.entries(categoryLabels);
+  const displayedCategories = showAllCategories
+    ? categoryEntries
+    : categoryEntries.slice(0, 5);
+
 
   return (
     <div className="mb-6">
@@ -29,6 +38,16 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({ onCategoryChange }) => {
             {label}
           </button>
         ))}
+        {categoryEntries.length > 5 && (
+        <div className="text-center">
+          <button
+            className="text-blue-600 hover:underline text-sm"
+            onClick={toggleShowAll}
+          >
+            {showAllCategories ? 'Show Less' : 'Show All'}
+          </button>
+        </div>
+         )}
       </div>
       <hr className="border-t border-gray-300 mt-4" />
     </div>
