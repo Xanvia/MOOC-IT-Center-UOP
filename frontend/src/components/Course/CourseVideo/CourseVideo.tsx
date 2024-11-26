@@ -221,6 +221,47 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
     setNewOptions([...newOptions, ""]);
   };
 
+  const handleSaveMCQ = async () => {
+    if (newCorrectAnswer < 1) {
+      // Display validation message if the condition is not met
+      const validationMessage = document.getElementById("validationMessage");
+      if (validationMessage) {
+        validationMessage.hidden = false;
+      }
+      return;
+    }
+  
+    const newMCQ: MCQ = {
+      timestamp: currentTime,
+      question: newQuestion,
+      options: newOptions,
+      correctAnswer: newCorrectAnswer,
+      isDone: false,
+    };
+  
+    const updatedMCQs = [...editMCQs, newMCQ]; // Append new MCQ to the list
+  
+    setEditMCQs(updatedMCQs); // Update the local state
+  
+    try {
+      await addQuizToVideo(id, updatedMCQs); // Send updated MCQs array to backend
+      toast.success("MCQ added successfully!");
+  
+      // Reset input fields after success
+      setNewQuestion("");
+      setNewOptions([""]);
+      setNewCorrectAnswer(0);
+  
+      // Hide validation message on success
+      const validationMessage = document.getElementById("validationMessage");
+      if (validationMessage) {
+        validationMessage.hidden = true;
+      }
+    } catch (error: any) {
+      toast.error("Error saving MCQ: " + error.message);
+    }
+  };
+
   const saveMCQ = async () => {
     const newMCQ: MCQ = {
       timestamp: currentTime,
@@ -499,9 +540,12 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
           ) : (
             <SecondaryButton
               text="Save MCQ" // Text for the button
-              onClick={saveMCQ} // Click handler for saving MCQ
+              onClick={handleSaveMCQ} // Updated click handler for saving MCQ
             />
           )}
+          <p className="text-red-500 mt-2" id="validationMessage" hidden>
+            There must be at least one correct answer.
+          </p>
         </div>
       )}
 
