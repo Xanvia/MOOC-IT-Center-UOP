@@ -560,7 +560,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
                 className="flex items-center justify-between p-4 border rounded"
               >
                 <div>
-                  <p className="font-medium w-[480px]">{mcq.question}</p>
+                  <p className="font-medium w-[300px]">{mcq.question}</p>
                   <p className="text-sm text-gray-500">
                     Timestamp: {formatTime(mcq.timestamp)}
                   </p>
