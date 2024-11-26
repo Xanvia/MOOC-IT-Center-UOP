@@ -202,7 +202,7 @@ const CodeEditor: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className="basis-2/6 m-8 bg-gray-100 rounded-lg">
+      <div className="basis-2/6 m-8 bg-gray-100 rounded-lg overflow-y-auto">
         {/* Input Section */}
         <div className="bg-gray-100 mb-3 px-4 pt-4 rounded-lg">
           <div className="mb-6">
@@ -251,7 +251,9 @@ const CodeEditor: React.FC<Props> = ({
             >
               Submit
             </button>
-            {canEdit && <SecondaryButton text="Save" onClick={handleSaveClick} />}
+            {canEdit && (
+              <SecondaryButton text="Save" onClick={handleSaveClick} />
+            )}
           </div>
         </div>
         {/* Output Section */}
@@ -310,7 +312,7 @@ const CodeEditor: React.FC<Props> = ({
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 ">
               {savedTestCases.map((testCase, index) => (
                 <div
                   key={index}
