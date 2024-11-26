@@ -30,13 +30,15 @@ const DropDownInterests: React.FC<Props> = ({ addSelection, value }) => {
     }
   };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    fetchInterests().then((data) => {
-      if (data) {
-        setInterests(data);
-      }
-    });
+
+useEffect(() => {
+  document.addEventListener("mousedown", handleClickOutside);
+  fetchInterests().then((data) => {
+    if (data) {
+      setInterests(data);
+      setVisibleInterests(data.slice(0, INITIAL_VISIBLE_COUNT)); // Show initial items
+    }
+  });
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -159,3 +161,5 @@ const DropDownInterests: React.FC<Props> = ({ addSelection, value }) => {
 };
 
 export default DropDownInterests;
+
+
