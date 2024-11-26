@@ -97,15 +97,15 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion, quizId }) => {
   };
 
   return (
-    <div className="quiz-creator p-10 bg-gray-100 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-bold text-center mb-4">Create Quiz</h1>
-      <div className="mb-6">
+    <div className="quiz-creator p-10 bg-gray-100 rounded-lg shadow-md">
+      <h1 className="text-3xl font-bold text-center mb-4 pb-4 border-b-2">Create Quiz</h1>
+      <div className="mb-6 pt-4">
         <input
           type="text"
           placeholder="Enter question"
           value={currentQuestion}
           onChange={(e) => setCurrentQuestion(e.target.value)}
-          className="w-full p-2 mb-4 border rounded-lg"
+          className="w-full p-2 mb-4 border rounded-lg shadow-inner"
         />
         <div className="flex items-center mb-4 space-x-2 mr-4">
         <h3 className="">Mark allocated for question :</h3>
@@ -114,13 +114,13 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion, quizId }) => {
             placeholder="Question score"
             value={questionScore}
             onChange={(e) => setQuestionScore(Math.max(1, parseInt(e.target.value) || 1))}
-            className="w-24 p-2 border rounded-lg"
+            className="w-24 p-2 border rounded-lg shadow-inner"
             min="1"
           />
           <select
             value={answerType}
             onChange={(e) => setAnswerType(e.target.value)}
-            className="p-2 border rounded-lg"
+            className="p-2 border rounded-lg shadow-inner"
             disabled={!currentQuestion}
           >
             <option value="SC">Single Correct Answer</option>
@@ -134,7 +134,7 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion, quizId }) => {
             placeholder="Enter answer option"
             value={currentAnswer}
             onChange={(e) => setCurrentAnswer(e.target.value)}
-            className="flex-grow p-2 border rounded-lg"
+            className="flex-grow p-2 border rounded-lg shadow-inner"
             disabled={!currentQuestion || answerType === "OE"}
           />
           <button

@@ -263,9 +263,11 @@ export const PrimaryButtonClass = clsx(
 );
 
 export const SecondaryButtonClass = clsx(
+  "shadow-md",
   "focus:outline-none",
   "text-white",
   "bg-primary",
+  "duration-300",
   "hover:bg-white",
   "hover:text-black",
   "focus:ring-4",
