@@ -469,36 +469,44 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
                 />
                 {/* Delete button only for existing options */}
                 {index < newOptions.length - 1 && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      // Create a new array without the option at the current index
-                      const updatedOptions = newOptions.filter((_, i) => i !== index);
-                      setNewOptions(updatedOptions);
-
-                      // Adjust correct answer if needed
-                      if (newCorrectAnswer === index) {
-                        setNewCorrectAnswer(0); // Reset to first option
-                      } else if (newCorrectAnswer > index) {
-                        // Shift correct answer index if deleted option was before it
-                        setNewCorrectAnswer(newCorrectAnswer - 1);
-                      }
-                    }}
-                    className="bg-white border rounded-lg text-red-500 hover:text-red-700 p-2"
-                  >
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      className="h-5 w-5" 
-                      viewBox="0 0 20 20" 
-                      fill="currentColor"
+                  <div className="relative group">
+                  {/* Button */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        // Create a new array without the option at the current index
+                        const updatedOptions = newOptions.filter((_, i) => i !== index);
+                        setNewOptions(updatedOptions);
+                  
+                        // Adjust correct answer if needed
+                        if (newCorrectAnswer === index) {
+                          setNewCorrectAnswer(0); // Reset to first option
+                        } else if (newCorrectAnswer > index) {
+                          // Shift correct answer index if deleted option was before it
+                          setNewCorrectAnswer(newCorrectAnswer - 1);
+                        }
+                      }}
+                      className="bg-white border rounded-lg text-red-500 hover:text-red-700 p-2"
                     >
-                      <path 
-                        fillRule="evenodd" 
-                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" 
-                        clipRule="evenodd" 
-                      />
-                    </svg>
-                  </button>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                
+                  {/* Tooltip */}
+                  <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                    Delete
+                  </span>
+                </div>
                 )}
                 {index === newOptions.length - 1 && (
                   <button
@@ -540,52 +548,99 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
 
       {/* MCQ List for Teacher */}
       {!isPreview && (
-        <div className="p-10 bg-gray-100 rounded-lg shadow-lg mt-12 mb-24 z-40">
+        <div className="p-10 bg-gray-100 rounded-lg shadow-lg mt-12 mb-24 z-40 w-[800px]">
           <h3 className="text-lg font-semibold mb-4">MCQs List</h3>
           <ul className="space-y-4">
             {editMCQs.map((mcq) => (
               <li
                 key={mcq.timestamp}
-                className="flex items-center justify-between p-4 border rounded bg-white"
+                className="flex items-center justify-between p-4 border rounded bg-white "
               >
-                <div className="flex-grow">
-                  <p className="font-medium text-lg mb-2">{mcq.question}</p>
-                  <div className="space-y-1">
-                    {mcq.options.map((option, index) => (
-                      <div 
-                        key={index} 
-                        className={`p-2 rounded ${
-                          index === mcq.correctAnswer 
-                          ? "bg-green-100 text-green-800" 
-                          : "bg-gray-100 text-gray-800"
-                        }`}
+                <div className="flex-grow w-[500px]">
+                <div className="flex items-center justify-between mb-2">
+                  {/* Question */}
+                  <p className="font-medium text-lg">{mcq.question}</p>
+
+                  {/* Buttons */}
+                  <div className="flex items-center space-x-2 ml-4">
+                  <div className="relative group">
+                    {/* Button */}
+                    <button
+                      type="button"
+                      onClick={() => handleEditMCQ(mcq)}
+                      className="bg-white border rounded-lg text-blue-500 hover:text-blue-700 p-2"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
                       >
-                        {index + 1}. {option}
-                        {index === mcq.correctAnswer && (
-                          <span className="ml-2 text-xs text-green-600">(Correct Answer)</span>
-                        )}
-                      </div>
-                    ))}
+                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                      </svg>
+                    </button>
+
+                    {/* Tooltip */}
+                    <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                      Edit
+                    </span>
                   </div>
-                  <p className="text-sm text-gray-500 mt-2">
-                    Timestamp: {formatTime(mcq.timestamp)}
-                  </p>
+
+                  <div className="relative group">
+                    {/* Button */}
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteMCQ(mcq.timestamp)}
+                      className="bg-white border rounded-lg text-red-500 hover:text-red-700 p-2"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+
+                    {/* Tooltip */}
+                    <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                      Delete
+                    </span>
+                  </div>
+                  </div>
                 </div>
-                <div className="flex space-x-2 ml-4">
-                  <EditButtonPrimary
-                    text="E D I T"
-                    onClick={() => handleEditMCQ(mcq)}
-                  />
-                  <DeleteButtonPrimary
-                    text="D E L E T E"
-                    onClick={() => handleDeleteMCQ(mcq.timestamp)}
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+                <div className="space-y-1">
+                              {mcq.options.map((option, index) => (
+                                <div 
+                                  key={index} 
+                                  className={`p-2 rounded  ${
+                                    index === mcq.correctAnswer 
+                                    ? "bg-green-100 text-green-800" 
+                                    : "bg-gray-100 text-gray-800"
+                                  }`}
+                                >
+                                  {index + 1}. {option}
+                                  {index === mcq.correctAnswer && (
+                                    <span className="ml-2 text-xs text-green-600">(Correct Answer)</span>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                            <p className="text-sm text-gray-500 mt-2">
+                              Timestamp: {formatTime(mcq.timestamp)}
+                            </p>
+                          </div>
+                          
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
       {/* MCQ View for students */}
       {currentMCQ && isPreview && (
