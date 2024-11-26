@@ -71,6 +71,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   const [isEdit, setIsEdit] = useState(permissions.canEdit);
   const [isPreview, setIsPreview] = useState<boolean>(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [showError, setShowError] = useState(false);
 
   const togglePreview = () => setIsPreview(!isPreview);
 
@@ -525,29 +526,46 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
             ))}
           </div>
           <div className="mb-4 flex items-center justify-center space-x-4">
-            <label className="block font-medium mb-1"> Select the correct answer index:</label>
-            <input
-              type="number"
+            <label className="block font-medium mb-1">Select the correct answer index:</label>
+            <select
               value={newCorrectAnswer}
               onChange={(e) => setNewCorrectAnswer(parseInt(e.target.value))}
-              className="w-20 p-2 border border-gray-300 rounded"
-              min={0}
-              max={newOptions.length-1}
-            />
+              className="w-40 p-2 border border-gray-300 rounded"
+              disabled={newOptions.length === 0}
+            >
+              {newOptions
+                .filter((option) => option && option.trim() !== "") // Filter out empty or undefined options
+                .map((option, index) => (
+                  <option key={index} value={index}>
+                    {index + 1}. {option}
+                  </option>
+                ))}
+            </select>
           </div>
+
+
+          {/* Error message */}
+          {/* {showError && (
+            <p className="text-red-500 text-sm mb-2">
+              The index of the correct answer cannot be zero.
+            </p>
+          )} */}
+
           <div className="flex items-center justify-center">
-            {editingMCQ ? (
-              <SecondaryButton
-                text="Update MCQ"
-                onClick={handleUpdateMCQ}
-              />
-            ) : (
-              <SecondaryButton
-                text="Save MCQ"
-                onClick={saveMCQ}
-              />
-            )}
+          {editingMCQ ? (
+            <SecondaryButton
+              text="Update MCQ" // Text for the button
+              onClick={handleUpdateMCQ} // Click handler for updating MCQ
+            />
+          ) : (
+            <SecondaryButton
+              text="Save MCQ" // Text for the button
+              onClick={saveMCQ} // Click handler for saving MCQ
+            />
+          )}
           </div>
+
+
         </div>
       )}
 
@@ -626,18 +644,20 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
                       <div
                         key={index}
                         className={`p-2 rounded ${
-                          index === mcq.correctAnswer
+                          index === mcq.correctAnswer // Compare the index with mcq.correctAnswer
                             ? "bg-green-100 text-green-800"
                             : "bg-gray-100 text-gray-800"
                         }`}
                       >
-                        {index + 1}. {option}
+                        {index + 1}. {option} {/* Display the index + 1 for visual numbering */}
                         {index === mcq.correctAnswer && (
                           <span className="ml-2 text-xs text-green-600">(Correct Answer)</span>
                         )}
                       </div>
                     ))}
                 </div>
+
+
 
                             <p className="text-sm text-gray-500 mt-2">
                               Timestamp: {formatTime(mcq.timestamp)}
