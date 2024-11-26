@@ -178,9 +178,9 @@ const CodeEditor: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex h-[600px] bg-gray-100 rounded-lg">
-      <div className="flex-1 p-4">
-        <div className="rounded shadow-md overflow-hidden h-[calc(130%-90px)]">
+    <div className="flex m-4 h-[600px] bg-gray-200 rounded-lg">
+      <div className="basis-4/6 p-4">
+        <div className="rounded-lg shadow-md overflow-hidden h-[calc(115%-90px)]">
           <AceEditor
             mode={language?.toLowerCase()}
             theme={isDarkMode ? "monokai" : "github"}
@@ -202,61 +202,62 @@ const CodeEditor: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className="flex-1 p-4 bg-white">
+      <div className="basis-2/6 m-8 bg-gray-100 rounded-lg">
         {/* Input Section */}
-        <div className="mb-6">
-          <div className="flex items-center pb-2 justify-between mb-2">
-            <h2 className="text-xl font-bold">Inputs</h2>
-            <button
-              onClick={addInputField}
-              className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600"
-            >
-              <Plus size={14} />
-            </button>
+        <div className="bg-gray-100 mb-3 px-4 pt-4 rounded-lg">
+          <div className="mb-6">
+            <div className="flex items-center pb-2 justify-between mb-2 border-b-2">
+              <h2 className="text-xl font-bold">Inputs</h2>
+              <button
+                onClick={addInputField}
+                className="p-2 bg-primary text-white rounded-full hover:bg-blue-800 duration-300"
+              >
+                <Plus size={14} />
+              </button>
+            </div>
+
+            {inputs.map((input, index) => (
+              <div key={index} className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => updateInput(index, e.target.value)}
+                  className="flex-1 p-2 border rounded shadow-inner"
+                  placeholder={`Input ${index + 1}`}
+                />
+                {inputs.length > 1 && (
+                  <button
+                    onClick={() => removeInput(index)}
+                    className="p-2 text-red-500 hover:text-red-600"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
 
-          {inputs.map((input, index) => (
-            <div key={index} className="flex gap-2 mb-2">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => updateInput(index, e.target.value)}
-                className="flex-1 p-2 border rounded"
-                placeholder={`Input ${index + 1}`}
-              />
-              {inputs.length > 1 && (
-                <button
-                  onClick={() => removeInput(index)}
-                  className="p-2 text-red-500 hover:text-red-600"
-                >
-                  <Trash2 size={16} />
-                </button>
-              )}
-            </div>
-          ))}
+          {/* Buttons Section */}
+          <div className="flex gap-2 mb-6">
+            <button
+              onClick={handleRun}
+              className="px-6 py-2 me-2 mb-2 bg-primary font-medium text-sm text-white rounded-lg hover:bg-blue-900  duration-300"
+            >
+              Run
+            </button>
+            <button
+              onClick={handleSubmit}
+              className="px-6 py-2 me-2 mb-2 bg-primary font-medium text-sm text-white rounded-lg hover:bg-blue-900 duration-300"
+            >
+              Submit
+            </button>
+            {canEdit && <SecondaryButton text="Save" onClick={handleSaveClick} />}
+          </div>
         </div>
-
-        {/* Buttons Section */}
-        <div className="flex gap-2 mb-6">
-          <button
-            onClick={handleRun}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-          >
-            Run
-          </button>
-          <button
-            onClick={handleSubmit}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            Submit
-          </button>
-          {canEdit && <SecondaryButton text="Save" onClick={handleSaveClick} />}
-        </div>
-
         {/* Output Section */}
-        <div className="mb-6">
-          <h2 className="text-xl font-bold mb-2">Output</h2>
-          <pre className="p-4 bg-gray-100 rounded">{output}</pre>
+        <div className="mb-6 p-4">
+          <h2 className="text-xl font-bold pb-2 mb-2 border-b-2">Output</h2>
+          <pre className="p-4 bg-white rounded shadow-inner">{output}</pre>
         </div>
 
         {testResults.length > 0 && (
@@ -297,7 +298,7 @@ const CodeEditor: React.FC<Props> = ({
         {userRole === "teacher" && (
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-xl font-bold">Test Cases</h2>
+              <h2 className="text-xl font-bold mb-2 p-4">Test Cases</h2>
               {output && (
                 <button
                   onClick={saveAsTestCase}
