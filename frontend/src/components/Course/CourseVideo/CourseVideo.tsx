@@ -342,7 +342,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
 
         {/* Controls container */}
         <div
-          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 transition-opacity duration-300 ${
+          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 transition-opacity w-[800px] duration-300 ${
             isHovering || !isPlaying ? "opacity-100" : "opacity-0"
           }`} // Show controls on hover or when video is paused
           style={{ zIndex: 2 }}
@@ -445,7 +445,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
 
       {/* Teacher Mode: Add/Edit MCQs */}
       {!isPreview && (
-        <div className="mt-12 p-10 bg-gray-100 rounded-lg shadow-lg">
+        <div className="mt-12 p-10 bg-gray-100 rounded-lg shadow-lg w-[800px]">
           <p className="text-red-400">Select timestamp using video slider</p>
           <h3 className="text-lg font-semibold mb-4">Add/Edit MCQs</h3>
           <div className="mb-4">
