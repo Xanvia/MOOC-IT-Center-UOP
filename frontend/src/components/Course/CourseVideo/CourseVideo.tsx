@@ -203,7 +203,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   const handleMouseLeave = () => setIsHovering(false);
 
   // Teacher Mode: Adding MCQ handling
-  const addNewOption = () => setNewOptions([...newOptions, ""]);
+  // const addNewOption = () => setNewOptions([...newOptions, ""]);
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
@@ -211,6 +211,14 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
     const updatedOptions = [...newOptions];
     updatedOptions[index] = value;
     setNewOptions(updatedOptions);
+  };
+
+  const addNewOption = () => {
+    if (newOptions[newOptions.length - 1].trim() === "") {
+      toast.error("Input cannot be null");
+      return;
+    }
+    setNewOptions([...newOptions, ""]);
   };
 
   const saveMCQ = async () => {
@@ -461,16 +469,10 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
                   onChange={(e) => handleNewOptionChange(index, e.target.value)}
                   className="flex-grow p-2 border border-gray-300 rounded-lg"
                 />
-                {/* <input
-                  type="text"
-                  value={option}
-                  onChange={(e) => handleNewOptionChange(index, e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded"
-                /> */}
                 {index === newOptions.length - 1 && (
                   <button
                     onClick={addNewOption}
-                    className="bg-primary text-white px-4 py-2 rounded-lg  hover:bg-white  hover:text-black border border-white-800"
+                    className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black border border-white-800"
                   >
                     Add Option
                   </button>
