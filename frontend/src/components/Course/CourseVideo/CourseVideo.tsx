@@ -688,7 +688,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
         <>
         {currentMCQ && isPreview && (
           <div
-            className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center"
+            className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 flex items-center justify-center"
             style={{ zIndex: 10 }}
           >
             <div className="bg-white p-6 rounded-lg max-w-lg w-full">
