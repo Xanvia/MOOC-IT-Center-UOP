@@ -306,7 +306,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       onMouseLeave={handleMouseLeave} // Hide controls when not hovering
     >
       <div
-        className="bg-black rounded-lg overflow-hidden relative"
+        className="bg-black rounded-lg overflow-hidden relative w-[800px]"
         style={{ zIndex: 1 }}
       >
         <video
