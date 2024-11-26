@@ -178,7 +178,7 @@ const CodeEditor: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex h-[600px] bg-gray-100">
+    <div className="flex h-[600px] bg-gray-100 rounded-lg">
       <div className="flex-1 p-4">
         <div className="rounded shadow-md overflow-hidden h-[calc(130%-90px)]">
           <AceEditor
@@ -205,13 +205,13 @@ const CodeEditor: React.FC<Props> = ({
       <div className="flex-1 p-4 bg-white">
         {/* Input Section */}
         <div className="mb-6">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center pb-2 justify-between mb-2">
             <h2 className="text-xl font-bold">Inputs</h2>
             <button
               onClick={addInputField}
               className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600"
             >
-              <Plus size={16} />
+              <Plus size={14} />
             </button>
           </div>
 

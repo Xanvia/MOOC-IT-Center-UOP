@@ -159,7 +159,7 @@ const EditForm: React.FC<Props> = ({ item, onSave }) => {
   );
 
   return (
-    <form className="ml-16">
+    <form className="ml-8 mr-5 p-8 bg-gray-100 rounded-lg shadow-md">
       <div className="mt-6 flex justify-end">
         <SecondaryButton text="SAVE" onClick={handleSaveClick} />
       </div>
@@ -202,7 +202,7 @@ const EditForm: React.FC<Props> = ({ item, onSave }) => {
                 value={timeInMinutes}
                 onChange={(e) => setTimeInMinutes(parseInt(e.target.value))}
                 placeholder="Time in minutes"
-                className="p-2 border border-gray-300 rounded-md w-2/3"
+                className="p-2 border border-gray-300 rounded-md w-2/3 shadow-inner"
               />
             </div>
           )}
@@ -218,7 +218,7 @@ const EditForm: React.FC<Props> = ({ item, onSave }) => {
             id="question"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-inner"
           />
         </div>
 
@@ -230,7 +230,7 @@ const EditForm: React.FC<Props> = ({ item, onSave }) => {
             value={explanation}
             id="explanation"
             onChange={(e) => setExplanation(e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-inner"
           />
         </div>
       </div>
