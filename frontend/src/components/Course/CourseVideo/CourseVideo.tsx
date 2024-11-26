@@ -449,7 +449,6 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
           <p className="text-red-400">Select timestamp using video slider</p>
           <h3 className="text-lg font-semibold mb-4">Add/Edit MCQs</h3>
           <div className="mb-4">
-            {/* <label className="block font-medium mb-1">Question:</label> */}
             <input
               type="text"
               placeholder="Enter question"
@@ -459,9 +458,8 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
             />
           </div>
           <div className="mb-4">
-            {/* <label className="block font-medium mb-1">Options:</label> */}
             {newOptions.map((option, index) => (
-              <div key={index} className="flex space-x-2 mb-2">
+              <div key={index} className="flex space-x-2 mb-2 items-center">
                 <input
                   type="text"
                   placeholder="Enter answer option"
@@ -469,6 +467,39 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
                   onChange={(e) => handleNewOptionChange(index, e.target.value)}
                   className="flex-grow p-2 border border-gray-300 rounded-lg"
                 />
+                {/* Delete button only for existing options */}
+                {index < newOptions.length - 1 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // Create a new array without the option at the current index
+                      const updatedOptions = newOptions.filter((_, i) => i !== index);
+                      setNewOptions(updatedOptions);
+
+                      // Adjust correct answer if needed
+                      if (newCorrectAnswer === index) {
+                        setNewCorrectAnswer(0); // Reset to first option
+                      } else if (newCorrectAnswer > index) {
+                        // Shift correct answer index if deleted option was before it
+                        setNewCorrectAnswer(newCorrectAnswer - 1);
+                      }
+                    }}
+                    className="bg-white border rounded-lg text-red-500 hover:text-red-700 p-2"
+                  >
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      className="h-5 w-5" 
+                      viewBox="0 0 20 20" 
+                      fill="currentColor"
+                    >
+                      <path 
+                        fillRule="evenodd" 
+                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" 
+                        clipRule="evenodd" 
+                      />
+                    </svg>
+                  </button>
+                )}
                 {index === newOptions.length - 1 && (
                   <button
                     onClick={addNewOption}
@@ -487,20 +518,20 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
               value={newCorrectAnswer}
               onChange={(e) => setNewCorrectAnswer(parseInt(e.target.value))}
               className="w-20 p-2 border border-gray-300 rounded"
-              min={1}
+              min={0}
               max={newOptions.length-1}
             />
           </div>
           <div className="flex items-center justify-center">
             {editingMCQ ? (
               <SecondaryButton
-                text="Update MCQ" // Text for the button
-                onClick={handleUpdateMCQ} // Click handler for updating MCQ
+                text="Update MCQ"
+                onClick={handleUpdateMCQ}
               />
             ) : (
               <SecondaryButton
-                text="Save MCQ" // Text for the button
-                onClick={saveMCQ} // Click handler for saving MCQ
+                text="Save MCQ"
+                onClick={saveMCQ}
               />
             )}
           </div>
