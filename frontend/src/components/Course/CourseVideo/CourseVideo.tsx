@@ -221,47 +221,6 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
     setNewOptions([...newOptions, ""]);
   };
 
-  const handleSaveMCQ = async () => {
-    if (newCorrectAnswer < 1) {
-      // Display validation message if the condition is not met
-      const validationMessage = document.getElementById("validationMessage");
-      if (validationMessage) {
-        validationMessage.hidden = false;
-      }
-      return;
-    }
-  
-    const newMCQ: MCQ = {
-      timestamp: currentTime,
-      question: newQuestion,
-      options: newOptions,
-      correctAnswer: newCorrectAnswer,
-      isDone: false,
-    };
-  
-    const updatedMCQs = [...editMCQs, newMCQ]; // Append new MCQ to the list
-  
-    setEditMCQs(updatedMCQs); // Update the local state
-  
-    try {
-      await addQuizToVideo(id, updatedMCQs); // Send updated MCQs array to backend
-      toast.success("MCQ added successfully!");
-  
-      // Reset input fields after success
-      setNewQuestion("");
-      setNewOptions([""]);
-      setNewCorrectAnswer(0);
-  
-      // Hide validation message on success
-      const validationMessage = document.getElementById("validationMessage");
-      if (validationMessage) {
-        validationMessage.hidden = true;
-      }
-    } catch (error: any) {
-      toast.error("Error saving MCQ: " + error.message);
-    }
-  };
-
   const saveMCQ = async () => {
     const newMCQ: MCQ = {
       timestamp: currentTime,
@@ -521,31 +480,30 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
               </div>
             ))}
           </div>
-          <div className="mb-4">
-            <label className="block font-medium mb-1">Correct Answer:</label>
+          <div className="mb-4 flex items-center justify-center space-x-4">
+            <label className="block font-medium mb-1"> Select the correct answer index:</label>
             <input
               type="number"
               value={newCorrectAnswer}
               onChange={(e) => setNewCorrectAnswer(parseInt(e.target.value))}
               className="w-20 p-2 border border-gray-300 rounded"
-              min={0}
-              max={newOptions.length - 1}
+              min={1}
+              max={newOptions.length-1}
             />
           </div>
-          {editingMCQ ? (
-            <SecondaryButton
-              text="Update MCQ" // Text for the button
-              onClick={handleUpdateMCQ} // Click handler for updating MCQ
-            />
-          ) : (
-            <SecondaryButton
-              text="Save MCQ" // Text for the button
-              onClick={handleSaveMCQ} // Updated click handler for saving MCQ
-            />
-          )}
-          <p className="text-red-500 mt-2" id="validationMessage" hidden>
-            There must be at least one correct answer.
-          </p>
+          <div className="flex items-center justify-center">
+            {editingMCQ ? (
+              <SecondaryButton
+                text="Update MCQ" // Text for the button
+                onClick={handleUpdateMCQ} // Click handler for updating MCQ
+              />
+            ) : (
+              <SecondaryButton
+                text="Save MCQ" // Text for the button
+                onClick={saveMCQ} // Click handler for saving MCQ
+              />
+            )}
+          </div>
         </div>
       )}
 
@@ -560,7 +518,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
                 className="flex items-center justify-between p-4 border rounded"
               >
                 <div>
-                  <p className="font-medium w-[300px]">{mcq.question}</p>
+                  <p className="font-medium w-[480px]">{mcq.question}</p>
                   <p className="text-sm text-gray-500">
                     Timestamp: {formatTime(mcq.timestamp)}
                   </p>
