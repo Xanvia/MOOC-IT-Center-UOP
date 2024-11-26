@@ -671,6 +671,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
                 )}
 
       {/* MCQ View for students */}
+      
       {currentMCQ && isPreview && (
         <div
           className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center"
@@ -679,24 +680,26 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
           <div className="bg-white p-6 rounded-lg max-w-lg w-full">
             <h3 className="text-xl font-bold mb-4">{currentMCQ.question}</h3>
             <div className="space-y-2">
-              {currentMCQ.options.map((option, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleAnswerSelect(index)}
-                  className={`w-full p-2 rounded ${
-                    selectedAnswer === index
-                      ? showResult
-                        ? index === currentMCQ.correctAnswer
-                          ? "bg-green-500 text-white"
-                          : "bg-red-500 text-white"
-                        : "bg-blue-500 text-white"
-                      : "bg-gray-200 hover:bg-gray-300"
-                  }`}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              ))}
+              {currentMCQ.options
+                .filter((option) => option && option.trim() !== "") // Filter out invalid or empty options
+                .map((option, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleAnswerSelect(index)}
+                    className={`w-full p-2 rounded ${
+                      selectedAnswer === index
+                        ? showResult
+                          ? index === currentMCQ.correctAnswer
+                            ? "bg-green-500 text-white"
+                            : "bg-red-500 text-white"
+                          : "bg-blue-500 text-white"
+                        : "bg-gray-200 hover:bg-gray-300"
+                    }`}
+                    disabled={showResult}
+                  >
+                    {option}
+                  </button>
+                ))}
             </div>
             {showResult && (
               <div className="mt-4">
