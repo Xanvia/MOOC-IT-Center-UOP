@@ -546,15 +546,32 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
             {editMCQs.map((mcq) => (
               <li
                 key={mcq.timestamp}
-                className="flex items-center justify-between p-4 border rounded"
+                className="flex items-center justify-between p-4 border rounded bg-white"
               >
-                <div>
-                  <p className="font-medium w-[480px]">{mcq.question}</p>
-                  <p className="text-sm text-gray-500">
+                <div className="flex-grow">
+                  <p className="font-medium text-lg mb-2">{mcq.question}</p>
+                  <div className="space-y-1">
+                    {mcq.options.map((option, index) => (
+                      <div 
+                        key={index} 
+                        className={`p-2 rounded ${
+                          index === mcq.correctAnswer 
+                          ? "bg-green-100 text-green-800" 
+                          : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {index + 1}. {option}
+                        {index === mcq.correctAnswer && (
+                          <span className="ml-2 text-xs text-green-600">(Correct Answer)</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm text-gray-500 mt-2">
                     Timestamp: {formatTime(mcq.timestamp)}
                   </p>
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex space-x-2 ml-4">
                   <EditButtonPrimary
                     text="E D I T"
                     onClick={() => handleEditMCQ(mcq)}
