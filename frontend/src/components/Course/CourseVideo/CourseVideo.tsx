@@ -300,6 +300,18 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (currentMCQ && isPreview) {
+      document.body.style.overflow = "hidden";  // Disable scrolling
+    } else {
+      document.body.style.overflow = "auto";  // Re-enable scrolling
+    }
+
+    return () => {
+      document.body.style.overflow = "auto"; // Cleanup: restore scrolling when the component unmounts
+    };
+  }, [currentMCQ, isPreview]);
+
   return (
     <div
       className="max-w-4xl mx-auto my-8"
@@ -673,58 +685,62 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
       {/* MCQ View for students */}
       
       {currentMCQ && isPreview && (
-        <div
-          className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center"
-          style={{ zIndex: 10 }}
-        >
-          <div className="bg-white p-6 rounded-lg max-w-lg w-full">
-            <h3 className="text-xl font-bold mb-4">{currentMCQ.question}</h3>
-            <div className="space-y-2">
-              {currentMCQ.options
-                .filter((option) => option && option.trim() !== "") // Filter out invalid or empty options
-                .map((option, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerSelect(index)}
-                    className={`w-full p-2 rounded ${
-                      selectedAnswer === index
-                        ? showResult
-                          ? index === currentMCQ.correctAnswer
-                            ? "bg-green-500 text-white"
-                            : "bg-red-500 text-white"
-                          : "bg-blue-500 text-white"
-                        : "bg-gray-200 hover:bg-gray-300"
-                    }`}
-                    disabled={showResult}
-                  >
-                    {option}
-                  </button>
-                ))}
-            </div>
-            {showResult && (
-              <div className="mt-4">
-                <p
-                  className={`font-bold ${
-                    selectedAnswer === currentMCQ.correctAnswer
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
-                >
-                  {selectedAnswer === currentMCQ.correctAnswer
-                    ? "Correct!"
-                    : "Incorrect. The correct answer was: " +
-                      currentMCQ.options[currentMCQ.correctAnswer]}
-                </p>
-                <button
-                  onClick={handleContinue}
-                  className="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  Continue Video
-                </button>
+        <>
+        {currentMCQ && isPreview && (
+          <div
+            className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center"
+            style={{ zIndex: 10 }}
+          >
+            <div className="bg-white p-6 rounded-lg max-w-lg w-full">
+              <h3 className="text-xl font-bold mb-4">{currentMCQ.question}</h3>
+              <div className="space-y-2">
+                {currentMCQ.options
+                  .filter((option) => option && option.trim() !== "") // Filter out invalid or empty options
+                  .map((option, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleAnswerSelect(index)}
+                      className={`w-full p-2 rounded ${
+                        selectedAnswer === index
+                          ? showResult
+                            ? index === currentMCQ.correctAnswer
+                              ? "bg-green-500 text-white"
+                              : "bg-red-500 text-white"
+                            : "bg-blue-500 text-white"
+                          : "bg-gray-200 hover:bg-gray-300"
+                      }`}
+                      disabled={showResult}
+                    >
+                      {option}
+                    </button>
+                  ))}
               </div>
-            )}
+              {showResult && (
+                <div className="mt-4">
+                  <p
+                    className={`font-bold ${
+                      selectedAnswer === currentMCQ.correctAnswer
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {selectedAnswer === currentMCQ.correctAnswer
+                      ? "Correct!"
+                      : "Incorrect. The correct answer was: " +
+                        currentMCQ.options[currentMCQ.correctAnswer]}
+                  </p>
+                  <button
+                    onClick={handleContinue}
+                    className="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  >
+                    Continue Video
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
+      </>
       )}
 
       <button
