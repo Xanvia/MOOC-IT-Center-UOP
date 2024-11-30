@@ -11,6 +11,7 @@ import ItemComponent from "./ItemComponent";
 import ConfirmDeleteModal from "../Modals/ConfrimDeleteModal";
 import { useGlobal } from "@/contexts/store";
 import { Trash } from "lucide-react";
+import { CornerDownRight } from "lucide-react";
 
 interface ChapterComponentProps {
   weekIndex: number;
@@ -250,10 +251,11 @@ const ChapterComponent: React.FC<ChapterComponentProps> = ({
                 menuPosition="fixed"
               />
               <button
-                className="ml-2 bg-blue-600 text-white p-2 rounded hover:bg-blue-800"
+                className="ml-2 bg-blue-800 text-white p-2 rounded hover:bg-blue-900"
                 onClick={handleAddNewItem}
+                title="Add item" // This will display the tooltip
               >
-                <FaPlus />
+                <CornerDownRight size={16} />
               </button>
             </div>
           ) : (
