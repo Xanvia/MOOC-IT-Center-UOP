@@ -36,9 +36,33 @@ class CourseTeachers(models.Model):
     teacher = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=ROLES, default="non-editing_teacher")
     permissions = models.ManyToManyField(CoursePermissions, blank=True)
+    messages = models.JSONField(default=dict)
 
     class Meta:
         unique_together = ("course", "teacher")
+
+    def add_message(self, sender, message, status="unread"):
+        """
+        Adds a new message to the messages field.
+        """
+        # Ensure 'messages' is a list, not a dictionary
+        if isinstance(self.messages, dict):
+            self.messages = []
+
+        # Append the new message to the list of messages
+        self.messages.append({"sender": sender, "message": message, "status": status})
+        
+        # Save the updated instance
+        self.save()
+
+    def update_message_status(self, sender, status="read"):
+        """
+        Updates the read status of a message for a specific sender.
+        """
+        for msg in self.messages:
+            if msg["sender"] == sender:
+                msg["status"] = status
+        self.save()
 
     def __str__(self):
         return self.teacher.username

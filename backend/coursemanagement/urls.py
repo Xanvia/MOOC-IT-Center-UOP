@@ -9,6 +9,7 @@ from .views import (
     GradeQuizAPIView,
     TeacherPermissionsRetrieveAPIView,
     CourseStudentsListAPIView,
+    CourseMessagesViewSet,
 )
 
 
@@ -48,12 +49,41 @@ urlpatterns = [
     path(
         "code/<int:pk>", StudentCodingDetailAPIView.as_view(), name="submission-details"
     ),
-    path("<int:course_id>/grade-quiz/<int:pk>", GradeQuizAPIView.as_view(), name="grade-quiz"),
-    path("<int:course_id>/grade-code/<int:pk>", GradeCodingAPIView.as_view(), name="grade-code"),
+    path(
+        "<int:course_id>/grade-quiz/<int:pk>",
+        GradeQuizAPIView.as_view(),
+        name="grade-quiz",
+    ),
+    path(
+        "<int:course_id>/grade-code/<int:pk>",
+        GradeCodingAPIView.as_view(),
+        name="grade-code",
+    ),
     path(
         "<int:course_id>/get-teacher-permissions/<int:teacher_id>/",
         TeacherPermissionsRetrieveAPIView.as_view(),
         name="teacher-permissions",
     ),
- 
+    path(
+        "<int:course_id>/messages/",
+        CourseMessagesViewSet.as_view(
+            {
+                "get": "list",
+                "post": "add_message_teacher",
+                "put": "update_message_status_teacher",
+            },
+        ),
+        name="course-messages",
+    ),
+    path(
+        "<int:course_id>/messages/<int:teacher_id>/",
+        CourseMessagesViewSet.as_view(
+            {
+                "get": "list",
+                "post": "add_message_admin",
+                "put": "update_message_status_admin",
+            },
+        ),
+        name="course-messages",
+    ),
 ]

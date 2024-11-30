@@ -16,6 +16,7 @@ from .serializers import (
     PaymentSerializer,
     GradeQuizSerializer,
     GradeCodeSerializer,
+    CourseMessagesSerializer,
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
@@ -296,4 +297,64 @@ class PaymentNotificationAPIView(views.APIView):
         return Response(
             {"status": "success", "message": "Payment completed successfully"},
             status=status.HTTP_200_OK,
+        )
+
+
+from rest_framework.response import Response
+from rest_framework import status
+
+
+class CourseMessagesViewSet(viewsets.ModelViewSet):
+    serializer_class = CourseMessagesSerializer
+    queryset = CourseTeachers.objects.all()
+
+    def get_object(self):
+        try:
+            if self.kwargs.get("teacher_id"):
+                return self.queryset.get(
+                    course=self.kwargs.get("course_id"),
+                    teacher=self.kwargs.get("teacher_id"),
+                )
+            else:
+                return self.queryset.get(
+                    course=self.kwargs.get("course_id"), teacher=self.request.user
+                )
+        except CourseTeachers.DoesNotExist:
+            raise NotFound("Teacher not found")
+
+    def add_message_admin(self, request, *args, **kwargs):
+        course_teacher_instance = self.get_object()
+        course_teacher_instance.add_message(
+            sender="admin", message=request.data["message"]
+        )
+
+        return Response(
+            {
+                "status": "success",
+                "message": "Message added successfully",
+            }
+        )
+
+    def add_message_teacher(self, request, *args, **kwargs):
+        course_teacher_instance = self.get_object()
+        course_teacher_instance.add_message(
+            sender="teacher", message=request.data["message"]
+        )
+
+        return Response(
+            {
+                "status": "success",
+                "message": "Message added successfully",
+            }
+        )
+
+    def update_message_status_admin(self, request, *args, **kwargs):
+        course_teacher_instance = self.get_object()
+        course_teacher_instance.update_message_status(sender="admin")
+
+        return Response(
+            {
+                "status": "success",
+                "message": "Message status updated successfully",
+            }
         )

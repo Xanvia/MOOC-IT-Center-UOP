@@ -184,7 +184,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ["id", "text", "question_type", "score", "answers","student_answer"]
+        fields = ["id", "text", "question_type", "score", "answers", "student_answer"]
 
     def get_answers(self, question):
         # For open-ended questions, don't return answer choices
@@ -200,7 +200,9 @@ class QuestionSerializer(serializers.ModelSerializer):
 
         # Assuming student_answers is a dictionary
         student_answers = student_quiz.student_answers
-        question_id = str(question.id)  # Ensure question_id is a string to match the dictionary keys
+        question_id = str(
+            question.id
+        )  # Ensure question_id is a string to match the dictionary keys
 
         # Get the student's answer for this question
         student_answer = student_answers.get(question_id)
@@ -214,7 +216,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
         # Handle the response based on the question type
         if question.question_type == Question.OPENN_ENDED:
-            return { "id":question_id,"text": student_answer}
+            return {"id": question_id, "text": student_answer}
         elif question.question_type == Question.MULTIPLE_CORRECT:
             return {
                 "selected_answers": student_answer,
@@ -225,12 +227,11 @@ class QuestionSerializer(serializers.ModelSerializer):
                 "selected_answer": student_answer,
                 "correct_answer": correct_answers.first(),
             }
-        
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation.pop("answers")
         return representation
-
 
 
 class StudentQuizDetailSerializer(serializers.ModelSerializer):
@@ -309,8 +310,10 @@ class StudentListSerializer(serializers.ModelSerializer):
 
         components = Component.objects.filter(chapter__week__course=instance.course)
         try:
-            
-            enrollement = Enrollment.objects.get(student=student.id, course=instance.course.id)
+
+            enrollement = Enrollment.objects.get(
+                student=student.id, course=instance.course.id
+            )
             completed_components = components.filter(
                 progress__completed=True, progress__enrollment=enrollement.id
             )
@@ -361,12 +364,13 @@ class GradeQuizSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Score is required")
         attrs["graded"] = True
         return super().validate(attrs)
-    
+
     def update(self, instance, validated_data):
         if instance.graded == True:
             instance.grade_approved = True
         return super().update(instance, validated_data)
-    
+
+
 class GradeCodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentCodingAnswer
@@ -377,3 +381,10 @@ class GradeCodeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Grade is required")
         attrs["graded"] = True
         return super().validate(attrs)
+
+
+class CourseMessagesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CourseTeachers
+        fields = ["messages"]
