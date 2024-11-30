@@ -358,3 +358,14 @@ class CourseMessagesViewSet(viewsets.ModelViewSet):
                 "message": "Message status updated successfully",
             }
         )
+
+    def update_message_status_teacher(self, request, *args, **kwargs):
+        course_teacher_instance = self.get_object()
+        course_teacher_instance.update_message_status(sender="teacher")
+
+        return Response(
+            {
+                "status": "success",
+                "message": "Message status updated successfully",
+            }
+        )
