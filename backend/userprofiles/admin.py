@@ -29,7 +29,7 @@ class AuthenticationTypeAdmin(admin.ModelAdmin):
 
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "country", "birth_date", "user_type")
+    list_display = ("user", "country", "birth_date", "user_type", "user_id")
 
 
 class DegreeAdmin(admin.ModelAdmin):
