@@ -97,7 +97,7 @@ const Chat: React.FC<ChatProps> = ({
           <div 
             className={`p-3 rounded-lg max-w-md ${
               isAdmin 
-                ? 'bg-blue-500 text-white' 
+                ? 'bg-blue-700 text-white' 
                 : 'bg-gray-200 text-black'
             }`}
           >
@@ -138,13 +138,13 @@ const Chat: React.FC<ChatProps> = ({
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
           placeholder="Type your message..."
-          className="flex-1 p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-700"
         />
         <button 
           onClick={handleSendMessage}
-          className="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600 transition-colors"
+          className="bg-blue-700 text-white p-2 rounded-r-lg hover:bg-blue-800 transition-colors"
         >
-          <Send size={20} />
+          <Send size={28} />
         </button>
       </div>
     </div>
