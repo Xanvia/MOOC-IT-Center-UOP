@@ -18,6 +18,14 @@ export const fetchAllCourses = async () => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+export const fetchAllCategories = async () => {
+  try {
+    const response = await axiosInstance.get("/interests/"); // Replace with your actual API endpoint
+    return response.data.data.interests; 
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
 
 export const fetchMyCourses = async () => {
   try {

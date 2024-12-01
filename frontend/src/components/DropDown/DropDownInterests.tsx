@@ -15,7 +15,11 @@ const DropDownInterests: React.FC<Props> = ({ addSelection, value }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(value);
   const [interests, setInterests] = useState<Interest[]>([]);
+  const [visibleInterests, setVisibleInterests] = useState<Interest[]>([]);
+  const [showAll, setShowAll] = useState(false); // Track "Show More" state
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  const INITIAL_VISIBLE_COUNT = 5; // Number of items to show initially
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -26,13 +30,15 @@ const DropDownInterests: React.FC<Props> = ({ addSelection, value }) => {
     }
   };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    fetchInterests().then((data) => {
-      if (data) {
-        setInterests(data);
-      }
-    });
+
+useEffect(() => {
+  document.addEventListener("mousedown", handleClickOutside);
+  fetchInterests().then((data) => {
+    if (data) {
+      setInterests(data);
+      setVisibleInterests(data.slice(0, INITIAL_VISIBLE_COUNT)); // Show initial items
+    }
+  });
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -54,6 +60,16 @@ const DropDownInterests: React.FC<Props> = ({ addSelection, value }) => {
       return [];
     }
   };
+
+  const handleShowMore = () => {
+    if (showAll) {
+      setVisibleInterests(interests.slice(0, INITIAL_VISIBLE_COUNT)); // Collapse back to initial
+    } else {
+      setVisibleInterests(interests); // Show all
+    }
+    setShowAll(!showAll); // Toggle state
+  };
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button
@@ -83,7 +99,7 @@ const DropDownInterests: React.FC<Props> = ({ addSelection, value }) => {
         </span>
       </button>
 
-      {isOpen && interests && Array.isArray(interests) && (
+      {isOpen && interests && Array.isArray(interests) && ( //update
         <ul
           className="absolute z-10 mt-1 max-h-56 w-80  overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm ml-44"
           tabIndex={-1}
@@ -91,7 +107,7 @@ const DropDownInterests: React.FC<Props> = ({ addSelection, value }) => {
           aria-labelledby="listbox-label"
           aria-activedescendant="listbox-option-3"
         >
-          {interests.map((interest) => (
+          {/* {interests.map((interest) => (
             <li
               key={interest.id}
               className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
@@ -109,7 +125,35 @@ const DropDownInterests: React.FC<Props> = ({ addSelection, value }) => {
                 </span>
               </div>
             </li>
+          ))} */
+          }
+          {visibleInterests.map((interest) => (
+            <li
+              key={interest.id}
+              className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
+              id={`listbox-option-${interest.id}`}
+              role="option"
+              onClick={() => {
+                setSelectedOption(interest.label);
+                addSelection(interest);
+                setIsOpen(false);
+              }}
+            >
+              <div className="flex items-center text-primary justify-start">
+                <span className="font-normal ml-3 block truncate">
+                  {interest.label}
+                </span>
+              </div>
+            </li>
           ))}
+          {interests.length > INITIAL_VISIBLE_COUNT && (
+            <li
+              className="text-blue-500 relative cursor-pointer select-none py-2 pl-3 pr-9 text-center hover:underline"
+              onClick={handleShowMore}
+            >
+              {showAll ? "Show Less" : "Show More"}
+            </li>
+          )}
         </ul>
       )}
     </div>
@@ -117,3 +161,5 @@ const DropDownInterests: React.FC<Props> = ({ addSelection, value }) => {
 };
 
 export default DropDownInterests;
+
+
