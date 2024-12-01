@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import CourseCard from "@/components/Course/CourseCard/CourseCard";
-import { fetchAllCourses,fetchAllCategories  } from "@/services/course.service";
+import { fetchAllCourses, fetchAllCategories } from "@/services/course.service";
 import { CourseData, CategoryEnum } from "@/components/Course/course.types";
 import Search from "@/components/Search/Search";
 import CategoryTabs from "@/components/CategoryTabs/CategoryTabs";
@@ -14,7 +14,6 @@ export default function Home() {
     CategoryEnum.All
   );
 
-   // Fetch all courses when the component mounts
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -25,9 +24,12 @@ export default function Home() {
         console.error("Failed to fetch courses", error);
       }
     };
+
     fetchCourses();
   }, []);
-// Handle category changes from the CategoryTabs component
+
+
+  // Handle category changes from the CategoryTabs component
   const handleCategoryChange = (category: CategoryEnum) => {
     setSelectedCategory(category);
     if (category === CategoryEnum.All) {
@@ -40,15 +42,6 @@ export default function Home() {
     }
   };
   // Fetch all categories dynamically
-  const fetchCategories = async () => {
-    try {
-      const response = await fetchAllCategories(); // API call to fetch categories
-      return response.categories; // Return categories in the expected format
-    } catch (error) {
-      console.error("Failed to fetch categories", error);
-      return {};
-    }
-  };
 
   return (
     <>
@@ -57,9 +50,9 @@ export default function Home() {
       </div> */}
       <Slideshow />
       <Search />
-      <CategoryTabs 
-        onCategoryChange={handleCategoryChange} 
-        // fetchAllCategories={fetchCategories}  
+      <CategoryTabs
+        onCategoryChange={handleCategoryChange}
+        // fetchAllCategories={fetchCategories}
       />
       <div className="grid grid-cols-1 py-10 ml-12 sm:grid-cols-2 xl:grid-cols-4 lg:grid-cols-3 justify-center items-center mx-10 sm:mx-36 lg:mx-36 gap-4 lg:gap-4 2xl:gap-10">
         {filteredCourses.map((course) => (
@@ -69,7 +62,9 @@ export default function Home() {
             image={course.header_image || ""}
             title={course.name}
             description={course.description}
-          />        
+            difficulty={course.difficulty}
+            institution={course.institution}
+          />
         ))}
       </div>
     </>

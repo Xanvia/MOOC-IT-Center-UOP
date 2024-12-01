@@ -1,87 +1,38 @@
-// import React, { useState } from 'react';
-// import { CategoryEnum, categoryLabels } from '@/components/Course/course.types';
-
-// interface CategoryTabsProps {
-//   onCategoryChange: (category: CategoryEnum) => void;
-// }
-
-// const CategoryTabs: React.FC<CategoryTabsProps> = ({ onCategoryChange }) => {
-//   const [activeCategory, setActiveCategory] = useState<CategoryEnum>(CategoryEnum.All);
-//   const [showAllCategories, setShowAllCategories] = useState(false);
-
-//   const handleCategoryClick = (category: CategoryEnum) => {
-//     setActiveCategory(category);
-//     onCategoryChange(category);
-//   };
-//   const toggleShowAll = () => {
-//     setShowAllCategories((prev) => !prev);
-//   };
-//   const categoryEntries = Object.entries(categoryLabels);
-//   const displayedCategories = showAllCategories
-//     ? categoryEntries
-//     : categoryEntries.slice(0, 5);
-
-
-//   return (
-//     <div className="mb-6">
-//       <div className="flex flex-wrap justify-center gap-4 my-6">
-//         {Object.entries(categoryLabels).map(([categoryId, label]) => (
-//           <button
-//             key={categoryId}
-//             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-//               activeCategory === Number(categoryId)
-//                 ? 'bg-blue-800 text-white hover:bg-blue-900'
-//                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-//             }`}
-//             onClick={() => handleCategoryClick(Number(categoryId) as CategoryEnum)}
-//           >
-//             {label}
-//           </button>
-//         ))}
-//         {categoryEntries.length > 5 && (
-//         <div className="text-center">
-//           <button
-//             className="text-blue-600 hover:underline text-sm"
-//             onClick={toggleShowAll}
-//           >
-//             {showAllCategories ? 'Show Less' : 'Show All'}
-//           </button>
-//         </div>
-//          )}
-//       </div>
-//       <hr className="border-t border-gray-300 mt-4" />
-//     </div>
-//   );
-// };
-
-// export default CategoryTabs;
-import React, { useState, useEffect } from 'react';
-import { CategoryEnum } from '@/components/Course/course.types'; // Assuming category types are defined here.
-import { fetchAllCategories } from '@/services/course.service';
+"use client";
+import React, { useState, useEffect } from "react";
+import { CategoryEnum } from "@/components/Course/course.types";
+import { fetchAllCategories } from "@/services/course.service";
+import { CircleArrowDown, CircleArrowUp,ArrowUp,ArrowDown, Ellipsis, PanelTopClose } from "lucide-react";
 interface CategoryTabsProps {
   onCategoryChange: (category: CategoryEnum) => void;
 }
 
-const CategoryTabs: React.FC<CategoryTabsProps> = ({
-  onCategoryChange,
-}) => {
-  const [activeCategory, setActiveCategory] = useState<CategoryEnum>(CategoryEnum.All);
+interface Category {
+  id: number;
+  label: string;
+}
+
+const CategoryTabs: React.FC<CategoryTabsProps> = ({ onCategoryChange }) => {
+  const [activeCategory, setActiveCategory] = useState<CategoryEnum>(
+    CategoryEnum.All
+  );
   const [showAllCategories, setShowAllCategories] = useState(false);
-  const [categories, setCategories] = useState<{ [key: number]: string }>({});
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch categories from the database when the component mounts.
-    fetchAllCategories()
-      .then((fetchedCategories) => {
-        setCategories(fetchedCategories);
+    const fetchCategories = async () => {
+      try {
+        const interests = await fetchAllCategories();
+        setCategories(interests);
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching categories:', error);
+      } catch (error) {
+        console.error("Failed to fetch categories", error);
         setLoading(false);
-      });
-  }, [fetchAllCategories]);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleCategoryClick = (category: CategoryEnum) => {
     setActiveCategory(category);
@@ -92,10 +43,9 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
     setShowAllCategories((prev) => !prev);
   };
 
-  const categoryEntries = Object.entries(categories);
   const displayedCategories = showAllCategories
-    ? categoryEntries
-    : categoryEntries.slice(0, 5);
+    ? categories
+    : categories.slice(0, 5);
 
   if (loading) {
     return <div>Loading categories...</div>;
@@ -103,26 +53,36 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
 
   return (
     <div className="mb-6">
-      <div className="flex flex-wrap justify-center gap-4 my-6">
-        {displayedCategories.map(([categoryId, label]) => (
+      <div className="flex flex-wrap justify-center gap-4 my-6 mx-44">
+        {displayedCategories.map((category) => (
           <button
-            key={categoryId}
+            key={category.id}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-              activeCategory === Number(categoryId)
-                ? 'bg-blue-800 text-white hover:bg-blue-900'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              activeCategory === category.id
+                ? "bg-blue-800 text-white hover:bg-blue-900"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
-            onClick={() => handleCategoryClick(Number(categoryId) as CategoryEnum)}
+            onClick={() => handleCategoryClick(category.id as CategoryEnum)}
           >
-            {label}
+            {category.label}
           </button>
         ))}
-        {categoryEntries.length > 5 && (
+        {categories.length > 5 && (
           <button
             className="ml-4 px-2 py-1 text-blue-600 hover:underline text-sm flex items-center"
             onClick={toggleShowAll}
           >
-            {showAllCategories ? '◀' : '▶'}
+            {showAllCategories ? (
+              <>
+                <span className="mr-1"></span>
+                <PanelTopClose size={24} />
+              </>
+            ) : (
+              <>
+                <span className="mr-1"></span>
+                <Ellipsis size={24} />
+              </>
+            )}
           </button>
         )}
       </div>
@@ -132,4 +92,3 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
 };
 
 export default CategoryTabs;
-
