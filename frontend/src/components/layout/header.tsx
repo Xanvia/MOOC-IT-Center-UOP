@@ -63,10 +63,10 @@ const Header = ({ toggleSidebar }: HeaderProps) => {
             </button>
           </div>
 
-          <button className="p-2 rounded-full text-gray-600 hover:bg-gray-100 focus:outline-none relative">
+          {/* <button className="p-2 rounded-full text-gray-600 hover:bg-gray-100 focus:outline-none relative">
             <Bell size={24} />
             <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
-          </button>
+          </button> */}
 
           <ProfileButton
             isProfileMenuOpen={isProfileMenuOpen}
