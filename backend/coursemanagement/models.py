@@ -36,7 +36,7 @@ class CourseTeachers(models.Model):
     teacher = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=ROLES, default="non-editing_teacher")
     permissions = models.ManyToManyField(CoursePermissions, blank=True)
-    messages = models.JSONField(default=dict)
+    messages = models.JSONField(default=dict, blank=True, null=True)
 
     class Meta:
         unique_together = ("course", "teacher")
