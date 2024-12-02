@@ -14,6 +14,11 @@ interface TeacherData {
   role: keyof typeof Roles;
 }
 
+interface CourseData {
+  id: string;
+  name: string; // Add other fields as needed
+}
+
 const Roles = {
   "non-editing_teacher": "Non-Editing Teacher",
   editing_teacher: "Editing Teacher",
@@ -23,6 +28,7 @@ const Roles = {
 const TeachersPage = () => {
   const params = useParams();
   const [teachersData, setTeachersData] = useState<TeacherData[]>([]);
+  const [courseData, setCourseData] = useState<CourseData | null>(null);
 
   useEffect(() => {
     const fetchTeachers = async () => {
@@ -30,12 +36,29 @@ const TeachersPage = () => {
         const teachers = await getAllCourseTeachers(params.courseId as string);
         setTeachersData(teachers);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching teachers:", error);
       }
     };
-
+  
+    const fetchCourseData = async () => {
+      try {
+        // Ensure the course ID is a string
+        const courseId = Array.isArray(params.courseId)
+          ? params.courseId[0]
+          : params.courseId;
+  
+        // Replace with actual course fetching logic
+        const course = { id: courseId, name: "Sample Course" }; // Mock data
+        setCourseData(course);
+      } catch (error) {
+        console.error("Error fetching course data:", error);
+      }
+    };
+  
     fetchTeachers();
-  }, []);
+    fetchCourseData();
+  }, [params.courseId]);
+
   return (
     <div className="flex h-screen bg-gray-50">
       <Head>
@@ -56,7 +79,9 @@ const TeachersPage = () => {
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        <TeacherSettingsTable data={teachersData} />
+        {courseData && (
+          <TeacherSettingsTable data={teachersData} course={courseData} />
+        )}
       </main>
     </div>
   );

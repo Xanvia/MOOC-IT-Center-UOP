@@ -66,7 +66,7 @@ const CourseRow: React.FC<CourseRowProps> = ({
                 Publish
               </button>
               <Link href={`/admin/chat`}>
-                <button className="bg-gray-400 hover:bg-gray-300 text-white px-3 py-1 rounded-md">
+                <button className="bg-gray-500 hover:bg-gray-400 text-white px-3 py-1 rounded-md">
                   Send Message
                 </button>
               </Link>

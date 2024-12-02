@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import PermissionModal from "./TeacherPermissionModal";
 import {
@@ -7,7 +6,9 @@ import {
   updatePermissions,
 } from "@/services/settings.service";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import { toast } from "sonner";
+
 export interface TeacherData {
   id: string;
   name: string;
@@ -15,6 +16,12 @@ export interface TeacherData {
   email: string;
   role: keyof typeof Roles;
 }
+
+export interface CourseData {
+  id: string;
+  name: string;
+}
+
 
 type Permission = {
   id: string;
@@ -24,6 +31,7 @@ type Permission = {
 
 export interface TeacherSettingsTableProps {
   data: TeacherData[];
+  course: CourseData;
 }
 
 const Roles = {
@@ -34,6 +42,7 @@ const Roles = {
 
 const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({
   data,
+  course,
 }) => {
   const params = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -129,13 +138,18 @@ const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({
                     <td className="px-6 py-4 whitespace-nowrap">
                       {Roles[teacher.role] || teacher.role}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 space-x-4 whitespace-nowrap">
                       <button
                         className="bg-blue-800 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-900"
                         onClick={() => handlePermissionsClick(teacher)}
                       >
                         Permissions
                       </button>
+                      <Link href={`/settings/${course.id}/teachers/chat`}>
+                        <button className="bg-gray-500 hover:bg-gray-400 text-white px-3 py-1 rounded-md text-sm">
+                          Send Message
+                        </button>
+                      </Link>
                     </td>
                   </tr>
                 )
