@@ -135,3 +135,37 @@ export const gradeCodeQuiz = async (
     throw error;
   }
 };
+
+export const getAvalibleTeachers = async (courseId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/manage/${courseId}/teachers-all/`
+    );
+    return response.data.data.teachers;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const addTeacherToCourse = async (courseId: string, name: string) => {
+  try {
+    const response = await axiosInstance.post(
+      `/course/manage/${courseId}/add-teacher/`,
+      { teacher: name, role: "non-editing_teacher" }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const removeTeacher = async (courseId: string, teacherId: string) => {
+  try {
+    const response = await axiosInstance.delete(
+      `/course/manage/${courseId}/add-teacher/${teacherId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

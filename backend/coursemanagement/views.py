@@ -17,6 +17,7 @@ from .serializers import (
     GradeQuizSerializer,
     GradeCodeSerializer,
     CourseMessagesSerializer,
+    TeacherSerializer,
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
@@ -30,12 +31,21 @@ from courses.models import (
 )
 from django.conf import settings
 from .permissions import GradePermissions
+from django.contrib.auth.models import User
 
 
 class CourseTeacherViewSet(viewsets.ModelViewSet):
     serializer_class = CourseTeachersSerializer
     queryset = CourseTeachers.objects.all()
     permission_classes = [IsCourseCreator]
+
+    def get_object(self):
+        if self.action == "destroy":
+            return self.queryset.get(
+                course=self.kwargs.get("course_id"),
+                teacher=self.kwargs.get("teacher_id"),
+            )
+        return super().get_object()
 
     def create(self, request, *args, **kwargs):
 
@@ -61,6 +71,9 @@ class CourseTeacherViewSet(viewsets.ModelViewSet):
             },
         }
         return response
+
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
 
 
 class PermissionsListAPIView(generics.ListAPIView):
@@ -369,3 +382,21 @@ class CourseMessagesViewSet(viewsets.ModelViewSet):
                 "message": "Message status updated successfully",
             }
         )
+
+
+class GetAllTeachers(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = TeacherSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(groups__name="teacher")
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "data": {
+                "teachers": response.data,
+            },
+        }
+        return response

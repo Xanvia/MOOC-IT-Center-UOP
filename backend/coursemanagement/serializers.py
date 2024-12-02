@@ -11,6 +11,7 @@ from courses.models import (
     Answer,
     Enrollment,
     Component,
+    Course,
 )
 import uuid
 
@@ -388,3 +389,36 @@ class CourseMessagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseTeachers
         fields = ["messages"]
+
+
+class TeacherSerializer(serializers.ModelSerializer):
+    course_id = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ["id", "first_name", "last_name", "email", "course_id", "username"]
+
+    def to_representation(self, instance):
+        course_id = (
+            self.context.get("request").parser_context["kwargs"].get("course_id")
+        )
+        representation = super().to_representation(instance)
+
+        try:
+            if course_id:
+                course = Course.objects.get(id=course_id)
+                user = User.objects.get(id=instance.id)
+                course_teacher = CourseTeachers.objects.get(course=course, teacher=user)
+                representation["added"] = True
+            else:
+                representation["added"] = False
+        except Course.DoesNotExist:
+            pass
+        except User.DoesNotExist:
+            pass
+        except CourseTeachers.DoesNotExist:
+            representation["added"] = False
+
+        representation["name"] = instance.first_name + " " + instance.last_name
+
+        return representation
