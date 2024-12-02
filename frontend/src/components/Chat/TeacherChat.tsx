@@ -130,7 +130,7 @@ const TeacherChat: React.FC<TeacherChatProps> = ({
           <div 
             className={`p-3 rounded-lg max-w-md ${
               isCurrentUser 
-                ? 'bg-purple-500 text-white' 
+                ? 'bg-cyan-500 text-white' 
                 : 'bg-gray-200 text-black'
             }`}
           >
@@ -169,7 +169,7 @@ const TeacherChat: React.FC<TeacherChatProps> = ({
               placeholder="Search teachers by name or department"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full p-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full p-2 pl-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
             <Search 
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
@@ -225,7 +225,7 @@ const TeacherChat: React.FC<TeacherChatProps> = ({
         </div>
         <button 
           onClick={() => setIsRecipientModalOpen(true)}
-          className="flex items-center bg-purple-500 text-white px-3 py-2 rounded-lg hover:bg-purple-600 transition-colors"
+          className="flex items-center bg-cyan-600 text-white px-3 py-2 rounded-lg hover:bg-cyan-600 transition-colors"
         >
           <UserPlus className="mr-2" />
           {selectedRecipient ? `Chatting with ${selectedRecipient}` : 'Select Recipient'}
@@ -257,16 +257,16 @@ const TeacherChat: React.FC<TeacherChatProps> = ({
           onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
           placeholder="Type your message..."
           disabled={!selectedRecipient}
-          className={`flex-1 p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500 
+          className={`flex-1 p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 
             ${!selectedRecipient ? 'bg-gray-100 cursor-not-allowed' : ''}`}
         />
         <button 
           onClick={handleSendMessage}
           disabled={!selectedRecipient}
-          className={`bg-purple-500 text-white p-2 rounded-r-lg hover:bg-purple-600 transition-colors
+          className={`bg-cyan-500 text-white p-2 rounded-r-lg hover:bg-cyan-600 transition-colors
             ${!selectedRecipient ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
-          <Send size={20} />
+          <Send size={27} />
         </button>
       </div>
 
