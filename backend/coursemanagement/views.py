@@ -17,6 +17,7 @@ from .serializers import (
     GradeQuizSerializer,
     GradeCodeSerializer,
     CourseMessagesSerializer,
+    TeacherSerializer,
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
@@ -30,6 +31,7 @@ from courses.models import (
 )
 from django.conf import settings
 from .permissions import GradePermissions
+from django.contrib.auth.models import User
 
 
 class CourseTeacherViewSet(viewsets.ModelViewSet):
@@ -369,3 +371,21 @@ class CourseMessagesViewSet(viewsets.ModelViewSet):
                 "message": "Message status updated successfully",
             }
         )
+
+
+class GetAllTeachers(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = TeacherSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(groups__name="teacher")
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "data": {
+                "teachers": response.data,
+            },
+        }
+        return response

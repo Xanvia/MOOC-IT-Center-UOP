@@ -10,6 +10,7 @@ from .views import (
     TeacherPermissionsRetrieveAPIView,
     CourseStudentsListAPIView,
     CourseMessagesViewSet,
+    GetAllTeachers,
 )
 
 
@@ -26,6 +27,11 @@ urlpatterns = [
         CourseTeacherViewSet.as_view(
             {"get": "list"},
         ),
+        name="course-teachers-list",
+    ),
+    path(
+        "<int:course_id>/teachers-all/",
+        GetAllTeachers.as_view(),
         name="course-teachers-list",
     ),
     path(
