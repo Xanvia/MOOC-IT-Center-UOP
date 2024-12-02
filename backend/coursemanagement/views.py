@@ -39,6 +39,14 @@ class CourseTeacherViewSet(viewsets.ModelViewSet):
     queryset = CourseTeachers.objects.all()
     permission_classes = [IsCourseCreator]
 
+    def get_object(self):
+        if self.action == "destroy":
+            return self.queryset.get(
+                course=self.kwargs.get("course_id"),
+                teacher=self.kwargs.get("teacher_id"),
+            )
+        return super().get_object()
+
     def create(self, request, *args, **kwargs):
 
         request.data["course"] = kwargs.get("course_id")
@@ -63,6 +71,9 @@ class CourseTeacherViewSet(viewsets.ModelViewSet):
             },
         }
         return response
+
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
 
 
 class PermissionsListAPIView(generics.ListAPIView):

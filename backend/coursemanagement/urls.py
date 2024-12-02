@@ -30,6 +30,13 @@ urlpatterns = [
         name="course-teachers-list",
     ),
     path(
+        "<int:course_id>/add-teacher/<int:teacher_id>/",
+        CourseTeacherViewSet.as_view(
+            {"delete": "destroy"},
+        ),
+        name="course-teachers-list",
+    ),
+    path(
         "<int:course_id>/teachers-all/",
         GetAllTeachers.as_view(),
         name="course-teachers-list",
