@@ -1,15 +1,15 @@
 import React, { useState, useRef } from "react";
-import { Menu, Search, Bell, User, ChevronDown } from "lucide-react";
+import { Menu, Search, MessageCircle } from "lucide-react";
 import ProfileButton from "../Navbar/ProfileButton";
-import { useGlobal } from "@/contexts/store";
+import Link from "next/link";
 
 interface HeaderProps {
   toggleSidebar: () => void;
+  courseId: string; // Add courseId prop
 }
 
-const Header = ({ toggleSidebar }: HeaderProps) => {
+const Header = ({ toggleSidebar, courseId }: HeaderProps) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  // const { isLoggedIn, isLoading } = useGlobal();
   const isLoggedIn = true;
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -37,7 +37,6 @@ const Header = ({ toggleSidebar }: HeaderProps) => {
             <Menu size={24} />
           </button>
           <div className="ml-4">
-            {/* <img src="/logo.svg" alt="OpenEd Logo" className="h-8" /> */}
             <h1 className="text-xl font-bold">OpenEd</h1>
           </div>
         </div>
@@ -63,10 +62,21 @@ const Header = ({ toggleSidebar }: HeaderProps) => {
             </button>
           </div>
 
-          {/* <button className="p-2 rounded-full text-gray-600 hover:bg-gray-100 focus:outline-none relative">
-            <Bell size={24} />
-            <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
-          </button> */}
+          <div className="relative group">
+            <Link href={`/settings/${courseId}/chat`}>
+              <button
+                className="p-2 rounded-full bg-blue-800 text-white hover:bg-blue-900 focus:outline-none"
+                onClick={() => console.log("Chat icon clicked")}
+              >
+                <MessageCircle size={16} />
+              </button>
+            </Link>
+
+            {/* Tooltip */}
+            <span className="absolute top-full left-1/2 min-w-max transform -translate-x-1/2 mb-2 px-2 py-1 text-sm text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+              Go to Chat
+            </span>
+          </div>
 
           <ProfileButton
             isProfileMenuOpen={isProfileMenuOpen}
