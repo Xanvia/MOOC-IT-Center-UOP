@@ -38,13 +38,13 @@ const DUMMY_MESSAGES: Message[] = [
   }
 ];
 
-interface TeacherChatProps {
+interface CourseCreatorChatProps {
   initialMessages?: Message[];
   currentUser?: string;
   onSendMessage?: (message: Message) => void;
 }
 
-const TeacherChat: React.FC<TeacherChatProps> = ({ 
+const CourseCreatorChat: React.FC<CourseCreatorChatProps> = ({ 
   initialMessages = DUMMY_MESSAGES, 
   currentUser = 'Mr. Smith', // Default user can be changed
   onSendMessage 
@@ -119,7 +119,7 @@ const TeacherChat: React.FC<TeacherChatProps> = ({
     <div className="flex flex-col h-full">
       <div className="flex items-center mb-4 border-b pb-2">
         <MessageSquare className="mr-2" />
-        <h2 className="text-xl font-semibold">Teacher Chat</h2>
+        <h2 className="text-xl font-semibold">Course Creator Chat</h2>
       </div>
       
       {/* Chat Messages Container */}
@@ -155,4 +155,4 @@ const TeacherChat: React.FC<TeacherChatProps> = ({
   );
 };
 
-export default TeacherChat;
+export default CourseCreatorChat;
