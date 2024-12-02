@@ -113,7 +113,7 @@ const Navbar = () => {
                   MY COURSES
                 </Link> */}
 
-                  <Link href="/" className={NavLink}>
+                  <Link href="/aboutus" className={NavLink}>
                     ABOUT US
                   </Link>
 
