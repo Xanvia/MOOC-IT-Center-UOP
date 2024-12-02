@@ -100,7 +100,7 @@ const TeacherChat: React.FC<TeacherChatProps> = ({
           <div 
             className={`p-3 rounded-lg max-w-md ${
               isCurrentUser 
-                ? 'bg-green-500 text-white' 
+                ? 'bg-sky-500 text-white' 
                 : 'bg-gray-200 text-black'
             }`}
           >
@@ -142,13 +142,13 @@ const TeacherChat: React.FC<TeacherChatProps> = ({
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
           placeholder="Type your message..."
-          className="flex-1 p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="flex-1 p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
         />
         <button 
           onClick={handleSendMessage}
-          className="bg-green-500 text-white p-2 rounded-r-lg hover:bg-green-600 transition-colors"
+          className="bg-sky-500 text-white p-2 rounded-r-lg hover:bg-sky-700 transition-colors"
         >
-          <Send size={20} />
+          <Send size={27} />
         </button>
       </div>
     </div>

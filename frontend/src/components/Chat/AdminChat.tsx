@@ -144,7 +144,7 @@ const Chat: React.FC<ChatProps> = ({
           onClick={handleSendMessage}
           className="bg-blue-700 text-white p-2 rounded-r-lg hover:bg-blue-800 transition-colors"
         >
-          <Send size={28} />
+          <Send size={27} />
         </button>
       </div>
     </div>
