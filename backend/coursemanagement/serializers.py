@@ -396,10 +396,12 @@ class TeacherSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "first_name", "last_name", "email", "course_id"]
+        fields = ["id", "first_name", "last_name", "email", "course_id", "username"]
 
     def to_representation(self, instance):
-        course_id = self.context.get('request').parser_context['kwargs'].get('course_id')
+        course_id = (
+            self.context.get("request").parser_context["kwargs"].get("course_id")
+        )
         representation = super().to_representation(instance)
 
         try:
