@@ -1,14 +1,13 @@
 import React, { useState, useRef } from "react";
-import { Menu, Search, MessageCircle } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import ProfileButton from "../Navbar/ProfileButton";
-import Link from "next/link";
 
-interface HeaderProps {
+interface HeaderWchatProps {
   toggleSidebar: () => void;
   courseId: string; // Add courseId prop
 }
 
-const Header = ({ toggleSidebar, courseId }: HeaderProps) => {
+const HeaderWchat = ({ toggleSidebar }: HeaderWchatProps) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const isLoggedIn = true;
 
@@ -62,22 +61,6 @@ const Header = ({ toggleSidebar, courseId }: HeaderProps) => {
             </button>
           </div>
 
-          <div className="relative group">
-            <Link href={`/settings/${courseId}/chat`}>
-              <button
-                className="p-2 rounded-full bg-blue-800 text-white hover:bg-blue-900 focus:outline-none"
-                onClick={() => console.log("Chat icon clicked")}
-              >
-                <MessageCircle size={16} />
-              </button>
-            </Link>
-
-            {/* Tooltip */}
-            <span className="absolute top-full left-1/2 min-w-max transform -translate-x-1/2 mb-2 px-2 py-1 text-sm text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-              Go to Chat
-            </span>
-          </div>
-
           <ProfileButton
             isProfileMenuOpen={isProfileMenuOpen}
             toggleProfileMenu={toggleProfileMenu}
@@ -89,4 +72,4 @@ const Header = ({ toggleSidebar, courseId }: HeaderProps) => {
   );
 };
 
-export default Header;
+export default HeaderWchat;

@@ -20,6 +20,8 @@ export default function DashboardLayout({
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const courseID = "1";
 
+  const courseId = "some-course-id";
+
   const navItems = [
     { icon: Home, label: "Dashboard", href: `/settings/${courseID}` },
     {
@@ -38,7 +40,7 @@ export default function DashboardLayout({
         navItems={navItems}
       />
       <div className={'flex flex-col flex-1 overflow-hidden transition-all duration-300'}>
-        <Header toggleSidebar={toggleSidebar} />
+        <Header toggleSidebar={toggleSidebar} courseId={courseId}/>
         <main className="flex-1 overflow-auto p-4 mt-16">{children}</main>
       </div>
     </div>
