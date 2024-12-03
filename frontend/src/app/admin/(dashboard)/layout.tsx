@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Home, Users, GraduationCap, Library } from "lucide-react";
 
-const Header = dynamic(() => import("@/components/layout/header"), {
+const HeaderWchat = dynamic(() => import("@/components/layout/HeaderWithoutChat"), {
   ssr: false,
 });
 
@@ -42,7 +42,7 @@ export default function AdminLayout({
           "flex flex-col flex-1 overflow-hidden transition-all duration-300"
         }
       >
-        <Header toggleSidebar={toggleSidebar} courseId={courseId} />
+        <HeaderWchat toggleSidebar={toggleSidebar} courseId={courseId} />
         <main className="flex-1 overflow-auto p-4 mt-16">{children}</main>
       </div>
     </div>
