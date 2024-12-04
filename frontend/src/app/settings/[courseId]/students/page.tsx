@@ -38,7 +38,7 @@ const StudentsPage = () => {
     };
   
     fetchStudents();
-  }, []);
+  }, [] );
   
   // useEffect(() => {
   //   const fetchStudents = async () => {
