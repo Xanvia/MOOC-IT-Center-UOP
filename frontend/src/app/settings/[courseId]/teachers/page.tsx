@@ -29,6 +29,7 @@ const TeachersPage = () => {
   const params = useParams();
   const [teachersData, setTeachersData] = useState<TeacherData[]>([]);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>(""); // State for search term
 
   useEffect(() => {
     const fetchTeachers = async () => {
@@ -59,6 +60,11 @@ const TeachersPage = () => {
     fetchCourseData();
   }, [params.courseId]);
 
+   // Filter teachers based on the search term
+   const filteredTeachers = teachersData.filter((teacher) =>
+    teacher.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="flex h-screen bg-gray-50">
       <Head>
@@ -77,6 +83,9 @@ const TeachersPage = () => {
             type="text"
             placeholder="Search name..."
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={searchTerm} // Bind input value to searchTerm state
+            onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm on input change
+          
           />
         </div>
         {courseData && (
