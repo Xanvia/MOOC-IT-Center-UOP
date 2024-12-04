@@ -11,6 +11,7 @@ from .views import (
     CourseStudentsListAPIView,
     CourseMessagesViewSet,
     GetAllTeachers,
+    isCourseCreator,
 )
 
 
@@ -21,6 +22,11 @@ urlpatterns = [
             {"post": "create"},
         ),
         name="course-teacher-list",
+    ),
+     path(
+        "<int:course_id>/is-creator/",
+        isCourseCreator.as_view(),
+        name="is-course-creator",
     ),
     path(
         "<int:course_id>/teachers/",

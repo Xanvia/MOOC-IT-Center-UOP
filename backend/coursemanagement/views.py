@@ -400,3 +400,22 @@ class GetAllTeachers(generics.ListAPIView):
             },
         }
         return response
+
+
+class isCourseCreator(views.APIView):
+    queryset = Course.objects.all()
+
+    def get(self, request, *args, **kwargs):
+ 
+        course_id = kwargs.get("course_id")
+        user_id = request.user.id
+        try:
+            course = Course.objects.get(id=course_id)
+            if course.course_creator.id == user_id:
+                course_creator = True
+            else:
+                course_creator = False
+        except Course.DoesNotExist:
+            course_creator = False
+        response = {"is_creator": course_creator}
+        return Response(response, status=status.HTTP_200_OK)

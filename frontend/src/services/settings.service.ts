@@ -169,3 +169,14 @@ export const removeTeacher = async (courseId: string, teacherId: string) => {
     throw error;
   }
 };
+
+export const isCourseCreator = async (courseId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/manage/${courseId}/is-creator/`
+    );
+    return response.data.is_creator;
+  } catch (error) {
+    throw error;
+  }
+};
