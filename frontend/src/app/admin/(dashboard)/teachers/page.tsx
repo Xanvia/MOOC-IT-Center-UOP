@@ -16,9 +16,10 @@ interface TeacherData {
 
 const TeachersPage = () => {
   const [teachersData, setTeachersData] = useState<TeacherData[]>([]);
+  const [searchTerm, setSearchTerm] = useState(""); // State for search input
 
   useEffect(() => {
-    const fetchStudents = async () => {
+    const fetchTeachers = async () => {
       try {
         const teachers = await getAllTeachers();
         setTeachersData(teachers);
@@ -27,8 +28,17 @@ const TeachersPage = () => {
       }
     };
 
-    fetchStudents();
+    fetchTeachers();
   }, []);
+
+   // Filter teachers dynamically based on the search term
+   const filteredTeachers = teachersData.filter((teacher) =>
+    `${teacher.first_name} ${teacher.last_name}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
+
   return (
     <div className="flex h-screen bg-gray-50">
       <Head>
@@ -48,10 +58,13 @@ const TeachersPage = () => {
             type="text"
             placeholder="Search name..."
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={searchTerm} // Bind input value to searchTerm state
+            onChange={(e) => setSearchTerm(e.target.value)} // Update state on input change
+           
           />
         </div>
 
-        <TeacherTable data={teachersData} />
+        <TeacherTable data={filteredTeachers} />
       </main>
     </div>
   );
