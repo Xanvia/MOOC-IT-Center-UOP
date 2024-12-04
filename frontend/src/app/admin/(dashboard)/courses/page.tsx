@@ -22,8 +22,11 @@ const CoursePage: React.FC = () => {
 
   const [isPublished, setIsPublished] = useState(false);
 
+  const [searchTerm, setSearchTerm] = useState(""); // State for search input
+
   const handleToggle = (status: boolean) => {
     setIsPublished(status);
+    setSearchTerm(""); // Clear search input when toggling views
   };
 
   const handlePublish = async (courseId: number) => {
@@ -64,6 +67,11 @@ const CoursePage: React.FC = () => {
     fetchUnPublishedCourses();
   }, []);
 
+  // Filter courses dynamically based on the search term
+  const filteredCourses = (isPublished ? publishedCourses : unpublishedCourses).filter((course) =>
+    course.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="flex h-screen bg-gray-50">
       <main className="flex-1 flex flex-col overflow-hidden p-6 bg-white rounded-lg shadow-md mx-6 my-6">
@@ -73,6 +81,15 @@ const CoursePage: React.FC = () => {
         <div>
           <ToggleButton onToggle={handleToggle} />
         </div>
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Search courses..."
+            value={searchTerm} // Bind input value to searchTerm state
+            onChange={(e) => setSearchTerm(e.target.value)} // Update state on input change
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
         {isPublished ? (
           <CourseTable
             courses={publishedCourses}
@@ -81,7 +98,7 @@ const CoursePage: React.FC = () => {
           />
         ) : (
           <CourseTable
-            courses={unpublishedCourses}
+            courses={filteredCourses} // Pass filtered courses to the table
             isPublished={false}
             onPublish={handlePublish}
           />
