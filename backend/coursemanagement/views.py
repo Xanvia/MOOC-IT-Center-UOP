@@ -207,7 +207,7 @@ class AdminMessagesViewSet(viewsets.ModelViewSet):
         response.data = {
             "status": "success",
             "data": {
-                "adminMessages": response.data,
+                "messages": response.data,
             },
         }
         return response
@@ -311,10 +311,6 @@ class PaymentNotificationAPIView(views.APIView):
             {"status": "success", "message": "Payment completed successfully"},
             status=status.HTTP_200_OK,
         )
-
-
-from rest_framework.response import Response
-from rest_framework import status
 
 
 class CourseMessagesViewSet(viewsets.ModelViewSet):

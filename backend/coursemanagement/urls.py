@@ -12,6 +12,7 @@ from .views import (
     CourseMessagesViewSet,
     GetAllTeachers,
     isCourseCreator,
+    AdminMessagesViewSet,
 )
 
 
@@ -105,4 +106,5 @@ urlpatterns = [
         ),
         name="course-messages",
     ),
+    path("admin-messages/<int:course_id>", AdminMessagesViewSet.as_view({"get": "list","post":"create"}), name="admin-messages",),
 ]

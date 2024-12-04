@@ -69,7 +69,12 @@ class CourseTeachers(models.Model):
 
 
 class AdminMessages(models.Model):
+    sender_choice = [
+        ("teacher", "Teacher"),
+        ("admin", "Admin"),
+    ]
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    sender = models.CharField(max_length=10, choices=sender_choice,default="admin")
     message = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
 
