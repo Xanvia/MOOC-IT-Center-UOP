@@ -17,6 +17,7 @@ interface StudentTableProps {
 
 const StudentsPage = () => {
   const [studentsData, setStudentsData] = useState<StudentData[]>([]);
+  const [searchTerm, setSearchTerm] = useState(""); // State for search input
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -30,6 +31,13 @@ const StudentsPage = () => {
 
     fetchStudents();
   }, []);
+
+   // Filter students based on the search term
+   const filteredStudents = studentsData.filter((student) =>
+    `${student.first_name} ${student.last_name}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -50,10 +58,12 @@ const StudentsPage = () => {
             type="text"
             placeholder="Search name..."
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={searchTerm} // Bind input value to searchTerm state
+            onChange={(e) => setSearchTerm(e.target.value)} // Update state on input change          
           />
         </div>
 
-        <StudentTable data={studentsData} />
+        <StudentTable data={filteredStudents} />
       </main>
     </div>
   );
