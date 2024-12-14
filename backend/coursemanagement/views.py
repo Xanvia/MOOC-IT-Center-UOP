@@ -309,37 +309,23 @@ class CourseMessagesViewSet(viewsets.ModelViewSet):
     queryset = CourseTeachers.objects.all()
 
     def get_object(self):
-        try:
-            if self.kwargs.get("teacher_id"):
-                print(self.kwargs.get("teacher_id"))
-                print(self.kwargs.get("course_id"))
-                course_teacher = self.queryset.get(
-                    course=self.kwargs.get("course_id"),
-                    teacher=self.kwargs.get("teacher_id"),
-                )
-                print(course_teacher)
-                return self.queryset.get(
-                    course=self.kwargs.get("course_id"),
-                    teacher=self.kwargs.get("teacher_id"),
-                )
-            else:
-                return self.queryset.get(
-                    course=self.kwargs.get("course_id"), teacher=self.request.user
-                )
-        except CourseTeachers.DoesNotExist:
-            raise NotFound("Teacher not found")
-        
+        if self.kwargs.get("teacher_id"):
+            return self.queryset.get(
+                id=self.kwargs.get("teacher_id"),
+            )
+        return self.queryset.get(
+                course = self.kwargs.get("course_id"),
+                teacher = self.request.user
+            )
     def filter_queryset(self, queryset):
         if self.kwargs.get("teacher_id"):
             return super().filter_queryset(queryset).filter(
-                course=self.kwargs.get("course_id"),
-                teacher=self.kwargs.get("teacher_id"),
+                id=self.kwargs.get("teacher_id")
             )
-        else:
-            return super().filter_queryset(queryset).filter(
-                course=self.kwargs.get("course_id"), teacher=self.request.user
-            )
-            
+        return super().filter_queryset(queryset).filter(
+            teacher=self.request.user,
+            course=self.kwargs.get("course_id")
+        )
        
     
     def list(self, request, *args, **kwargs):

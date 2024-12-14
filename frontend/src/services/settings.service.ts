@@ -189,7 +189,7 @@ export const getMessagesWithTeacher = async (
     const response = await axiosInstance.get(
       `/course/manage/${courseID}/messages/${teacherId}/`
     );
-    return response.data.data;
+    return response.data[0].messages;
   } catch (error) {
     throw error;
   }

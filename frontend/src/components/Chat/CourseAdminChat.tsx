@@ -33,7 +33,6 @@ const CourseAdminChat: React.FC = () => {
   useEffect(() => {
     try {
       getMessagesWithTeacher(courseId, teacherId).then((messages) => {
-        console.log(messages);
         setMessages(messages);
       });
     } catch (error) {
