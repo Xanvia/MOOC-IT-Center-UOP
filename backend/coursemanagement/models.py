@@ -1,6 +1,7 @@
 from django.db import models
 from courses.models import Course, Enrollment
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 class CoursePermissions(models.Model):
@@ -50,7 +51,7 @@ class CourseTeachers(models.Model):
             self.messages = []
 
         # Append the new message to the list of messages
-        self.messages.append({"sender": sender, "message": message, "status": status})
+        self.messages.append({"sender": sender, "message": message, "status": status, "date": str(datetime.now())})
         
         # Save the updated instance
         self.save()
@@ -69,7 +70,12 @@ class CourseTeachers(models.Model):
 
 
 class AdminMessages(models.Model):
+    sender_choice = [
+        ("teacher", "Teacher"),
+        ("admin", "Admin"),
+    ]
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    sender = models.CharField(max_length=10, choices=sender_choice,default="admin")
     message = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
 

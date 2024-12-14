@@ -169,3 +169,70 @@ export const removeTeacher = async (courseId: string, teacherId: string) => {
     throw error;
   }
 };
+
+export const isCourseCreator = async (courseId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/manage/${courseId}/is-creator/`
+    );
+    return response.data.is_creator;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getMessagesWithTeacher = async (
+  courseID: string,
+  teacherId: string
+) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/manage/${courseID}/messages/${teacherId}/`
+    );
+    return response.data[0].messages;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const sendAdminMessage = async (
+  courseId: string,
+  teacherId: string,
+  message: string
+) => {
+  try {
+    const response = await axiosInstance.post(
+      `/course/manage/${courseId}/messages/${teacherId}/`,
+      { message: message }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getMessagesFromAdmin = async (courseId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/manage/${courseId}/messages/`
+    );
+    return response.data[0].messages;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const replytoCourseCreator = async (
+  courseId: string,
+  message: string
+) => {
+  try {
+    const response = await axiosInstance.post(
+      `/course/manage/${courseId}/messages/`,
+      { message: message }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

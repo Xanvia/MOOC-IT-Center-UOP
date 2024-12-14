@@ -43,3 +43,29 @@ export const publishCourse = async (courseId: number) => {
     throw error;
   }
 };
+
+export const getAdminMessages = async (courseId: string) => {
+  try {
+    const { data } = await axiosInstance.get(
+      `course/manage/admin-messages/${courseId}`
+    );
+    return data.data.messages;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const sendAdminMessage = async (
+  courseId: string,
+  message: string,
+  sender: string
+) => {
+  try {
+    await axiosInstance.post(`course/manage/admin-messages/${courseId}`, {
+      message,
+      sender,
+    });
+  } catch (error) {
+    throw error;
+  }
+};

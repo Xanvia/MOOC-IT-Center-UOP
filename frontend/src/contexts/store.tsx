@@ -10,6 +10,8 @@ interface GlobalContextType {
   userRole: string | null;
   setUserRole: (userRole: string | null) => void;
   isInitialized: boolean;
+  isCreator: boolean;
+  setIsCourseCreator: (isCreator: boolean) => void;
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -23,6 +25,7 @@ export const GlobalContextProvider = ({
   const [isLoading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isCreator, setIsCourseCreator] = useState(false);
 
   useEffect(() => {
     const initializeAuth = () => {
@@ -52,6 +55,8 @@ export const GlobalContextProvider = ({
         userRole,
         setUserRole,
         isInitialized,
+        isCreator,
+        setIsCourseCreator,
       }}
     >
       {children}

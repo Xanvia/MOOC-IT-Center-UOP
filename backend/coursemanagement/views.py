@@ -86,9 +86,6 @@ class EditPermissionAPIView(generics.UpdateAPIView):
     queryset = CourseTeachers.objects.all()
     permission_classes = [IsCourseCreator]
 
-    def get_object(self):
-        return self.queryset.get(course=self.kwargs.get("course_id"))
-
     def update(self, request, *args, **kwargs):
         response = super().update(request, partial=True, *args, **kwargs)
 
@@ -198,16 +195,12 @@ class AdminMessagesViewSet(viewsets.ModelViewSet):
         }
         return response
 
-    def filter_queryset(self, queryset):
-        course_id = self.kwargs.get("course_id")
-        return super().filter_queryset(queryset).filter(course_id=course_id)
-
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         response.data = {
             "status": "success",
             "data": {
-                "adminMessages": response.data,
+                "messages": response.data,
             },
         }
         return response
@@ -218,8 +211,6 @@ class TeacherPermissionsRetrieveAPIView(generics.RetrieveAPIView):
     queryset = CourseTeachers.objects.all()
     permission_classes = [IsCourseCreator]
 
-    def get_object(self):
-        return self.queryset.get(course=self.kwargs.get("course_id"))
 
     def retrieve(self, request, *args, **kwargs):
         response = super().retrieve(request, *args, **kwargs)
@@ -313,27 +304,33 @@ class PaymentNotificationAPIView(views.APIView):
         )
 
 
-from rest_framework.response import Response
-from rest_framework import status
-
-
 class CourseMessagesViewSet(viewsets.ModelViewSet):
     serializer_class = CourseMessagesSerializer
     queryset = CourseTeachers.objects.all()
 
     def get_object(self):
-        try:
-            if self.kwargs.get("teacher_id"):
-                return self.queryset.get(
-                    course=self.kwargs.get("course_id"),
-                    teacher=self.kwargs.get("teacher_id"),
-                )
-            else:
-                return self.queryset.get(
-                    course=self.kwargs.get("course_id"), teacher=self.request.user
-                )
-        except CourseTeachers.DoesNotExist:
-            raise NotFound("Teacher not found")
+        if self.kwargs.get("teacher_id"):
+            return self.queryset.get(
+                id=self.kwargs.get("teacher_id"),
+            )
+        return self.queryset.get(
+                course = self.kwargs.get("course_id"),
+                teacher = self.request.user
+            )
+    def filter_queryset(self, queryset):
+        if self.kwargs.get("teacher_id"):
+            return super().filter_queryset(queryset).filter(
+                id=self.kwargs.get("teacher_id")
+            )
+        return super().filter_queryset(queryset).filter(
+            teacher=self.request.user,
+            course=self.kwargs.get("course_id")
+        )
+       
+    
+    def list(self, request, *args, **kwargs):
+        response =  super().list(request, *args, **kwargs)
+        return response
 
     def add_message_admin(self, request, *args, **kwargs):
         course_teacher_instance = self.get_object()
@@ -400,3 +397,22 @@ class GetAllTeachers(generics.ListAPIView):
             },
         }
         return response
+
+
+class isCourseCreator(views.APIView):
+    queryset = Course.objects.all()
+
+    def get(self, request, *args, **kwargs):
+ 
+        course_id = kwargs.get("course_id")
+        user_id = request.user.id
+        try:
+            course = Course.objects.get(id=course_id)
+            if course.course_creator.id == user_id:
+                course_creator = True
+            else:
+                course_creator = False
+        except Course.DoesNotExist:
+            course_creator = False
+        response = {"is_creator": course_creator}
+        return Response(response, status=status.HTTP_200_OK)

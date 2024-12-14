@@ -11,6 +11,8 @@ from .views import (
     CourseStudentsListAPIView,
     CourseMessagesViewSet,
     GetAllTeachers,
+    isCourseCreator,
+    AdminMessagesViewSet,
 )
 
 
@@ -21,6 +23,11 @@ urlpatterns = [
             {"post": "create"},
         ),
         name="course-teacher-list",
+    ),
+     path(
+        "<int:course_id>/is-creator/",
+        isCourseCreator.as_view(),
+        name="is-course-creator",
     ),
     path(
         "<int:course_id>/teachers/",
@@ -47,7 +54,7 @@ urlpatterns = [
         name="course-students-list",
     ),
     path(
-        "<int:course_id>/teacher-permissions/<int:teacher_id>/",
+        "<int:course_id>/teacher-permissions/<int:pk>/",
         EditPermissionAPIView.as_view(),
         name="edit-permissions",
     ),
@@ -73,7 +80,7 @@ urlpatterns = [
         name="grade-code",
     ),
     path(
-        "<int:course_id>/get-teacher-permissions/<int:teacher_id>/",
+        "<int:course_id>/get-teacher-permissions/<int:pk>/",
         TeacherPermissionsRetrieveAPIView.as_view(),
         name="teacher-permissions",
     ),
@@ -99,4 +106,5 @@ urlpatterns = [
         ),
         name="course-messages",
     ),
+    path("admin-messages/<int:course_id>", AdminMessagesViewSet.as_view({"get": "list","post":"create"}), name="admin-messages",),
 ]

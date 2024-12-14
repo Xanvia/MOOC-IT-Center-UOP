@@ -1,32 +1,27 @@
 import React, { useState, useEffect, useRef } from "react";
-import { MessageSquare, Send, User } from "lucide-react";
-import { getAdminMessages, sendAdminMessage } from "@/services/admin.service";
+import { MessageSquare, Send, User, Shield } from "lucide-react";
 import { useParams } from "next/navigation";
+import {
+  getMessagesWithTeacher,
+  sendAdminMessage,
+} from "@/services/settings.service";
 
-// Updated message type to match the incoming data structure
+// Define message type
 interface Message {
-  id: number;
-  sender: string;
+  id: string;
+  sender: "admin" | "teacher";
   message: string;
-  date: string;
-  course: number;
+  date: Date;
 }
 
-interface CourseCreatorChatProps {
-  currentUser?: string;
-  onSendMessage?: (message: Message) => void;
-}
-
-const CourseCreatorChat: React.FC<CourseCreatorChatProps> = ({
-  currentUser = "teacher", // Default user for teacher
-  onSendMessage,
-}) => {
+const CourseAdminChat: React.FC = () => {
+  const params = useParams();
+  const courseId = params.courseId as string;
+  const teacherId = params.teacherId as string;
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const params = useParams();
 
-  // Scroll to bottom of messages when messages change
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -35,83 +30,69 @@ const CourseCreatorChat: React.FC<CourseCreatorChatProps> = ({
     scrollToBottom();
   }, [messages]);
 
-  // Handle sending a new message
-  const handleSendMessage = async () => {
-    if (newMessage.trim() === "") return;
-
-    const message: Message = {
-      id: Date.now(), // Generate a temporary unique ID
-      sender: currentUser,
-      message: newMessage,
-      date: new Date().toISOString(),
-      course: Number(params.courseId) || 0,
-    };
-
-    try {
-      await sendAdminMessage(
-        params.courseId as string,
-        newMessage,
-        currentUser
-      );
-      setMessages([...messages, message]);
-      onSendMessage?.(message);
-    } catch (error) {
-      console.error(error);
-      return;
-    }
-
-    // Clear input
-    setNewMessage("");
-  };
-
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const courseId = params.courseId as string;
-        const fetchedMessages = await getAdminMessages(courseId);
-        setMessages(fetchedMessages);
+        const fetchedMessages = await getMessagesWithTeacher(courseId, teacherId);
+        // Ensure fetchedMessages is an array, even if it's undefined
+        setMessages(Array.isArray(fetchedMessages) ? fetchedMessages : []);
       } catch (error) {
         console.error(error);
+        setMessages([]);
       }
     };
 
     fetchMessages();
-  }, []);
+  }, [courseId, teacherId]);
 
+  const handleSendMessage = async () => {
+    if (newMessage.trim() === "") return;
+
+    const message: Message = {
+      id: `msg-${Date.now()}`,
+      sender: "admin",
+      message: newMessage,
+      date: new Date(),
+    };
+
+    try {
+      await sendAdminMessage(courseId, teacherId, newMessage);
+      setMessages(prevMessages => [...prevMessages, message]);
+      setNewMessage("");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Render individual message
   const renderMessage = (message: Message) => {
-    // Determine if the message is from the current user (teacher)
-    const isCurrentUser = message.sender === currentUser;
-
-    // If sender is 'admin', treat it as an incoming message
-    const isIncomingMessage = message.sender === "admin";
+    const isTeacherMessage = message.sender === "teacher";
 
     return (
       <div
         key={message.id}
         className={`flex items-start mb-4 ${
-          isCurrentUser ? "justify-end" : "justify-start"
+          isTeacherMessage ? "justify-start" : "justify-end"
         }`}
       >
         <div
           className={`flex items-start space-x-2 ${
-            isCurrentUser ? "flex-row-reverse space-x-reverse" : ""
+            isTeacherMessage ? "" : "flex-row-reverse space-x-reverse"
           }`}
         >
           <div className="rounded-full p-2 bg-gray-200">
-            <User size={20} />
+            {isTeacherMessage ? <User size={20} /> : <Shield size={20} />}
           </div>
           <div
             className={`p-3 rounded-lg max-w-md ${
-              isIncomingMessage
+              isTeacherMessage
                 ? "bg-gray-200 text-black"
-                : isCurrentUser
-                ? "bg-sky-500 text-white"
-                : "bg-gray-100 text-black"
+                : "bg-blue-700 text-white"
             }`}
           >
-            <div className="font-semibold text-sm mb-1">
-              {isIncomingMessage ? "Administrator" : "You"}
-            </div>
+            {isTeacherMessage && (
+              <div className="font-semibold text-sm mb-1">Course Creator</div>
+            )}
             <p>{message.message}</p>
             <span className="text-xs opacity-70 block mt-1 text-right">
               {new Date(message.date).toLocaleTimeString()}
@@ -126,7 +107,7 @@ const CourseCreatorChat: React.FC<CourseCreatorChatProps> = ({
     <div className="flex flex-col h-full">
       <div className="flex items-center mb-4 border-b pb-2">
         <MessageSquare className="mr-2" />
-        <h2 className="text-xl font-semibold">Messages</h2>
+        <h2 className="text-xl font-semibold">Messages with Course Creator</h2>
       </div>
 
       {/* Chat Messages Container */}
@@ -149,11 +130,11 @@ const CourseCreatorChat: React.FC<CourseCreatorChatProps> = ({
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
           placeholder="Type your message..."
-          className="flex-1 p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-sky-700"
+          className="flex-1 p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-700"
         />
         <button
           onClick={handleSendMessage}
-          className="bg-sky-500 text-white p-2 rounded-r-lg hover:bg-sky-700 transition-colors"
+          className="bg-blue-700 text-white p-2 rounded-r-lg hover:bg-blue-800 transition-colors"
         >
           <Send size={27} />
         </button>
@@ -162,4 +143,4 @@ const CourseCreatorChat: React.FC<CourseCreatorChatProps> = ({
   );
 };
 
-export default CourseCreatorChat;
+export default CourseAdminChat;

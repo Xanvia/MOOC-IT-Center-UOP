@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { Menu, Search, MessageCircle } from "lucide-react";
 import ProfileButton from "../Navbar/ProfileButton";
 import Link from "next/link";
+import { useGlobal } from "@/contexts/store";
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -15,6 +16,7 @@ const Header = ({ toggleSidebar, courseId }: HeaderProps) => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const profileMenuRef = useRef(null);
+  const {isCreator} = useGlobal();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);

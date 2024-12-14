@@ -1,14 +1,18 @@
-'use client';
-import { useState } from "react";
+"use client";
+import { useState, useEffect } from "react";
 import { Home, Users, GraduationCap } from "lucide-react";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
+import { useParams } from "next/navigation";
+import { isCourseCreator } from "@/services/settings.service";
+import { useGlobal } from "@/contexts/store";
+import { set } from "jodit/types/core/helpers";
 
 const Header = dynamic(() => import("@/components/layout/header"), {
-  ssr: false
+  ssr: false,
 });
 
 const Sidebar = dynamic(() => import("@/components/layout/settings-sidebar"), {
-  ssr: false
+  ssr: false,
 });
 
 export default function DashboardLayout({
@@ -16,21 +20,30 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const params = useParams();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-  const courseID = "1";
+  const { setIsCourseCreator} = useGlobal();
 
-  const courseId = "some-course-id";
+  const courseId = params.courseId;
 
   const navItems = [
-    { icon: Home, label: "Dashboard", href: `/settings/${courseID}` },
+    { icon: Home, label: "Dashboard", href: `/settings/${courseId}` },
     {
       icon: GraduationCap,
       label: "Teachers",
-      href: `/settings/${courseID}/teachers`,
+      href: `/settings/${courseId}/teachers`,
     },
-    { icon: Users, label: "Students", href: `/settings/${courseID}/students` },
+    { icon: Users, label: "Students", href: `/settings/${courseId}/students` },
   ];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await isCourseCreator(courseId as string);
+      setIsCourseCreator(res);
+    };
+    fetchData();
+  }, [courseId]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -39,8 +52,15 @@ export default function DashboardLayout({
         toggleSidebar={toggleSidebar}
         navItems={navItems}
       />
-      <div className={'flex flex-col flex-1 overflow-hidden transition-all duration-300'}>
-        <Header toggleSidebar={toggleSidebar} courseId={courseId}/>
+      <div
+        className={
+          "flex flex-col flex-1 overflow-hidden transition-all duration-300"
+        }
+      >
+        <Header
+          toggleSidebar={toggleSidebar}
+          courseId={courseId as string}
+        />
         <main className="flex-1 overflow-auto p-4 mt-16">{children}</main>
       </div>
     </div>
