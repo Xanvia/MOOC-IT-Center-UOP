@@ -321,7 +321,6 @@ class ProgressTrackSerializer(serializers.ModelSerializer):
         fields = ["id"]
 
     def to_representation(self, instance):
-        print(instance)
         representation = super().to_representation(instance)
         components = Component.objects.filter(chapter__week__course=instance)
 

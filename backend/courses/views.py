@@ -91,17 +91,11 @@ class CourseViewSet(viewsets.ModelViewSet):
             return super().filter_queryset(queryset).filter(status="published")
         elif self.action == "my_courses":
             if self.request.user.groups.filter(name="teacher").exists():
-                return (
-                    super()
-                    .filter_queryset(queryset)
-                    .filter(course_creator=self.request.user)
-                )
+                creator_courses = super().filter_queryset(queryset).filter(course_creator=self.request.user)
+                teacher_courses = super().filter_queryset(queryset).filter(courseteachers__teacher=self.request.user)
+                return creator_courses.union(teacher_courses)
             elif self.request.user.groups.filter(name="student").exists():
-                return (
-                    super()
-                    .filter_queryset(queryset)
-                    .filter(enrollment__student=self.request.user)
-                )
+                return super().filter_queryset(queryset).filter(enrollment__student=self.request.user)
         elif self.action == "unpublished":
             return super().filter_queryset(queryset).filter(status="unpublished")
 
