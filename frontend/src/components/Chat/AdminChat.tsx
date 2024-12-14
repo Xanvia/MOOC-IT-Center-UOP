@@ -29,7 +29,6 @@ const Chat: React.FC = () => {
   useEffect(() => {
     try {
       getAdminMessages(courseId).then((messages) => {
-        console.log(messages);
         setMessages(messages);
       });
     } catch (error) {
@@ -55,22 +54,41 @@ const Chat: React.FC = () => {
     }
 
     setMessages([...messages, message]);
-
     setNewMessage("");
   };
 
   // Render individual message
   const renderMessage = (message: Message) => {
+    const isTeacherMessage = message.sender === "teacher";
+    
     return (
-      <div key={message.id} className="flex items-start mb-4 justify-end">
-        <div className="flex items-start space-x-2 flex-row-reverse space-x-reverse">
+      <div 
+        key={message.id} 
+        className={`flex items-start mb-4 ${
+          isTeacherMessage ? "justify-start" : "justify-end"
+        }`}
+      >
+        <div 
+          className={`flex items-start space-x-2 ${
+            isTeacherMessage ? "" : "flex-row-reverse space-x-reverse"
+          }`}
+        >
           <div className="rounded-full p-2 bg-gray-200">
-            <Shield size={20} />
+            {isTeacherMessage ? <User size={20} /> : <Shield size={20} />}
           </div>
-          <div className="p-3 rounded-lg max-w-md bg-blue-700 text-white">
+          <div 
+            className={`p-3 rounded-lg max-w-md ${
+              isTeacherMessage 
+                ? "bg-gray-200 text-black" 
+                : "bg-blue-700 text-white"
+            }`}
+          >
+            {isTeacherMessage && (
+              <div className="font-semibold text-sm mb-1">Course Creator</div>
+            )}
             <p>{message.message}</p>
             <span className="text-xs opacity-70 block mt-1 text-right">
-                {new Date(message.date).toLocaleTimeString()}
+              {new Date(message.date).toLocaleTimeString()}
             </span>
           </div>
         </div>
@@ -82,7 +100,7 @@ const Chat: React.FC = () => {
     <div className="flex flex-col h-full">
       <div className="flex items-center mb-4 border-b pb-2">
         <MessageSquare className="mr-2" />
-        <h2 className="text-xl font-semibold">Messages to Course Creator</h2>
+        <h2 className="text-xl font-semibold">Messages with Course Creator</h2>
       </div>
 
       {/* Chat Messages Container */}
