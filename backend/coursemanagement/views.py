@@ -86,9 +86,6 @@ class EditPermissionAPIView(generics.UpdateAPIView):
     queryset = CourseTeachers.objects.all()
     permission_classes = [IsCourseCreator]
 
-    def get_object(self):
-        return self.queryset.get(course=self.kwargs.get("course_id"))
-
     def update(self, request, *args, **kwargs):
         response = super().update(request, partial=True, *args, **kwargs)
 
@@ -198,10 +195,6 @@ class AdminMessagesViewSet(viewsets.ModelViewSet):
         }
         return response
 
-    def filter_queryset(self, queryset):
-        course_id = self.kwargs.get("course_id")
-        return super().filter_queryset(queryset).filter(course_id=course_id)
-
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         response.data = {
@@ -218,8 +211,6 @@ class TeacherPermissionsRetrieveAPIView(generics.RetrieveAPIView):
     queryset = CourseTeachers.objects.all()
     permission_classes = [IsCourseCreator]
 
-    def get_object(self):
-        return self.queryset.get(course=self.kwargs.get("course_id"))
 
     def retrieve(self, request, *args, **kwargs):
         response = super().retrieve(request, *args, **kwargs)
@@ -320,6 +311,13 @@ class CourseMessagesViewSet(viewsets.ModelViewSet):
     def get_object(self):
         try:
             if self.kwargs.get("teacher_id"):
+                print(self.kwargs.get("teacher_id"))
+                print(self.kwargs.get("course_id"))
+                course_teacher = self.queryset.get(
+                    course=self.kwargs.get("course_id"),
+                    teacher=self.kwargs.get("teacher_id"),
+                )
+                print(course_teacher)
                 return self.queryset.get(
                     course=self.kwargs.get("course_id"),
                     teacher=self.kwargs.get("teacher_id"),

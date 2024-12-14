@@ -54,7 +54,7 @@ urlpatterns = [
         name="course-students-list",
     ),
     path(
-        "<int:course_id>/teacher-permissions/<int:teacher_id>/",
+        "<int:course_id>/teacher-permissions/<int:pk>/",
         EditPermissionAPIView.as_view(),
         name="edit-permissions",
     ),
@@ -80,7 +80,7 @@ urlpatterns = [
         name="grade-code",
     ),
     path(
-        "<int:course_id>/get-teacher-permissions/<int:teacher_id>/",
+        "<int:course_id>/get-teacher-permissions/<int:pk>/",
         TeacherPermissionsRetrieveAPIView.as_view(),
         name="teacher-permissions",
     ),

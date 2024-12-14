@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MessageSquare, Send, User, Shield } from "lucide-react";
-import { getAdminMessages, sendAdminMessage } from "@/services/admin.service";
 import { useParams } from "next/navigation";
-import { getMessagesWithTeacher } from "@/services/settings.service";
+import {
+  getMessagesWithTeacher,
+  sendAdminMessage,
+} from "@/services/settings.service";
 
 // Define message type
 interface Message {
@@ -33,8 +35,7 @@ const CourseAdminChat: React.FC = () => {
       getMessagesWithTeacher(courseId, teacherId).then((messages) => {
         console.log(messages);
         setMessages(messages);
-      }
-    );
+      });
     } catch (error) {
       console.error(error);
     }
@@ -51,7 +52,7 @@ const CourseAdminChat: React.FC = () => {
     };
 
     try {
-      await sendAdminMessage(courseId, newMessage, "admin");
+      await sendAdminMessage(courseId, teacherId, newMessage);
     } catch (error) {
       console.error(error);
       return;
@@ -64,15 +65,15 @@ const CourseAdminChat: React.FC = () => {
   // Render individual message
   const renderMessage = (message: Message) => {
     const isTeacherMessage = message.sender === "teacher";
-    
+
     return (
-      <div 
-        key={message.id} 
+      <div
+        key={message.id}
         className={`flex items-start mb-4 ${
           isTeacherMessage ? "justify-start" : "justify-end"
         }`}
       >
-        <div 
+        <div
           className={`flex items-start space-x-2 ${
             isTeacherMessage ? "" : "flex-row-reverse space-x-reverse"
           }`}
@@ -80,10 +81,10 @@ const CourseAdminChat: React.FC = () => {
           <div className="rounded-full p-2 bg-gray-200">
             {isTeacherMessage ? <User size={20} /> : <Shield size={20} />}
           </div>
-          <div 
+          <div
             className={`p-3 rounded-lg max-w-md ${
-              isTeacherMessage 
-                ? "bg-gray-200 text-black" 
+              isTeacherMessage
+                ? "bg-gray-200 text-black"
                 : "bg-blue-700 text-white"
             }`}
           >

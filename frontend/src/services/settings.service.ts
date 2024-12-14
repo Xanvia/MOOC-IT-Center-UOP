@@ -194,3 +194,19 @@ export const getMessagesWithTeacher = async (
     throw error;
   }
 };
+
+export const sendAdminMessage = async (
+  courseId: string,
+  teacherId: string,
+  message: string
+) => {
+  try {
+    const response = await axiosInstance.post(
+      `/course/manage/${courseId}/messages/${teacherId}/`,
+      { message: message }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
