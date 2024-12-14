@@ -210,3 +210,29 @@ export const sendAdminMessage = async (
     throw error;
   }
 };
+
+export const getMessagesFromAdmin = async (courseId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/manage/${courseId}/messages/`
+    );
+    return response.data[0].messages;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const replytoCourseCreator = async (
+  courseId: string,
+  message: string
+) => {
+  try {
+    const response = await axiosInstance.post(
+      `/course/manage/${courseId}/messages/`,
+      { message: message }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

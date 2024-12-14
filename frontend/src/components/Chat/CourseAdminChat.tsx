@@ -31,14 +31,19 @@ const CourseAdminChat: React.FC = () => {
   }, [messages]);
 
   useEffect(() => {
-    try {
-      getMessagesWithTeacher(courseId, teacherId).then((messages) => {
-        setMessages(messages);
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }, [courseId]);
+    const fetchMessages = async () => {
+      try {
+        const fetchedMessages = await getMessagesWithTeacher(courseId, teacherId);
+        // Ensure fetchedMessages is an array, even if it's undefined
+        setMessages(Array.isArray(fetchedMessages) ? fetchedMessages : []);
+      } catch (error) {
+        console.error(error);
+        setMessages([]);
+      }
+    };
+
+    fetchMessages();
+  }, [courseId, teacherId]);
 
   const handleSendMessage = async () => {
     if (newMessage.trim() === "") return;
@@ -52,13 +57,11 @@ const CourseAdminChat: React.FC = () => {
 
     try {
       await sendAdminMessage(courseId, teacherId, newMessage);
+      setMessages(prevMessages => [...prevMessages, message]);
+      setNewMessage("");
     } catch (error) {
       console.error(error);
-      return;
     }
-
-    setMessages([...messages, message]);
-    setNewMessage("");
   };
 
   // Render individual message
@@ -109,12 +112,12 @@ const CourseAdminChat: React.FC = () => {
 
       {/* Chat Messages Container */}
       <div className="flex-1 overflow-y-auto space-y-4 p-4">
-        {messages?.length === 0 ? (
+        {messages.length === 0 ? (
           <div className="text-center text-gray-500 py-10">
             No messages yet. Start a conversation!
           </div>
         ) : (
-          messages?.map(renderMessage)
+          messages.map(renderMessage)
         )}
         <div ref={messagesEndRef} />
       </div>
