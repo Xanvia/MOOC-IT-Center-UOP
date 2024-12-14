@@ -86,16 +86,38 @@ class CourseViewSet(viewsets.ModelViewSet):
         self.kwargs["pk"] = self.kwargs.get("course_id")
         return super().get_object()
 
+    def get_queryset(self):
+        search_query = self.request.query_params.get("search", None)
+        if search_query is not None:
+            title = super().get_queryset().filter(name__icontains=search_query)
+            institution = (
+                super().get_queryset().filter(institution_label__icontains=search_query)
+            )
+            return title.union(institution)
+        return super().get_queryset()
+
     def filter_queryset(self, queryset):
         if self.action == "list":
             return super().filter_queryset(queryset).filter(status="published")
         elif self.action == "my_courses":
             if self.request.user.groups.filter(name="teacher").exists():
-                creator_courses = super().filter_queryset(queryset).filter(course_creator=self.request.user)
-                teacher_courses = super().filter_queryset(queryset).filter(courseteachers__teacher=self.request.user)
+                creator_courses = (
+                    super()
+                    .filter_queryset(queryset)
+                    .filter(course_creator=self.request.user)
+                )
+                teacher_courses = (
+                    super()
+                    .filter_queryset(queryset)
+                    .filter(courseteachers__teacher=self.request.user)
+                )
                 return creator_courses.union(teacher_courses)
             elif self.request.user.groups.filter(name="student").exists():
-                return super().filter_queryset(queryset).filter(enrollment__student=self.request.user)
+                return (
+                    super()
+                    .filter_queryset(queryset)
+                    .filter(enrollment__student=self.request.user)
+                )
         elif self.action == "unpublished":
             return super().filter_queryset(queryset).filter(status="unpublished")
 
