@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import CourseCreatorChat from "@/components/Chat/CourseCreatorChat";
+import CourseAdminChat from "@/components/Chat/CourseAdminChat";
 // import TeacherChat from "@/components/Chat/TeacherChat";
 
 
@@ -11,7 +11,7 @@ const CourseCreatorChatPage: React.FC = () => {
     <div className="flex h-screen bg-gray-50">
       <main className="flex-1 flex flex-col overflow-hidden p-6 bg-white rounded-lg shadow-md mx-6 my-6">
         
-        <CourseCreatorChat />
+        <CourseAdminChat />
 
       </main>
     </div>

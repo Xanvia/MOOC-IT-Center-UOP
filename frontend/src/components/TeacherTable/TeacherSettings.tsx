@@ -22,7 +22,6 @@ export interface CourseData {
   name: string;
 }
 
-
 type Permission = {
   id: string;
   label: string;
@@ -145,7 +144,9 @@ const TeacherSettingsTable: React.FC<TeacherSettingsTableProps> = ({
                       >
                         Permissions
                       </button>
-                      <Link href={`/settings/${course.id}/teachers/chat`}>
+                      <Link
+                        href={`/settings/${course.id}/teachers/${teacher.id}/chat`}
+                      >
                         <button className="bg-gray-500 hover:bg-gray-400 text-white px-3 py-1 rounded-md text-sm">
                           Send Message
                         </button>

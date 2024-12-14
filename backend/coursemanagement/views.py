@@ -330,6 +330,23 @@ class CourseMessagesViewSet(viewsets.ModelViewSet):
                 )
         except CourseTeachers.DoesNotExist:
             raise NotFound("Teacher not found")
+        
+    def filter_queryset(self, queryset):
+        if self.kwargs.get("teacher_id"):
+            return super().filter_queryset(queryset).filter(
+                course=self.kwargs.get("course_id"),
+                teacher=self.kwargs.get("teacher_id"),
+            )
+        else:
+            return super().filter_queryset(queryset).filter(
+                course=self.kwargs.get("course_id"), teacher=self.request.user
+            )
+            
+       
+    
+    def list(self, request, *args, **kwargs):
+        response =  super().list(request, *args, **kwargs)
+        return response
 
     def add_message_admin(self, request, *args, **kwargs):
         course_teacher_instance = self.get_object()

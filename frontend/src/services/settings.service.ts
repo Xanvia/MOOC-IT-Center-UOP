@@ -180,3 +180,17 @@ export const isCourseCreator = async (courseId: string) => {
     throw error;
   }
 };
+
+export const getMessagesWithTeacher = async (
+  courseID: string,
+  teacherId: string
+) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/manage/${courseID}/messages/${teacherId}/`
+    );
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
+};

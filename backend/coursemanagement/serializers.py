@@ -389,8 +389,7 @@ class CourseMessagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseTeachers
         fields = ["messages"]
-
-
+    
 class TeacherSerializer(serializers.ModelSerializer):
     course_id = serializers.IntegerField(write_only=True)
 

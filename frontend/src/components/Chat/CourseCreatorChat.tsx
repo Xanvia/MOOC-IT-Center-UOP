@@ -110,7 +110,7 @@ const CourseCreatorChat: React.FC<CourseCreatorChatProps> = ({
             }`}
           >
             <div className="font-semibold text-sm mb-1">
-              {isIncomingMessage ? "Administrator" : message.sender}
+              {isIncomingMessage ? "Administrator" : "You"}
             </div>
             <p>{message.message}</p>
             <span className="text-xs opacity-70 block mt-1 text-right">
