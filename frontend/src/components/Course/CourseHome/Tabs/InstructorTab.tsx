@@ -8,39 +8,43 @@ interface Props {
 
 const Example: React.FC<Props> = ({ instructors }) => {
   return (
-    <div>
-      <section className="relative isolate overflow-hidden bg-white px-6 py-6 sm:py-16 lg:px-8">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.indigo.100),white)] opacity-20" />
-        <div className="absolute inset-y-0 right-1/2 -z-10 mr-16 w-[200%] origin-bottom-left skew-x-[-30deg] bg-white shadow-xl shadow-indigo-600/10 ring-1 ring-indigo-50 sm:mr-28 lg:mr-0 xl:mr-16 xl:origin-center" />
-        <div className="mx-auto max-w-2xl lg:max-w-4xl">
-        <div className="lg:mx-32"></div>
-          <figure className="mt-2 text-center">
+    <div className="w-full mb-10">
+      <div className="flex justify-center lg:mx-32">
+      <div className="py-20 px-10 sm:px-20 xl:mx-28 text-left bg-primary_light w-full">
+          <figure className="mt-6 text-center">
             <blockquote className="text-xl font-semibold leading-8 text-gray-900 sm:text-2xl sm:leading-9"></blockquote>
-            <figcaption className="mt-2 flex flex-wrap justify-center gap-20">
+            <figcaption className="mt-6 flex flex-wrap justify-center gap-20">
               {instructors.map((instructor, index) => (
                 <div
                   key={index}
-                  className="flex flex-col items-center space-y-1 text-base"
+                  className="flex w-80 items-center rounded-lg border bg-white border-gray-200 p-4 shadow-md hover:shadow-lg transition-shadow"
                 >
-                  <Image
-                    alt=""
-                    src={instructor.profile_picture}
-                    className="h-12 w-12 rounded-full"
-                    width={48}
-                    height={48}
-                  />
-                  <div className="font-semibold text-gray-900">
-                    {instructor.full_name}
+                  
+                  <div className="flex-shrink-0">
+                    <Image
+                      alt=""
+                      src={instructor.profile_picture}
+                      className="h-16 w-16 rounded-full object-cover"
+                      width={64}
+                      height={64}
+                    />
                   </div>
-                  <div className="text-gray-600">{instructor.headline}</div>
-                  <div className="text-gray-600">{instructor.email}</div>
+                  
+                  <div className="mx-4 h-16 w-px bg-gray-400"></div>
+                  
+                  <div className="flex flex-col items-start space-y-1">
+                    <div className="font-semibold text-gray-900">
+                      {instructor.full_name}
+                    </div>
+                    <div className="text-gray-600">{instructor.headline}</div>
+                    <div className="text-gray-600">{instructor.email}</div>
+                  </div>
                 </div>
               ))}
             </figcaption>
           </figure>
-
         </div>
-      </section>
+      </div>
     </div>
   );
 };
