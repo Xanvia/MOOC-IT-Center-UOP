@@ -37,7 +37,7 @@ export default function ProfilePage() {
         setError("User ID not found in URL");
         return;
       }
-
+  
       try {
         console.log("Fetching profile data for ID:", id);
         const data = await fetchProfileDataById(id as string);
@@ -50,9 +50,10 @@ export default function ProfilePage() {
         setError("Failed to load profile data.");
       }
     };
-
+  
     loadProfileData();
   }, [id, reload]);
+  
 
   if (error) {
     return <div>Error: {error}</div>;

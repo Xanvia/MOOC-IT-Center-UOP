@@ -57,10 +57,11 @@ export interface UpdateCourseData {
 }
 
 export interface Instructor {
-  email: string;
+  id: string | number; // Ensure id exists
   full_name: string;
-  headline: string;
+  email: string;
   profile_picture: string;
+  headline: string;
 }
 export const categoryLabels: { [key in CategoryEnum]: string } = {
   [CategoryEnum.All]: "All",

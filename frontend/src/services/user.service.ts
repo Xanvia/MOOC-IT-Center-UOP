@@ -8,7 +8,7 @@ import axios from "axios";
 
 export const fetchProfileData = async () => {
   try {
-    const response = await axiosInstance.get("/user/profile/");
+    const response = await axiosInstance.get("http://localhost:8000/api/user/profile/");
     return response.data.data;
   } catch (error) {
     console.error(error);
@@ -16,13 +16,13 @@ export const fetchProfileData = async () => {
   }
 };
 
-export const fetchProfileDataById = async (userId: string) => {
+export const fetchProfileDataById = async (id: string) => {
   try {
-    const response = await axios.get(`http://localhost:8000/api/user/profile/${userId}/`);
-    console.log("API Response:", response.data); // Check response in the console
+    const response = await axiosInstance.get(`http://localhost:8000/api/user/profile/${id}/`);
+    console.log("API Response:", response.data); // Debug response
     return response.data;
   } catch (error: any) {
-    console.error("Failed to fetch profile data:", error.response || error.message);
+    console.error("Failed to fetch profile data:", error.response?.data || error.message);
     throw error;
   }
 };
