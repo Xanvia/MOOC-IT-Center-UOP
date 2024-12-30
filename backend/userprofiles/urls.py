@@ -11,6 +11,7 @@ from .views import (
     WorkExperienceApiView,
     EducationApiView,
     StudentListView,
+    UserProfileByIdView,
 )
 
 urlpatterns = [
@@ -24,6 +25,11 @@ urlpatterns = [
         "profile/",
         UserProfileViewSet.as_view({"get": "retrieve", "put": "update"}),
         name="user-profile",
+    ),
+    path(
+        "profile/<int:pk>/",
+        UserProfileByIdView.as_view({"get": "retrieve", "put": "update"}),
+        name="user-profile-detail",
     ),
     path(
         "profile-image", RemoveUserProfileImage.as_view(), name="remove-profile-image"

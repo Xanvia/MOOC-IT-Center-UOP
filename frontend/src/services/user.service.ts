@@ -4,16 +4,27 @@ import {
   WorkData,
   EducationData,
 } from "@/components/Profile/types";
+import axios from "axios";
 
-export const fetchProfileData = async () => {
+export const fetchProfileData = async (id: string) => {
+  const response = await fetch(`http://localhost:8000/api/user/profile/${id}/`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch profile data");
+  }
+  return await response.json();
+};
+
+export const fetchProfileDataById = async (userId: string) => {
   try {
-    const response = await axiosInstance.get("/user/profile/");
-    return response.data.data;
-  } catch (error) {
-    console.error(error);
+    const response = await axios.get(`http://localhost:8000/api/user/profile/${userId}/`);
+    console.log("API Response:", response.data); // Check response in the console
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to fetch profile data:", error.response || error.message);
     throw error;
   }
 };
+
 
 export const editUserProfile = async (values: EditProfileData) => {
   const formData = new FormData();

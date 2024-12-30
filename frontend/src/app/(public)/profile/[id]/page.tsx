@@ -1,10 +1,11 @@
 "use client";
 import React, { useState, useEffect, Suspense } from "react";
+import { useParams } from "next/navigation";
 import { Work, Education, ProfileData } from "@/components/Profile/types";
 import { fetchProfileData } from "@/services/user.service";
+import { fetchProfileDataById } from "@/services/user.service";
 
 const Profile = React.lazy(() => import("@/components/Profile/Profile"));
-
 const EducationModal = React.lazy(
   () => import("@/components/Profile/Education/EducationModal")
 );
@@ -19,39 +20,54 @@ const ExperienceModal = React.lazy(
 );
 
 export default function ProfilePage() {
+  const reloadData = () => {
+    setReload((prevState) => !prevState);
+  };
+  const params = useParams();
+  const { id } = params; // Ensure 'id' is fetched properly
   const [work, setWork] = useState<Work[]>([]);
   const [education, setEducation] = useState<Education[]>([]);
-  const [profileData, setProfileData] = useState<ProfileData | undefined>(
-    undefined
-  );
+  const [profileData, setProfileData] = useState<ProfileData | undefined>(undefined);
   const [reload, setReload] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadProfileData = async () => {
+      if (!id) {
+        setError("User ID not found in URL");
+        return;
+      }
+
       try {
-        const data = await fetchProfileData();
-        setWork(data.work_experiences);
-        setEducation(data.educations);
+        console.log("Fetching profile data for ID:", id);
+        const data = await fetchProfileDataById(id as string);
+        console.log("Fetched profile data:", data);
+        setWork(data.work_experiences || []);
+        setEducation(data.educations || []);
         setProfileData(data);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching profile data:", error);
+        setError("Failed to load profile data.");
       }
     };
 
     loadProfileData();
-  }, [reload]);
+  }, [id, reload]);
 
-  const reloadData = () => {
-    setReload((prevState) => !prevState);
-  };
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
+  if (!profileData) {
+    return <div>Loading profile data...</div>;
+  }
   return (
     <>
       <div className="flex flex-col lg:flex-row w-full py-20">
         <Suspense>
-          <Profile reloadData={reloadData} profileData={profileData} />
+        <Profile reloadData={() => setReload(!reload)} profileData={profileData} />
         </Suspense>
-        <div className="relative  lg:w-full h-11/12  md:rounded-r-lg lg:basis-1/2 2xl:px-12 basis-1/3 mx-6 sm:ml-32 pt-32 lg:pt-0 lg:m-0">
+        <div className="relative lg:w-full h-11/12 md:rounded-r-lg lg:basis-1/2 2xl:px-12 basis-1/3 mx-6 sm:ml-32 pt-32 lg:pt-0 lg:m-0">
           <div className="min-h-[300px]">
             <Suspense>
               <EducationModal
@@ -69,7 +85,9 @@ export default function ProfilePage() {
                   />
                 ))
               ) : (
-                <EducationCard eduData={education[0]} reload={reloadData} />
+                <div className="py-10 text-xl">
+                  <p>No education details available</p>
+                </div>
               )}
             </Suspense>
           </div>
@@ -79,6 +97,8 @@ export default function ProfilePage() {
                 CardTitle="Add Your Work Experience"
                 reloadData={reloadData}
               />
+            </Suspense>
+            <Suspense>
               {work && work.length > 0 ? (
                 work.map((workItem) => (
                   <ExperienceCard
