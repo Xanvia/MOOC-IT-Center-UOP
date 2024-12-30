@@ -6,12 +6,14 @@ import {
 } from "@/components/Profile/types";
 import axios from "axios";
 
-export const fetchProfileData = async (id: string) => {
-  const response = await fetch(`http://localhost:8000/api/user/profile/${id}/`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch profile data");
+export const fetchProfileData = async () => {
+  try {
+    const response = await axiosInstance.get("/user/profile/");
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
-  return await response.json();
 };
 
 export const fetchProfileDataById = async (userId: string) => {
