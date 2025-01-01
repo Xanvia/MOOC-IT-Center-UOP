@@ -16,13 +16,13 @@ export const fetchProfileData = async () => {
   }
 };
 
-export const fetchProfileDataById = async (id: string) => {
+export const fetchProfileDataById = async (id: string | number) => {
   try {
-    const response = await axiosInstance.get(`http://localhost:8000/api/user/profile/${id}/`);
-    console.log("API Response:", response.data); // Debug response
+    const response = await axios.get(`http://localhost:8000/api/user/profile/${id}/`);
+    console.log("API Response:", response.data); // Check if the ID fetches correct data
     return response.data;
   } catch (error: any) {
-    console.error("Failed to fetch profile data:", error.response?.data || error.message);
+    console.error("Failed to fetch profile data:", error.response || error.message);
     throw error;
   }
 };
