@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { FaChevronRight, FaChevronDown, FaPlus, FaChevronUp,  FaTrash } from "react-icons/fa";
+
 
 interface AccordionItem {
   title: string;
@@ -74,11 +76,17 @@ const CourseContent: React.FC = () => {
                         e.stopPropagation();
                         removeSection(index);
                       }}
-                      className="text-red-600 text-sm"
+                      className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
                     >
-                      Delete
+                      <FaTrash />
                     </button>
-                    <span>{activeIndex === index ? "x" : "+"}</span>
+                    <span>
+                      {activeIndex === index ? (
+                        <FaChevronUp className="text-lg" />
+                      ) : (
+                        <FaChevronDown className="text-lg" />
+                      )}
+                    </span>
                   </div>
                 </div>
                 {activeIndex === index && (
@@ -95,10 +103,11 @@ const CourseContent: React.FC = () => {
             ))}
             <button
               onClick={addSection}
-              className="w-full mt-4 p-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              className="w-full mt-4 p-2 bg-blue-900 text-white rounded hover:bg-blue-800"
             >
               Add New Section
             </button>
+            
           </div>
         </div>
       </div>
