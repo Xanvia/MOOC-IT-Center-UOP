@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FaChevronUp, FaChevronDown, FaTrash } from "react-icons/fa";
 import SolidButton from "@/components/Buttons/SolidButton";
 import { toast } from "sonner";
-import { saveCourseContent } from "@/services/course.service";
+import { addSyllabus } from "@/services/course.service";
 
 interface AccordionItem {
   title: string;
@@ -47,7 +47,9 @@ const CourseContent: React.FC<CourseContentProps> = ({ courseId }) => {
 
   const handleSave = async () => {
     try {
-      const response = await saveCourseContent(courseId, sections);
+      // Extract only the titles and contents from sections
+      const syllabus = sections.map((section) => `${section.title}: ${section.content}`);
+      const response = await addSyllabus(courseId, syllabus);
       toast.success(response.message || "Course content saved successfully!");
     } catch (error: any) {
       toast.error(error.message || "Failed to save course content.");

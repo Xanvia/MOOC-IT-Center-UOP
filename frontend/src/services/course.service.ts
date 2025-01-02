@@ -122,21 +122,16 @@ export const addSpecifications = async (
   }
 };
 
-export const saveCourseContent = async (courseId: number, sections: AccordionItem[]) => {
-  const response = await fetch(`/api/course/${courseId}/content`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ sections })
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to save course content.");
-  }
-
-  return await response.json();
-};
+// export const saveCourseContent = async (courseId: number, courseContent: AccordionItem[]) => {
+//   try {
+//     const response = await axiosInstance.patch(`/course/${courseId}`, {
+//       courseContent,
+//     });
+//     return response.data;
+//   } catch (error: any) {
+//     throw new Error(error.response?.data.message ?? "Network error");
+//   }
+// };
 
 
 export const addOutcomes = async (courseId: number, outcomes: string[]) => {
@@ -149,6 +144,7 @@ export const addOutcomes = async (courseId: number, outcomes: string[]) => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
 export const addSyllabus = async (courseId: number, syllabus: string[]) => {
   try {
     const response = await axiosInstance.patch(`/course/${courseId}`, {
