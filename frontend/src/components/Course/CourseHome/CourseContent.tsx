@@ -6,35 +6,35 @@ interface AccordionItem {
   content: string;
 }
 
-const accordionData: AccordionItem[] = [
-  {
-    title: "Introduction to jQuery",
-    content:
-      "Beginner-friendly course that teaches the basics of using jQuery, a popular JavaScript library. Learn how to make asynchronous requests using AJAX.Beginner-friendly co the basics of using jQuery, a popular JavaScript library.",
-  },
-  {
-    title: "Introduction to AJAX",
-    content:
-      "Learn how to make asynchronous requests using AJAX.Beginner-friendly course that teaches the basics of using jQuery, a popular JavaScript library. the basics of using jQuery, a popular JavaScript library.",
-  },
-  {
-    title: "Single Page Applications (SPAs)",
-    content:
-      "Understand the principles behind SPAs and how they work. Learn how to make asynchronous requests using AJAX.Beginner-friendly co Learn how to make asynchronous requests using AJAX.Beginner-friendly co the basics of using jQuery, a popular JavaScript library.",
-  },
-  {
-    title: "Angular as a SPA Framework",
-    content:
-      "Learn how to use Angular for building SPAs. Learn how to make asynchronous requests using AJAX.Beginner-friendly co Learn how to make asynchronous requests using AJAX.Beginner-friendly co the basics of using jQuery, a popular JavaScript library.",
-  },
-];
-
 const CourseContent: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
-
+  const [sections, setSections] = useState<AccordionItem[]>([
+    { title: "", content: "" }
+  ]);
 
   const handleToggle = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
+  };
+
+  const handleTitleChange = (index: number, value: string) => {
+    const newSections = [...sections];
+    newSections[index].title = value;
+    setSections(newSections);
+  };
+
+  const handleContentChange = (index: number, value: string) => {
+    const newSections = [...sections];
+    newSections[index].content = value;
+    setSections(newSections);
+  };
+
+  const addSection = () => {
+    setSections([...sections, { title: "", content: "" }]);
+  };
+
+  const removeSection = (index: number) => {
+    const newSections = sections.filter((_, i) => i !== index);
+    setSections(newSections);
   };
 
   return (
@@ -45,32 +45,60 @@ const CourseContent: React.FC = () => {
             Course Content
           </h1>
         </div>
-        <div className="xl:mr-56 pt-10 xl-pt-0">
+        <div className="xl:mr-56 pt-10 xl:pt-0">
           <div>
-            {accordionData.map((item, index) => (
-              <div key={index}>
+            {sections.map((section, index) => (
+              <div key={index} className="mb-8 border-b border-gray-300 pb-4">
                 <div
-                  className="flex justify-between text-primary cursor-pointer mb-8 pb-2 border-b border-gray-800 transition-all duration-300 ease-in-out transform hover:scale-105"
+                  className="flex justify-between items-center text-primary cursor-pointer"
                   onClick={() => handleToggle(index)}
                 >
-                  <span className={`${
-                      activeIndex === index
-                        ? "font-bold"
-                        : "font"
-                    } transition-all duration-100`}
-                  >
-                    {index + 1 < 10 ? `0${index + 1}.` : index + 1} {item.title}.
-                  </span>
-
-                  <span>{activeIndex === index ? "x" : "+"}</span>
+                  <div className="flex-1 flex items-center gap-2">
+                    <span className={`${
+                      activeIndex === index ? "font-bold" : "font"
+                    } min-w-[40px]`}>
+                      {index + 1 < 10 ? `0${index + 1}.` : `${index + 1}.`}
+                    </span>
+                    <input
+                      type="text"
+                      value={section.title}
+                      onChange={(e) => handleTitleChange(index, e.target.value)}
+                      placeholder="Enter section title"
+                      className="flex-1 p-2 border border-gray-300 rounded"
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeSection(index);
+                      }}
+                      className="text-red-600 text-sm"
+                    >
+                      Delete
+                    </button>
+                    <span>{activeIndex === index ? "x" : "+"}</span>
+                  </div>
                 </div>
                 {activeIndex === index && (
-                  <div style={{ paddingLeft: "32px", marginBottom: "44px" }}>
-                    {item.content}
+                  <div className="mt-4 pl-[40px]">
+                    <textarea
+                      value={section.content}
+                      onChange={(e) => handleContentChange(index, e.target.value)}
+                      placeholder="Enter section content"
+                      className="w-full p-2 border border-gray-300 rounded min-h-[100px]"
+                    />
                   </div>
                 )}
               </div>
             ))}
+            <button
+              onClick={addSection}
+              className="w-full mt-4 p-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Add New Section
+            </button>
           </div>
         </div>
       </div>
