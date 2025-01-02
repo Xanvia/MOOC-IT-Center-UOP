@@ -1,14 +1,20 @@
 "use client";
 import { useState } from "react";
-import { FaChevronRight, FaChevronDown, FaPlus, FaChevronUp,  FaTrash } from "react-icons/fa";
-
+import { FaChevronUp, FaChevronDown, FaTrash } from "react-icons/fa";
+import SolidButton from "@/components/Buttons/SolidButton";
+import { toast } from "sonner";
+import { saveCourseContent } from "@/services/course.service";
 
 interface AccordionItem {
   title: string;
   content: string;
 }
 
-const CourseContent: React.FC = () => {
+interface CourseContentProps {
+  courseId: number;
+}
+
+const CourseContent: React.FC<CourseContentProps> = ({ courseId }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
   const [sections, setSections] = useState<AccordionItem[]>([
     { title: "", content: "" }
@@ -37,6 +43,15 @@ const CourseContent: React.FC = () => {
   const removeSection = (index: number) => {
     const newSections = sections.filter((_, i) => i !== index);
     setSections(newSections);
+  };
+
+  const handleSave = async () => {
+    try {
+      const response = await saveCourseContent(courseId, sections);
+      toast.success(response.message || "Course content saved successfully!");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to save course content.");
+    }
   };
 
   return (
@@ -103,11 +118,18 @@ const CourseContent: React.FC = () => {
             ))}
             <button
               onClick={addSection}
-              className="w-full mt-4 p-2 bg-blue-900 text-white rounded hover:bg-blue-800"
+              className="w-full  p-2  bg-slate-500 text-white rounded hover:bg-slate-600"
             >
               Add New Section
             </button>
             
+            <div className="flex justify-end mt-16">
+              <SolidButton
+                type="button"
+                text="S A V E"
+                onClick={handleSave}
+              />
+            </div>
           </div>
         </div>
       </div>

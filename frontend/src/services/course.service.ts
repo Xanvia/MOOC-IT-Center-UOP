@@ -4,10 +4,17 @@ import {
   CreateCourseData,
   UpdateCourseData,
 } from "@/components/Course/course.types";
+
+
 interface TestCase {
   stdin: string;
   expected_output: string;
   marks?: string;
+}
+
+interface AccordionItem {
+  title: string;
+  content: string;
 }
 
 export const fetchAllCourses = async () => {
@@ -114,6 +121,23 @@ export const addSpecifications = async (
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const saveCourseContent = async (courseId: number, sections: AccordionItem[]) => {
+  const response = await fetch(`/api/course/${courseId}/content`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ sections })
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to save course content.");
+  }
+
+  return await response.json();
+};
+
 
 export const addOutcomes = async (courseId: number, outcomes: string[]) => {
   try {
