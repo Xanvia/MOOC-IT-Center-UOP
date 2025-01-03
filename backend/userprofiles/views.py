@@ -191,6 +191,17 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             "message": "User info updated successfully",
         }
         return response
+    
+class UserProfileByIdView(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+
+    def get(self, request, user_id):
+        user = User.objects.filter(id=user_id).first()
+        if user:
+            serializer = UserProfileSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class RemoveUserProfileImage(generics.UpdateAPIView):
