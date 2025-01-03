@@ -4,18 +4,19 @@ import { FaChevronUp, FaChevronDown, FaTrash } from "react-icons/fa";
 import SolidButton from "@/components/Buttons/SolidButton";
 import { toast } from "sonner";
 import { addSyllabus } from "@/services/course.service";
+import { useParams } from "next/navigation";
 
 interface AccordionItem {
   title: string;
   content: string;
 }
 
-interface CourseContentProps {
-  courseId: number;
-}
 
-const CourseContent: React.FC<CourseContentProps> = ({ courseId }) => {
+const CourseContent: React.FC = () => {
+  const params = useParams();
+  const courseId = params.id as string;
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
+
   const [sections, setSections] = useState<AccordionItem[]>([
     { title: "", content: "" }
   ]);

@@ -145,7 +145,7 @@ export const addOutcomes = async (courseId: number, outcomes: string[]) => {
   }
 };
 
-export const addSyllabus = async (courseId: number, syllabus: string[]) => {
+export const addSyllabus = async (courseId: string, syllabus: string[]) => {
   try {
     const response = await axiosInstance.patch(`/course/${courseId}`, {
       syllabus,
