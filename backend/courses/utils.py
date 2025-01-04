@@ -1,50 +1,51 @@
-# import os
-# import google.oauth2.credentials
-# import google_auth_oauthlib.flow
-# import googleapiclient.discovery
-# from googleapiclient.http import MediaFileUpload
-# from django.conf import settings
+import os
+import subprocess
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from .models import VideoFile
+from mooc.settings import MEDIA_ROOT, MEDIA_URL
 
-# SCOPES = ['https://www.googleapis.com/auth/youtube.upload']
-# API_SERVICE_NAME = 'youtube'
-# API_VERSION = 'v3'
+def segment_video(video_file):
+    """
+    Convert uploaded video to HLS format using original filename
+    Returns the playlist URL path
+    """
+    # Get original filename without extension
+    filename = os.path.splitext(os.path.basename(video_file.file.name))[0]
+    
+    # Create folder based on filename
+    segments_folder = os.path.join(MEDIA_ROOT, f"videos/hls/{filename}")
+    os.makedirs(segments_folder, exist_ok=True)
 
-# def get_client_config():
-#     return {
-#         "web": {
-#             "client_id": settings.GOOGLE_CLIENT_ID,
-#             "client_secret": settings.GOOGLE_CLIENT_SECRET,
-#             "redirect_uris": ["http://localhost:8000/oauth2callback","http://localhost:8000"],
-#             "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-#             "token_uri": "https://oauth2.googleapis.com/token"
-#         }
-#     }
+    playlist_path = os.path.join(segments_folder, "playlist.m3u8")
 
-# def get_authenticated_service():
-#     flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_config(
-#         get_client_config(), SCOPES)
-#     credentials = flow.run_local_server(port=0)
-#     return googleapiclient.discovery.build(API_SERVICE_NAME, API_VERSION, credentials=credentials)
+    command = [
+        "ffmpeg",
+        "-i", video_file.file.path,
+        "-codec", "copy",  # Use copy codec for faster processing
+        "-start_number", "0",
+        "-hls_time", "10",
+        "-hls_list_size", "0",
+        "-f", "hls",
+        "-hls_segment_filename", os.path.join(segments_folder, "segment_%03d.ts"),
+        playlist_path
+    ]
 
-# def upload_video_to_youtube(video_file):
-#     youtube = get_authenticated_service()
+    try:
+        process = subprocess.Popen(
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        stdout, stderr = process.communicate()
 
-#     # Define the video metadata
-#     body = {
-#         'snippet': {
-#             'title': 'Test Video',
-#             'description': 'This is a test video upload.',
-#             'tags': ['test', 'video'],
-#             'categoryId': '22'
-#         },
-#         'status': {
-#             'privacyStatus': 'private'
-#         }
-#     }
+        if process.returncode != 0:
+            raise ValidationError(f"Error processing video: {stderr.decode()}")
 
-#     # Upload the video
-#     media = MediaFileUpload(video_file.temporary_file_path(), chunksize=-1, resumable=True)
-#     request = youtube.videos().insert(part="snippet,status", body=body, media_body=media)
-#     response = request.execute()
+        # Return the relative URL path for the playlist
+        return f'/media/videos/hls/{filename}/playlist.m3u8'
 
-#     return f"https://www.youtube.com/watch?v={response['id']}"
+    except subprocess.CalledProcessError as e:
+        raise ValidationError(f"Error processing video: {str(e)}")
+    except Exception as e:
+        raise ValidationError(f"Unexpected error: {str(e)}")
