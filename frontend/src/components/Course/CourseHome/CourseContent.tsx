@@ -6,20 +6,29 @@ import { toast } from "sonner";
 import { addSyllabus } from "@/services/course.service";
 import { useParams } from "next/navigation";
 
+// interface CourseContentProps {
+//   courseId: number; // courseId should explicitly be a number
+//   syllabus: string[];
+// }
+
 interface AccordionItem {
   title: string;
   content: string;
 }
 
+interface CourseContentProps {
+  courseId: number;
+  syllabus: string[];
+}
 
-const CourseContent: React.FC = () => {
-  const params = useParams();
-  const courseId = params.id as string;
+const CourseContent: React.FC<CourseContentProps> = ({ courseId, syllabus }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
-
-  const [sections, setSections] = useState<AccordionItem[]>([
-    { title: "", content: "" }
-  ]);
+  const [sections, setSections] = useState<AccordionItem[]>(
+    syllabus.map((item) => {
+      const [title, ...contentParts] = item.split(": ");
+      return { title, content: contentParts.join(": ") };
+    }) || [{ title: "", content: "" }]
+  );
 
   const handleToggle = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -48,7 +57,6 @@ const CourseContent: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      // Extract only the titles and contents from sections
       const syllabus = sections.map((section) => `${section.title}: ${section.content}`);
       const response = await addSyllabus(courseId, syllabus);
       toast.success(response.message || "Course content saved successfully!");

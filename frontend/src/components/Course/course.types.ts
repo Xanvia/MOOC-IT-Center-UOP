@@ -33,6 +33,7 @@ export interface CourseData {
   name: string;
   description: string;
   specifications: any;
+  syllabus: string[];
   outcomes: string[];
   header_image: string;
   duration: string;
