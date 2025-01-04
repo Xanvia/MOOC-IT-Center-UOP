@@ -1,27 +1,52 @@
 "use client";
+import { searchCourses } from "@/services/course.service";
 import React, { useState } from "react";
 
-const Search: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+interface SearchProps {
+  setCourses: React.Dispatch<React.SetStateAction<any[]>>;
+}
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+const Search: React.FC<SearchProps> = ({ setCourses }) => {
+  const [query, setQuery] = useState("");
+
+  const handleSearch = async (searchQuery: string) => {
+    try {
+      const data = await searchCourses(searchQuery);
+      setCourses(data.courses);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    // Perform search logic here
-    console.log("Searching for:", searchTerm);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setQuery(value);
+
+    if (value.trim()) {
+      const debounceTimeout = setTimeout(() => handleSearch(value), 300); // Debounce API call
+      return () => clearTimeout(debounceTimeout);
+    } else {
+      // Reset to show all courses if query is cleared
+      const fetchAllCourses = async () => {
+        try {
+          const data = await searchCourses(""); // Adjust API to return all courses when search query is empty
+          setCourses(data.courses);
+        } catch (error) {
+          console.error("Error fetching all courses:", error);
+        }
+      };
+      fetchAllCourses();
+    }
   };
 
   return (
     <div className="flex justify-center pb-7 px-7">
-      <form onSubmit={handleSubmit} className="w-1/2 pt-[90px] pb-5 ">
+      <form className="w-1/2 pt-[90px] pb-5 ">
         <div className="relative">
           <input
             type="text"
-            value={searchTerm}
-            onChange={handleSearch}
+            value={query} // Bind input to `query`
+            onChange={handleInputChange}
             placeholder="What do you want to learn?"
             className="w-full px-5 py-2 font-1px placeholder-black text-black rounded-lg border-none ring-1 ring-[#072569] focus:ring-primary focus:ring-1"
           />

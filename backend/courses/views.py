@@ -90,10 +90,10 @@ class CourseViewSet(viewsets.ModelViewSet):
         search_query = self.request.query_params.get("search", None)
         if search_query is not None:
             title = super().get_queryset().filter(name__icontains=search_query)
-            institution = (
-                super().get_queryset().filter(institution_label__icontains=search_query)
-            )
-            return title.union(institution)
+            # institution = (
+            #     super().get_queryset().filter(institution__label__icontains=search_query)
+            # )
+            return title
         return super().get_queryset()
 
     def filter_queryset(self, queryset):
