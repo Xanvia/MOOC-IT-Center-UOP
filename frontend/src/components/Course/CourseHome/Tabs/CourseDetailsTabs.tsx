@@ -71,6 +71,7 @@ const CourseDetailsTabs = ({
       {activeTab === "Syllabus" && (
         <CourseContent
           courseId={courseData.id} 
+          isEdit={isEdit}
           syllabus={courseData.syllabus || []}
         />
       )}
