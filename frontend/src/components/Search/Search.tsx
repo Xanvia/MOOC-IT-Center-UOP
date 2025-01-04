@@ -51,7 +51,6 @@ const Search: React.FC<SearchProps> = ({ setCourses }) => {
             className="w-full px-5 py-2 font-1px placeholder-black text-black rounded-lg border-none ring-1 ring-[#072569] focus:ring-primary focus:ring-1"
           />
           <button
-            type="submit"
             className="text-white text-lg bg-[#072569] hover:bg-[#1146ce] px-3 py-0.25 rounded-lg absolute end-1.5 bottom-1.5"
           >
             Search
