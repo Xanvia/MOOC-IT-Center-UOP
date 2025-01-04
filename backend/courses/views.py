@@ -63,11 +63,14 @@ from .permissons import (
 from coursemanagement.models import CourseTeachers
 from django.utils import timezone
 from django.contrib.auth.models import User, Group
+from rest_framework.filters import SearchFilter
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['name', 'description', 'institution__label','category__label'] 
 
     def get_permissions(self):
         """
@@ -91,11 +94,23 @@ class CourseViewSet(viewsets.ModelViewSet):
             return super().filter_queryset(queryset).filter(status="published")
         elif self.action == "my_courses":
             if self.request.user.groups.filter(name="teacher").exists():
-                creator_courses = super().filter_queryset(queryset).filter(course_creator=self.request.user)
-                teacher_courses = super().filter_queryset(queryset).filter(courseteachers__teacher=self.request.user)
+                creator_courses = (
+                    super()
+                    .filter_queryset(queryset)
+                    .filter(course_creator=self.request.user)
+                )
+                teacher_courses = (
+                    super()
+                    .filter_queryset(queryset)
+                    .filter(courseteachers__teacher=self.request.user)
+                )
                 return creator_courses.union(teacher_courses)
             elif self.request.user.groups.filter(name="student").exists():
-                return super().filter_queryset(queryset).filter(enrollment__student=self.request.user)
+                return (
+                    super()
+                    .filter_queryset(queryset)
+                    .filter(enrollment__student=self.request.user)
+                )
         elif self.action == "unpublished":
             return super().filter_queryset(queryset).filter(status="unpublished")
 
