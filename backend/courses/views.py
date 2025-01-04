@@ -63,11 +63,14 @@ from .permissons import (
 from coursemanagement.models import CourseTeachers
 from django.utils import timezone
 from django.contrib.auth.models import User, Group
+from rest_framework.filters import SearchFilter
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['name', 'description', 'institution__label','category__label'] 
 
     def get_permissions(self):
         """
@@ -85,16 +88,6 @@ class CourseViewSet(viewsets.ModelViewSet):
     def get_object(self):
         self.kwargs["pk"] = self.kwargs.get("course_id")
         return super().get_object()
-
-    def get_queryset(self):
-        search_query = self.request.query_params.get("search", None)
-        if search_query is not None:
-            title = super().get_queryset().filter(name__icontains=search_query)
-            # institution = (
-            #     super().get_queryset().filter(institution__label__icontains=search_query)
-            # )
-            return title
-        return super().get_queryset()
 
     def filter_queryset(self, queryset):
         if self.action == "list":
