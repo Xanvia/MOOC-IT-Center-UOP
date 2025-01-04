@@ -64,6 +64,16 @@ const CourseContent: React.FC<CourseContentProps> = ({ courseId, syllabus }) => 
       toast.error(error.message || "Failed to save course content.");
     }
   };
+  
+  const handleDeleteSyllabus = (index: number) => {
+    try {
+      const updatedSections = sections.filter((_, i) => i !== index);
+      setSections(updatedSections);
+      toast.success(`Section ${index + 1} deleted successfully!`);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to delete the section.");
+    }
+  };
 
   return (
     <div className="w-full">
@@ -97,15 +107,12 @@ const CourseContent: React.FC<CourseContentProps> = ({ courseId, syllabus }) => 
                     />
                   </div>
                   <div className="flex items-center gap-2">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeSection(index);
-                      }}
-                      className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
-                    >
-                      <FaTrash />
-                    </button>
+                  <button
+                    className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
+                    onClick={() => handleDeleteSyllabus(index)}
+                  >
+                    <FaTrash />
+                  </button>
                     <span>
                       {activeIndex === index ? (
                         <FaChevronUp className="text-lg" />
