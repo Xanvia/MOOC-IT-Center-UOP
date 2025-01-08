@@ -186,7 +186,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         if not user.is_authenticated:
             return Response({"error": "User not authenticated"}, status=401)
 
-        interests = user.profile.interests.all()  # Assuming user has a profile with interests
+        interests = user.userprofile.interests.all()  # Assuming user has a profile with interests
         courses = Course.objects.filter(category__in=interests, status='published').distinct()
         serializer = RecommendedCourseSerializer(courses, many=True)
         return Response({"status": "success", "data": serializer.data})
