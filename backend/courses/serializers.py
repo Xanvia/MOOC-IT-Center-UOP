@@ -681,3 +681,10 @@ class GetCertificateSerializer(serializers.ModelSerializer):
             instance.student.first_name + " " + instance.student.last_name
         )
         return representation
+
+
+class RecommendedCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ['id', 'name', 'description', 'category', 'institution', 'difficulty', 'price', 'payment_type', 'header_image']
+
