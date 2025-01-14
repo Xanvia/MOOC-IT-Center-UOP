@@ -12,7 +12,12 @@ interface Props {
   setIsFinished: (isFinished: boolean) => void;
 }
 
-const CodingQ: React.FC<Props> = ({ permissions, item,userRole ,setIsFinished}) => {
+const CodingQ: React.FC<Props> = ({
+  permissions,
+  item,
+  userRole,
+  setIsFinished,
+}) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const { canEdit } = permissions;
 
@@ -29,6 +34,10 @@ const CodingQ: React.FC<Props> = ({ permissions, item,userRole ,setIsFinished}) 
     <div>
       <div className="flex justify-between items-center ml-16 my-5">
         <h2 className="text-2xl text-primary font-semibold">{item.name}</h2>
+
+       <div className=" pt-4">
+       <h3>{item.content.question}</h3>
+       </div>
         <div>
           {!isEditMode && canEdit && (
             <EditButtonPrimary
