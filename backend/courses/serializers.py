@@ -194,6 +194,23 @@ class ItemSerializer(serializers.ModelSerializer):
                     representation["content"] = content
                 else:
                     representation["grade"] = None
+
+        if instance.type == "Quiz" and progress:
+            if progress.completed:
+                student_quiz = StudentQuiz.objects.filter(
+                    enrollement=progress.enrollment, quiz=instance.quiz
+                ).first()
+                if student_quiz:
+                    content = representation["content"]
+                    content["student_answers"] = student_quiz.student_answers
+                    content["graded"] = student_quiz.graded
+                    content["grade"] = student_quiz.score
+                    content["grade_approved"] = student_quiz.grade_approved
+                    representation["content"] = content
+                else:
+                    representation["score"] = None
+        
+        
         return representation
 
 

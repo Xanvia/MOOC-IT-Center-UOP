@@ -5,6 +5,7 @@ import QuizCreator from "./QuizCreator";
 import QuizPreview from "./QuizPreview";
 import { Item, Permissions } from "../types";
 import { useGlobal } from "@/contexts/store";
+import CompletedQuiz from "./CompletedQuiz";
 
 interface Props {
   item: Item;
@@ -24,13 +25,17 @@ const CreateQuiz: React.FC<Props> = ({ item, permissions, setIsFinished }) => {
   return (
     <div className="quiz-container">
       {isEdit && <QuizCreator addQuestion={addQuestion} quizId={item.id} />}
-      <QuizPreview
-        questions={questions}
-        quizTitle={item.name}
-        isCompleted={item.completed}
-        quizId={item.id}
-        setIsFinished={setIsFinished}
-      />
+      {item.completed ? (
+        <CompletedQuiz content={item.content} />
+      ) : (
+        <QuizPreview
+          questions={questions}
+          quizTitle={item.name}
+          isCompleted={item.completed}
+          quizId={item.id}
+          setIsFinished={setIsFinished}
+        />
+      )}
     </div>
   );
 };
