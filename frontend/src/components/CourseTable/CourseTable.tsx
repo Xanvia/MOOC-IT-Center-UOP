@@ -25,7 +25,10 @@ const CourseTable: React.FC<CourseTableProps> = ({ courses, isPublished, onPubli
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Course Creator</th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Course</th>
               <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Level</th>
-              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th className="px-20 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-left text-s font-medium text-gray-500 uppercase tracking-wider">Payments</th>
+
+              
             </tr>
           </thead>
           <tbody>

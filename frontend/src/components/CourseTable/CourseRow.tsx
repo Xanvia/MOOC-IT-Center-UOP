@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye } from "lucide-react";
 
@@ -41,16 +41,15 @@ const CourseRow: React.FC<CourseRowProps> = ({
         </span>
       </td>
       <td className="px-6 py-4">
-        <div className="flex space-x-9">
+        <div className="flex space-x-4">
           {isPublished ? (
             <>
               <Link href={`/courses/${course.id}`}>
                 <Eye size={20} className="text-blue-500 my-2" />
               </Link>
-
               <Link
                 href={`chat/${course.id}/`}
-                className="bg-gray-500 hover:bg-gray-400 text-white px-3 py-1 rounded-md"
+                className="bg-green-400 hover:bg-gray-400 text-white px-3 py-1 rounded-md"
               >
                 Send Message
               </Link>
@@ -58,9 +57,8 @@ const CourseRow: React.FC<CourseRowProps> = ({
           ) : (
             <>
               <Link href={`/courses/${course.id}`}>
-                <Eye size={24} className="text-blue-500 my-1" />
+                <Eye size={20} className="text-blue-500 my-2" />
               </Link>
-
               <button
                 className="bg-blue-900 hover:bg-blue-800 text-white px-3 py-1 rounded-md"
                 onClick={() => onPublish(course.id)}
@@ -69,13 +67,21 @@ const CourseRow: React.FC<CourseRowProps> = ({
               </button>
               <Link
                 href={`chat/${course.id}/`}
-                className="bg-gray-500 hover:bg-gray-400 text-white px-3 py-1 rounded-md"
+                className="bg-green-500 hover:bg-gray-400 text-white px-3 py-1 rounded-md"
               >
                 Send Message
               </Link>
             </>
           )}
         </div>
+      </td>
+      <td className="px-6 py-4">
+        <Link
+          href={`courses/${course.id}/`}
+          className="bg-button_yellow hover:bg-gray-400 text-red-500 px-3 py-1 rounded-md"
+        >
+          View Payments
+        </Link>
       </td>
     </tr>
   );

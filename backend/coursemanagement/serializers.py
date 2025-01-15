@@ -353,6 +353,12 @@ class PaymentSerializer(serializers.ModelSerializer):
         attrs["order_id"] = str(uuid.uuid4())
         attrs["amount"] = enrollement.course.price
         return super().validate(attrs)
+    
+    def to_representation(self, instance):
+        representation= super().to_representation(instance)
+        representation["student"] = instance.student.first_name + " " + instance.enrollement.student.last_name
+        representation["course"] = instance.enrollement.course.name
+        return representation
 
 
 class GradeQuizSerializer(serializers.ModelSerializer):

@@ -236,3 +236,14 @@ export const replytoCourseCreator = async (
     throw error;
   }
 };
+
+export const getPayments = async (courseId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/manage/payments/${courseId}`
+    );
+    return response.data.data.payments;
+  } catch (error) {
+    throw error;
+  }
+}
