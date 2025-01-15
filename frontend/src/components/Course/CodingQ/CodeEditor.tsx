@@ -170,7 +170,7 @@ const CodeEditor: React.FC<Props> = ({
 
   const handleSaveClick = async () => {
     try {
-      await addStarterCode(codeID, code || "", testCases);
+      await addStarterCode(codeID, code || "", savedTestCases);
       toast.success("Code saved successfully");
     } catch (err) {
       toast.error("Error saving code");
@@ -251,8 +251,13 @@ const CodeEditor: React.FC<Props> = ({
             >
               Submit
             </button>
+          </div>
+          <div className="pt-6">
             {canEdit && (
-              <SecondaryButton text="Save" onClick={handleSaveClick} />
+              <SecondaryButton
+                text="Save The Starter Code"
+                onClick={handleSaveClick}
+              />
             )}
           </div>
         </div>

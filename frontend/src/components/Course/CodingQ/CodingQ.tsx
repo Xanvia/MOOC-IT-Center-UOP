@@ -32,20 +32,40 @@ const CodingQ: React.FC<Props> = ({
 
   return (
     <div>
-      <div className="flex justify-between items-center ml-16 my-5">
+      <div className="ml-4 my-5 flex justify-between items-center">
         <h2 className="text-2xl text-primary font-semibold">{item.name}</h2>
-
-       <div className=" pt-4">
-       <h3>{item.content.question}</h3>
-       </div>
-        <div>
-          {!isEditMode && canEdit && (
-            <EditButtonPrimary
-              text="Edit Question Details"
-              onClick={handleEditClick}
-            />
-          )}
+        {item.content.graded ? (
+          <span className="text-green-600 font-semibold">
+            Grade: {item.content.grade} (Graded)
+          </span>
+        ) : item.content.grade ? (
+          <span className="text-yellow-600 font-semibold">
+            Grade: {item.content.grade} (To be approved)
+          </span>
+        ) : null}
+      </div>
+      <div className="mt-3">
+        <div
+          className="p-4 border border-gray-300 rounded-lg bg-gray-50 shadow-sm"
+          style={{ minHeight: "150px" }}
+        >
+          <h3 className="text-lg font-semibold text-primary">Question:</h3>
+          <p className="mt-2 text-base text-gray-800">
+            {item.content.question}
+          </p>
+          <p className="mt-4 text-sm text-gray-600">
+            {item.content.explanation}
+          </p>
         </div>
+      </div>
+
+      <div className="flex justify-end mt-4">
+        {!isEditMode && canEdit && (
+          <EditButtonPrimary
+            text="Edit Question Details"
+            onClick={handleEditClick}
+          />
+        )}
       </div>
 
       {isEditMode ? (

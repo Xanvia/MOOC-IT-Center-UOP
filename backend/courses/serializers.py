@@ -180,6 +180,20 @@ class ItemSerializer(serializers.ModelSerializer):
             if progress.completed:
                 representation["completed"] = True
 
+
+        if instance.type == "Code" and progress:
+            if progress.completed:
+                student_coding_answer = StudentCodingAnswer.objects.filter(
+                    enrollement=progress.enrollment, coding_assignment=instance.codingassignment
+                ).first()
+                if student_coding_answer:
+                    content = representation["content"]
+                    content["starter_code"] = student_coding_answer.code
+                    content["graded"] = student_coding_answer.graded
+                    content["grade"] = student_coding_answer.grade
+                    representation["content"] = content
+                else:
+                    representation["grade"] = None
         return representation
 
 
@@ -411,7 +425,7 @@ class StudentCodingSerializer(serializers.ModelSerializer):
             StudentCodingAnswer.objects.get(
                 enrollement=enrollement, coding_assignment=coding_assignment
             )
-            raise serializers.ValidationError("You have already submitted this quiz")
+            # raise serializers.ValidationError("You have already submitted this quiz")
         except StudentCodingAnswer.DoesNotExist:
             pass
         return super().validate(attrs)
