@@ -13,6 +13,7 @@ from .views import (
     GetAllTeachers,
     isCourseCreator,
     AdminMessagesViewSet,
+    PaymentsListAPIView,
 )
 
 
@@ -107,4 +108,5 @@ urlpatterns = [
         name="course-messages",
     ),
     path("admin-messages/<int:course_id>", AdminMessagesViewSet.as_view({"get": "list","post":"create"}), name="admin-messages",),
+    path("payments/<int:course_id>", PaymentsListAPIView.as_view(), name="payments-list"),
 ]

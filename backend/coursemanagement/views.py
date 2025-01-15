@@ -21,7 +21,7 @@ from .serializers import (
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
-from .permissions import IsCourseCreator
+from .permissions import IsCourseCreator,IsAdminOrCourseCreator,GradePermissions
 from courses.models import (
     Course,
     Progress,
@@ -30,7 +30,6 @@ from courses.models import (
     StudentQuiz,
 )
 from django.conf import settings
-from .permissions import GradePermissions
 from django.contrib.auth.models import User
 
 
@@ -416,3 +415,22 @@ class isCourseCreator(views.APIView):
             course_creator = False
         response = {"is_creator": course_creator}
         return Response(response, status=status.HTTP_200_OK)
+    
+
+class PaymentsListAPIView(generics.ListAPIView):
+    queryset = Payments.objects.all()
+    serializer_class = PaymentSerializer
+    permission_classes = [IsAdminOrCourseCreator]
+
+    def get_queryset(self):
+        return self.queryset.filter(enrollement__course=self.kwargs.get("course_id"))
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "data": {
+                "payments": response.data,
+            },
+        }
+        return response
