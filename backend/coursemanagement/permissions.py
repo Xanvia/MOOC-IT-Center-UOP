@@ -15,7 +15,22 @@ class IsCourseCreator(permissions.BasePermission):
         # Only allow course creators (teachers) to edit
         course = Course.objects.get(pk=course_id)
         return course.course_creator == user
+class IsAdminOrCourseCreator(permissions.BasePermission):
+    """
+    Custom permission to allow only admins or course creators to edit courses.
+    """
 
+    def has_permission(self, request, view):
+        course_id = view.kwargs["course_id"]
+        user = request.user
+
+        # Check if the user is in the admin group
+        if user.groups.filter(name="admin").exists():
+            return True
+
+        # Only allow course creators (teachers) to edit
+        course = Course.objects.get(pk=course_id)
+        return course.course_creator == user
 
 class GradePermissions(permissions.BasePermission):
     """

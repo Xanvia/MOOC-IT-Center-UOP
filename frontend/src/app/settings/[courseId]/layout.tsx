@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Home, Users, GraduationCap } from "lucide-react";
+import { Home, Users, GraduationCap, CreditCard } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import { isCourseCreator } from "@/services/settings.service";
@@ -23,7 +23,7 @@ export default function DashboardLayout({
   const params = useParams();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-  const { setIsCourseCreator} = useGlobal();
+  const { setIsCourseCreator } = useGlobal();
 
   const courseId = params.courseId;
 
@@ -35,6 +35,11 @@ export default function DashboardLayout({
       href: `/settings/${courseId}/teachers`,
     },
     { icon: Users, label: "Students", href: `/settings/${courseId}/students` },
+    {
+      icon: CreditCard,
+      label: "Payements",
+      href: `/settings/${courseId}/payments`,
+    },
   ];
 
   useEffect(() => {
@@ -57,10 +62,7 @@ export default function DashboardLayout({
           "flex flex-col flex-1 overflow-hidden transition-all duration-300"
         }
       >
-        <Header
-          toggleSidebar={toggleSidebar}
-          courseId={courseId as string}
-        />
+        <Header toggleSidebar={toggleSidebar} courseId={courseId as string} />
         <main className="flex-1 overflow-auto p-4 mt-16">{children}</main>
       </div>
     </div>
