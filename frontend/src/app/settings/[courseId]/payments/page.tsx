@@ -15,6 +15,7 @@ interface PaymentData {
 
 const PaymentsPage = () => {
   const [paymentsData, setPaymentsData] = useState<PaymentData[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>(""); // State for search term
   const params = useParams();
 
   useEffect(() => {
@@ -24,12 +25,17 @@ const PaymentsPage = () => {
         const payments = await getPayments(params.courseId as string);
         setPaymentsData(payments);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching payments:", error);
       }
     };
 
     fetchPayments();
   }, [params.courseId]);
+
+  // Filter payments based on the search term
+  const filteredPayments = paymentsData.filter((payment) =>
+    payment.student.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -46,14 +52,16 @@ const PaymentsPage = () => {
         </div>
 
         <div className="mb-6">
-          <input
+        <input
             type="text"
             placeholder="Search student name..."
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={searchTerm} // Bind input to searchTerm
+            onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm on change
           />
         </div>
 
-        <PaymentTable data={paymentsData} />
+        <PaymentTable data={filteredPayments} />
       </main>
     </div>
   );
