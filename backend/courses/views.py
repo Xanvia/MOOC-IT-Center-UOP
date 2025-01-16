@@ -99,8 +99,11 @@ class CourseViewSet(viewsets.ModelViewSet):
                 return super().filter_queryset(queryset).filter(enrollment__student=self.request.user)
         elif self.action == "unpublished":
             return super().filter_queryset(queryset).filter(status="unpublished")
-        #elif self.action == "recommended":
-
+        elif self.action == "recommended_courses":
+            user = self.request.user
+            interests = user.userprofile.interests.all()
+            return queryset.filter(category__in=interests, status="published").distinct()
+        
         return super().filter_queryset(queryset)
 
     def retrieve(self, request, *args, **kwargs):
@@ -179,18 +182,15 @@ class CourseViewSet(viewsets.ModelViewSet):
         }
         return response
     
-    def recommended_courses(self, request):
-        """
-        Get recommended courses based on user's interests.
-        """
-        user = request.user
-        if not user.is_authenticated:
-            return Response({"error": "User not authenticated"}, status=401)
-        #elif
-        interests = user.userprofile.interests.all()  # Assuming user has a profile with interests
-        courses = Course.objects.filter(category__in=interests, status='published').distinct()
-        serializer = RecommendedCourseSerializer(courses, many=True)
-        return Response({"status": "success", "data": serializer.data})
+    def recommended_courses(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "data": {
+                "courses": response.data,
+            },
+        }
+        return response
 
 
 class WeekViewSet(viewsets.ModelViewSet):
