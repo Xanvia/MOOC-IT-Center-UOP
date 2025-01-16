@@ -38,7 +38,7 @@ const StudentsPage = () => {
     };
   
     fetchStudents();
-  }, []      );
+  }, [params.courseId]);
   
   // useEffect(() => {
   //   const fetchStudents = async () => {
@@ -83,8 +83,10 @@ const StudentsPage = () => {
         </div>
 
         <StudentSettingsTable
-          data={studentsData}
-          onManageGradeClick={() => {}}
+          data={filteredStudents} // Use filtered students
+          onManageGradeClick={(studentId) =>
+            console.log(`Manage grades for student ID: ${studentId}`)
+          }
         />
       </main>
     </div>
