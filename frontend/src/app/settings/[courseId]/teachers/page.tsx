@@ -89,7 +89,7 @@ const TeachersPage = () => {
           />
         </div>
         {courseData && (
-          <TeacherSettingsTable data={teachersData} course={courseData} />
+         <TeacherSettingsTable data={filteredTeachers} course={courseData} />
         )}
       </main>
     </div>
