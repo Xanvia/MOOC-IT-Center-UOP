@@ -92,7 +92,7 @@ const CoursePage: React.FC = () => {
         </div>
         {isPublished ? (
           <CourseTable
-            courses={publishedCourses}
+            courses={filteredCourses}
             isPublished={true}
             onPublish={handlePublish}
           />
