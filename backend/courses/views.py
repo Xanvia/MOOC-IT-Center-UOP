@@ -71,8 +71,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     filter_backends = [SearchFilter]
-    search_fields = ['name', 'description', 'institution__label','category__label'] 
-
+    search_fields = ["name", "description", "institution__label", "category__label"]
 
     def get_permissions(self):
         """
@@ -102,11 +101,23 @@ class CourseViewSet(viewsets.ModelViewSet):
         elif self.action == "my_courses":
             # Returns all the courses created by the user or the courses in which the user is enrolled
             if self.request.user.groups.filter(name="teacher").exists():
-                creator_courses = super().filter_queryset(queryset).filter(course_creator=self.request.user)
-                teacher_courses = super().filter_queryset(queryset).filter(courseteachers__teacher=self.request.user)
+                creator_courses = (
+                    super()
+                    .filter_queryset(queryset)
+                    .filter(course_creator=self.request.user)
+                )
+                teacher_courses = (
+                    super()
+                    .filter_queryset(queryset)
+                    .filter(courseteachers__teacher=self.request.user)
+                )
                 return creator_courses.union(teacher_courses)
             elif self.request.user.groups.filter(name="student").exists():
-                return super().filter_queryset(queryset).filter(enrollment__student=self.request.user)
+                return (
+                    super()
+                    .filter_queryset(queryset)
+                    .filter(enrollment__student=self.request.user)
+                )
         elif self.action == "unpublished":
             # Returns all the unpublished courses
             return super().filter_queryset(queryset).filter(status="unpublished")
@@ -118,9 +129,15 @@ class CourseViewSet(viewsets.ModelViewSet):
             """
             user = self.request.user
             interests = user.userprofile.interests.all()
-            recommended_courses = queryset.filter(category__in=interests, status="published").distinct()[:5]
-            if recommended_courses.count() < 5:
-                additional_courses = queryset.filter(status="published").exclude(id__in=recommended_courses).distinct()[:5 - recommended_courses.count()]
+            recommended_courses = queryset.filter(
+                category__in=interests, status="published"
+            ).distinct()[:4]
+            if recommended_courses.count() < 4:
+                additional_courses = (
+                    queryset.filter(status="published")
+                    .exclude(id__in=recommended_courses)
+                    .distinct()[: 4 - recommended_courses.count()]
+                )
                 recommended_courses = recommended_courses | additional_courses
             return recommended_courses
         return super().filter_queryset(queryset)
@@ -200,7 +217,7 @@ class CourseViewSet(viewsets.ModelViewSet):
             },
         }
         return response
-    
+
     def recommended_courses(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         response.data = {
@@ -1182,5 +1199,3 @@ class GetCertifcateView(generics.RetrieveAPIView):
 
         response.data = {"status": "success", "data": response.data}
         return response
-
-
