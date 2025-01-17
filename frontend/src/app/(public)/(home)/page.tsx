@@ -34,7 +34,7 @@ const SectionHeader = ({
   </div>
 );
 
-export const Pagination = () => {
+const Pagination = () => {
   return (
     <div className="flex items-center justify-center space-x-2 py-8">
       <button className="flex items-center px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
