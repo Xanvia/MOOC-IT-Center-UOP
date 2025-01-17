@@ -19,19 +19,44 @@ interface StudentTableProps {
 
 const StudentsPage = () => {
   const [studentsData, setStudentsData] = useState<StudentData[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>(""); // State for search term
   const params = useParams();
+
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         const teachers = await getCourseStudents(params.courseId as string);
-        setStudentsData(teachers);
+        console.log("API Response:", teachers); // Log the API response
+        if (Array.isArray(teachers)) {
+          setStudentsData(teachers); // Ensure it's an array before setting state
+        } else {
+          console.error("Unexpected API response format:", teachers);
+        }
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching students:", error);
       }
     };
-
+  
     fetchStudents();
-  }, []);
+  }, [params.courseId]);
+  
+  // useEffect(() => {
+  //   const fetchStudents = async () => {
+  //     try {
+  //       const teachers = await getCourseStudents(params.courseId as string);
+  //       setStudentsData(teachers);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+
+  //   fetchStudents();
+  // }, []);
+
+  // Filter students based on the search term
+  const filteredStudents = studentsData.filter((student) =>
+    student.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -52,12 +77,16 @@ const StudentsPage = () => {
             type="text"
             placeholder="Search name..."
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={searchTerm} // Bind input to searchTerm
+            onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm on change
           />
         </div>
 
         <StudentSettingsTable
-          data={studentsData}
-          onManageGradeClick={() => {}}
+          data={filteredStudents} // Use filtered students
+          onManageGradeClick={(studentId) =>
+            console.log(`Manage grades for student ID: ${studentId}`)
+          }
         />
       </main>
     </div>
