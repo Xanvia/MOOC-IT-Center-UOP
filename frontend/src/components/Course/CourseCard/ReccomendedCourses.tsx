@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CourseCard from "./CourseCard";
+import CourseCardRec from "./CourseCardRec";
 import { fetchRecommendedCourses } from "@/services/course.service";
 import { CourseData } from "@/components/Course/course.types";
 import Link from "next/link";
@@ -47,7 +47,7 @@ const RecommendedCourses: React.FC = () => {
         <div className="grid grid-cols-1 py-10 ml-12 sm:grid-cols-2 xl:grid-cols-3 lg:grid-cols-3 justify-center items-center mx-10 sm:mx-36 lg:mx-36 gap-4 lg:gap-4 2xl:gap-10">
           {courses.map((course) => (
             <Link key={course.id} href={`/courses/${course.id}`}>
-              <CourseCard
+              <CourseCardRec
                 id={course.id}
                 title={course.name}
                 description={course.description}
