@@ -17,7 +17,11 @@ interface CourseContentProps {
   isEdit: boolean;
 }
 
-const CourseContent: React.FC<CourseContentProps> = ({ courseId, syllabus, isEdit }) => {
+const CourseContent: React.FC<CourseContentProps> = ({
+  courseId,
+  syllabus,
+  isEdit,
+}) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
   const [sections, setSections] = useState<AccordionItem[]>(
     syllabus.map((item) => {
@@ -58,7 +62,9 @@ const CourseContent: React.FC<CourseContentProps> = ({ courseId, syllabus, isEdi
   const handleSave = async () => {
     toggleEditView();
     try {
-      const syllabus = sections.map((section) => `${section.title}: ${section.content}`);
+      const syllabus = sections.map(
+        (section) => `${section.title}: ${section.content}`
+      );
       const response = await addSyllabus(courseId, syllabus);
       toast.success(response.message || "Course content saved successfully!");
     } catch (error: any) {
@@ -75,9 +81,11 @@ const CourseContent: React.FC<CourseContentProps> = ({ courseId, syllabus, isEdi
           </h1>
         </div>
         <div className="xl:mr-56 pt-10 xl:pt-0">
-          {isEdit && !editView && (
-            <EditButtonPrimary text="E D I T" onClick={toggleEditView} />
-          )}
+          <div className="flex justify-end pb-6">
+            {isEdit && !editView && (
+              <EditButtonPrimary text="E D I T" onClick={toggleEditView} />
+            )}
+          </div>
 
           {sections.map((section, index) => (
             <div key={index} className="mb-8 border-b border-gray-300 pb-4">
@@ -86,9 +94,11 @@ const CourseContent: React.FC<CourseContentProps> = ({ courseId, syllabus, isEdi
                 onClick={() => handleToggle(index)}
               >
                 <div className="flex-1 flex items-center gap-2">
-                  <span className={`${
-                    activeIndex === index ? "font-bold" : "font"
-                  } min-w-[40px]`}>
+                  <span
+                    className={`${
+                      activeIndex === index ? "font-bold" : "font"
+                    } min-w-[40px]`}
+                  >
                     {index + 1 < 10 ? `0${index + 1}.` : `${index + 1}.`}
                   </span>
                   {editView ? (
@@ -127,7 +137,9 @@ const CourseContent: React.FC<CourseContentProps> = ({ courseId, syllabus, isEdi
                   {editView ? (
                     <textarea
                       value={section.content}
-                      onChange={(e) => handleContentChange(index, e.target.value)}
+                      onChange={(e) =>
+                        handleContentChange(index, e.target.value)
+                      }
                       placeholder="Enter section content"
                       className="w-full p-2 border border-gray-300 rounded min-h-[100px]"
                     />
@@ -148,7 +160,11 @@ const CourseContent: React.FC<CourseContentProps> = ({ courseId, syllabus, isEdi
                 <FaPlus className="inline mr-2" /> Add New Section
               </button>
               <div className="flex justify-end mt-8">
-                <SolidButton type="button" text="S A V E" onClick={handleSave} />
+                <SolidButton
+                  type="button"
+                  text="S A V E"
+                  onClick={handleSave}
+                />
               </div>
             </>
           )}
