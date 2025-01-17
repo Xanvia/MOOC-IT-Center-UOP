@@ -64,11 +64,15 @@ from .permissons import (
 from coursemanagement.models import CourseTeachers
 from django.utils import timezone
 from django.contrib.auth.models import User, Group
+from rest_framework.filters import SearchFilter
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['name', 'description', 'institution__label','category__label'] 
+
 
     def get_permissions(self):
         """
