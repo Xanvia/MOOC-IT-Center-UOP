@@ -1,29 +1,30 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import (
-    CourseViewSet,
+from .views.course import CourseViewSet, EnrollementViewSet, GetCertifcateView
+from .views.coursecontent import (
     WeekViewSet,
     ChapterViewSet,
     NoteViewSet,
-    ImageUpload,
     VideoViewSet,
+    ImageUpload,
+)
+from .views.quiz import (
     QuizViewSet,
-    EnrollementViewSet,
     AddQuestionsViewSet,
-    ProgressTrackViewSet,
-    GetProgressAPIView,
-    CodingQuizViewSet,
     StudentQuizViewSet,
+    CodingQuizViewSet,
     StudentCodingViewSet,
+)
+from .views.progress import ProgressTrackViewSet, GetProgressAPIView
+from .views.messaging import (
     AnnouncementViewSet,
     MessageViewSet,
     ReplyViewSet,
     ItemChatViewSet,
     ThreadMessageViewSet,
     LastSeenViewSet,
-    CheckUpdatesRetrieveView,
     UpdateLastSeenView,
-    GetCertifcateView
+    CheckUpdatesRetrieveView,
 )
 
 router = DefaultRouter()
@@ -226,5 +227,4 @@ urlpatterns = [
         CourseViewSet.as_view({"get": "recommended_courses"}),
         name="course-recommended",
     ),
-
 ]
