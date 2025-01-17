@@ -1,46 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CourseCard from "./CourseCard";
-
-const course1 = "/images/course1.png";
-const course2 = "/images/course2.png";
-const course5 = "/images/course5.png";
+import { fetchRecommendedCourses } from "@/services/course.service";
+import { CourseData } from "@/components/Course/course.types";
 
 const RecommendedCourses: React.FC = () => {
+  const [courses, setCourses] = useState<CourseData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await fetchRecommendedCourses();
+        setCourses(response.courses);
+      } catch (error) {
+        console.error("Failed to fetch recommended courses", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  if (loading) {
+    return <p className="text-center mt-10">Loading recommended courses...</p>;
+  }
+
+  if (courses.length === 0) {
+    return (
+      <p className="text-center mt-10 text-gray-500">
+        No recommended courses available.
+      </p>
+    );
+  }
+
   return (
     <>
       <div className="col-span-2 mx-44 mt-20">
         <h1 className="text-2xl text-primary font-semibold mx-44">
-          {" "}
           Course Recommendations For You
         </h1>
         <div className="w-full h-px bg-gray-200 my-4" />
       </div>
       <div className="container mx-auto px-4 mt-10">
         <div className="grid grid-cols-1 py-10 ml-12 sm:grid-cols-2 xl:grid-cols-3 lg:grid-cols-3 justify-center items-center mx-10 sm:mx-36 lg:mx-36 gap-4 lg:gap-4 2xl:gap-10">
-          <CourseCard
-            id={1}
-            title="Digital Marketing"
-            description="Material on beginner marketing strategies and concepts"
-            difficulty="Beginner"
-            institution="Institution A"
-            image={course1}
-          />
-          <CourseCard
-            id={2}
-            title="Data Analysis"
-            description="Description 3"
-            difficulty="Intermediate"
-            institution="Institution B"
-            image={course2}
-          />
-          <CourseCard
-            id={3}
-            title="Digital Marketing"
-            description="Material on beginner marketing strategies and concepts"
-            difficulty="Beginner"
-            institution="Institution A"
-            image={course5}
-          />
+          {courses.map((course) => (
+            <CourseCard
+              key={course.id}
+              id={course.id}
+              title={course.name}
+              description={course.description}
+              difficulty={course.difficulty}
+              institution={course.institution}
+              image={course.header_image || ""}
+            />
+          ))}
         </div>
       </div>
     </>
