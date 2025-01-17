@@ -26,7 +26,7 @@ from userprofiles.views import (
     InstitutionsListAPIView,
     StudentListView,
 )
-from courses.views import ListCourseCreators
+from courses.views.course import ListCourseCreators
 from coursemanagement.views import (
     PermissionsListAPIView,
     PublishCourseAPIView,
