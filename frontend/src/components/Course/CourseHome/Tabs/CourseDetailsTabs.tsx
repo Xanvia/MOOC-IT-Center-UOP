@@ -68,7 +68,13 @@ const CourseDetailsTabs = ({
       {activeTab === "Instructor" && (
         <InstructorTab instructors={courseData.instructors} />
       )}
-      {activeTab !== "Outcomes" && <CourseContent />}
+      {activeTab === "Syllabus" && (
+        <CourseContent
+          courseId={courseData.id} 
+          isEdit={isEdit}
+          syllabus={courseData.syllabus || []}
+        />
+      )}
       <CourseOutcomes
         outcomes={courseData.outcomes}
         isEdit={isEdit}

@@ -35,9 +35,15 @@ const Profile: React.FC<ProfileProps> = ({ profileData, reloadData }) => {
             <h1 className="text text-primary text-3xl pt-3">
               {profileData.firstname} {profileData.lastname}
             </h1>
-            <h3 className="text-gray-600 font-mono mx-16 text-center">
-              {profileData.headline}
-            </h3>
+            {profileData.headline ? (
+              <h3 className="text-gray-600 font-mono mx-16 text-center">
+                {profileData.headline}
+              </h3>
+            ) : (
+              <h3 className="text-gray-400 font-mono mx-16 text-center italic bg-button_yellow">
+                Add your position or a headline here
+              </h3>
+            )}
             <ProfileInfo
               email={profileData.email}
               mobile_nubmer={profileData.mobile_number}

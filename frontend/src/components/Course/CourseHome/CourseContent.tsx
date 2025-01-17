@@ -1,40 +1,75 @@
 "use client";
 import { useState } from "react";
+import { FaChevronUp, FaChevronDown, FaTrash, FaPlus } from "react-icons/fa";
+import SolidButton from "@/components/Buttons/SolidButton";
+import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
+import { toast } from "sonner";
+import { addSyllabus } from "@/services/course.service";
 
 interface AccordionItem {
   title: string;
   content: string;
 }
 
-const accordionData: AccordionItem[] = [
-  {
-    title: "Introduction to jQuery",
-    content:
-      "Beginner-friendly course that teaches the basics of using jQuery, a popular JavaScript library. Learn how to make asynchronous requests using AJAX.Beginner-friendly co the basics of using jQuery, a popular JavaScript library.",
-  },
-  {
-    title: "Introduction to AJAX",
-    content:
-      "Learn how to make asynchronous requests using AJAX.Beginner-friendly course that teaches the basics of using jQuery, a popular JavaScript library. the basics of using jQuery, a popular JavaScript library.",
-  },
-  {
-    title: "Single Page Applications (SPAs)",
-    content:
-      "Understand the principles behind SPAs and how they work. Learn how to make asynchronous requests using AJAX.Beginner-friendly co Learn how to make asynchronous requests using AJAX.Beginner-friendly co the basics of using jQuery, a popular JavaScript library.",
-  },
-  {
-    title: "Angular as a SPA Framework",
-    content:
-      "Learn how to use Angular for building SPAs. Learn how to make asynchronous requests using AJAX.Beginner-friendly co Learn how to make asynchronous requests using AJAX.Beginner-friendly co the basics of using jQuery, a popular JavaScript library.",
-  },
-];
+interface CourseContentProps {
+  courseId: number;
+  syllabus: string[];
+  isEdit: boolean;
+}
 
-const CourseContent: React.FC = () => {
+const CourseContent: React.FC<CourseContentProps> = ({
+  courseId,
+  syllabus,
+  isEdit,
+}) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
+  const [sections, setSections] = useState<AccordionItem[]>(
+    syllabus.map((item) => {
+      const [title, ...contentParts] = item.split(": ");
+      return { title, content: contentParts.join(": ") };
+    }) || [{ title: "", content: "" }]
+  );
 
+  const [editView, setEditView] = useState(false);
+
+  const toggleEditView = () => setEditView(!editView);
 
   const handleToggle = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
+  };
+
+  const handleTitleChange = (index: number, value: string) => {
+    const newSections = [...sections];
+    newSections[index].title = value;
+    setSections(newSections);
+  };
+
+  const handleContentChange = (index: number, value: string) => {
+    const newSections = [...sections];
+    newSections[index].content = value;
+    setSections(newSections);
+  };
+
+  const addSection = () => {
+    setSections([...sections, { title: "", content: "" }]);
+  };
+
+  const removeSection = (index: number) => {
+    const newSections = sections.filter((_, i) => i !== index);
+    setSections(newSections);
+  };
+
+  const handleSave = async () => {
+    toggleEditView();
+    try {
+      const syllabus = sections.map(
+        (section) => `${section.title}: ${section.content}`
+      );
+      const response = await addSyllabus(courseId, syllabus);
+      toast.success(response.message || "Course content saved successfully!");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to save course content.");
+    }
   };
 
   return (
@@ -45,33 +80,94 @@ const CourseContent: React.FC = () => {
             Course Content
           </h1>
         </div>
-        <div className="xl:mr-56 pt-10 xl-pt-0">
-          <div>
-            {accordionData.map((item, index) => (
-              <div key={index}>
-                <div
-                  className="flex justify-between text-primary cursor-pointer mb-8 pb-2 border-b border-gray-800 transition-all duration-300 ease-in-out transform hover:scale-105"
-                  onClick={() => handleToggle(index)}
-                >
-                  <span className={`${
-                      activeIndex === index
-                        ? "font-bold"
-                        : "font"
-                    } transition-all duration-100`}
-                  >
-                    {index + 1 < 10 ? `0${index + 1}.` : index + 1} {item.title}.
-                  </span>
+        <div className="xl:mr-56 pt-10 xl:pt-0">
+          <div className="flex justify-end pb-6">
+            {isEdit && !editView && (
+              <EditButtonPrimary text="E D I T" onClick={toggleEditView} />
+            )}
+          </div>
 
-                  <span>{activeIndex === index ? "x" : "+"}</span>
+          {sections.map((section, index) => (
+            <div key={index} className="mb-8 border-b border-gray-300 pb-4">
+              <div
+                className="flex justify-between items-center text-primary cursor-pointer"
+                onClick={() => handleToggle(index)}
+              >
+                <div className="flex-1 flex items-center gap-2">
+                  <span
+                    className={`${
+                      activeIndex === index ? "font-bold" : "font"
+                    } min-w-[40px]`}
+                  >
+                    {index + 1 < 10 ? `0${index + 1}.` : `${index + 1}.`}
+                  </span>
+                  {editView ? (
+                    <input
+                      type="text"
+                      value={section.title}
+                      onChange={(e) => handleTitleChange(index, e.target.value)}
+                      placeholder="Enter section title"
+                      className="flex-1 p-2 border border-gray-300 rounded"
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  ) : (
+                    <span>{section.title}</span>
+                  )}
                 </div>
-                {activeIndex === index && (
-                  <div style={{ paddingLeft: "32px", marginBottom: "44px" }}>
-                    {item.content}
+                {editView && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => removeSection(index)}
+                      className="ml-2 bg-slate-400 text-white p-1 rounded hover:bg-slate-600"
+                    >
+                      <FaTrash />
+                    </button>
                   </div>
                 )}
+                <span>
+                  {activeIndex === index ? (
+                    <FaChevronUp className="text-lg" />
+                  ) : (
+                    <FaChevronDown className="text-lg" />
+                  )}
+                </span>
               </div>
-            ))}
-          </div>
+              {activeIndex === index && (
+                <div className="mt-4 pl-[40px]">
+                  {editView ? (
+                    <textarea
+                      value={section.content}
+                      onChange={(e) =>
+                        handleContentChange(index, e.target.value)
+                      }
+                      placeholder="Enter section content"
+                      className="w-full p-2 border border-gray-300 rounded min-h-[100px]"
+                    />
+                  ) : (
+                    <p>{section.content}</p>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+
+          {editView && (
+            <>
+              <button
+                onClick={addSection}
+                className="w-full p-2 bg-slate-500 text-white rounded hover:bg-slate-600"
+              >
+                <FaPlus className="inline mr-2" /> Add New Section
+              </button>
+              <div className="flex justify-end mt-8">
+                <SolidButton
+                  type="button"
+                  text="S A V E"
+                  onClick={handleSave}
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
