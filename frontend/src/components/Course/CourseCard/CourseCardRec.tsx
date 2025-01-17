@@ -62,9 +62,9 @@ const CourseCardRec: React.FC<CourseCardProps> = ({
         <div className="flex item-center justify-center">
           Difficulty: {difficulty}
         </div>
-        <div className="space-x-4 mt-3 border-t-2 p-1 border-gray-200">
+        {/* <div className="space-x-4 mt-3 border-t-2 p-1 border-gray-200">
           <h1 className="font-semibold text-center mt-2 hover:underline cursor-pointer">Click here to go to the Course</h1>
-        </div>
+        </div> */}
       </div>
     </div>
   );
