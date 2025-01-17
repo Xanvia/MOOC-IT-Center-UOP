@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import CourseCard from "./CourseCard";
 import { fetchRecommendedCourses } from "@/services/course.service";
 import { CourseData } from "@/components/Course/course.types";
+import Link from "next/link";
 
 const RecommendedCourses: React.FC = () => {
   const [courses, setCourses] = useState<CourseData[]>([]);
@@ -45,15 +46,16 @@ const RecommendedCourses: React.FC = () => {
       <div className="container mx-auto px-4 mt-10">
         <div className="grid grid-cols-1 py-10 ml-12 sm:grid-cols-2 xl:grid-cols-3 lg:grid-cols-3 justify-center items-center mx-10 sm:mx-36 lg:mx-36 gap-4 lg:gap-4 2xl:gap-10">
           {courses.map((course) => (
-            <CourseCard
-              key={course.id}
-              id={course.id}
-              title={course.name}
-              description={course.description}
-              difficulty={course.difficulty}
-              institution={course.institution}
-              image={course.header_image || ""}
-            />
+            <Link key={course.id} href={`/courses/${course.id}`}>
+              <CourseCard
+                id={course.id}
+                title={course.name}
+                description={course.description}
+                difficulty={course.difficulty}
+                institution={course.institution}
+                image={course.header_image || ""}
+              />
+            </Link>
           ))}
         </div>
       </div>
