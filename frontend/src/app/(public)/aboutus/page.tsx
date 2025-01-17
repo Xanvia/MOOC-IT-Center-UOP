@@ -33,29 +33,48 @@ const defaultStats: Stat[] = [
 const defaultTeamMembers: TeamMember[] = [
   {
     id: 1,
-    name: "Dr. Sarah Johnson",
-    role: "Education Director",
-    bio: "20+ years experience in educational technology and curriculum development.",
+    name: "Dr. Upul Jayasinghe",
+    role: "Director",
+    bio: "Ph.D. (UK), M.Eng. (Thailand), B.Sc(Moratuwa)",
     imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3",
+      "https://people.ce.pdn.ac.lk/images/staff/academic-staff/upul-jayasinghe.jpg",
   },
   {
     id: 2,
-    name: "Michael Chen",
-    role: "Technical Lead",
-    bio: "Expert in e-learning platforms and educational software development.",
+    name: "Dr. Hakim A. Usoof",
+    role: "Deputy Director",
+    bio: "B.Sc(Pera), PhD(Sweden)",
     imageUrl:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3",
+      "https://sci.pdn.ac.lk/scs/assets/img/staff/16-hakim.webp",
   },
   {
     id: 3,
     name: "Lisa Rodriguez",
-    role: "Student Success Manager",
-    bio: "Dedicated to ensuring the best learning experience for all students.",
+    role: "OPEN-ED Director",
+    bio: "B.Sc., M.Sc (Computer Science)",
     imageUrl:
       "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3",
   },
 ];
+
+const SolidButton = () => {
+  const handleClick = () => {
+    window.location.href = 'http://www.ceit.pdn.ac.lk/';
+  };
+
+  return (
+    <div className="w-full bg-gray-50 py-12">
+      <div className="container mx-auto px-4 text-center">
+        <button
+          onClick={handleClick}
+          className="bg-blue-950 hover:bg-blue-900 text-white text-lg font-semibold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105  mx-auto"
+        >
+          IT Center →
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const AboutUs = () => {
   const [content, setContent] = useState<AboutContent | null>(null);
@@ -77,15 +96,16 @@ const AboutUs = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 ">
+    <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section
-        className="bg-primary text-white py-20 bg-cover bg-center"
+        className="bg-primary text-white py-20 bg-cover bg-center relative"
         style={{
           backgroundImage: `url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3')`,
         }}
       >
-        <div className="container mx-auto px-4">
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <h1 className="text-5xl font-bold mb-6">OpenEd: Transforming Education</h1>
@@ -126,7 +146,7 @@ const AboutUs = () => {
       {/* Team Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-12 text-center">Meet Our Team</h2>
+          <h2 className="text-3xl font-bold mb-12 text-center">STAFF MEMBERS OF THE IT CENTER</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {(content?.teamMembers || defaultTeamMembers).map((member) => (
               <div key={member.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -148,6 +168,9 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
+
+      {/* Button Section */}
+      <SolidButton />
     </div>
   );
 };
