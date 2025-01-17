@@ -2,7 +2,14 @@
 import React, { useState, useEffect } from "react";
 import { CategoryEnum } from "@/components/Course/course.types";
 import { fetchAllCategories } from "@/services/course.service";
-import { CircleArrowDown, CircleArrowUp,ArrowUp,ArrowDown, Ellipsis, PanelTopClose } from "lucide-react";
+import {
+  CircleArrowDown,
+  CircleArrowUp,
+  ArrowUp,
+  ArrowDown,
+  Ellipsis,
+  PanelTopClose,
+} from "lucide-react";
 interface CategoryTabsProps {
   onCategoryChange: (category: CategoryEnum) => void;
 }
@@ -48,7 +55,7 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({ onCategoryChange }) => {
     : categories.slice(0, 5);
 
   if (loading) {
-    return <div>Loading categories...</div>;
+    return <div></div>;
   }
 
   return (

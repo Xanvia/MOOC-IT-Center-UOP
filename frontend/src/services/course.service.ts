@@ -156,6 +156,18 @@ export const addSyllabus = async (courseId: number, syllabus: string[]) => {
   }
 };
 
+
+export const fetchRecommendedCourses = async () => {
+  try {
+    const response = await axiosInstance.get("/course/recommended");
+    return response.data.data; // Assuming the API response format is { status: "success", data: [...] }
+  } catch (error) {
+    console.error("Failed to fetch recommended courses", error);
+    throw error;
+  }
+};
+
+
 export const uploadImage = async (
   file: File,
   noteId: number

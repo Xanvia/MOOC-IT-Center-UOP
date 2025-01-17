@@ -221,4 +221,10 @@ urlpatterns = [
     path("check-updates/<int:pk>/", CheckUpdatesRetrieveView.as_view()),
     path("last-seen/<int:pk>/", UpdateLastSeenView.as_view()),
     path("certificate/<int:pk>/", GetCertifcateView.as_view()),
+    path(
+        "recommended/",
+        CourseViewSet.as_view({"get": "recommended_courses"}),
+        name="course-recommended",
+    ),
+
 ]

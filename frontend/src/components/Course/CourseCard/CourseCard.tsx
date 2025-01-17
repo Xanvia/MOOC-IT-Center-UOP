@@ -43,6 +43,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
   };
 
   return (
+    <Link href={`/courses/${id}`}>
     <div className={CourseCardOuterClasses}>
       <div className={CourseCardImageContainerClsx}>
         {image ? (
@@ -147,6 +148,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
         </div>
       </div>
     </div>
+    </Link>
   );
 };
 

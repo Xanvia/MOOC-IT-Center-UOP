@@ -191,7 +191,8 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             "message": "User info updated successfully",
         }
         return response
-    
+
+
 class UserProfileByIdView(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
