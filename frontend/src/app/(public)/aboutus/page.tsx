@@ -44,8 +44,7 @@ const defaultTeamMembers: TeamMember[] = [
     name: "Dr. Hakim A. Usoof",
     role: "Deputy Director",
     bio: "B.Sc(Pera), PhD(Sweden)",
-    imageUrl:
-      "https://sci.pdn.ac.lk/scs/assets/img/staff/16-hakim.webp",
+    imageUrl: "https://sci.pdn.ac.lk/scs/assets/img/staff/16-hakim.webp",
   },
   {
     id: 3,
@@ -59,15 +58,15 @@ const defaultTeamMembers: TeamMember[] = [
 
 const SolidButton = () => {
   const handleClick = () => {
-    window.location.href = 'http://www.ceit.pdn.ac.lk/';
+    window.location.href = "http://www.ceit.pdn.ac.lk/";
   };
 
   return (
-    <div className="w-full bg-gray-50 py-12">
+    <div className="w-full bg-gray-50 py-16">
       <div className="container mx-auto px-4 text-center">
         <button
           onClick={handleClick}
-          className="bg-blue-950 hover:bg-blue-900 text-white text-lg font-semibold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105  mx-auto"
+          className="bg-blue-950 hover:bg-blue-900 text-white text-lg font-semibold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105 mx-auto"
         >
           IT Center →
         </button>
@@ -81,10 +80,14 @@ const AboutUs = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    document.title = "About Us - OpenEd";
+  }, []);
+
+  useEffect(() => {
     const fetchContent = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/about-content/");
-        setContent(response.data);
+        // const response = await axios.get("http://localhost:8000/api/about-content/");
+        // setContent(response.data);
       } catch (error) {
         console.error("Error fetching about page content:", error);
       } finally {
@@ -99,7 +102,7 @@ const AboutUs = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section
-        className="bg-primary text-white py-20 bg-cover bg-center relative"
+        className="bg-primary text-white py-32 bg-cover bg-center relative"
         style={{
           backgroundImage: `url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3')`,
         }}
@@ -108,10 +111,12 @@ const AboutUs = () => {
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
-              <h1 className="text-5xl font-bold mb-6">OpenEd: Transforming Education</h1>
-              <p className="text-xl max-w-2xl">
+              <h1 className="text-5xl font-bold mb-8">
+                OpenEd: Transforming Education
+              </h1>
+              <p className="text-xl max-w-2xl leading-relaxed">
                 {content?.mission ||
-                  "Our mission is to provide accessible, quality education to learners worldwide through innovative online learning experiences."}
+                  "To provide accessible, inclusive, and high-quality educational resources through innovative technology, empowering learners worldwide to reach their full potential and cultivate a lifelong passion for knowledge."}
               </p>
             </div>
           </div>
@@ -119,13 +124,15 @@ const AboutUs = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-white">
+      <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {(content?.stats || defaultStats).map((stat) => (
               <div key={stat.id} className="text-center">
-                <div className="text-4xl font-bold text-primary mb-2">{stat.value}</div>
-                <div className="text-gray-600">{stat.label}</div>
+                <div className="text-4xl font-bold text-primary mb-3">
+                  {stat.value}
+                </div>
+                <div className="text-gray-600 text-lg">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -133,38 +140,58 @@ const AboutUs = () => {
       </section>
 
       {/* Vision Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8 text-center">Our Vision</h2>
-          <p className="text-xl text-center max-w-3xl mx-auto">
+          <h2 className="text-3xl font-bold mb-10 text-center">Our Vision</h2>
+          <p className="text-xl text-center max-w-3xl mx-auto leading-relaxed">
             {content?.vision ||
-              "To create a global learning community where knowledge is accessible to all, fostering innovation and lifelong learning through technology-enabled education."}
+              "To revolutionize education by creating a global platform that fosters collaboration, personal growth, and learning without boundaries, where individuals of all backgrounds can unlock opportunities and thrive in an ever-changing world."}
           </p>
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-16 bg-white">
+      {/* IT Center Section */}
+      <section className="py-28 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-12 text-center">STAFF MEMBERS OF THE IT CENTER</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {(content?.teamMembers || defaultTeamMembers).map((member) => (
-              <div key={member.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div className="relative h-64 w-full">
-                  <Image
-                    src={member.imageUrl}
-                    alt={member.name}
-                    fill
-                    className="object-cover"
-                  />
+          <h2 className="text-3xl font-bold mb-20 text-center">
+            The IT Center: Empowering OpenEd's Educational Journey
+          </h2>
+          <p className="text-lg text-center max-w-4xl mx-auto mb-24 text-gray-700 leading-relaxed">
+            The IT Center serves as the backbone of OpenEd, empowering students
+            and staff with advanced technology solutions and support. Our
+            dedicated team ensures a seamless digital experience, fostering
+            innovation and excellence in education.
+          </p>
+          <h3 className="text-2xl font-bold mb-20 text-center">Our Staff</h3>
+          <div className="flex justify-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl justify-items-center">
+              {(content?.teamMembers || defaultTeamMembers).map((member) => (
+                <div
+                  key={member.id}
+                  className="bg-gray-100 rounded-lg shadow-md overflow-hidden w-full max-w-sm transform transition-transform duration-300 hover:scale-105"
+                >
+                  <div className="relative h-48 w-full">
+                    <Image
+                      src={member.imageUrl}
+                      alt={member.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-6 text-center">
+                    <h4 className="text-lg font-semibold mb-2">
+                      {member.name}
+                    </h4>
+                    <p className="text-sm text-primary font-medium mb-3">
+                      {member.role}
+                    </p>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {member.bio}
+                    </p>
+                  </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold mb-2">{member.name}</h3>
-                  <p className="text-primary mb-4">{member.role}</p>
-                  <p className="text-gray-600">{member.bio}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
