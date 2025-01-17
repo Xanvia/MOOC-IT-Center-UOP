@@ -153,9 +153,9 @@ const AboutUs = () => {
       {/* IT Center Section */}
       <section className="py-28 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-20 text-center">
-            The IT Center: Empowering OpenEd's Educational Journey
-          </h2>
+            <h2 className="text-3xl font-bold mb-20 text-center">
+            The IT Center: Empowering OpenEd&apos;s Educational Journey
+            </h2>
           <p className="text-lg text-center max-w-4xl mx-auto mb-24 text-gray-700 leading-relaxed">
             The IT Center serves as the backbone of OpenEd, empowering students
             and staff with advanced technology solutions and support. Our
