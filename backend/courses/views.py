@@ -77,7 +77,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         if self.action == "update" or self.action == "add_details":
             # Only course creators can create weeks
             permission_classes = [EditPublicDetailsAccess]
-        elif self.action == "retrieve":
+        elif self.action == "retrieve" or self.action == "list":
             permission_classes = [permissions.AllowAny]
         else:
             permission_classes = []
@@ -88,9 +88,15 @@ class CourseViewSet(viewsets.ModelViewSet):
         return super().get_object()
 
     def filter_queryset(self, queryset):
+        """
+        The default Query set is all the courses in the database.
+        We filter them based on the action.
+        """
         if self.action == "list":
+            # Returns all the published courses
             return super().filter_queryset(queryset).filter(status="published")
         elif self.action == "my_courses":
+            # Returns all the courses created by the user or the courses in which the user is enrolled
             if self.request.user.groups.filter(name="teacher").exists():
                 creator_courses = super().filter_queryset(queryset).filter(course_creator=self.request.user)
                 teacher_courses = super().filter_queryset(queryset).filter(courseteachers__teacher=self.request.user)
@@ -98,12 +104,21 @@ class CourseViewSet(viewsets.ModelViewSet):
             elif self.request.user.groups.filter(name="student").exists():
                 return super().filter_queryset(queryset).filter(enrollment__student=self.request.user)
         elif self.action == "unpublished":
+            # Returns all the unpublished courses
             return super().filter_queryset(queryset).filter(status="unpublished")
         elif self.action == "recommended_courses":
+            # Returns all the recommended courses
+
+            """
+            The recommended courses are the courses that are in the same category as the user's interests.
+            """
             user = self.request.user
             interests = user.userprofile.interests.all()
-            return queryset.filter(category__in=interests, status="published").distinct()
-        
+            recommended_courses = queryset.filter(category__in=interests, status="published").distinct()[:5]
+            if recommended_courses.count() < 5:
+                additional_courses = queryset.filter(status="published").exclude(id__in=recommended_courses).distinct()[:5 - recommended_courses.count()]
+                recommended_courses = recommended_courses | additional_courses
+            return recommended_courses
         return super().filter_queryset(queryset)
 
     def retrieve(self, request, *args, **kwargs):

@@ -95,7 +95,9 @@ class CourseSerializer(serializers.ModelSerializer):
                 enrollement = Enrollment.objects.get(student=user, course=instance)
                 if enrollement.paid:
                     representation["isEnrolled"] = True
-                    progress = ProgressTrackSerializer(instance, context=self.context).data
+                    progress = ProgressTrackSerializer(
+                        instance, context=self.context
+                    ).data
                     representation["progress"] = progress.get("progress")
                 else:
                     representation["isEnrolled"] = False
@@ -113,9 +115,10 @@ class CourseSerializer(serializers.ModelSerializer):
                     course_teacher = CourseTeachers.objects.filter(
                         teacher=user, course=instance
                     ).first()
-                    representation["canEdit"] = course_teacher.permissions.filter(
-                        label="edit_course_public_details"
-                    ).exists()
+                    if course_teacher:
+                        representation["canEdit"] = course_teacher.permissions.filter(
+                            label="edit_course_public_details"
+                        ).exists()
             else:
                 representation["canEdit"] = False
         return representation
@@ -180,11 +183,11 @@ class ItemSerializer(serializers.ModelSerializer):
             if progress.completed:
                 representation["completed"] = True
 
-
         if instance.type == "Code" and progress:
             if progress.completed:
                 student_coding_answer = StudentCodingAnswer.objects.filter(
-                    enrollement=progress.enrollment, coding_assignment=instance.codingassignment
+                    enrollement=progress.enrollment,
+                    coding_assignment=instance.codingassignment,
                 ).first()
                 if student_coding_answer:
                     content = representation["content"]
@@ -209,8 +212,7 @@ class ItemSerializer(serializers.ModelSerializer):
                     representation["content"] = content
                 else:
                     representation["score"] = None
-        
-        
+
         return representation
 
 
@@ -686,5 +688,14 @@ class GetCertificateSerializer(serializers.ModelSerializer):
 class RecommendedCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['id', 'name', 'description', 'category', 'institution', 'difficulty', 'price', 'payment_type', 'header_image']
-
+        fields = [
+            "id",
+            "name",
+            "description",
+            "category",
+            "institution",
+            "difficulty",
+            "price",
+            "payment_type",
+            "header_image",
+        ]
