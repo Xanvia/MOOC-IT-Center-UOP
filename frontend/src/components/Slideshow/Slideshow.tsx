@@ -18,7 +18,7 @@ const slides: Slide[] = [
     title: "Learn Without Limits",
     description: "Build skills with courses, certificates, and degrees online from world-class universities and companies.",
     bgColor: "from-purple-900/90",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&h=400&fit=crop",
+    image: "/images/slide01.jpg",
     buttonText: "Explore Courses"
   },
   {
@@ -26,7 +26,7 @@ const slides: Slide[] = [
     title: "Master New Skills",
     description: "Choose from over 1000 online video courses with new additions published every month.",
     bgColor: "from-indigo-900/90",
-    image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200&h=400&fit=crop",
+    image: "/images/slide02.jpg",
     buttonText: "Start Learning"
   },
   {
@@ -34,7 +34,7 @@ const slides: Slide[] = [
     title: "Learn From Experts",
     description: "Select from top instructors around the world. Learn at your own pace with lifetime access on mobile and desktop.",
     bgColor: "from-purple-900/90",
-    image: "https://images.unsplash.com/photo-1597239450996-ea7c2c564412?q=80&w=1200&h=400&fit=crop",
+    image: "/images/slide03.jpg",
     buttonText: "Meet Instructors"
   }
 ];
