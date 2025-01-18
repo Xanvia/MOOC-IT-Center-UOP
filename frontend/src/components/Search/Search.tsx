@@ -41,7 +41,7 @@ const Search: React.FC<SearchProps> = ({ setCourses }) => {
 
   return (
     <div className="flex justify-center pb-7 px-7">
-      <form className="w-1/2 pt-[90px] pb-5 ">
+      <form className="w-1/2 pt-[50px] pb-5 ">
         <div className="relative">
           <input
             type="text"

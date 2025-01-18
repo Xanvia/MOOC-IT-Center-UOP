@@ -17,15 +17,15 @@ const slides: Slide[] = [
     id: 1,
     title: "Learn Without Limits",
     description: "Build skills with courses, certificates, and degrees online from world-class universities and companies.",
-    bgColor: "from-purple-900/90",
-    image: "/images/slide01.jpg",
+    bgColor: "from-blue-200/90",
+    image: "/images/slide03.jpg",
     buttonText: "Explore Courses"
   },
   {
     id: 2,
     title: "Master New Skills",
     description: "Choose from over 1000 online video courses with new additions published every month.",
-    bgColor: "from-indigo-900/90",
+    bgColor: "from-indigo-200/90",
     image: "/images/slide02.jpg",
     buttonText: "Start Learning"
   },
@@ -33,8 +33,8 @@ const slides: Slide[] = [
     id: 3,
     title: "Learn From Experts",
     description: "Select from top instructors around the world. Learn at your own pace with lifetime access on mobile and desktop.",
-    bgColor: "from-purple-900/90",
-    image: "/images/slide03.jpg",
+    bgColor: "from-sky-200/90",
+    image: "/images/slide04.jpg",
     buttonText: "Meet Instructors"
   }
 ];
@@ -73,7 +73,7 @@ const Slideshow = () => {
 
   return (
     <div 
-      className="relative w-full h-[350px] bg-blue-800 overflow-hidden"
+      className="relative w-full h-[400px] bg-blue-800 overflow-hidden"
       onMouseEnter={() => setIsAutoPlaying(false)}
       onMouseLeave={() => setIsAutoPlaying(true)}
     >
@@ -106,7 +106,7 @@ const Slideshow = () => {
             {/* Content */}
             <div className="absolute inset-0 z-20 flex items-center p-20">
               <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="max-w-2xl text-white space-y-6">
+                <div className="max-w-2xl text-primary space-y-6">
                   <h2 className="text-4xl sm:text-5xl font-bold leading-tight">
                     {slide.title}
                   </h2>
