@@ -77,10 +77,20 @@ class CourseViewSet(viewsets.ModelViewSet):
             The recommended courses are the courses that are in the same category as the user's interests.
             """
             user = self.request.user
-            interests = user.userprofile.interests.all()
+
+            # Check if userprofile exists and has interests
+            try:
+                interests = user.userprofile.interests.all()
+            except AttributeError:
+                # If userprofile is not found or has no interests, return 4 available courses
+                recommended_courses = queryset.filter(status="published").distinct()[:4]
+                return recommended_courses
+
+            # If user has interests, filter recommended courses
             recommended_courses = queryset.filter(
                 category__in=interests, status="published"
             ).distinct()[:4]
+
             if recommended_courses.count() < 4:
                 additional_courses = (
                     queryset.filter(status="published")
@@ -88,7 +98,9 @@ class CourseViewSet(viewsets.ModelViewSet):
                     .distinct()[: 4 - recommended_courses.count()]
                 )
                 recommended_courses = recommended_courses | additional_courses
+
             return recommended_courses
+
         return super().filter_queryset(queryset)
 
     def retrieve(self, request, *args, **kwargs):
