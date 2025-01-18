@@ -150,14 +150,12 @@ export const InputLabel = clsx(
 export const RegisterBlueDiv = clsx(
   "bg-primary",
   "text-white",
-  "px-10",
-  "py-4",
+  "px-6",
   "rounded-l-lg",
-  " absolute",
+  "absolute",
   "inset-0",
   "flex",
-  "pt-60",
-  "px-10"
+  "pt-20"
 );
 
 export const RegisterWhiteDiv = clsx(

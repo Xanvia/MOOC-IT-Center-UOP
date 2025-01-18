@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 const Footer: React.FC = () => {
@@ -6,7 +7,23 @@ const Footer: React.FC = () => {
       <div className="container">
         <hr className="my-0 border-primary" />
         <div className="flex flex-col space-y-2">
-          <img src="/images/uop log.png" alt="UOP Logo" className="w-32 h-32" />
+          {/* <img src="/images/uop log.png" alt="UOP Logo" className="w-32 h-32" /> */}
+          <div className="flex justify-between items-center">
+            {/* UOP Logo */}
+            <Image
+              src="/images/uop log.png"
+              alt="UOP Logo"
+              width={120}
+              height={120}
+            />
+            {/* OpenEd Logo */}
+            <Image
+              src="/images/white_logo.png"
+              alt="OpenEd Logo"
+              width={200}
+              height={150}
+            />
+          </div>
           <p className="text-gray-400 text-xs">powered by</p>
           <p className="text-gray-400 text-xs">IT Center</p>
           <p className="text-gray-400 text-md">University of Peradeniya</p>
@@ -23,14 +40,10 @@ const Footer: React.FC = () => {
                   Home
                 </a>
               </li>
+
               <li>
-                <a href="/Kursus" className="hover:text-gray-400">
-                  Kursus
-                </a>
-              </li>
-              <li>
-                <a href="/Blog" className="hover:text-gray-400">
-                  Blog
+                <a href="/aboutus" className="hover:text-gray-400">
+                  About Us
                 </a>
               </li>
               <li>

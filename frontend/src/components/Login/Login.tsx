@@ -22,6 +22,8 @@ import {
 import { toast } from "sonner";
 import { useGlobal } from "@/contexts/store";
 import { set } from "jodit/types/core/helpers";
+import Image from "next/image";
+import Link from "next/link";
 
 export interface LoginFormValues {
   email: string;
@@ -153,17 +155,24 @@ export default function Login() {
                       disabled={false}
                     />
                     <br />
-                    <div className="text-blue-950 pt-16 text-center">
-                      Don&apos;t have an account? <u>Register</u>
+                    <div className="text-center">
+                      <div className="text-blue-950 pt-6 text-center">
+                        Don&apos;t have an account? <u>Register</u>
+                      </div>
+                      <Link href={"/"}>
+                        <Image
+                          src="/images/blue_logo.png" // Replace with your logo path
+                          alt="Logo"
+                          width={150} // Adjust size as necessary
+                          height={150} // Adjust size as necessary
+                          className="mx-auto" // Ensures logo is centered
+                        />
+                      </Link>
                     </div>
                   </div>
                 </Form>
               )}
             </Formik>
-
-            <div className="text-3xl font-bold text-[#072569] text-center mt-10 mb-2.5 mx-0">
-              OpenEd
-            </div>
           </div>
         </div>
       )}
