@@ -14,6 +14,7 @@ import {
 } from "../components.styles";
 import Loader from "../Loarder/Loarder";
 import { useGlobal } from "../../contexts/store";
+import Image from "next/image";
 
 const Login = dynamic(() => import("../Login/Login"), { ssr: false });
 const Register = dynamic(() => import("../Register/Register"), { ssr: false });
@@ -55,7 +56,7 @@ const Navbar = () => {
       {isLoading ? <Loader /> : null}
       <nav className="bg-primary w-full fixed top-0 left-0 z-10">
         <div className="md:mx-20 px-2 sm:px-6 lg:px-8">
-          <div className="relative flex h-16 items-center justify-between">
+          <div className="relative flex h-20 items-center justify-between">
             <div className="absolute inset-y-0 left-0 flex items-center md:hidden">
               <button
                 type="button"
@@ -100,12 +101,17 @@ const Navbar = () => {
             </div>
             <div className={NavLinkContainer}>
               <div className="hidden sm:flex flex-shrink-0 items-center">
-                <h1 className="text-white text-3xl ml-0 sm:font-bold">
-                  OpenEd
-                </h1>
+                <Image
+                  src="/images/white_logo.png"
+                  alt="OpenEd Logo"
+                  width={200}
+                  height={180}
+                  className="object-contain py-4"
+                />
               </div>
-              <div className="hidden pt-2 lg:pl-20 md:ml-6 md:block lg:text-base font-medium text-sm">
-                <div className="flex space-x-4 min-h-11">
+
+              <div className="hidden pt-[92px] lg:pl-20 md:ml-6 md:block lg:text-base font-medium text-sm">
+                <div className="flex items-center space-x-4 min-h-11 ">
                   <Link href="/" className={NavLink}>
                     HOME
                   </Link>
@@ -117,9 +123,6 @@ const Navbar = () => {
                     ABOUT US
                   </Link>
 
-                  <Link href="/" className={NavLink}>
-                    FAQ
-                  </Link>
                   {/* {isLoggedIn && (
                     <>
                       {userRole === "admin" ? (
