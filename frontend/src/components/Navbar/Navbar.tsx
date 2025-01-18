@@ -15,6 +15,7 @@ import {
 import Loader from "../Loarder/Loarder";
 import { useGlobal } from "../../contexts/store";
 import Image from "next/image";
+import { Link2 } from "lucide-react";
 
 const Login = dynamic(() => import("../Login/Login"), { ssr: false });
 const Register = dynamic(() => import("../Register/Register"), { ssr: false });
@@ -101,13 +102,15 @@ const Navbar = () => {
             </div>
             <div className={NavLinkContainer}>
               <div className="hidden sm:flex flex-shrink-0 items-center">
-                <Image
-                  src="/images/white_logo.png"
-                  alt="OpenEd Logo"
-                  width={200}
-                  height={180}
-                  className="object-contain py-4"
-                />
+                <Link href={"/"}>
+                  <Image
+                    src="/images/white_logo.png"
+                    alt="OpenEd Logo"
+                    width={200}
+                    height={180}
+                    className="object-contain py-4"
+                  />
+                </Link>
               </div>
 
               <div className="hidden pt-[92px] lg:pl-20 md:ml-6 md:block lg:text-base font-medium text-sm">
