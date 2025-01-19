@@ -130,7 +130,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
         response.data = {
             "status": "success",
-            "message": "Course details added successfully",
+            "message": "Course details updated successfully",
         }
         return response
 
