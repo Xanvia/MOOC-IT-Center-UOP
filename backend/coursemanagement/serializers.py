@@ -429,7 +429,32 @@ class TeacherSerializer(serializers.ModelSerializer):
         return representation
     
 class CourseStatSerializer(serializers.Serializer):
-    total_courses = serializers.SerializerMethodField()
+    course_id = serializers.IntegerField()
+    course_name = serializers.CharField(read_only=True)
+    enrolled_students = serializers.IntegerField(read_only=True)
+    teachers_count = serializers.IntegerField(read_only=True)
+    completed_students = serializers.IntegerField(read_only=True)
 
-    def get_total_courses(self, obj):
-        return Course.objects.count()
+def validate(self, attrs):
+       course_id = attrs.get("course_id")
+
+       if not Course.objects.filter(id=course_id).exists():
+           raise serializers.ValidationError("course does not exist")
+       return attrs
+   
+def to_representation(self, instance):
+        # Retrieve the course instance
+        course = Course.objects.get(id=instance.get("course_id"))
+        # Calculate enrolled students count
+        enrolled_students_count = course.students.count()  # Assuming a `students` relation
+        teachers_count = course.teachers.count()  # Assuming a `teachers` relation
+        completed_students_count = course.students.filter(completion_status=True).count()  # Assuming a `completion_status` field on the `students` relation
+
+        return {
+            "course_id": course.id,
+            "course_name": course.name,  # Assuming the course has a 'name' field
+            "enrolled_students": enrolled_students_count,
+            "teachers_count": teachers_count,
+            "completed_students": completed_students_count,
+        }
+    
