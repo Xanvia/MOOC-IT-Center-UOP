@@ -61,7 +61,7 @@ const DropDownCountry = ({ addSelection, selectedCountry }: Props) => {
       <span className="text-sm font-semibold text-primary pr-52">Country</span>
       <button
         type="button"
-        className="relative w-full cursor-default rounded-md bg-white mt-1 py-1.5 pl-3 pr-10 text-left text-primary shadow-sm ring-1 ring-inset ring-primary focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+        className="relative w-full min-h-10 cursor-default rounded-md bg-white mt-1 py-1.5 pl-3 pr-10 text-left text-primary shadow-sm ring-1 ring-inset ring-primary focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
         aria-haspopup="listbox"
         aria-expanded="true"
         aria-labelledby="listbox-label"
@@ -70,6 +70,7 @@ const DropDownCountry = ({ addSelection, selectedCountry }: Props) => {
         <span className="flex items-center text-primary justify-center">
           <span className="ml-3 block truncate">{selectedOption}</span>
         </span>
+
         <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
           <svg
             className="h-5 w-5 text-gray-400"

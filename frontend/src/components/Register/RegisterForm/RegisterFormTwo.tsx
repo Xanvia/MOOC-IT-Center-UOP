@@ -133,7 +133,7 @@ const RegistrationFormTwo: React.FC = () => {
 
             <div className={InputOuterDiv}>
               <div className={InputInnerDiv}>
-                <DatePicker setDate={setBirthDate} />
+                <DatePicker setDate={setBirthDate} Text="Date Of Birth"/>
               </div>
             </div>
 

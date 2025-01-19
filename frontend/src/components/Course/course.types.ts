@@ -58,7 +58,7 @@ export interface UpdateCourseData {
 }
 
 export interface Instructor {
-  id: string | number; // Ensure id exists
+  id: string; // Ensure id exists
   full_name: string;
   email: string;
   profile_picture: string;

@@ -13,6 +13,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
+
+
 export default function Register() {
   const [isOpen, setIsOpen] = useState(false);
   const [resetForm, setResetForm] = useState<(() => void) | null>(null);
@@ -53,13 +55,13 @@ export default function Register() {
                   {" "}
                   {/* Add flex and space-y for vertical spacing */}
                   <Link href={"/"}>
-                  <Image
-                    src="/images/white_logo.png"
-                    alt="OpenEd Logo"
-                    width={400}
-                    height={200}
-                    className="object-cover object-center"
-                  />
+                    <Image
+                      src="/images/white_logo.png"
+                      alt="OpenEd Logo"
+                      width={400}
+                      height={200}
+                      className="object-cover object-center"
+                    />
                   </Link>
                   <span className="absolute inset-0 flex justify-center items-center text-white text-center font-sans text-base xl:text-xl z-10 px-10 pt-10">
                     {`"Empower your journey. Learn, grow, succeed with us."`}

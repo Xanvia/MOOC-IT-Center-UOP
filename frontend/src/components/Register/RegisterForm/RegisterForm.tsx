@@ -218,15 +218,13 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
               </div>
             </div>
           </div>
-          <div className="pt-8">
+          <div className="pt-16">
             <SolidButton
               type="submit"
               text="R E G I S T E R"
               onClick={() => {}}
             />
           </div>
-
-          <br />
           <div className="text-gray-500 peer-focus:text-gray-500 py-2">
             <p> -or- </p>
           </div>

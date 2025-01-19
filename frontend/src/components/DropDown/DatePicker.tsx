@@ -5,9 +5,10 @@ import "react-datepicker/dist/react-datepicker.css";
 interface Props {
   setDate: (date: Date | null) => void;
   initialDate?: Date | null;
+  Text:string
 }
 
-const ReactDatePicker = ({ setDate, initialDate }: Props) => {
+const ReactDatePicker = ({ setDate, initialDate ,Text}: Props) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(
     initialDate || null
   );
@@ -36,7 +37,7 @@ const ReactDatePicker = ({ setDate, initialDate }: Props) => {
         showYearDropdown
         dateFormat="MM/dd/yyyy"
         className="bg-gray-50 px-48 xl:px-20 border border-gray-300 text-primary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 py-1.5 xl:p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-primary dark:text-primary dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        placeholderText="Select Date"
+        placeholderText={Text}
       />
     </div>
   );

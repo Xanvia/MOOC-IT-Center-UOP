@@ -259,6 +259,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
                 <ReactDatePicker
                   setDate={setBirthDate}
                   initialDate={birthDate}
+                  Text={"Date Of Birth"}
                 />
               </div>
             </div>
@@ -270,7 +271,7 @@ const EditProfileForm: React.FC<Props> = ({ userData, reloadData }) => {
                   name="description"
                   className={InputFieldClasses}
                   placeholder=" "
-                  maxLength="10"
+                  maxLength="250"
                 />
                 <ErrorMessage
                   name="description"
