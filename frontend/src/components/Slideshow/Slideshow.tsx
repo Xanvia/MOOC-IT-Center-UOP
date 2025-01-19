@@ -34,7 +34,7 @@ const slides: Slide[] = [
     title: "Learn From Experts",
     description: "Select from top instructors around the world. Learn at your own pace with lifetime access on mobile and desktop.",
     bgColor: "from-sky-200/90",
-    image: "/images/slide04.jpg",
+    image: "/images/slide06.jpg",
     buttonText: "Meet Instructors"
   }
 ];
