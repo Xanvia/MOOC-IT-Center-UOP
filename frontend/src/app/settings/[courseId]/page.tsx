@@ -12,7 +12,7 @@ const LoadingChart = () => (
 );
 
 // Dynamic imports
-const DataStatsOne = dynamic(() => import("@/components/DataStats/DataStats"), {
+const DataStatsTwo = dynamic(() => import("@/components/DataStats/DataStatsTwo"), {
   ssr: false,
   loading: () => <LoadingStats />
 });
@@ -31,7 +31,7 @@ const CourseSettingsPage = () => {
   return (
     <div className="bg-slate-100">
       <Suspense fallback={<LoadingStats />}>
-        <DataStatsOne />
+        <DataStatsTwo />
       </Suspense>
       
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-9 2xl:gap-7.5">
