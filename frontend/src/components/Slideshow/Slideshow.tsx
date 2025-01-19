@@ -1,4 +1,3 @@
-// components/Slideshow/Slideshow.tsx
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
@@ -17,24 +16,24 @@ const slides: Slide[] = [
     id: 1,
     title: "Learn Without Limits",
     description: "Build skills with courses, certificates, and degrees online from world-class universities and companies.",
-    bgColor: "from-purple-900/90",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&h=400&fit=crop",
+    bgColor: "from-blue-200/90",
+    image: "/images/slide03.jpg",
     buttonText: "Explore Courses"
   },
   {
     id: 2,
     title: "Master New Skills",
     description: "Choose from over 1000 online video courses with new additions published every month.",
-    bgColor: "from-indigo-900/90",
-    image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200&h=400&fit=crop",
+    bgColor: "from-indigo-200/90",
+    image: "/images/slide02.jpg",
     buttonText: "Start Learning"
   },
   {
     id: 3,
     title: "Learn From Experts",
     description: "Select from top instructors around the world. Learn at your own pace with lifetime access on mobile and desktop.",
-    bgColor: "from-purple-900/90",
-    image: "https://images.unsplash.com/photo-1597239450996-ea7c2c564412?q=80&w=1200&h=400&fit=crop",
+    bgColor: "from-sky-200/90",
+    image: "/images/slide06.jpg",
     buttonText: "Meet Instructors"
   }
 ];
@@ -61,7 +60,7 @@ const Slideshow = () => {
     if (isAutoPlaying) {
       interval = setInterval(() => {
         nextSlide();
-      }, 5000); // Change slide every 5 seconds
+      }, 5000);
     }
 
     return () => {
@@ -73,7 +72,7 @@ const Slideshow = () => {
 
   return (
     <div 
-      className="relative w-full h-[350px] bg-blue-800 overflow-hidden"
+      className="relative w-full h-[400px] bg-blue-800 overflow-hidden"
       onMouseEnter={() => setIsAutoPlaying(false)}
       onMouseLeave={() => setIsAutoPlaying(true)}
     >
@@ -106,16 +105,19 @@ const Slideshow = () => {
             {/* Content */}
             <div className="absolute inset-0 z-20 flex items-center p-20">
               <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="max-w-2xl text-white space-y-6">
+                <div className="max-w-2xl text-primary space-y-6">
                   <h2 className="text-4xl sm:text-5xl font-bold leading-tight">
                     {slide.title}
                   </h2>
                   <p className="text-lg sm:text-xl opacity-90">
                     {slide.description}
                   </p>
-                  <button className="inline-flex items-center px-6 py-3 bg-white text-blue-800 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg">
+                  <a 
+                    href="#popular-courses"
+                    className="inline-flex items-center px-6 py-3 bg-white text-blue-800 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
+                  >
                     {slide.buttonText}
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
@@ -137,7 +139,7 @@ const Slideshow = () => {
         <ChevronRight className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
       </button>
 
-      Dots Navigation
+      {/* Dots Navigation */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-0 flex space-x-3">
         {slides.map((_, index) => (
           <button

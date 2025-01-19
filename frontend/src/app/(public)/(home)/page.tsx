@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import CourseCard from "@/components/Course/CourseCard/CourseCard";
 import {
   fetchAllCourses,
@@ -69,9 +69,14 @@ const Pagination = () => {
 export default function Home() {
   const [courses, setCourses] = useState<CourseData[]>([]);
   const [suggestedCourses, setSuggestedCourses] = useState<CourseData[]>([]);
+  const popularCoursesRef = useRef<HTMLElement>(null);
   const [selectedCategory, setSelectedCategory] = useState<CategoryEnum>(
     CategoryEnum.All
   );
+
+  const scrollToPopularCourses = () => {
+    popularCoursesRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -118,12 +123,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Slideshow />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <Search setCourses={setCourses} />
         <CategoryTabs onCategoryChange={handleCategoryChange} />
 
         {/* Popular Courses Section */}
-        <section className="mt-12">
+        <section ref={popularCoursesRef} id="popular-courses" className="mt-12">
           <SectionHeader
             title="Most Popular Certificates"
             subtitle="Explore our most popular programs, get job-ready for an in-demand career."

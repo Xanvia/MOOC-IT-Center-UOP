@@ -114,7 +114,7 @@ const Navbar = () => {
               </div>
 
               <div className="hidden pt-[92px] lg:pl-20 md:ml-6 md:block lg:text-base font-medium text-sm">
-                <div className="flex items-center space-x-4 min-h-11 ">
+                <div className="flex items-center space-x-8 min-h-11 ">
                   <Link href="/" className={NavLink}>
                     HOME
                   </Link>
@@ -124,6 +124,10 @@ const Navbar = () => {
 
                   <Link href="/aboutus" className={NavLink}>
                     ABOUT US
+                  </Link>
+
+                  <Link href="http://www.ceit.pdn.ac.lk/" className={NavLink}>
+                    SERVICES
                   </Link>
 
                   {/* {isLoggedIn && (
