@@ -75,7 +75,7 @@ export default function Home() {
   );
 
   const scrollToPopularCourses = () => {
-    popularCoursesRef.current?.scrollIntoView({ behavior: 'smooth' });
+    popularCoursesRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {

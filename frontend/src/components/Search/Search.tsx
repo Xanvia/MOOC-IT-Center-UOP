@@ -1,5 +1,5 @@
 "use client";
-import { searchCourses } from "@/services/course.service";
+import { fetchAllCourses, searchCourses } from "@/services/course.service";
 import React, { useState } from "react";
 
 interface SearchProps {
@@ -27,15 +27,15 @@ const Search: React.FC<SearchProps> = ({ setCourses }) => {
       return () => clearTimeout(debounceTimeout);
     } else {
       // Reset to show all courses if query is cleared
-      const fetchAllCourses = async () => {
+      const fetchAllDefault = async () => {
         try {
-          const data = await searchCourses(""); // Adjust API to return all courses when search query is empty
+          const data = await fetchAllCourses(); // Adjust API to return all courses when search query is empty
           setCourses(data.courses);
         } catch (error) {
           console.error("Error fetching all courses:", error);
         }
       };
-      fetchAllCourses();
+      fetchAllDefault();
     }
   };
 
@@ -50,9 +50,7 @@ const Search: React.FC<SearchProps> = ({ setCourses }) => {
             placeholder="What do you want to learn?"
             className="w-full px-5 py-2 font-1px placeholder-black text-black rounded-lg border-none ring-1 ring-[#072569] focus:ring-primary focus:ring-1"
           />
-          <button
-            className="text-white text-lg bg-[#072569] hover:bg-[#1146ce] px-3 py-0.25 rounded-lg absolute end-1.5 bottom-1.5"
-          >
+          <button className="text-white text-lg bg-[#072569] hover:bg-[#1146ce] px-3 py-0.25 rounded-lg absolute end-1.5 bottom-1.5">
             Search
           </button>
         </div>
