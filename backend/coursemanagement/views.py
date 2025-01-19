@@ -1,4 +1,5 @@
 from rest_framework import viewsets, generics, views, status
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 import hashlib
@@ -18,6 +19,7 @@ from .serializers import (
     GradeCodeSerializer,
     CourseMessagesSerializer,
     TeacherSerializer,
+    CourseStatSerializer,
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
@@ -434,3 +436,9 @@ class PaymentsListAPIView(generics.ListAPIView):
             },
         }
         return response
+    
+
+class CourseStatView(APIView):
+    def get(self, request, *args, **kwargs):
+        serializer = CourseStatSerializer()
+        return Response(serializer.data)

@@ -427,3 +427,9 @@ class TeacherSerializer(serializers.ModelSerializer):
         representation["name"] = instance.first_name + " " + instance.last_name
 
         return representation
+    
+class CourseStatSerializer(serializers.Serializer):
+    total_courses = serializers.SerializerMethodField()
+
+    def get_total_courses(self, obj):
+        return Course.objects.count()
