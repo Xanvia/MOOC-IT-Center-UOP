@@ -1,4 +1,3 @@
-// components/Slideshow/Slideshow.tsx
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
@@ -61,7 +60,7 @@ const Slideshow = () => {
     if (isAutoPlaying) {
       interval = setInterval(() => {
         nextSlide();
-      }, 5000); // Change slide every 5 seconds
+      }, 5000);
     }
 
     return () => {
@@ -113,9 +112,12 @@ const Slideshow = () => {
                   <p className="text-lg sm:text-xl opacity-90">
                     {slide.description}
                   </p>
-                  <button className="inline-flex items-center px-6 py-3 bg-white text-blue-800 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg">
+                  <a 
+                    href="#popular-courses"
+                    className="inline-flex items-center px-6 py-3 bg-white text-blue-800 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
+                  >
                     {slide.buttonText}
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
@@ -137,7 +139,7 @@ const Slideshow = () => {
         <ChevronRight className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
       </button>
 
-      Dots Navigation
+      {/* Dots Navigation */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-0 flex space-x-3">
         {slides.map((_, index) => (
           <button
