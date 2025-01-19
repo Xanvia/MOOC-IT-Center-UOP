@@ -440,8 +440,16 @@ class PaymentsListAPIView(generics.ListAPIView):
     
 
 class CourseStatView(APIView):
-    def post(self, request, *args, **kwargs):
-        serializer = CourseStatSerializer(data=request.data)
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    queryset = Course.objects.all()
+    serializer_class = CourseStatSerializer
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "data": {
+                "courses": response.data,
+            },
+        }
+        return response
+    

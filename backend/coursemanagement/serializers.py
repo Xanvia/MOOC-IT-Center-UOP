@@ -436,7 +436,7 @@ class CourseStatSerializer(serializers.Serializer):
     completed_students = serializers.IntegerField(read_only=True)
 
 def validate(self, attrs):
-       course_id = attrs.get("course_id")
+       course_id = attrs.get("pk")
 
        if not Course.objects.filter(id=course_id).exists():
            raise serializers.ValidationError("course does not exist")
