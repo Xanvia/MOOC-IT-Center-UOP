@@ -110,5 +110,5 @@ urlpatterns = [
     ),
     path("admin-messages/<int:course_id>", AdminMessagesViewSet.as_view({"get": "list","post":"create"}), name="admin-messages",),
     path("payments/<int:course_id>", PaymentsListAPIView.as_view(), name="payments-list"),
-    path("settings/<int:pk>", CourseStatView.as_view(), name='course-stats'),
+    path("course-stats/<int:pk>", CourseStatView.as_view(), name='course-stats'),
 ]
