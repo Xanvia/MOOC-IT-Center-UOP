@@ -21,6 +21,7 @@ from .serializers import (
     CourseMessagesSerializer,
     TeacherSerializer,
     CourseStatSerializer,
+    AdminDashboardStatSerializer
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
@@ -453,3 +454,16 @@ class CourseStatView(APIView):
         }
         return response
     
+class AdminDashboardStatView(APIView):
+    queryset = Course.objects.all()
+    serializer_class = AdminDashboardStatSerializer
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "data": {
+                "enrollments": response.data,
+            },
+        }
+        return response

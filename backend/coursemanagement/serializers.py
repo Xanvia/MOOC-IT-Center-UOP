@@ -458,3 +458,25 @@ def to_representation(self, instance):
             "completed_students": completed_students_count,
         }
     
+class AdminDashboardStatSerializer(serializers.Serializer):
+    course_id = serializers.IntegerField()
+    course_name = serializers.CharField(read_only=True)
+    enrolled_students = serializers.IntegerField(read_only=True)
+    teachers_count = serializers.IntegerField(read_only=True)
+    completed_students = serializers.IntegerField(read_only=True)
+
+    
+    def to_representation(self, instance):
+            enrollments = Enrollment.objects.all().count()
+                
+            students = User.objects.filter(groups_name="student").count()
+            teachers = User.objects.filter(groups_name="teacher").count()
+            paid_students = Payments.objects.all().count()
+
+            return {
+                    "enrollments": enrollments,
+                    "students":students,
+                    "teachers":teachers,
+                    "paid_students":paid_students,
+                    
+                }
