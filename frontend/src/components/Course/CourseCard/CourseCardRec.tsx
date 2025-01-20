@@ -6,6 +6,7 @@ import CourseRatingLabel from "./CourseRatingLabel";
 import {
   CourseCardImageContainerClsx,
   CourseCardOuterClasses,
+  CourseCardRecOuterClasses,
   CourseCardImageClsx,
   CourseCardTitleContainerClsx,
   CourseCardTitle,
@@ -41,7 +42,8 @@ const CourseCardRec: React.FC<CourseCardProps> = ({
   };
 
   return (
-    <div className={CourseCardOuterClasses}>
+    <Link href={`/courses/${id}`}>
+    <div className={CourseCardRecOuterClasses}>
       <div className={CourseCardImageContainerClsx}>
         {image ? (
           <Image src={image} alt={title} layout="fill" objectFit="cover" />
@@ -67,6 +69,7 @@ const CourseCardRec: React.FC<CourseCardProps> = ({
         </div> */}
       </div>
     </div>
+    </Link>
   );
 };
 

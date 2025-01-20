@@ -393,6 +393,22 @@ export const CourseCardOuterClasses = clsx(
   "overflow-hidden", 
 );
 
+export const CourseCardRecOuterClasses = clsx(
+  "relative",
+  "flex",
+  "w-full",
+  "max-w-[20rem]",
+  "lg:max-w-[26rem]",
+  "flex-col",
+  "rounded-xl",
+  "bg-white",
+  "bg-clip-border",
+  "text-gray-700",
+  "shadow-lg",
+  "h-[310px]",
+  "overflow-hidden", 
+);
+
 export const CourseCardImageContainerClsx = clsx(
   "relative",
   "lg:mx-1",

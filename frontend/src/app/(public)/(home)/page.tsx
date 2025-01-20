@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import CourseCard from "@/components/Course/CourseCard/CourseCard";
+import CourseCardRec from "@/components/Course/CourseCard/CourseCardRec";
 import {
   fetchAllCourses,
   fetchAllCategories,
@@ -107,7 +107,7 @@ export default function Home() {
   const CourseGrid = ({ courses }: { courses: CourseData[] }) => (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 lg:grid-cols-3 gap-6 mb-12">
       {courses.map((course) => (
-        <CourseCard
+        <CourseCardRec
           id={course.id}
           key={course.id}
           image={course.header_image || ""}
