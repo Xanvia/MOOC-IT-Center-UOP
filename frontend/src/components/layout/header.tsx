@@ -44,7 +44,7 @@ const Header = ({ toggleSidebar, courseId }: HeaderProps) => {
         </div>
 
         <div className="flex items-center space-x-4">
-          <div
+          {/* <div
             className={`relative ${
               isSearchOpen ? "w-64" : "w-8"
             } transition-all duration-300`}
@@ -62,7 +62,7 @@ const Header = ({ toggleSidebar, courseId }: HeaderProps) => {
             >
               <Search size={20} />
             </button>
-          </div>
+          </div> */}
 
           <div className="relative group">
             <Link href={`/settings/${courseId}/chat`}>
