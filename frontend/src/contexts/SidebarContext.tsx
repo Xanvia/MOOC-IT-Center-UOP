@@ -38,8 +38,10 @@ interface SelectedTopicContextType {
   setAnnouncements: React.Dispatch<React.SetStateAction<Announcement[]>>;
   discussions: Discussion[];
   setDiscussions: React.Dispatch<React.SetStateAction<Discussion[]>>;
-  addAnnouncement: (announcement: Omit<Announcement, 'id'>) => void;
-  addDiscussion: (discussion: Omit<Discussion, 'id'>) => void;
+  addAnnouncement: (announcement: Omit<Announcement, "id">) => void;
+  addDiscussion: (discussion: Omit<Discussion, "id">) => void;
+  reloadData: () => void;
+  reload: boolean;
 }
 
 const SelectedTopicContext = createContext<SelectedTopicContextType | null>(
@@ -63,6 +65,7 @@ export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
   });
 
   const [weeks, setWeeks] = useState<Week[]>([]);
+  const [reload, setReload] = useState<boolean>(false);
   const [expandedWeek, setExpandedWeek] = useState<number | null>(0);
   const [permissions, setPermissions] = useState<Permissions>({
     canEdit: false,
@@ -93,7 +96,7 @@ export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
   };
 
   // Add new functions for handling announcements and discussions
-  const addAnnouncement = (announcement: Omit<Announcement, 'id'>) => {
+  const addAnnouncement = (announcement: Omit<Announcement, "id">) => {
     setAnnouncements((prev) => [
       ...prev,
       {
@@ -103,7 +106,7 @@ export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
     ]);
   };
 
-  const addDiscussion = (discussion: Omit<Discussion, 'id'>) => {
+  const addDiscussion = (discussion: Omit<Discussion, "id">) => {
     setDiscussions((prev) => [
       ...prev,
       {
@@ -111,6 +114,10 @@ export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
         id: prev.length + 1,
       },
     ]);
+  };
+
+  const reloadData = () => {
+    setReload((prevState) => !prevState);
   };
 
   return (
@@ -127,13 +134,14 @@ export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
         updateItemStatus,
         permissions,
         setPermissions,
-        // Add new values to the context
         announcements,
         setAnnouncements,
         discussions,
         setDiscussions,
         addAnnouncement,
         addDiscussion,
+        reloadData,
+        reload,
       }}
     >
       {children}

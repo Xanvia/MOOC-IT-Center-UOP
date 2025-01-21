@@ -33,6 +33,7 @@ const Page: React.FC = () => {
     expandedSubtopics,
     updateItemStatus,
     permissions,
+    reloadData,
   } = useSelectedTopic();
   const [item, setItem] = useState<Item>({ ...selectedTopic });
   const [isFinished, setIsFinished] = useState<boolean>(false);
@@ -62,7 +63,11 @@ const Page: React.FC = () => {
       if (!courseId) return;
       try {
         const data = await fetchCourseData(courseId as string);
-        setCourseData({ name: data.name, canEdit: data.canEdit ,finished: data.finished});
+        setCourseData({
+          name: data.name,
+          canEdit: data.canEdit,
+          finished: data.finished,
+        });
       } catch (error) {
         console.error("Failed to fetch course data:", error);
       } finally {
@@ -212,7 +217,7 @@ const Page: React.FC = () => {
         <TheBreadcrumb items={breadcrumbItems} />
       </div>
       {item.type === "Note" ? (
-        <Note selectedTopic={item} permissions={permissions} />
+        <Note selectedTopic={item} permissions={permissions} reloadData={reloadData}/>
       ) : item.type === "Video" ? (
         <CourseVideo
           videoURL={item.content.video_link}

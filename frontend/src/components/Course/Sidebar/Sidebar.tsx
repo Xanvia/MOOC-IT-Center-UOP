@@ -40,6 +40,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     setExpandedWeek,
     setPermissions,
     permissions,
+    reloadData,
+    reload,
   } = useSelectedTopic();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -49,13 +51,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   const { userRole, isLoggedIn } = useGlobal();
   const [progress, setProgress] = useState<number>(0);
   const [progressLoaded, setProgressLoaded] = useState<boolean>(false);
-  const [reload, setReload] = useState(false);
   const [newAnnouncements, setNewAnnouncements] = useState<boolean>(false);
   const [newDiscussions, setNewDiscussions] = useState<boolean>(false);
-
-  const reloadData = () => {
-    setReload((prevState) => !prevState);
-  };
 
   useEffect(() => {
     const loadCourseContent = async () => {
