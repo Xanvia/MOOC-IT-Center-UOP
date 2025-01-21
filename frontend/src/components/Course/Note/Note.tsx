@@ -13,9 +13,14 @@ import ChatDrawer from "../Drawer/Drawer";
 interface NoteProps {
   selectedTopic: Item;
   permissions: Permissions;
+  reloadData: () => void;
 }
 
-const Note: React.FC<NoteProps> = ({ selectedTopic, permissions }) => {
+const Note: React.FC<NoteProps> = ({
+  selectedTopic,
+  permissions,
+  reloadData,
+}) => {
   const { userRole } = useGlobal();
 
   const [noteContent, setNoteContent] = useState(selectedTopic.content);
@@ -27,6 +32,7 @@ const Note: React.FC<NoteProps> = ({ selectedTopic, permissions }) => {
     try {
       const response = await editNote(selectedTopic.id!, value);
       toast.success(response.message);
+      reloadData();
       setNoteContent(value);
       setEditView(false);
     } catch (error: any) {
