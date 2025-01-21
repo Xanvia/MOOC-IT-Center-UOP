@@ -172,6 +172,9 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
     ],
     "EXCEPTION_HANDLER": "mooc.utils.custom_exception_handler",
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")

@@ -1,4 +1,5 @@
 from rest_framework import viewsets, generics, views, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
@@ -440,12 +441,17 @@ class PaymentsListAPIView(generics.ListAPIView):
         return response
     
 
-class CourseStatView(APIView):
+class CourseStatView(generics.RetrieveAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseStatSerializer
 
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        print(serializer.data)
+        response = Response(serializer.data)
+        
         response.data = {
             "status": "success",
             "data": {
@@ -454,7 +460,21 @@ class CourseStatView(APIView):
         }
         return response
     
-class AdminDashboardStatView(APIView):
+# class AdminDashboardStatView(generics.ListAPIView):
+#     queryset = Course.objects.all()
+#     serializer_class = AdminDashboardStatSerializer
+
+#     def list(self, request, *args, **kwargs):
+#         response = super().list(request, *args, **kwargs)
+#         response.data = {
+#             "status": "success",
+#             "data": {
+#                 "enrollments": response.data,
+#             },
+#         }
+#         return response
+    
+class AdminDashboardStatView(generics.ListAPIView):
     queryset = Course.objects.all()
     serializer_class = AdminDashboardStatSerializer
 
