@@ -230,6 +230,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             break;
           case "Quiz":
             response = await createQuiz(chapterId as string, item.name);
+            break;
           case "Code":
             response = await createCodingQ(chapterId as string, item.name);
             break;
