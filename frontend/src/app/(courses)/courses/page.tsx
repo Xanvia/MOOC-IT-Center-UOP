@@ -13,6 +13,7 @@ import { useGlobal } from "@/contexts/store";
 export default function Courses() {
   const { userRole } = useGlobal();
   const [courses, setCourses] = useState<CourseData[]>([]);
+  const [reload, setReload] = useState(false);
   const [activeTab, setActiveTab] = useState<"inprogress" | "completed">(
     "inprogress"
   );
@@ -22,12 +23,15 @@ export default function Courses() {
       try {
         const response = await fetchMyCourses();
         // Deduplicate courses by ID
-        const uniqueCourses = response.courses.reduce((acc: CourseData[], current: CourseData) => {
-          if (!acc.some(course => course.id === current.id)) {
-            acc.push(current);
-          }
-          return acc;
-        }, []);
+        const uniqueCourses = response.courses.reduce(
+          (acc: CourseData[], current: CourseData) => {
+            if (!acc.some((course) => course.id === current.id)) {
+              acc.push(current);
+            }
+            return acc;
+          },
+          []
+        );
         setCourses(uniqueCourses);
       } catch (error) {
         console.error("Failed to fetch courses", error);
@@ -35,7 +39,7 @@ export default function Courses() {
     };
 
     fetchCourses();
-  }, []);
+  }, [reload]);
 
   const breadcrumbItems = [
     { label: "Home", href: "/" },
@@ -48,6 +52,10 @@ export default function Courses() {
     return activeTab === "inprogress" ? progress < 100 : progress === 100;
   });
 
+  const reloadCourses = () => {
+    setReload(!reload);
+  };
+
   return (
     <div className="container mx-auto px-4 mt-20">
       {/* Breadcrumb */}
@@ -58,7 +66,7 @@ export default function Courses() {
         <h1 className="text-3xl font-bold">My Courses</h1>
         {userRole === "teacher" && (
           <Suspense>
-            <CreateCourseModal />
+            <CreateCourseModal relaodCourses={reloadCourses} />
           </Suspense>
         )}
       </div>

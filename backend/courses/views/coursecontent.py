@@ -27,6 +27,7 @@ from ..permissons import (
     CourseFileUploadAccess,
 )
 from coursemanagement.models import CourseTeachers
+from ..utils import segment_video
 
 
 
@@ -267,7 +268,6 @@ class ImageUpload(generics.CreateAPIView):
         }
         return response
 
-
 class VideoViewSet(viewsets.ModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
@@ -300,13 +300,25 @@ class VideoViewSet(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def get_video_link(self, request, *args, **kwargs):
-
+        """
+        Handle video upload and conversion
+        Returns the HLS playlist URL and video ID
+        """
         if "video_file" not in request.data:
             raise ValidationError({"video_file": "Video file is required"})
 
         video_file = request.data["video_file"]
+
         saved_video_file = VideoFile.objects.create(file=video_file)
-        return saved_video_file.file.url, saved_video_file.id
+
+        # Generate HLS playlist
+        playlist_url = segment_video(saved_video_file)
+
+        # Update video file record with playlist URL
+        saved_video_file.hls_playlist = playlist_url
+        saved_video_file.file = None
+        saved_video_file.save()
+        return playlist_url, saved_video_file.id
 
     def create(self, request, *args, **kwargs):
 

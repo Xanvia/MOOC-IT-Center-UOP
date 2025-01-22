@@ -12,6 +12,8 @@ import DropDownInterests from "@/components/DropDown/DropDownInterests";
 import { createCourse } from "@/services/course.service";
 import { CreateCourseData } from "../course.types";
 import DropDownPaymentType from "@/components/DropDown/DropDownPayement";
+import { CourseData } from "../course.types";
+
 interface Interest {
   id: number;
   label: string;
@@ -21,7 +23,13 @@ interface FromValues {
   title: string;
 }
 
-export default function CreateCourseModal() {
+interface CreateCourseModalProps {
+  relaodCourses: () => void;
+}
+
+export default function CreateCourseModal({
+  relaodCourses,
+}: CreateCourseModalProps) {
   const [category, setCategory] = useState<Interest>();
   const [difficulty, setDifficulty] = useState("");
   const [institution, setInstitution] = useState("");
@@ -77,6 +85,7 @@ export default function CreateCourseModal() {
     try {
       await createCourse(data);
       toast.success("Course created successfully!");
+      relaodCourses();
       setIsOpen(false);
     } catch (error: any) {
       const errorMessage = error.message ?? "Failed to create course";
@@ -150,7 +159,7 @@ export default function CreateCourseModal() {
                         onChange={handleDifficultyChange}
                       />
                     </div>
-                    <div className="col-span-2 sm:col-span-1 mb-4 md:px-5 lg:px-10 pt-5">
+                    <div className="col-span-2 sm:col-span-1 mb-4 md:px-5 lg:px-10 pt-0">
                       <DropDownInterests
                         addSelection={handleCategoryChange}
                         value="Select Course Category"

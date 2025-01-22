@@ -30,15 +30,14 @@ const DropDownInterests: React.FC<Props> = ({ addSelection, value }) => {
     }
   };
 
-
-useEffect(() => {
-  document.addEventListener("mousedown", handleClickOutside);
-  fetchInterests().then((data) => {
-    if (data) {
-      setInterests(data);
-      setVisibleInterests(data.slice(0, INITIAL_VISIBLE_COUNT)); // Show initial items
-    }
-  });
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    fetchInterests().then((data) => {
+      if (data) {
+        setInterests(data);
+        setVisibleInterests(data.slice(0, INITIAL_VISIBLE_COUNT)); // Show initial items
+      }
+    });
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -72,6 +71,9 @@ useEffect(() => {
 
   return (
     <div className="relative" ref={dropdownRef}>
+      <span className="text-sm font-semibold text-primary ">
+        Course Category
+      </span>
       <button
         type="button"
         className="relative w-full cursor-default rounded-md bg-white my-1 py-2 pl-3 pr-10 text-left text-primary shadow-sm ring-1 ring-inset ring-primary focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6"
@@ -99,15 +101,17 @@ useEffect(() => {
         </span>
       </button>
 
-      {isOpen && interests && Array.isArray(interests) && ( //update
-        <ul
-          className="absolute z-10 mt-1 max-h-56 w-80  overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm ml-44"
-          tabIndex={-1}
-          role="listbox"
-          aria-labelledby="listbox-label"
-          aria-activedescendant="listbox-option-3"
-        >
-          {/* {interests.map((interest) => (
+      {isOpen &&
+        interests &&
+        Array.isArray(interests) && ( //update
+          <ul
+            className="absolute z-10 mt-1 max-h-56 w-80  overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm ml-44"
+            tabIndex={-1}
+            role="listbox"
+            aria-labelledby="listbox-label"
+            aria-activedescendant="listbox-option-3"
+          >
+            {/* {interests.map((interest) => (
             <li
               key={interest.id}
               className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
@@ -125,41 +129,38 @@ useEffect(() => {
                 </span>
               </div>
             </li>
-          ))} */
-          }
-          {visibleInterests.map((interest) => (
-            <li
-              key={interest.id}
-              className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
-              id={`listbox-option-${interest.id}`}
-              role="option"
-              onClick={() => {
-                setSelectedOption(interest.label);
-                addSelection(interest);
-                setIsOpen(false);
-              }}
-            >
-              <div className="flex items-center text-primary justify-start">
-                <span className="font-normal ml-3 block truncate">
-                  {interest.label}
-                </span>
-              </div>
-            </li>
-          ))}
-          {interests.length > INITIAL_VISIBLE_COUNT && (
-            <li
-              className="text-blue-500 relative cursor-pointer select-none py-2 pl-3 pr-9 text-center hover:underline"
-              onClick={handleShowMore}
-            >
-              {showAll ? "Show Less" : "Show More"}
-            </li>
-          )}
-        </ul>
-      )}
+          ))} */}
+            {visibleInterests.map((interest) => (
+              <li
+                key={interest.id}
+                className="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9"
+                id={`listbox-option-${interest.id}`}
+                role="option"
+                onClick={() => {
+                  setSelectedOption(interest.label);
+                  addSelection(interest);
+                  setIsOpen(false);
+                }}
+              >
+                <div className="flex items-center text-primary justify-start">
+                  <span className="font-normal ml-3 block truncate">
+                    {interest.label}
+                  </span>
+                </div>
+              </li>
+            ))}
+            {interests.length > INITIAL_VISIBLE_COUNT && (
+              <li
+                className="text-blue-500 relative cursor-pointer select-none py-2 pl-3 pr-9 text-center hover:underline"
+                onClick={handleShowMore}
+              >
+                {showAll ? "Show Less" : "Show More"}
+              </li>
+            )}
+          </ul>
+        )}
     </div>
   );
 };
 
 export default DropDownInterests;
-
-
