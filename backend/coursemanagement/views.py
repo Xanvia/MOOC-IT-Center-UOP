@@ -440,12 +440,13 @@ class PaymentsListAPIView(generics.ListAPIView):
         return response
     
 
-class CourseStatView(APIView):
+class CourseStatView(generics.RetrieveAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseStatSerializer
 
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+
         response.data = {
             "status": "success",
             "data": {
@@ -453,17 +454,20 @@ class CourseStatView(APIView):
             },
         }
         return response
-    
-class AdminDashboardStatView(APIView):
-    queryset = Course.objects.all()
-    serializer_class = AdminDashboardStatSerializer
 
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
+
+class AdminDashboardStatView(generics.RetrieveAPIView):
+    serializer_class = AdminDashboardStatSerializer
+    queryset = User.objects.all()
+
+    def get_object(self):
+        return self.queryset.get(id=self.request.user.id)
+
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+
         response.data = {
             "status": "success",
-            "data": {
-                "enrollments": response.data,
-            },
+            "data": response.data,
         }
         return response
