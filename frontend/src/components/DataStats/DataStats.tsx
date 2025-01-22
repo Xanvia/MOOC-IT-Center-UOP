@@ -1,5 +1,8 @@
+"use client";
 import React from "react";
 import { dataStats } from "./types";
+import { useEffect, useState } from "react";
+import axiosInstance from "@/lib/axiosInstance";
 
 const dataStatsList = [
   {
@@ -160,9 +163,48 @@ const dataStatsList = [
     value: "2.564K",
     growthRate: 0.45,
   },
-];
 
-const DataStatsOne: React.FC<dataStats> = () => {
+];
+type AdminData = {
+  data: {
+      courses_count: number;
+      students_count: number;
+      teachers_count:number;
+      paid_students: number;
+    };
+  };
+
+const DataStatsOne = () => {
+  const [data, setData] = useState<AdminData | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+      const fetchStats = async () => {
+        try {
+          const response = await axiosInstance.get(
+            `/course/manage/admin-stats`
+          );
+  
+          console.log(response.data);
+          setData(response.data);
+        } catch (error) {
+          console.error("Error fetching course stats:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchStats();
+    }, []);
+  
+    if (loading) {
+      return <div>Loading...</div>;
+    }
+  
+    if (!data) {
+      return <div>No data available</div>;
+    }
+  
   return (
     <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5 p-4">
@@ -185,7 +227,14 @@ const DataStatsOne: React.FC<dataStats> = () => {
             <div className="mt-6 flex items-end justify-between">
               <div>
                 <h4 className="mb-1.5 text-heading-6 font-bold text-dark">
-                  {item.value}
+                {index === 0
+                    ? data.data.courses_count
+                    : index === 1
+                    ? data.data.students_count
+                    : index === 2
+                    ? data.data.teachers_count
+                    : data.data.paid_students
+                    }
                 </h4>
                 <span className="text-body-sm font-medium">{item.title}</span>
               </div>
