@@ -22,11 +22,11 @@ from .serializers import (
     CourseMessagesSerializer,
     TeacherSerializer,
     CourseStatSerializer,
-    AdminDashboardStatSerializer
+    AdminDashboardStat,
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
-from .permissions import IsCourseCreator,IsAdminOrCourseCreator,GradePermissions
+from .permissions import IsCourseCreator, IsAdminOrCourseCreator, GradePermissions
 from courses.models import (
     Course,
     Progress,
@@ -36,6 +36,7 @@ from courses.models import (
 )
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.db.models import Count, Subquery
 
 
 class CourseTeacherViewSet(viewsets.ModelViewSet):
@@ -215,7 +216,6 @@ class TeacherPermissionsRetrieveAPIView(generics.RetrieveAPIView):
     queryset = CourseTeachers.objects.all()
     permission_classes = [IsCourseCreator]
 
-
     def retrieve(self, request, *args, **kwargs):
         response = super().retrieve(request, *args, **kwargs)
         response.data = {
@@ -318,22 +318,24 @@ class CourseMessagesViewSet(viewsets.ModelViewSet):
                 id=self.kwargs.get("teacher_id"),
             )
         return self.queryset.get(
-                course = self.kwargs.get("course_id"),
-                teacher = self.request.user
-            )
+            course=self.kwargs.get("course_id"), teacher=self.request.user
+        )
+
     def filter_queryset(self, queryset):
         if self.kwargs.get("teacher_id"):
-            return super().filter_queryset(queryset).filter(
-                id=self.kwargs.get("teacher_id")
+            return (
+                super()
+                .filter_queryset(queryset)
+                .filter(id=self.kwargs.get("teacher_id"))
             )
-        return super().filter_queryset(queryset).filter(
-            teacher=self.request.user,
-            course=self.kwargs.get("course_id")
+        return (
+            super()
+            .filter_queryset(queryset)
+            .filter(teacher=self.request.user, course=self.kwargs.get("course_id"))
         )
-       
-    
+
     def list(self, request, *args, **kwargs):
-        response =  super().list(request, *args, **kwargs)
+        response = super().list(request, *args, **kwargs)
         return response
 
     def add_message_admin(self, request, *args, **kwargs):
@@ -407,7 +409,7 @@ class isCourseCreator(views.APIView):
     queryset = Course.objects.all()
 
     def get(self, request, *args, **kwargs):
- 
+
         course_id = kwargs.get("course_id")
         user_id = request.user.id
         try:
@@ -420,7 +422,7 @@ class isCourseCreator(views.APIView):
             course_creator = False
         response = {"is_creator": course_creator}
         return Response(response, status=status.HTTP_200_OK)
-    
+
 
 class PaymentsListAPIView(generics.ListAPIView):
     queryset = Payments.objects.all()
@@ -439,19 +441,15 @@ class PaymentsListAPIView(generics.ListAPIView):
             },
         }
         return response
-    
+
 
 class CourseStatView(generics.RetrieveAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseStatSerializer
 
-
     def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        print(serializer.data)
-        response = Response(serializer.data)
-        
+        response = super().retrieve(request, *args, **kwargs)
+
         response.data = {
             "status": "success",
             "data": {
@@ -459,24 +457,7 @@ class CourseStatView(generics.RetrieveAPIView):
             },
         }
         return response
-    
-# class AdminDashboardStatView(generics.ListAPIView):
-#     queryset = Course.objects.all()
-#     serializer_class = AdminDashboardStatSerializer
 
-#     def list(self, request, *args, **kwargs):
-#         response = super().list(request, *args, **kwargs)
-#         response.data = {
-#             "status": "success",
-#             "data": {
-#                 "enrollments": response.data,
-#             },
-#         }
-#         return response
-    
-class AdminDashboardStatView(generics.ListAPIView):
-    queryset = Course.objects.all()
-    serializer_class = AdminDashboardStatSerializer
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)

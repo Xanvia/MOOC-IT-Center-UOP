@@ -353,10 +353,12 @@ class PaymentSerializer(serializers.ModelSerializer):
         attrs["order_id"] = str(uuid.uuid4())
         attrs["amount"] = enrollement.course.price
         return super().validate(attrs)
-    
+
     def to_representation(self, instance):
-        representation= super().to_representation(instance)
-        representation["student"] = instance.student.first_name + " " + instance.enrollement.student.last_name
+        representation = super().to_representation(instance)
+        representation["student"] = (
+            instance.student.first_name + " " + instance.enrollement.student.last_name
+        )
         representation["course"] = instance.enrollement.course.name
         return representation
 
@@ -395,7 +397,8 @@ class CourseMessagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseTeachers
         fields = ["messages"]
-    
+
+
 class TeacherSerializer(serializers.ModelSerializer):
     course_id = serializers.IntegerField(write_only=True)
 
@@ -427,55 +430,47 @@ class TeacherSerializer(serializers.ModelSerializer):
         representation["name"] = instance.first_name + " " + instance.last_name
 
         return representation
-    
+
+
 class CourseStatSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    course_name = serializers.CharField(read_only=True,source="name")
+    course_name = serializers.CharField(read_only=True, source="name")
 
-
-    def validate(self, attrs):
-        course_id = attrs.get("pk")
-
-        if not Course.objects.filter(id=course_id).exists():
-            raise serializers.ValidationError("course does not exist")
-        return attrs
-    
     def to_representation(self, instance):
-            # Retrieve the course instance
-        
-            representation = super().to_representation(instance)
+        # Retrieve the course instance
 
-            enrollments_count = Enrollment.objects.filter(course=instance).count()
-            completed_students_count = Enrollment.objects.filter(course=instance, course__status="completed").count()
-            teachers_count = CourseTeachers.objects.filter(course=instance).count()
+        representation = super().to_representation(instance)
 
-            representation.update({
-            "enrollments_count": enrollments_count,
-            "completed_students_count": completed_students_count,
+        enrollments_count = Enrollment.objects.filter(course=instance).count()
+        completed_students_count = Enrollment.objects.filter(
+            course=instance, course__status="completed"
+        ).count()
+        teachers_count = CourseTeachers.objects.filter(course=instance).count()
+
+        representation.update(
+            {
+                "enrollments_count": enrollments_count,
+                "completed_students_count": completed_students_count,
+                "teachers_count": teachers_count,
+            }
+        )
+
+        return representation
+
+
+class AdminDashboardStat(serializers.Serializer):
+
+    def to_representation(self, instance):
+
+        courses_count = Course.objects.count()
+        students_count = User.objects.filter(groups__name="student").count()
+        teachers_count = User.objects.filter(groups__name="teacher").count()
+        paid_students = Payments.objects.filter(status="SUCCESS").count()
+
+        representation = {
+            "courses_count": courses_count,
+            "students_count": students_count,
             "teachers_count": teachers_count,
-        })
-         
-            return representation
-
-    
-class AdminDashboardStatSerializer(serializers.Serializer):
-    course_id = serializers.IntegerField()
-    course_name = serializers.CharField(read_only=True)
-    enrolled_students = serializers.IntegerField(read_only=True)
-    teachers_count = serializers.IntegerField(read_only=True)
-    completed_students = serializers.IntegerField(read_only=True)
-
-    def to_representation(self, instance):
-            enrollments = Enrollment.objects.all().count()
-              
-            students = User.objects.filter(groups_name="student").count()
-            teachers = User.objects.filter(groups_name="teacher").count()
-            paid_students = Payments.objects.all().count()
-
-            return {
-                    "enrollments": enrollments,
-                    "students":students,
-                    "teachers":teachers,
-                    "paid_students":paid_students,
-                    
-                }
+            "paid_students": paid_students,
+        }
+        return representation
