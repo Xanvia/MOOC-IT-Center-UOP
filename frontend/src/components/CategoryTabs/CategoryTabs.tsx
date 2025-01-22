@@ -11,7 +11,7 @@ import {
   PanelTopClose,
 } from "lucide-react";
 interface CategoryTabsProps {
-  onCategoryChange: (category: CategoryEnum) => void;
+  onCategoryChange: (category: string) => void;
 }
 
 interface Category {
@@ -41,10 +41,18 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({ onCategoryChange }) => {
     fetchCategories();
   }, []);
 
-  const handleCategoryClick = (category: CategoryEnum) => {
-    setActiveCategory(category);
-    onCategoryChange(category);
+  const handleCategoryClick = (category: Category) => {
+    // Toggle active category: if the same is clicked, reset it
+    setActiveCategory((prev) => (prev === category.id ? CategoryEnum.All : category.id));
+  
+    // Call onCategoryChange with the appropriate value
+    if (activeCategory === category.id) {
+      onCategoryChange(""); // Clear filter when the same category is clicked
+    } else {
+      onCategoryChange(category.label); // Apply filter for the clicked category
+    }
   };
+  
 
   const toggleShowAll = () => {
     setShowAllCategories((prev) => !prev);
@@ -69,7 +77,7 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({ onCategoryChange }) => {
                 ? "bg-blue-800 text-white hover:bg-blue-900"
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
-            onClick={() => handleCategoryClick(category.id as CategoryEnum)}
+            onClick={() => handleCategoryClick(category)}
           >
             {category.label}
           </button>

@@ -70,9 +70,7 @@ export default function Home() {
   const [courses, setCourses] = useState<CourseData[]>([]);
   const [suggestedCourses, setSuggestedCourses] = useState<CourseData[]>([]);
   const popularCoursesRef = useRef<HTMLElement>(null);
-  const [selectedCategory, setSelectedCategory] = useState<CategoryEnum>(
-    CategoryEnum.All
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   const scrollToPopularCourses = () => {
     popularCoursesRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -100,9 +98,14 @@ export default function Home() {
     fetchCourses();
   }, []);
 
-  const handleCategoryChange = (category: CategoryEnum) => {
+  const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
   };
+
+  const filteredCourses = selectedCategory
+  ? courses.filter((course) => course.category.label === selectedCategory)
+  : courses;
+
 
   const CourseGrid = ({ courses }: { courses: CourseData[] }) => (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 lg:grid-cols-3 gap-6 mb-12">
@@ -133,7 +136,7 @@ export default function Home() {
             title="Most Popular Certificates"
             subtitle="Explore our most popular programs, get job-ready for an in-demand career."
           />
-          <CourseGrid courses={courses} />
+          <CourseGrid courses={filteredCourses} />
         </section>
 
         {/* Suggested Courses Section */}
