@@ -22,7 +22,7 @@ from .serializers import (
     CourseMessagesSerializer,
     TeacherSerializer,
     CourseStatSerializer,
-    AdminDashboardStat,
+    AdminDashboardStat
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
@@ -457,14 +457,21 @@ class CourseStatView(generics.RetrieveAPIView):
             },
         }
         return response
+    
+    
+class AdminDashboardStatView(generics.RetrieveAPIView):
+    serializer_class = AdminDashboardStat
+    queryset = User.objects.all()
 
+    def get_object(self):
+        return self.queryset.get(id=self.request.user.id)
 
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+
         response.data = {
             "status": "success",
-            "data": {
-                "enrollments": response.data,
-            },
+            "data": response.data,
         }
         return response
+
