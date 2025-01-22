@@ -1,4 +1,6 @@
 from rest_framework import viewsets, generics, views, status
+from rest_framework.views import APIView
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 import hashlib
@@ -18,6 +20,8 @@ from .serializers import (
     GradeCodeSerializer,
     CourseMessagesSerializer,
     TeacherSerializer,
+    CourseStatSerializer,
+    AdminDashboardStatSerializer
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
@@ -431,6 +435,35 @@ class PaymentsListAPIView(generics.ListAPIView):
             "status": "success",
             "data": {
                 "payments": response.data,
+            },
+        }
+        return response
+    
+
+class CourseStatView(APIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseStatSerializer
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "data": {
+                "courses": response.data,
+            },
+        }
+        return response
+    
+class AdminDashboardStatView(APIView):
+    queryset = Course.objects.all()
+    serializer_class = AdminDashboardStatSerializer
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data = {
+            "status": "success",
+            "data": {
+                "enrollments": response.data,
             },
         }
         return response
