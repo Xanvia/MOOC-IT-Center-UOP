@@ -150,7 +150,7 @@ export default function CreateCourseModal() {
                         onChange={handleDifficultyChange}
                       />
                     </div>
-                    <div className="col-span-2 sm:col-span-1 mb-4 md:px-5 lg:px-10 pt-5">
+                    <div className="col-span-2 sm:col-span-1 mb-4 md:px-5 lg:px-10 pt-0">
                       <DropDownInterests
                         addSelection={handleCategoryChange}
                         value="Select Course Category"
