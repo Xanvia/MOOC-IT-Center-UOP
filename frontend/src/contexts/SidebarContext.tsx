@@ -65,7 +65,6 @@ export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
   });
 
   const [weeks, setWeeks] = useState<Week[]>([]);
-  const [reload, setReload] = useState<boolean>(false);
   const [expandedWeek, setExpandedWeek] = useState<number | null>(0);
   const [permissions, setPermissions] = useState<Permissions>({
     canEdit: false,

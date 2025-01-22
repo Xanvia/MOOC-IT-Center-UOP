@@ -203,31 +203,34 @@ export default function CourseDescEditModal({ courseData, reloadData }: Props) {
               {(formik) => (
                 <Form>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 sm:mx-10">
-                      <div className="col-span-2">
-                        <label htmlFor="title" className="text-sm font-semibold text-primary">
-                          Course Title
-                        </label>
-                        <Field
-                          type="text"
-                          id="title"
-                          name="title"
-                          className={`${SolidInputFieldClasses}`}
-                          placeholder="Enter course title"
-                        />
-                        <ErrorMessage
-                          name="title"
-                          component="div"
-                          className="text-red-500 text-xs"
-                        />
-                      </div>
+                    <div className="col-span-2">
+                      <label
+                        htmlFor="title"
+                        className="text-sm font-semibold text-primary"
+                      >
+                        Course Title
+                      </label>
+                      <Field
+                        type="text"
+                        id="title"
+                        name="title"
+                        className={`${SolidInputFieldClasses}`}
+                        placeholder="Enter course title"
+                      />
+                      <ErrorMessage
+                        name="title"
+                        component="div"
+                        className="text-red-500 text-xs"
+                      />
+                    </div>
 
                     <div className="col-span-1">
-                      <label
+                      {/* <label
                         htmlFor="category"
                         className="text-sm font-semibold text-primary"
                       >
                         Course Category
-                      </label>
+                      </label> */}
                       <DropDownInterests
                         addSelection={handleCategoryChange}
                         value={category.label}
