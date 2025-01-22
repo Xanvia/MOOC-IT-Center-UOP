@@ -27,6 +27,7 @@ from ..permissons import (
     CourseFileUploadAccess,
 )
 from coursemanagement.models import CourseTeachers
+from ..utils import segment_video
 
 
 
