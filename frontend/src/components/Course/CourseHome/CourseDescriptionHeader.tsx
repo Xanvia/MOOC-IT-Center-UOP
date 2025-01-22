@@ -49,13 +49,12 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
         input.value = value as string;
         form.appendChild(input);
       }
-
-      if (payload.amount == 0 || payload.amount == null) {
-        location.href = `/courses/${courseData.id}/room`;
+      if (payload.amount != 0 && payload.amount != null) {
+        document.body.appendChild(form);
+        form.submit();
       }
-
-      document.body.appendChild(form);
-      form.submit();
+      console.log("free course");
+      location.href = `/courses/${courseData.id}/room`;
     } catch (error) {
       console.error("Error initiating payment:", error);
     }

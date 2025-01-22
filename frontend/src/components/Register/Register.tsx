@@ -13,8 +13,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-
-
 export default function Register() {
   const [isOpen, setIsOpen] = useState(false);
   const [resetForm, setResetForm] = useState<(() => void) | null>(null);

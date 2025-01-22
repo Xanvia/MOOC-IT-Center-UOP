@@ -188,6 +188,10 @@ class AdminMessagesViewSet(viewsets.ModelViewSet):
     serializer_class = AdminMessagesSerializer
     queryset = AdminMessages.objects.all()
 
+    def filter_queryset(self, queryset):
+        pk = self.kwargs.get("course_id")
+        return super().filter_queryset(queryset).filter(course=pk)
+
     def create(self, request, *args, **kwargs):
 
         request.data["course"] = kwargs.get("course_id")
@@ -261,9 +265,12 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
         merchant_secret = settings.MERCH_SECRET
         currency = "USD"
 
-        if(amount==None or amount==0):
+        if amount is None or amount == 0:
+            print("Enrollment paid")
             enrollement.paid = True
             enrollement.save()
+            print(enrollement.paid)  # Should print True
+
 
         hash_source = f"{appid}{order_id}{amount}{currency}{hashlib.md5(merchant_secret.encode()).hexdigest().upper()}"
         hash_value = hashlib.md5(hash_source.encode()).hexdigest().upper()
