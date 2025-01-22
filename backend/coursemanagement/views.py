@@ -261,6 +261,10 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
         merchant_secret = settings.MERCH_SECRET
         currency = "USD"
 
+        if(amount==None or amount==0):
+            enrollement.paid = True
+            enrollement.save()
+
         hash_source = f"{appid}{order_id}{amount}{currency}{hashlib.md5(merchant_secret.encode()).hexdigest().upper()}"
         hash_value = hashlib.md5(hash_source.encode()).hexdigest().upper()
 

@@ -32,6 +32,7 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
     try {
       const enrollementId = await enrollCourse(courseData.id);
       setEnrollementId(enrollementId);
+
       // Fetch the payload from your backend
       const response = await initiatePaymentBe(enrollmentId);
       const payload = response.data.payload;
@@ -47,6 +48,10 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
         input.name = key;
         input.value = value as string;
         form.appendChild(input);
+      }
+
+      if (payload.amount == 0 || payload.amount == null) {
+        location.href = `/courses/${courseData.id}/room`;
       }
 
       document.body.appendChild(form);

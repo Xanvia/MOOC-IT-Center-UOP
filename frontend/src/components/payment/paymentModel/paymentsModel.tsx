@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -24,11 +24,12 @@ export default function PaymentModal({
   onClick,
 }: PaymentModalProps) {
   const router = useRouter();
+  const params = useParams();
 
   if (!isOpen) return null;
 
   const handleStartFreeTrial = () => {
-    const courseId = "1"; // Replace with dynamic courseId
+    const courseId = params.courseId; // Replace with dynamic courseId
     router.push(`/courses/${courseId}`);
   };
 
@@ -60,7 +61,7 @@ export default function PaymentModal({
           <div>
             <p className="text-gray-600 text-sm">Course Fee:</p>
             <p className="text-lg font-semibold text-blue-900">
-              {fee === 0 ? "Free" : ` ${fee} USD`}
+              {fee === null ? "Free" : ` ${fee} USD`}
             </p>
           </div>
           <div>
