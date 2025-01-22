@@ -80,6 +80,7 @@ export const SelectedTopicProvider: React.FC<SelectedTopicProviderProps> = ({
   // Add new state for notifications and discussions
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [discussions, setDiscussions] = useState<Discussion[]>([]);
+  const [reload,setReload] = useState(false);
 
   const updateItemStatus = (itemId: number, updates: Partial<Item>) => {
     setWeeks((prevWeeks) =>

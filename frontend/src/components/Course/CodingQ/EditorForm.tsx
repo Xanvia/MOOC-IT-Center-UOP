@@ -123,7 +123,7 @@ const EditForm: React.FC<Props> = ({ item, onSave }) => {
 
         {isOpen && (
           <ul
-            className="absolute z-10 mt-1 w-full max-h-56 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            className=" mt-1 w-full max-h-56 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             tabIndex={-1}
             role="listbox"
             aria-labelledby="listbox-label"

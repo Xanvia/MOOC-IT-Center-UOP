@@ -35,6 +35,8 @@ const Note: React.FC<NoteProps> = ({
       reloadData();
       setNoteContent(value);
       setEditView(false);
+      setNoteContent(value);
+      window.location.reload()
     } catch (error: any) {
       toast.error(error.message);
     }
