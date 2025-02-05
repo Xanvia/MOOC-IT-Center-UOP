@@ -27,6 +27,15 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 MERCH_ID = os.getenv("MERCH_ID")
 MERCH_SECRET = os.getenv("MERCH_SECRET")
 
+
+RECAPTCHA_SECRET_KEY= os.getenv("RECAPTCHA_SECRET_KEY")
+MERCH_NAME= os.getenv("MERCH_NAME")
+PAYMENT_URL = os.getenv("PAYMENT_URL")
+PAYMENT_USER= os.getenv("PAYMENT_USER")
+PAYMENT_PASSWORD =os.getenv("PAYMENT_PASSWORD")
+DEBUG=os.getenv("DEBUG")
+
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=2),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=2),
