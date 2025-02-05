@@ -22,11 +22,11 @@ from .serializers import (
     CourseMessagesSerializer,
     TeacherSerializer,
     CourseStatSerializer,
-    AdminDashboardStatSerializer
+    AdminDashboardStatSerializer,
 )
 from courses.serializers import CourseSerializer
 from .models import CourseTeachers, CoursePermissions, AdminMessages, Payments
-from .permissions import IsCourseCreator,IsAdminOrCourseCreator,GradePermissions
+from .permissions import IsCourseCreator, IsAdminOrCourseCreator, GradePermissions
 from courses.models import (
     Course,
     Progress,
@@ -221,7 +221,6 @@ class TeacherPermissionsRetrieveAPIView(generics.RetrieveAPIView):
     queryset = CourseTeachers.objects.all()
     permission_classes = [IsCourseCreator]
 
-
     def retrieve(self, request, *args, **kwargs):
         response = super().retrieve(request, *args, **kwargs)
         response.data = {
@@ -274,7 +273,6 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
     #         enrollement.save()
     #         print(enrollement.paid)  # Should print True
 
-
     #     hash_source = f"{appid}{order_id}{amount}{currency}{hashlib.md5(merchant_secret.encode()).hexdigest().upper()}"
     #     hash_value = hashlib.md5(hash_source.encode()).hexdigest().upper()
 
@@ -301,7 +299,6 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
 
     #     return Response({"payload": payload}, status=status.HTTP_200_OK)
 
-
     def create(self, request, *args, **kwargs):
         # Initialize payment record with user and enrollment data
         request.data["student"] = request.user.id
@@ -325,72 +322,74 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
         recaptcha_token = request.data.get("recaptchaToken")
         if recaptcha_token:
             recaptcha_response = requests.post(
-                'https://www.google.com/recaptcha/api/siteverify',
+                "https://www.google.com/recaptcha/api/siteverify",
                 data={
-                    'secret': settings.RECAPTCHA_SECRET_KEY,
-                    'response': recaptcha_token
-                }
+                    "secret": settings.RECAPTCHA_SECRET_KEY,
+                    "response": recaptcha_token,
+                },
             )
             recaptcha_data = recaptcha_response.json()
-            
-            if not recaptcha_data.get('success'):
+
+            if not recaptcha_data.get("success"):
                 return Response(
-                    {"error": "reCAPTCHA verification failed"}, 
-                    status=status.HTTP_400_BAD_REQUEST
+                    {"error": "reCAPTCHA verification failed"},
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
 
         # Payment initialization parameters
         payment_request = {
-            'apiOperation': 'INITIATE_CHECKOUT',
-            'order.id': order_id,
-            'order.amount': str(amount),
-            'order.currency': 'USD',
-            'order.reference': str(enrollment.id),
-            'order.description': f'Course Enrollment: {enrollment.course.title}',
-            'interaction.operation': 'PURCHASE',
-            'interaction.merchant.name': settings.MERCH_NAME
+            "apiOperation": "INITIATE_CHECKOUT",
+            "order.id": order_id,
+            "order.amount": str(amount),
+            "order.currency": "LKR",
+            "order.reference": str(enrollment.id),
+            "order.description": f"Course Enrollment: {enrollment.course.name}",
+            "interaction.operation": "PURCHASE",
+            "interaction.merchant.name": settings.MERCH_NAME,
         }
 
         # Merchant configuration
         merchant_config = {
-            'certificateVerifyPeer': False,
-            'certificateVerifyHost': 0,
-            'proxyCurlOption': 0,
-            'proxyCurlValue': 0,
-            'gatewayUrl': settings.PAYMENT_URL,
-            'merchantId': settings.MERCH_ID,
-            'apiUsername': settings.PAYMENT_USER,
-            'password': settings.PAYMENT_PASSWORD,
-            'debug': settings.DEBUG,
-            'version': '71'
+            "certificateVerifyPeer": False,
+            "certificateVerifyHost": 0,
+            "proxyCurlOption": 0,
+            "proxyCurlValue": 0,
+            "gatewayUrl": settings.PAYMENT_URL,
+            "merchantId": settings.MERCH_ID,
+            "apiUsername": settings.PAYMENT_USER,
+            "password": settings.PAYMENT_PASSWORD,
+            "debug": settings.DEBUG,
+            "version": "71",
         }
 
         try:
             # Initialize payment session
             payment_parser = PaymentParser(merchant_config)
             response = payment_parser.send_transaction(payment_request)
-            
-            # Parse response parameters
+            print(response)
             response_params = parse_qs(response)
-            session_id = response_params.get('session.id', [None])[0]
-            version = response_params.get('session.version', [None])[0]
+            session_id = response_params.get("session.id", [None])[0]
+            version = response_params.get("session.version", [None])[0]
 
             if not session_id:
                 return Response(
-                    {"error": "Failed to initialize payment session"}, 
-                    status=status.HTTP_400_BAD_REQUEST
+                    {"error": "Failed to initialize payment session"},
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            return Response({
-                "sessionId": session_id,
-                "responseParams": response,
-                "version": version
-            }, status=status.HTTP_200_OK)
+            return Response(
+                {
+                    "sessionId": session_id,
+                    "responseParams": response,
+                    "version": version,
+                },
+                status=status.HTTP_200_OK,
+            )
 
         except Exception as e:
             return Response(
-                {"error": f"Payment initialization failed: {str(e)}"}, 
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {"error": f"Payment initialization failed: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
 
@@ -423,22 +422,24 @@ class CourseMessagesViewSet(viewsets.ModelViewSet):
                 id=self.kwargs.get("teacher_id"),
             )
         return self.queryset.get(
-                course = self.kwargs.get("course_id"),
-                teacher = self.request.user
-            )
+            course=self.kwargs.get("course_id"), teacher=self.request.user
+        )
+
     def filter_queryset(self, queryset):
         if self.kwargs.get("teacher_id"):
-            return super().filter_queryset(queryset).filter(
-                id=self.kwargs.get("teacher_id")
+            return (
+                super()
+                .filter_queryset(queryset)
+                .filter(id=self.kwargs.get("teacher_id"))
             )
-        return super().filter_queryset(queryset).filter(
-            teacher=self.request.user,
-            course=self.kwargs.get("course_id")
+        return (
+            super()
+            .filter_queryset(queryset)
+            .filter(teacher=self.request.user, course=self.kwargs.get("course_id"))
         )
-       
-    
+
     def list(self, request, *args, **kwargs):
-        response =  super().list(request, *args, **kwargs)
+        response = super().list(request, *args, **kwargs)
         return response
 
     def add_message_admin(self, request, *args, **kwargs):
@@ -512,7 +513,7 @@ class isCourseCreator(views.APIView):
     queryset = Course.objects.all()
 
     def get(self, request, *args, **kwargs):
- 
+
         course_id = kwargs.get("course_id")
         user_id = request.user.id
         try:
@@ -525,7 +526,7 @@ class isCourseCreator(views.APIView):
             course_creator = False
         response = {"is_creator": course_creator}
         return Response(response, status=status.HTTP_200_OK)
-    
+
 
 class PaymentsListAPIView(generics.ListAPIView):
     queryset = Payments.objects.all()
@@ -544,7 +545,7 @@ class PaymentsListAPIView(generics.ListAPIView):
             },
         }
         return response
-    
+
 
 class CourseStatView(generics.RetrieveAPIView):
     queryset = Course.objects.all()
