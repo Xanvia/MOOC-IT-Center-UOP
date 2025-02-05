@@ -1,3 +1,4 @@
+import requests
 from rest_framework import viewsets, generics, views, status
 from rest_framework.views import APIView
 from rest_framework import status
@@ -35,6 +36,8 @@ from courses.models import (
 )
 from django.conf import settings
 from django.contrib.auth.models import User
+from .utils import PaymentParser
+from urllib.parse import parse_qs
 
 
 class CourseTeacherViewSet(viewsets.ModelViewSet):
@@ -250,53 +253,145 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
     queryset = Payments.objects.all()
     serializer_class = PaymentSerializer
 
-    def create(self, request, *args, **kwargs):
+    # def create(self, request, *args, **kwargs):
 
+    #     request.data["student"] = request.user.id
+    #     request.data["enrollement"] = kwargs.get("enrollment_id")
+
+    #     response = super().create(request, *args, **kwargs)
+    #     amount = response.data["amount"]
+    #     order_id = response.data["order_id"]
+
+    #     enrollement = Enrollment.objects.get(id=kwargs.get("enrollment_id"))
+    #     course_id = enrollement.course.id
+    #     appid = settings.MERCH_ID
+    #     merchant_secret = settings.MERCH_SECRET
+    #     currency = "USD"
+
+    #     if amount is None or amount == 0:
+    #         print("Enrollment paid")
+    #         enrollement.paid = True
+    #         enrollement.save()
+    #         print(enrollement.paid)  # Should print True
+
+
+    #     hash_source = f"{appid}{order_id}{amount}{currency}{hashlib.md5(merchant_secret.encode()).hexdigest().upper()}"
+    #     hash_value = hashlib.md5(hash_source.encode()).hexdigest().upper()
+
+    #     # Prepare the payload
+    #     payload = {
+    #         "merchant_id": appid,
+    #         "return_url": f"http://localhost:3000/courses/{course_id}/room",
+    #         "cancel_url": f"http://localhost:3000/courses/{course_id}",
+    #         "notify_url": "http://127.0.0.1:8000/api/payments/notify/",
+    #         "order_id": order_id,
+    #         "items": "Course Enrollment",
+    #         "currency": currency,
+    #         "amount": amount,
+    #         "first_name": request.user.first_name,
+    #         "last_name": request.user.last_name,
+    #         "email": request.user.email,
+    #         "address": "Student Address",
+    #         "city": "Student City",
+    #         "country": "Sri Lanka",
+    #         "hash": hash_value,
+    #         "custom_1": request.user.id,
+    #         "custom_2": kwargs.get("enrollment_id"),
+    #     }
+
+    #     return Response({"payload": payload}, status=status.HTTP_200_OK)
+
+
+    def create(self, request, *args, **kwargs):
+        # Initialize payment record with user and enrollment data
         request.data["student"] = request.user.id
         request.data["enrollement"] = kwargs.get("enrollment_id")
 
+        # Create the payment record using parent class
         response = super().create(request, *args, **kwargs)
         amount = response.data["amount"]
         order_id = response.data["order_id"]
 
-        enrollement = Enrollment.objects.get(id=kwargs.get("enrollment_id"))
-        course_id = enrollement.course.id
-        appid = settings.MERCH_ID
-        merchant_secret = settings.MERCH_SECRET
-        currency = "USD"
+        # Get enrollment details
+        enrollment = Enrollment.objects.get(id=kwargs.get("enrollment_id"))
 
+        # Handle free enrollments
         if amount is None or amount == 0:
-            print("Enrollment paid")
-            enrollement.paid = True
-            enrollement.save()
-            print(enrollement.paid)  # Should print True
+            enrollment.paid = True
+            enrollment.save()
+            return Response({"status": "success"}, status=status.HTTP_200_OK)
 
+        # Verify reCAPTCHA token
+        recaptcha_token = request.data.get("recaptchaToken")
+        if recaptcha_token:
+            recaptcha_response = requests.post(
+                'https://www.google.com/recaptcha/api/siteverify',
+                data={
+                    'secret': settings.RECAPTCHA_SECRET_KEY,
+                    'response': recaptcha_token
+                }
+            )
+            recaptcha_data = recaptcha_response.json()
+            
+            if not recaptcha_data.get('success'):
+                return Response(
+                    {"error": "reCAPTCHA verification failed"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
-        hash_source = f"{appid}{order_id}{amount}{currency}{hashlib.md5(merchant_secret.encode()).hexdigest().upper()}"
-        hash_value = hashlib.md5(hash_source.encode()).hexdigest().upper()
-
-        # Prepare the payload
-        payload = {
-            "merchant_id": appid,
-            "return_url": f"http://localhost:3000/courses/{course_id}/room",
-            "cancel_url": f"http://localhost:3000/courses/{course_id}",
-            "notify_url": "http://127.0.0.1:8000/api/payments/notify/",
-            "order_id": order_id,
-            "items": "Course Enrollment",
-            "currency": currency,
-            "amount": amount,
-            "first_name": request.user.first_name,
-            "last_name": request.user.last_name,
-            "email": request.user.email,
-            "address": "Student Address",
-            "city": "Student City",
-            "country": "Sri Lanka",
-            "hash": hash_value,
-            "custom_1": request.user.id,
-            "custom_2": kwargs.get("enrollment_id"),
+        # Payment initialization parameters
+        payment_request = {
+            'apiOperation': 'INITIATE_CHECKOUT',
+            'order.id': order_id,
+            'order.amount': str(amount),
+            'order.currency': 'USD',
+            'order.reference': str(enrollment.id),
+            'order.description': f'Course Enrollment: {enrollment.course.title}',
+            'interaction.operation': 'PURCHASE',
+            'interaction.merchant.name': settings.MERCH_NAME
         }
 
-        return Response({"payload": payload}, status=status.HTTP_200_OK)
+        # Merchant configuration
+        merchant_config = {
+            'certificateVerifyPeer': False,
+            'certificateVerifyHost': 0,
+            'proxyCurlOption': 0,
+            'proxyCurlValue': 0,
+            'gatewayUrl': settings.PAYMENT_URL,
+            'merchantId': settings.MERCH_ID,
+            'apiUsername': settings.PAYMENT_USER,
+            'password': settings.PAYMENT_PASSWORD,
+            'debug': settings.DEBUG,
+            'version': '71'
+        }
+
+        try:
+            # Initialize payment session
+            payment_parser = PaymentParser(merchant_config)
+            response = payment_parser.send_transaction(payment_request)
+            
+            # Parse response parameters
+            response_params = parse_qs(response)
+            session_id = response_params.get('session.id', [None])[0]
+            version = response_params.get('session.version', [None])[0]
+
+            if not session_id:
+                return Response(
+                    {"error": "Failed to initialize payment session"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            return Response({
+                "sessionId": session_id,
+                "responseParams": response,
+                "version": version
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(
+                {"error": f"Payment initialization failed: {str(e)}"}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class PaymentNotificationAPIView(views.APIView):

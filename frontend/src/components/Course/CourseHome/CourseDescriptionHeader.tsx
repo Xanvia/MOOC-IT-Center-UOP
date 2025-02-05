@@ -28,37 +28,37 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
   const router = useRouter();
   const { userRole } = useGlobal();
 
-  async function initiatePayment(enrollmentId: number) {
-    try {
-      const enrollementId = await enrollCourse(courseData.id);
-      setEnrollementId(enrollementId);
+  // async function initiatePayment() {
+  //   try {
+  //     const enrollementId = await enrollCourse(courseData.id);
+  //     setEnrollementId(enrollementId);
 
-      // Fetch the payload from your backend
-      const response = await initiatePaymentBe(enrollmentId);
-      const payload = response.data.payload;
-      console.log(payload);
-      // Create a form and submit it to the PayHere API
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = "https://sandbox.payhere.lk/pay/checkout";
+  //     // Fetch the payload from your backend
+  //     const response = await initiatePaymentBe(enrollementId);
+  //     const payload = response.data.payload;
+  //     console.log(payload);
+  //     // Create a form and submit it to the PayHere API
+  //     const form = document.createElement("form");
+  //     form.method = "POST";
+  //     form.action = "https://sandbox.payhere.lk/pay/checkout";
 
-      for (const [key, value] of Object.entries(payload)) {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = key;
-        input.value = value as string;
-        form.appendChild(input);
-      }
-      if (payload.amount != 0 && payload.amount != null) {
-        document.body.appendChild(form);
-        form.submit();
-      }
-      console.log("free course");
-      location.href = `/courses/${courseData.id}/room`;
-    } catch (error) {
-      console.error("Error initiating payment:", error);
-    }
-  }
+  //     for (const [key, value] of Object.entries(payload)) {
+  //       const input = document.createElement("input");
+  //       input.type = "hidden";
+  //       input.name = key;
+  //       input.value = value as string;
+  //       form.appendChild(input);
+  //     }
+  //     if (payload.amount != 0 && payload.amount != null) {
+  //       document.body.appendChild(form);
+  //       form.submit();
+  //     }
+  //     console.log("free course");
+  //     location.href = `/courses/${courseData.id}/room`;
+  //   } catch (error) {
+  //     console.error("Error initiating payment:", error);
+  //   }
+  // }
 
   return (
     <>
@@ -134,7 +134,7 @@ const CourseHeader: React.FC<CourseHeaderProps> = ({
           description={courseData.description}
           fee={courseData.price}
           trialAvailable={false}
-          onClick={() => initiatePayment(2)}
+          courseId = {courseData.id}
         />
       </div>
     </>
