@@ -156,7 +156,7 @@ const AboutUs = () => {
           </p>
           <h3 className="text-2xl font-bold mb-20 text-center">Our Staff</h3>
           <div className="flex justify-center">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl justify-items-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 max-w-7xl justify-items-center">
               {(content?.teamMembers || defaultTeamMembers).map((member) => (
                 <div
                   key={member.id}
