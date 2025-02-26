@@ -46,14 +46,6 @@ const defaultTeamMembers: TeamMember[] = [
     bio: "B.Sc(Pera), PhD(Sweden)",
     imageUrl: "https://sci.pdn.ac.lk/scs/assets/img/staff/16-hakim.webp",
   },
-  {
-    id: 3,
-    name: "Lisa Rodriguez",
-    role: "OPEN-ED Director",
-    bio: "B.Sc., M.Sc (Computer Science)",
-    imageUrl:
-      "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3",
-  },
 ];
 
 const SolidButton = () => {
@@ -153,9 +145,9 @@ const AboutUs = () => {
       {/* IT Center Section */}
       <section className="py-28 bg-white">
         <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-20 text-center">
+          <h2 className="text-3xl font-bold mb-20 text-center">
             The IT Center: Empowering OpenEd&apos;s Educational Journey
-            </h2>
+          </h2>
           <p className="text-lg text-center max-w-4xl mx-auto mb-24 text-gray-700 leading-relaxed">
             The IT Center serves as the backbone of OpenEd, empowering students
             and staff with advanced technology solutions and support. Our
