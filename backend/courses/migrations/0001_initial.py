@@ -118,19 +118,7 @@ class Migration(migrations.Migration):
                 ('status', models.CharField(default='unpublished', max_length=255)),
                 ('payment_type', models.CharField(choices=[('free', 'Free'), ('paid', 'Completely Paid'), ('trial', '1 Week Free Trial and Paid')], default='trial', max_length=50)),
                 ('price', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                 ('finished', models.BooleanField(default=False)),
-=======
-=======
->>>>>>> 810f922 (fix:migrations)
->>>>>>> 73ba8c9 (fix:migrations)
-=======
->>>>>>> fc5fab2 (feat: migartions)
-=======
-                ('finished', models.BooleanField(default=False)),
->>>>>>> e2c040a (WIP)
                 ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='userprofiles.interest')),
                 ('course_creator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
                 ('institution', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='userprofiles.institution')),
@@ -154,23 +142,9 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date_enrolled', models.DateTimeField(auto_now_add=True)),
                 ('paid', models.BooleanField(default=False)),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                 ('certificate_url', models.CharField(blank=True, max_length=255, null=True)),
                 ('certificate_id', models.CharField(blank=True, max_length=255, null=True)),
                 ('completion_date', models.DateTimeField(blank=True, null=True)),
-=======
-=======
->>>>>>> 810f922 (fix:migrations)
->>>>>>> 73ba8c9 (fix:migrations)
-=======
->>>>>>> fc5fab2 (feat: migartions)
-=======
-                ('certificate_url', models.CharField(blank=True, max_length=255, null=True)),
-                ('certificate_id', models.CharField(blank=True, max_length=255, null=True)),
-                ('completion_date', models.DateTimeField(blank=True, null=True)),
->>>>>>> e2c040a (WIP)
                 ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.course')),
                 ('student', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
