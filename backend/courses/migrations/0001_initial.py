@@ -120,6 +120,7 @@ class Migration(migrations.Migration):
                 ('price', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 ('finished', models.BooleanField(default=False)),
 =======
 =======
@@ -127,6 +128,9 @@ class Migration(migrations.Migration):
 >>>>>>> 73ba8c9 (fix:migrations)
 =======
 >>>>>>> fc5fab2 (feat: migartions)
+=======
+                ('finished', models.BooleanField(default=False)),
+>>>>>>> e2c040a (WIP)
                 ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='userprofiles.interest')),
                 ('course_creator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
                 ('institution', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='userprofiles.institution')),
@@ -152,6 +156,7 @@ class Migration(migrations.Migration):
                 ('paid', models.BooleanField(default=False)),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 ('certificate_url', models.CharField(blank=True, max_length=255, null=True)),
                 ('certificate_id', models.CharField(blank=True, max_length=255, null=True)),
                 ('completion_date', models.DateTimeField(blank=True, null=True)),
@@ -161,6 +166,11 @@ class Migration(migrations.Migration):
 >>>>>>> 73ba8c9 (fix:migrations)
 =======
 >>>>>>> fc5fab2 (feat: migartions)
+=======
+                ('certificate_url', models.CharField(blank=True, max_length=255, null=True)),
+                ('certificate_id', models.CharField(blank=True, max_length=255, null=True)),
+                ('completion_date', models.DateTimeField(blank=True, null=True)),
+>>>>>>> e2c040a (WIP)
                 ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.course')),
                 ('student', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
