@@ -33,7 +33,7 @@ router.register(r"progress", ProgressTrackViewSet, basename="progress")
 urlpatterns = [
     # get course details, update course details, create course
     path(
-        "<int:course_id>",
+        "<int:course_id>/",
         CourseViewSet.as_view(
             {"get": "retrieve", "patch": "add_details", "put": "update"}
         ),
@@ -55,7 +55,7 @@ urlpatterns = [
     ),
     # get course detials, update course details, delete course
     path(
-        "<int:course_id>",
+        "<int:course_id>/",
         CourseViewSet.as_view(
             {"get": "retrieve", "patch": "add_details", "put": "update"}
         ),
@@ -188,7 +188,7 @@ urlpatterns = [
         name="message-detail",
     ),
     path(
-        "message/<int:message_id>/reply",
+        "message/<int:message_id>/reply/",
         ReplyViewSet.as_view({"post": "create", "get": "list"}),
         name="reply-message",
     ),
@@ -198,7 +198,7 @@ urlpatterns = [
         name="reply-detail",
     ),
     path(
-        "component/<int:component_id>/chat",
+        "component/<int:component_id>/chat/",
         ItemChatViewSet.as_view({"post": "create", "get": "list"}),
         name="item-chat",
     ),

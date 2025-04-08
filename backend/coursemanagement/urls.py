@@ -15,7 +15,7 @@ from .views import (
     AdminMessagesViewSet,
     PaymentsListAPIView,
     CourseStatView,
-    AdminDashboardStatView
+    AdminDashboardStatView,
 )
 
 
@@ -27,7 +27,7 @@ urlpatterns = [
         ),
         name="course-teacher-list",
     ),
-     path(
+    path(
         "<int:course_id>/is-creator/",
         isCourseCreator.as_view(),
         name="is-course-creator",
@@ -67,18 +67,20 @@ urlpatterns = [
         name="student-quizes",
     ),
     path(
-        "quiz/<int:pk>", StudentQuizDetailAPIView.as_view(), name="submission-details"
+        "quiz/<int:pk>/", StudentQuizDetailAPIView.as_view(), name="submission-details"
     ),
     path(
-        "code/<int:pk>", StudentCodingDetailAPIView.as_view(), name="submission-details"
+        "code/<int:pk>/",
+        StudentCodingDetailAPIView.as_view(),
+        name="submission-details",
     ),
     path(
-        "<int:course_id>/grade-quiz/<int:pk>",
+        "<int:course_id>/grade-quiz/<int:pk>/",
         GradeQuizAPIView.as_view(),
         name="grade-quiz",
     ),
     path(
-        "<int:course_id>/grade-code/<int:pk>",
+        "<int:course_id>/grade-code/<int:pk>/",
         GradeCodingAPIView.as_view(),
         name="grade-code",
     ),
@@ -109,8 +111,14 @@ urlpatterns = [
         ),
         name="course-messages",
     ),
-    path("admin-messages/<int:course_id>", AdminMessagesViewSet.as_view({"get": "list","post":"create"}), name="admin-messages",),
-    path("payments/<int:course_id>", PaymentsListAPIView.as_view(), name="payments-list"),
-    path("course-stats/<int:pk>", CourseStatView.as_view(), name='course-stats'),
-    path("admin-stats", AdminDashboardStatView.as_view(), name='admin-stats'),
+    path(
+        "admin-messages/<int:course_id>/",
+        AdminMessagesViewSet.as_view({"get": "list", "post": "create"}),
+        name="admin-messages",
+    ),
+    path(
+        "payments/<int:course_id>/", PaymentsListAPIView.as_view(), name="payments-list"
+    ),
+    path("course-stats/<int:pk>/", CourseStatView.as_view(), name="course-stats"),
+    path("admin-stats/", AdminDashboardStatView.as_view(), name="admin-stats"),
 ]
