@@ -18,6 +18,7 @@ from .models import (
     ItemChat,
     Message,
     Reply,
+    Image,
 
 )
 
