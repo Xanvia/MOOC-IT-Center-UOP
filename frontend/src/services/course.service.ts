@@ -185,7 +185,9 @@ export const uploadImage = async (
         },
       }
     );
-    return response.data.data.url;
+    const originalUrl = response.data.data.url;
+    const modifiedUrl = originalUrl.replace("/media", "/be/media");
+    return modifiedUrl;
   } catch (error) {
     console.error("Error uploading image: ", error);
     throw new Error("Failed to upload image");

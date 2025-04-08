@@ -30,7 +30,6 @@ const TextEditor: React.FC<TextEditorProps> = ({ initialData, onClick,id }) => {
 
     const imageUrl = await uploadImage(file, id);
     if (typeof imageUrl === "string" && imageUrl.length > 0) {
-      console.log(imageUrl);
       if (editorRef.current) {
         editorRef.current.insertContent(
           `<img src="${imageUrl}" alt="Uploaded Image" />`
