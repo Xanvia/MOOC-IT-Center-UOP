@@ -65,7 +65,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User, Group
 from rest_framework.filters import SearchFilter
 from .utils import segment_video
-from urllib.parse import urljoin
+from pathlib import Path
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -418,14 +418,24 @@ class ImageUpload(generics.CreateAPIView):
     permission_classes = [CourseFileUploadAccess]
 
     def create(self, request, *args, **kwargs):
+        # Attach note ID from URL to request data
         request.data["note"] = kwargs["note_id"]
+
+        # Perform the default create logic
         response = super().create(request, *args, **kwargs)
 
-        image_path = response.data["image"]
+        # Get the image path returned from serializer
+        raw_image_path = response.data.get("image", "")
 
-        # Build full absolute URL — respects HTTPS if settings are correct
-        image_url = request.build_absolute_uri(f"/be{image_path}")
+        # Clean path: remove '../../' and ensure it starts from /media/
+        clean_path = Path(raw_image_path).as_posix()
+        if clean_path.startswith("../../"):
+            clean_path = clean_path.replace("../../", "/media/", 1)
 
+        # Final full URL (accounting for reverse proxy under `/be`)
+        image_url = request.build_absolute_uri(f"/be{clean_path}")
+
+        # Custom response
         response.data = {
             "status": "success",
             "message": "Image uploaded successfully",
@@ -434,6 +444,7 @@ class ImageUpload(generics.CreateAPIView):
                 "url": image_url,
             },
         }
+
         return response
 
 
