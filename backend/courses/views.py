@@ -424,7 +424,7 @@ class ImageUpload(generics.CreateAPIView):
         image_path = response.data["image"]
 
         # Build full absolute URL — respects HTTPS if settings are correct
-        image_url = request.build_absolute_uri(image_path)
+        image_url = request.build_absolute_uri(f"/be{image_path}")
 
         response.data = {
             "status": "success",
