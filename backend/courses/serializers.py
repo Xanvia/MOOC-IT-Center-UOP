@@ -234,25 +234,6 @@ class ImageSerializer(serializers.ModelSerializer):
         model = Image
         fields = "__all__"
 
-    def to_representation(self, instance):
-        """
-        Modify the representation of the image to include the '/be' part in the URL.
-        """
-        representation = super().to_representation(instance)
-
-        # Get the raw image path
-        raw_image_path = representation.get("image", "")
-
-        # Ensure it's a valid path and starts with /media
-        if raw_image_path.startswith("../../"):
-            # Clean path to get the absolute path for media
-            clean_path = raw_image_path.replace("../../", "/media/", 1)
-
-            # Add the '/be' prefix
-            representation["image"] = f"/be{clean_path}"
-
-        return representation
-
 
 class QuizSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="Quiz")

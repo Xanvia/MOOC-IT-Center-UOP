@@ -419,13 +419,15 @@ class ImageUpload(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         request.data["note"] = kwargs["note_id"]
         response = super().create(request, *args, **kwargs)
+        image_path = response.data["image"]
+        image_url = request.build_absolute_uri(f"/be{image_path}")
 
         response.data = {
             "status": "success",
             "message": "Image uploaded successfully",
             "data": {
                 "id": response.data["id"],
-                "url": response.data["image"],
+                "url": image_url,
             },
         }
         return response
