@@ -29,7 +29,7 @@ export const getAllPublishedCourses = async () => {
 
 export const getAllUnpublishedCourses = async () => {
   try {
-    const { data } = await axiosInstance.get("/course/unpublished");
+    const { data } = await axiosInstance.get("/course/unpublished/");
     return data.data.courses;
   } catch (error) {
     throw error;
