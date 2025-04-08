@@ -230,22 +230,28 @@ class NoteSerializer(serializers.ModelSerializer):
 
 
 class ImageSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
-
     class Meta:
         model = Image
         fields = "__all__"
 
-    def get_image(self, obj):
-        if obj.image:
-            request = self.context.get("request")
-            # Return modified path with '/be/' prefix
-            return (
-                f"/be{obj.image.url}"
-                if obj.image.url.startswith("/media")
-                else f"/be/media/{obj.image.name}"
-            )
-        return None
+    def to_representation(self, instance):
+        """
+        Modify the representation of the image to include the '/be' part in the URL.
+        """
+        representation = super().to_representation(instance)
+
+        # Get the raw image path
+        raw_image_path = representation.get("image", "")
+
+        # Ensure it's a valid path and starts with /media
+        if raw_image_path.startswith("../../"):
+            # Clean path to get the absolute path for media
+            clean_path = raw_image_path.replace("../../", "/media/", 1)
+
+            # Add the '/be' prefix
+            representation["image"] = f"/be{clean_path}"
+
+        return representation
 
 
 class QuizSerializer(serializers.ModelSerializer):
