@@ -182,7 +182,7 @@ const DataStatsOne = () => {
       const fetchStats = async () => {
         try {
           const response = await axiosInstance.get(
-            `/course/manage/admin-stats`
+            `/course/manage/admin-stats/`
           );
   
           console.log(response.data);
