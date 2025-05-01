@@ -300,50 +300,48 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
     #     return Response({"payload": payload}, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
-        # Initialize payment record with user and enrollment data
+        # 1. Add user and enrollment data to request
         request.data["student"] = request.user.id
         request.data["enrollement"] = kwargs.get("enrollment_id")
-        print(request.data["recaptchaToken"])
+        recaptcha_token = request.data.get("recaptchaToken")
+        print("Received token:", recaptcha_token)
 
-        print("here")
-
-        # Create the payment record using parent class
+        # 2. Create the payment record
         response = super().create(request, *args, **kwargs)
-        amount = response.data["amount"]
-        order_id = response.data["order_id"]
-
-        # Get enrollment details
+        amount = response.data.get("amount")
+        order_id = response.data.get("order_id")
         enrollment = Enrollment.objects.get(id=kwargs.get("enrollment_id"))
 
-        # Handle free enrollments
-        if amount is None or amount == 0:
+        # 3. If it's a free course, mark as paid
+        if not amount or amount == 0:
             enrollment.paid = True
             enrollment.save()
             return Response({"status": "success"}, status=status.HTTP_200_OK)
 
-        # Verify reCAPTCHA token
-        recaptcha_token = request.data["recaptchaToken"]
-        print(recaptcha_token)
+        # 4. reCAPTCHA Enterprise verification
         if recaptcha_token:
-            recaptcha_response = requests.post(
-                "https://www.google.com/recaptcha/api/siteverify",
-                data={
-                    "secret": settings.RECAPTCHA_SECRET_KEY,
-                    "response": recaptcha_token,
-                },
-            )
-            print("here2")
-            print(recaptcha_response)
-            recaptcha_data = recaptcha_response.json()
-
-            if not recaptcha_data.get("success"):
-                print("not success")
-                return Response(
-                    {"error": "reCAPTCHA verification failed"},
-                    status=status.HTTP_400_BAD_REQUEST,
+            try:
+                assessment = create_assessment(
+                    project_id=settings.RECAPTCHA_PROJECT_ID,
+                    recaptcha_key=settings.RECAPTCHA_SITE_KEY,
+                    token=recaptcha_token,
+                    recaptcha_action="enroll_action",  # this must match the frontend action
                 )
 
-        # Payment initialization parameters
+                if not assessment or assessment.risk_analysis.score < 0.5:
+                    return Response(
+                        {
+                            "error": "reCAPTCHA verification failed or risky behavior detected."
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+            except GoogleAPICallError as e:
+                return Response(
+                    {"error": f"reCAPTCHA validation error: {str(e)}"},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+
+        # 5. Prepare payment payload
         payment_request = {
             "apiOperation": "INITIATE_CHECKOUT",
             "order.id": order_id,
@@ -355,7 +353,6 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
             "interaction.merchant.name": settings.MERCH_NAME,
         }
 
-        # Merchant configuration
         merchant_config = {
             "certificateVerifyPeer": False,
             "certificateVerifyHost": 0,
@@ -369,12 +366,11 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
             "version": "71",
         }
 
+        # 6. Process the payment session
         try:
-            # Initialize payment session
             payment_parser = PaymentParser(merchant_config)
-            response = payment_parser.send_transaction(payment_request)
-            print(response)
-            response_params = parse_qs(response)
+            response_raw = payment_parser.send_transaction(payment_request)
+            response_params = parse_qs(response_raw)
             session_id = response_params.get("session.id", [None])[0]
             version = response_params.get("session.version", [None])[0]
 
@@ -387,7 +383,7 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
             return Response(
                 {
                     "sessionId": session_id,
-                    "responseParams": response,
+                    "responseParams": response_raw,
                     "version": version,
                 },
                 status=status.HTTP_200_OK,
