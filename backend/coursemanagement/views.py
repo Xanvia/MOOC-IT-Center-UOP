@@ -320,6 +320,7 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
 
         # Verify reCAPTCHA token
         recaptcha_token = request.data.get("recaptchaToken")
+        print(recaptcha_token)
         if recaptcha_token:
             recaptcha_response = requests.post(
                 "https://www.google.com/recaptcha/api/siteverify",
