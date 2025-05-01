@@ -333,7 +333,7 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
                 },
             )
             print("here2")
-            print(recaptcha_data)
+            print(recaptcha_response)
             recaptcha_data = recaptcha_response.json()
 
             if not recaptcha_data.get("success"):
