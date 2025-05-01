@@ -332,10 +332,11 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
                     "response": recaptcha_token,
                 },
             )
-            print(recaptcha_response)
+            print("here2")
             recaptcha_data = recaptcha_response.json()
-
+                
             if not recaptcha_data.get("success"):
+                print("not success")
                 return Response(
                     {"error": "reCAPTCHA verification failed"},
                     status=status.HTTP_400_BAD_REQUEST,
