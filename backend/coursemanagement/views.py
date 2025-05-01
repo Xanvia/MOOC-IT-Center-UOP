@@ -303,6 +303,9 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
         # Initialize payment record with user and enrollment data
         request.data["student"] = request.user.id
         request.data["enrollement"] = kwargs.get("enrollment_id")
+        print(request.data["recaptchaToken"])
+
+        print("here")
 
         # Create the payment record using parent class
         response = super().create(request, *args, **kwargs)
@@ -319,7 +322,7 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
             return Response({"status": "success"}, status=status.HTTP_200_OK)
 
         # Verify reCAPTCHA token
-        recaptcha_token = request.data.get("recaptchaToken")
+        recaptcha_token = request.data["recaptchaToken"]
         print(recaptcha_token)
         if recaptcha_token:
             recaptcha_response = requests.post(
