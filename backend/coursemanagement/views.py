@@ -303,8 +303,8 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
         # 1. Add user and enrollment data to request
         request.data["student"] = request.user.id
         request.data["enrollement"] = kwargs.get("enrollment_id")
-        recaptcha_token = request.data.get("recaptchaToken")
-        print("Received token:", recaptcha_token)
+        # recaptcha_token = request.data.get("recaptchaToken")
+        # print("Received token:", recaptcha_token)
 
         # 2. Create the payment record
         response = super().create(request, *args, **kwargs)
@@ -318,28 +318,28 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
             enrollment.save()
             return Response({"status": "success"}, status=status.HTTP_200_OK)
 
-        # 4. reCAPTCHA Enterprise verification
-        if recaptcha_token:
-            try:
-                assessment = create_assessment(
-                    project_id=settings.RECAPTCHA_PROJECT_ID,
-                    recaptcha_key=settings.RECAPTCHA_SITE_KEY,
-                    token=recaptcha_token,
-                    recaptcha_action="enroll_action",  # this must match the frontend action
-                )
+        # # 4. reCAPTCHA Enterprise verification
+        # if recaptcha_token:
+        #     try:
+        #         assessment = create_assessment(
+        #             project_id=settings.RECAPTCHA_PROJECT_ID,
+        #             recaptcha_key=settings.RECAPTCHA_SITE_KEY,
+        #             token=recaptcha_token,
+        #             recaptcha_action="enroll_action",  # this must match the frontend action
+        #         )
 
-                if not assessment or assessment.risk_analysis.score < 0.5:
-                    return Response(
-                        {
-                            "error": "reCAPTCHA verification failed or risky behavior detected."
-                        },
-                        status=status.HTTP_400_BAD_REQUEST,
-                    )
-            except GoogleAPICallError as e:
-                return Response(
-                    {"error": f"reCAPTCHA validation error: {str(e)}"},
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                )
+        #         if not assessment or assessment.risk_analysis.score < 0.5:
+        #             return Response(
+        #                 {
+        #                     "error": "reCAPTCHA verification failed or risky behavior detected."
+        #                 },
+        #                 status=status.HTTP_400_BAD_REQUEST,
+        #             )
+        #     except GoogleAPICallError as e:
+        #         return Response(
+        #             {"error": f"reCAPTCHA validation error: {str(e)}"},
+        #             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        #         )
 
         # 5. Prepare payment payload
         payment_request = {
