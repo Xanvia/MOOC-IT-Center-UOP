@@ -304,7 +304,6 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
         request.data["student"] = request.user.id
         request.data["enrollement"] = kwargs.get("enrollment_id")
 
-
         # Create the payment record using parent class
         response = super().create(request, *args, **kwargs)
         amount = response.data["amount"]
@@ -330,7 +329,8 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
                     "response": recaptcha_token,
                 },
             )
-            
+
+            print(recaptcha_response)
             recaptcha_data = recaptcha_response.json()
             print(recaptcha_data)
 
