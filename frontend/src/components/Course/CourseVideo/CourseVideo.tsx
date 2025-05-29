@@ -20,6 +20,7 @@ import EditButtonPrimary from "@/components/Buttons/EditButtonPrimary";
 import DeleteButtonPrimary from "@/components/Buttons/DeleteButtonPrimary";
 import ChatDrawer from "../Drawer/Drawer";
 import Hls from "hls.js";
+import UploadLoader from "./uploader";
 
 interface MCQ {
   timestamp: number;
@@ -62,6 +63,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [answeredMCQs, setAnsweredMCQs] = useState<Set<number>>(new Set());
+  const [isUploading, setIsUploading] = useState(false);
 
   // Teacher mode variables
   const [editMCQs, setEditMCQs] = useState<MCQ[]>(mcqs); // editable list of MCQs
@@ -159,12 +161,15 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
       if (file) {
+        setIsUploading(true);
         try {
           const response = await uploadVideo(file, id);
           setUploadedVideoURL(response.data.url);
           toast.success(response.message);
         } catch (error: any) {
           toast.error(error.message);
+        } finally {
+          setIsUploading(false); 
         }
       }
     },
@@ -645,7 +650,7 @@ const CourseVideo: React.FC<CourseVideoProps> = ({
           </div>
         </div>
       )}
-
+    <UploadLoader isVisible={isUploading} />
       {/* MCQ List for Teacher */}
       {!isPreview && (
         <div className="p-10 bg-gray-100 rounded-lg shadow-lg mt-12 mb-24 z-40 w-[800px]">

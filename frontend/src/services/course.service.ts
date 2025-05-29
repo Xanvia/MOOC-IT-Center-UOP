@@ -348,6 +348,7 @@ export const uploadVideo = async (file: File, videoId: number) => {
         },
       }
     );
+    await new Promise((resolve) => setTimeout(resolve, 6000));
     return response.data;
   } catch (error: any) {
     console.log(error);
