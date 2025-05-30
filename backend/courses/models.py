@@ -287,3 +287,12 @@ class LastSeenCourse(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     last_seen_announcement = models.DateTimeField(auto_now_add=True)
     last_seen_discussion = models.DateTimeField(auto_now_add=True)
+
+
+
+class UploadedFile(models.Model):
+    file = models.FileField(upload_to="quiz_files/")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.file.name
