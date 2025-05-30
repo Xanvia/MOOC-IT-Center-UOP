@@ -162,11 +162,13 @@ class Question(models.Model):
     SINGLE_CORRECT = "SC"
     MULTIPLE_CORRECT = "MC"
     OPENN_ENDED = "OE"
+    FILE_UPLOAD = "FU"
 
     QUESTION_TYPES = [
         (SINGLE_CORRECT, "Single Correct"),
         (MULTIPLE_CORRECT, "Multiple Correct"),
         (OPENN_ENDED, "Open Ended"),
+        (FILE_UPLOAD, "File Upload"),
     ]
 
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions")
@@ -212,10 +214,16 @@ class StudentCodingAnswer(models.Model):
 
 
 class VideoFile(models.Model):
-    file = models.FileField(upload_to="videos/",null=True,blank=True)  # This is where the file is uploaded to
-    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp of the file creation
-    hls_playlist = models.FileField(upload_to="videos/hls/", null=True, blank=True)  # Store the playlist path
-    hls_segments = models.JSONField(null=True, blank=True)  
+    file = models.FileField(
+        upload_to="videos/", null=True, blank=True
+    )  # This is where the file is uploaded to
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )  # Timestamp of the file creation
+    hls_playlist = models.FileField(
+        upload_to="videos/hls/", null=True, blank=True
+    )  # Store the playlist path
+    hls_segments = models.JSONField(null=True, blank=True)
 
 
 class Announcement(models.Model):
