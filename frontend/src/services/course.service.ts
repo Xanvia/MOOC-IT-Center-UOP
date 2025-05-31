@@ -51,6 +51,8 @@ export const createCourse = async (values: CreateCourseData) => {
       category: values.category,
       difficulty: values.difficulty,
       payment_type: values.payment_type,
+      faculty: values.faculty || "",
+      department: values.department || "",
     });
 
     return response.data;
