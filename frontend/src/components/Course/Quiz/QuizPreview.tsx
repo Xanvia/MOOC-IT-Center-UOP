@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { Upload, FileText, Image, Code, X, Check } from "lucide-react";
+import { uploadQuizFile } from "@/services/course.service";
+import { submitQuiz } from "@/services/course.service";
+import { toast } from "sonner";
 
 // Mock SecondaryButton component
 interface SecondaryButtonProps {
@@ -16,15 +19,6 @@ const SecondaryButton: React.FC<SecondaryButtonProps> = ({ text, onClick }) => (
   </button>
 );
 
-// Mock toast
-const toast = {
-  success: (message: string) => console.log("Success:", message)
-};
-
-// Mock service
-const submitQuiz = async (quizId: number, score: number, studentAnswers: Record<number, any>) => {
-  return new Promise(resolve => setTimeout(resolve, 1000));
-};
 
 interface Answer {
   text: string;
@@ -245,11 +239,18 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
     });
   };
 
-  const handleFileChange = (questionIndex: number, file: File | null) => {
-    setSelectedAnswers((prev) => ({
-      ...prev,
-      [questionIndex]: file ? file.name : ""
-    }));
+  const handleFileChange = async (questionIndex: number, file: File | null) => {
+    if (!file) return;
+
+    try {
+      const { file_url } = await uploadQuizFile(file);
+      setSelectedAnswers((prev) => ({
+        ...prev,
+        [questionIndex]: file_url,
+      }));
+    } catch (error) {
+      console.error("Error uploading file for question", questionIndex, error);
+    }
   };
 
   const calculateScore = () => {
@@ -278,12 +279,15 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
     return totalScore;
   };
 
-  const createStudentAnswers = () => {
+  const createStudentAnswers = async () => {
     const studentAnswers: {
       [key: number]: string | string[] | { text: string; grade: number };
     } = {};
-    questions.forEach((question, index) => {
+
+    for (let index = 0; index < questions.length; index++) {
+      const question = questions[index];
       const selectedAnswer = selectedAnswers[index];
+
       if (question.question_type === "SC" || question.question_type === "OE") {
         if (selectedAnswer !== undefined) {
           if (question.question_type === "OE") {
@@ -306,18 +310,19 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
           studentAnswers[question.id] = selectedAnswer as string;
         }
       }
-    });
+    }
+
     return studentAnswers;
   };
 
   const handleSubmit = async () => {
     const score = calculateScore();
-    const studentAnswers = createStudentAnswers();
+    const studentAnswers = await createStudentAnswers();
 
     try {
-      setShowResults(true);
-      setQuizSubmitted(true);
       await submitQuiz(quizId, score, studentAnswers);
+      setQuizSubmitted(true);
+      setShowResults(true);
       setIsFinished(true);
       toast.success("Quiz Submitted");
     } catch (error) {

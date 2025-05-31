@@ -662,3 +662,20 @@ export const searchCourses = async (searchQuery: string) => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const uploadQuizFile = async (file: File): Promise<{ file_id: string; file_url: string }> => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await axiosInstance.post("/course/file-upload/", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Error uploading file: ", error);
+    throw new Error(error.response?.data.message ?? "Failed to upload file");
+  }
+};
