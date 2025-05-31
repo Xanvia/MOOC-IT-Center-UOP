@@ -87,6 +87,7 @@ class Video(Component):
 
 class Note(Component):
     content = models.TextField(blank=True, null=True)
+    file_url = models.CharField(max_length=255, blank=True, null=True)
 
 
 class ItemChat(models.Model):

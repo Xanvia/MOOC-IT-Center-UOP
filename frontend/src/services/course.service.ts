@@ -275,14 +275,23 @@ export const createChapter = async (weekId: string, name: string) => {
   }
 };
 
-export const editNote = async (noteId: number, content: string) => {
+export const editNote = async (noteId: number, content?: string, file_url?: string) => {
   try {
+    const data: { content?: string; file_url?: string } = {};
+
+    if (content !== undefined) {
+      data.content = content;
+    }
+
+    if (file_url !== undefined) {
+      data.file_url = file_url;
+    }
+
     const response = await axiosInstance.put(
       `/course/week/chapter/note/${noteId}/`,
-      {
-        content,
-      }
+      data
     );
+
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
