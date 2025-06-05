@@ -23,7 +23,7 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion, quizId }) => {
       return;
     }
 
-    if (answerType !== "OE") {
+    if (answerType !== "OE" && answerType !== "FU") {
       if (currentOptions.length < 2) {
         toast.warning("Please add at least two answer options.");
         return;
@@ -126,32 +126,33 @@ const QuizCreator: React.FC<QuizCreatorProps> = ({ addQuestion, quizId }) => {
             <option value="SC">Single Correct Answer</option>
             <option value="MC">Multiple Correct Answers</option>
             <option value="OE">Open Ended</option>
+            <option value="FU">File Upload</option>
           </select>
         </div>
-        <div className="flex items-center mb-8 space-x-2">
-          <input
-            type="text"
-            placeholder="Enter answer option"
-            value={currentAnswer}
-            onChange={(e) => setCurrentAnswer(e.target.value)}
-            className="flex-grow p-2 border rounded-lg shadow-inner"
-            disabled={!currentQuestion || answerType === "OE"}
-          />
-          <button
-            onClick={addOption}
-            className={`py-2 px-4 rounded-lg transition duration-300 ${
-              currentQuestion && answerType !== "OE"
-                ? "bg-primary text-white hover:bg-primary_test"
-                : "bg-gray-300 text-gray-600 cursor-not-allowed"
-            }`}
-            disabled={
-              !currentQuestion || !currentAnswer || answerType === "OE"
-            }
-          >
-            Add Option
-          </button>
-        </div>
-        {currentOptions.length > 0 && answerType !== "OE" && (
+        {answerType !== "OE" && answerType !== "FU" && (
+          <div className="flex items-center mb-8 space-x-2">
+            <input
+              type="text"
+              placeholder="Enter answer option"
+              value={currentAnswer}
+              onChange={(e) => setCurrentAnswer(e.target.value)}
+              className="flex-grow p-2 border rounded-lg shadow-inner"
+              disabled={!currentQuestion}
+            />
+            <button
+              onClick={addOption}
+              className={`py-2 px-4 rounded-lg transition duration-300 ${
+          currentQuestion
+            ? "bg-primary text-white hover:bg-primary_test"
+            : "bg-gray-300 text-gray-600 cursor-not-allowed"
+              }`}
+              disabled={!currentQuestion || !currentAnswer}
+            >
+              Add Option
+            </button>
+          </div>
+        )}
+        {currentOptions.length > 0 && (answerType !== "OE" && answerType !== "FU") && (
           <div className="mb-4 bg-blue-100 p-4 rounded-md">
             <p className="text-lg font-semibold mb-2">
               Select the correct {answerType === "SC" ? "answer" : "answers"} before adding the question:

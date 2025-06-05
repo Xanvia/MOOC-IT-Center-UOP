@@ -23,6 +23,7 @@ from .models import (
     ThreadMessage,
     LastSeen,
     LastSeenCourse,
+    UploadedFile,
 )
 from userprofiles.models import Institution
 from userprofiles.serializers import InterestSerializer
@@ -33,7 +34,7 @@ class CourseTeacherSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id","email", "first_name", "last_name"]
+        fields = ["id", "email", "first_name", "last_name"]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -414,12 +415,12 @@ class StudentQuizSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         quiz = validated_data.get("quiz")
-        # we have to iterate through all the questions in the quiz, in order to check if theres atleast one open_ended
-        open_ended = False
+        # Check if there are open-ended or file-upload type questions
+        requires_manual_grading = False
         for question in quiz.questions.all():
-            if question.question_type == Question.OPENN_ENDED:
-                open_ended = True
-        validated_data["graded"] = not open_ended
+            if question.question_type in [Question.OPENN_ENDED, Question.FILE_UPLOAD]:
+                requires_manual_grading = True
+        validated_data["graded"] = not requires_manual_grading
 
         return super().create(validated_data)
 
@@ -698,3 +699,15 @@ class RecommendedCourseSerializer(serializers.ModelSerializer):
             "payment_type",
             "header_image",
         ]
+
+
+
+class FileUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UploadedFile
+        fields = ["id", "file", "uploaded_at"]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["file_url"] = instance.file.url
+        return representation

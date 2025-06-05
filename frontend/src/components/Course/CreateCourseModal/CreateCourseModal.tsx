@@ -12,7 +12,6 @@ import DropDownInterests from "@/components/DropDown/DropDownInterests";
 import { createCourse } from "@/services/course.service";
 import { CreateCourseData } from "../course.types";
 import DropDownPaymentType from "@/components/DropDown/DropDownPayement";
-import { CourseData } from "../course.types";
 
 interface Interest {
   id: number;
@@ -21,6 +20,8 @@ interface Interest {
 
 interface FromValues {
   title: string;
+  faculty: string;
+  department: string;
 }
 
 interface CreateCourseModalProps {
@@ -81,6 +82,8 @@ export default function CreateCourseModal({
       category: category.id,
       difficulty: difficulty,
       payment_type: paymentType,
+      faculty: values.faculty,
+      department: values.department,
     };
     try {
       await createCourse(data);
@@ -99,7 +102,7 @@ export default function CreateCourseModal({
       {isOpen && (
         <div className={ModalClassesBG} onMouseDown={handleInsideClick}>
           <div
-            className="bg-white py-10 px-5 sm:px-10 rounded-lg z-50 shadow-lg relative max-w-3xl w-full"
+            className="bg-white py-10 px-5 sm:px-10 rounded-lg z-50 shadow-lg relative max-w-4xl w-full" // Increased max width
             onMouseDown={handleOutsideClick}
           >
             <CloseButton onClick={toggleModal} />
@@ -107,9 +110,11 @@ export default function CreateCourseModal({
               Create Your Course
             </h1>
             <Formik
-              initialValues={{ title: "", institution: "" }}
+              initialValues={{ title: "", faculty: "", department: "" }}
               validationSchema={Yup.object({
                 title: Yup.string().required("Course title is required"),
+                faculty: Yup.string().required("Faculty is required"),
+                department: Yup.string().required("Department is required"),
               })}
               onSubmit={handleSubmit}
             >
@@ -163,6 +168,54 @@ export default function CreateCourseModal({
                       <DropDownInterests
                         addSelection={handleCategoryChange}
                         value="Select Course Category"
+                      />
+                    </div>
+                    <div className="col-span-2 sm:col-span-1 mb-4 md:px-5 lg:px-10">
+                      <label
+                        htmlFor="faculty"
+                        className="block text-sm font-bold text-primary mb-1"
+                      >
+                        Faculty
+                      </label>
+                      <Field
+                        type="text"
+                        id="faculty"
+                        name="faculty"
+                        className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
+                          formik.touched.faculty && formik.errors.faculty
+                            ? "border-primary"
+                            : ""
+                        }`}
+                        placeholder="Enter faculty name"
+                      />
+                      <ErrorMessage
+                        name="faculty"
+                        component="div"
+                        className="text-red-500 text-sm"
+                      />
+                    </div>
+                    <div className="col-span-2 sm:col-span-1 mb-4 md:px-5 lg:px-10">
+                      <label
+                        htmlFor="department"
+                        className="block text-sm font-bold text-primary mb-1"
+                      >
+                        Department
+                      </label>
+                      <Field
+                        type="text"
+                        id="department"
+                        name="department"
+                        className={`mt-1 block w-full border border-primary rounded-md shadow-sm p-2 ${
+                          formik.touched.department && formik.errors.department
+                            ? "border-primary"
+                            : ""
+                        }`}
+                        placeholder="Enter department name"
+                      />
+                      <ErrorMessage
+                        name="department"
+                        component="div"
+                        className="text-red-500 text-sm"
                       />
                     </div>
                   </div>

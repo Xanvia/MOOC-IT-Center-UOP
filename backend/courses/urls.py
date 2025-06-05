@@ -1,6 +1,11 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views.course import CourseViewSet, EnrollementViewSet, GetCertifcateView
+from .views.course import (
+    CourseViewSet,
+    EnrollementViewSet,
+    GetCertifcateView,
+    FileUploadView,
+)
 from .views.coursecontent import (
     WeekViewSet,
     ChapterViewSet,
@@ -227,4 +232,5 @@ urlpatterns = [
         CourseViewSet.as_view({"get": "recommended_courses"}),
         name="course-recommended",
     ),
+    path("file-upload/", FileUploadView.as_view(), name="file-upload"),
 ]

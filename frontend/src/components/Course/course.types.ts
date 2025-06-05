@@ -14,6 +14,8 @@ export interface CreateCourseData {
   category: number;
   difficulty: string;
   payment_type: string;
+  faculty?: string;
+  department?: string;
 }
 
 export interface CourseCreator {

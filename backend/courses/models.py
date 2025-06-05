@@ -87,6 +87,7 @@ class Video(Component):
 
 class Note(Component):
     content = models.TextField(blank=True, null=True)
+    file_url = models.CharField(max_length=255, blank=True, null=True)
 
 
 class ItemChat(models.Model):
@@ -162,11 +163,13 @@ class Question(models.Model):
     SINGLE_CORRECT = "SC"
     MULTIPLE_CORRECT = "MC"
     OPENN_ENDED = "OE"
+    FILE_UPLOAD = "FU"
 
     QUESTION_TYPES = [
         (SINGLE_CORRECT, "Single Correct"),
         (MULTIPLE_CORRECT, "Multiple Correct"),
         (OPENN_ENDED, "Open Ended"),
+        (FILE_UPLOAD, "File Upload"),
     ]
 
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions")
@@ -212,10 +215,16 @@ class StudentCodingAnswer(models.Model):
 
 
 class VideoFile(models.Model):
-    file = models.FileField(upload_to="videos/",null=True,blank=True)  # This is where the file is uploaded to
-    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp of the file creation
-    hls_playlist = models.FileField(upload_to="videos/hls/", null=True, blank=True)  # Store the playlist path
-    hls_segments = models.JSONField(null=True, blank=True)  
+    file = models.FileField(
+        upload_to="videos/", null=True, blank=True
+    )  # This is where the file is uploaded to
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )  # Timestamp of the file creation
+    hls_playlist = models.FileField(
+        upload_to="videos/hls/", null=True, blank=True
+    )  # Store the playlist path
+    hls_segments = models.JSONField(null=True, blank=True)
 
 
 class Announcement(models.Model):
@@ -279,3 +288,12 @@ class LastSeenCourse(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     last_seen_announcement = models.DateTimeField(auto_now_add=True)
     last_seen_discussion = models.DateTimeField(auto_now_add=True)
+
+
+
+class UploadedFile(models.Model):
+    file = models.FileField(upload_to="quiz_files/")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.file.name

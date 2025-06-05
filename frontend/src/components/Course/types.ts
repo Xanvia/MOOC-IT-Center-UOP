@@ -2,6 +2,7 @@ export interface Item {
   id: number;
   name: string;
   content: any;
+  file_url?: string;
   type: "Video" | "Note" | "Quiz" | "Code" | "Notifications";
   has_started: boolean;
   completed: boolean;

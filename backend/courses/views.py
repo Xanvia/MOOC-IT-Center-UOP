@@ -1178,3 +1178,4 @@ class GetCertifcateView(generics.RetrieveAPIView):
 
         response.data = {"status": "success", "data": response.data}
         return response
+
