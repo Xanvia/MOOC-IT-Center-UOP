@@ -277,3 +277,12 @@ class StudentSerializer(serializers.ModelSerializer):
         except ValueError:
             representation["profile_picture"] = instance.userprofile.profile_picture
         return representation
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class PasswordResetSerializer(serializers.Serializer):
+    otp = serializers.CharField(max_length=6)
+    new_password = serializers.CharField()
