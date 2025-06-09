@@ -64,7 +64,11 @@ export default function Login() {
       toast.success(res.message);
       window.location.reload();
     } catch (error: any) {
-      toast.error(error.message);
+      if (error.response?.data?.message === "Verify your email") {
+        toast.error("Please verify your email before logging in.");
+      } else {
+        toast.error(error.message);
+      }
     }
   };
 
@@ -158,6 +162,10 @@ export default function Login() {
                     <div className="text-center">
                       <div className="text-blue-950 pt-6 text-center">
                         Don&apos;t have an account? <u>Register</u>
+                        <br />
+                        <Link href="/auth/forget-password">
+                          <u>Forgot Password?</u>
+                        </Link>
                       </div>
                       <Link href={"/"}>
                         <Image
