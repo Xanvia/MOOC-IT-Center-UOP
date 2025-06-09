@@ -33,12 +33,12 @@ MERCH_ID = os.getenv("MERCH_ID")
 MERCH_SECRET = os.getenv("MERCH_SECRET")
 
 
-RECAPTCHA_SECRET_KEY= os.getenv("RECAPTCHA_SECRET_KEY")
-MERCH_NAME= os.getenv("MERCH_NAME")
+RECAPTCHA_SECRET_KEY = os.getenv("RECAPTCHA_SECRET_KEY")
+MERCH_NAME = os.getenv("MERCH_NAME")
 PAYMENT_URL = os.getenv("PAYMENT_URL")
-PAYMENT_USER= os.getenv("PAYMENT_USER")
-PAYMENT_PASSWORD =os.getenv("PAYMENT_PASSWORD")
-DEBUG=os.getenv("DEBUG")
+PAYMENT_USER = os.getenv("PAYMENT_USER")
+PAYMENT_PASSWORD = os.getenv("PAYMENT_PASSWORD")
+DEBUG = os.getenv("DEBUG")
 
 
 SIMPLE_JWT = {
@@ -61,7 +61,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [os.getenv("HOST"),os.getenv("HOST2"),os.getenv("HOST3")] 
+ALLOWED_HOSTS = [os.getenv("HOST"), os.getenv("HOST2"), os.getenv("HOST3")]
 
 
 # Application definition
@@ -119,7 +119,7 @@ WSGI_APPLICATION = "mooc.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 if os.getenv("DJANGO_ENV") == "production":
-   DATABASES = {
+    DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
             "NAME": os.getenv("DB_NAME"),
@@ -194,3 +194,13 @@ GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_X_FORWARDED_HOST = True
+
+
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")

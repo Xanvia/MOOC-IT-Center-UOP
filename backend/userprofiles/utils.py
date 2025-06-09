@@ -50,4 +50,4 @@ def send_verification_email(user):
     )
     subject = "Verify Your Email"
     message = f"Please verify your email by clicking the link: {verification_url}"
-    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+    send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email])
