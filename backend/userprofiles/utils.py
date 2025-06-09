@@ -1,6 +1,9 @@
 from django.conf import settings
 from django.shortcuts import redirect
 import requests
+from django.core.mail import send_mail
+from django.urls import reverse
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 def google_authenticate(code, redirect_uri):
@@ -17,15 +20,17 @@ def google_authenticate(code, redirect_uri):
     token_response = requests.post(token_url, data=token_data)
     token_response_data = token_response.json()
     access_token = token_response_data.get("access_token")
-   
+
     return get_user_info(access_token)
+
 
 def get_user_info(access_token):
     # Use access token to get user info
     userinfo_url = "https://www.googleapis.com/oauth2/v2/userinfo"
-    userinfo_response = requests.get(userinfo_url, headers={"Authorization": f"Bearer {access_token}"})
+    userinfo_response = requests.get(
+        userinfo_url, headers={"Authorization": f"Bearer {access_token}"}
+    )
     userinfo = userinfo_response.json()
-    
 
     # Organize user info
     user_info = {
@@ -36,3 +41,13 @@ def get_user_info(access_token):
         "profile_picture": userinfo.get("picture"),
     }
     return user_info
+
+
+def send_verification_email(user):
+    token = str(RefreshToken.for_user(user).access_token)
+    verification_url = (
+        settings.FRONTEND_URL + reverse("verify-email") + f"?token={token}"
+    )
+    subject = "Verify Your Email"
+    message = f"Please verify your email by clicking the link: {verification_url}"
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])

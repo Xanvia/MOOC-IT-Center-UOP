@@ -12,6 +12,7 @@ from .views import (
     EducationApiView,
     StudentListView,
     UserProfileByIdView,
+    VerifyEmailView,
 )
 
 urlpatterns = [
@@ -54,5 +55,5 @@ urlpatterns = [
         EducationApiView.as_view({"put": "update", "delete": "destroy"}),
         name="education-detail",
     ),
+    path("verify-email/", VerifyEmailView.as_view(), name="verify-email"),
 ]
-

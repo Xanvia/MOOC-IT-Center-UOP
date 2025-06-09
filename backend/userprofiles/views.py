@@ -26,6 +26,7 @@ from .models import (
 )
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import PermissionDenied
+from rest_framework.views import APIView
 
 
 class UserRegistrationApiView(generics.CreateAPIView):
@@ -339,3 +340,27 @@ class StudentListView(generics.ListAPIView):
             {"status": "success", "data": {"students": response.data}},
             status=status.HTTP_200_OK,
         )
+
+
+class VerifyEmailView(generics.GenericAPIView):
+    def post(self, request):
+        token = request.data.get("token")
+        if not token:
+            return Response(
+                {"error": "Token is required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            access_token = AccessToken(token)
+            user_id = access_token["user_id"]
+            user = User.objects.get(id=user_id)
+            user.is_active = True
+            user.save()
+            return Response(
+                {"message": "Email verified successfully"}, status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            return Response(
+                {"error": "Invalid or expired token"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
