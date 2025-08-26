@@ -368,31 +368,37 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
 
         # 6. Process the payment session
         try:
+            print("Payment request:", payment_request)
+            print("Merchant config:", merchant_config)
             payment_parser = PaymentParser(merchant_config)
             response_raw = payment_parser.send_transaction(payment_request)
+            print("Raw response from payment gateway:", response_raw)
             response_params = parse_qs(response_raw)
+            print("Parsed response params:", response_params)
             session_id = response_params.get("session.id", [None])[0]
             version = response_params.get("session.version", [None])[0]
-
+            
             if not session_id:
-                return Response(
-                    {"error": "Failed to initialize payment session"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+                print("Session ID not found in response.")
+            return Response(
+                {"error": "Failed to initialize payment session"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
             return Response(
-                {
-                    "sessionId": session_id,
-                    "responseParams": response_raw,
-                    "version": version,
-                },
-                status=status.HTTP_200_OK,
+            {
+                "sessionId": session_id,
+                "responseParams": response_raw,
+                "version": version,
+            },
+            status=status.HTTP_200_OK,
             )
 
         except Exception as e:
+            print("Exception during payment initialization:", str(e))
             return Response(
-                {"error": f"Payment initialization failed: {str(e)}"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            {"error": f"Payment initialization failed: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
 
