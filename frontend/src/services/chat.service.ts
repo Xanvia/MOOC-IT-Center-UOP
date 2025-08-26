@@ -5,7 +5,7 @@ import { mapVisibility } from "./utils";
 export const getAnnouncements = async (courseId: number) => {
   try {
     const response = await axiosInstance.get(
-      `/course/${courseId}/announcement`
+      `/course/${courseId}/announcement/`
     );
     const announcements = response.data.data.announcements.map((ann: any) => ({
       id: ann.id,
@@ -22,7 +22,7 @@ export const getAnnouncements = async (courseId: number) => {
 
 export const getDiscussions = async (courseId: number) => {
   try {
-    const response = await axiosInstance.get(`/course/${courseId}/messages`);
+    const response = await axiosInstance.get(`/course/${courseId}/messages/`);
     const messages = response.data.data.messages.map((msg: any) => ({
       id: msg.id,
       user: msg.user,
@@ -98,7 +98,7 @@ export const addMessage = async (
 export const getReplies = async (messageId: number) => {
   try {
     const response = await axiosInstance.get(
-      `/course/message/${messageId}/reply`
+      `/course/message/${messageId}/reply/`
     );
     const replies = response.data.data.threads.map((reply: any) => ({
       id: reply.id,
@@ -115,7 +115,7 @@ export const getReplies = async (messageId: number) => {
 
 export const addReply = async(messageId: number, content: string) => {
   try {
-    const response = await axiosInstance.post(`/course/message/${messageId}/reply`, {
+    const response = await axiosInstance.post(`/course/message/${messageId}/reply/`, {
       content,
     });
     

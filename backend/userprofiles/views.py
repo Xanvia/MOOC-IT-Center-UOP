@@ -12,6 +12,8 @@ from .serializers import (
     EducationSerializer,
     InstitutionSerializer,
     StudentSerializer,
+    PasswordResetRequestSerializer,
+    PasswordResetSerializer,
 )
 from .utils import google_authenticate
 from django.contrib.auth import authenticate
@@ -23,9 +25,15 @@ from .models import (
     Country,
     WorkExperience,
     Institution,
+    PasswordReset,
 )
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import PermissionDenied
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.core.mail import send_mail
+from random import randint
 
 
 class UserRegistrationApiView(generics.CreateAPIView):
@@ -339,3 +347,79 @@ class StudentListView(generics.ListAPIView):
             {"status": "success", "data": {"students": response.data}},
             status=status.HTTP_200_OK,
         )
+
+
+class VerifyEmailView(generics.GenericAPIView):
+    def post(self, request):
+        token = request.data.get("token")
+        if not token:
+            return Response(
+                {"error": "Token is required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            access_token = AccessToken(token)
+            user_id = access_token["user_id"]
+            user = User.objects.get(id=user_id)
+            user.is_active = True
+            user.save()
+            return Response(
+                {"message": "Email verified successfully"}, status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            return Response(
+                {"error": "Invalid or expired token"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
+class PasswordResetRequestView(APIView):
+    def post(self, request):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data["email"]
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response(
+                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        otp = str(randint(100000, 999999))
+        PasswordReset.objects.update_or_create(user=user, defaults={"otp": otp})
+
+        send_mail(
+            "Password Reset OTP",
+            f"Your OTP is {otp}",
+            "no-reply@example.com",
+            [email],
+        )
+
+        return Response({"message": "OTP sent to email"}, status=status.HTTP_200_OK)
+
+
+class PasswordResetView(APIView):
+    def post(self, request):
+        serializer = PasswordResetSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        otp = serializer.validated_data["otp"]
+        new_password = serializer.validated_data["new_password"]
+
+        try:
+            password_reset = PasswordReset.objects.get(otp=otp)
+        except PasswordReset.DoesNotExist:
+            return Response(
+                {"error": "Invalid OTP"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = password_reset.user
+        user.set_password(new_password)
+        user.save()
+
+        password_reset.delete()
+
+        return Response(
+            {"message": "Password updated successfully"}, status=status.HTTP_200_OK
+        )
+

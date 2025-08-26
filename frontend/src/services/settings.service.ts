@@ -240,7 +240,7 @@ export const replytoCourseCreator = async (
 export const getPayments = async (courseId: string) => {
   try {
     const response = await axiosInstance.get(
-      `/course/manage/payments/${courseId}`
+      `/course/manage/payments/${courseId}/`
     );
     return response.data.data.payments;
   } catch (error) {

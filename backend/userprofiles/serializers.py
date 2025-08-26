@@ -10,6 +10,7 @@ from .models import (
     Education,
     Institution,
 )
+from .utils import send_verification_email
 from random import choice
 
 
@@ -43,6 +44,9 @@ class UserSerializer(serializers.ModelSerializer):
         if email is None:
             raise serializers.ValidationError({"email": "Email is required"})
         if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+            if not user.is_active:
+                raise serializers.ValidationError({"email": "Verify your email"})
             raise serializers.ValidationError({"email": "Email already exists"})
 
         usertype = attrs.get("user_type", "")
@@ -60,6 +64,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         # create user
         user = super().create(validated_data)
+        user.is_active = False  # Set is_active to False by default
         if password:  # Set the password, if provided
             user.set_password(password)
         user.save()
@@ -77,6 +82,9 @@ class UserSerializer(serializers.ModelSerializer):
             profile_picture = f"https://ui-avatars.com/api/?name={name}&color=ffffff&background={random_color}"
 
         UserProfile.objects.create(user=user, profile_picture=profile_picture)
+
+        # Send verification email
+        send_verification_email(user)
 
         return user
 
@@ -108,6 +116,8 @@ class UserLoginSerializer(serializers.Serializer):
         email = attrs["email"]
         try:
             user = User.objects.get(email=email)
+            if not user.is_active:
+                raise serializers.ValidationError({"email": "Verify your email"})
             attrs["username"] = user.username
         except User.DoesNotExist:
             attrs["username"] = None
@@ -267,3 +277,12 @@ class StudentSerializer(serializers.ModelSerializer):
         except ValueError:
             representation["profile_picture"] = instance.userprofile.profile_picture
         return representation
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class PasswordResetSerializer(serializers.Serializer):
+    otp = serializers.CharField(max_length=6)
+    new_password = serializers.CharField()

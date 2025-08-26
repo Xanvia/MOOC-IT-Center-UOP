@@ -12,6 +12,9 @@ from .views import (
     EducationApiView,
     StudentListView,
     UserProfileByIdView,
+    VerifyEmailView,
+    PasswordResetRequestView,
+    PasswordResetView,
 )
 
 urlpatterns = [
@@ -54,5 +57,11 @@ urlpatterns = [
         EducationApiView.as_view({"put": "update", "delete": "destroy"}),
         name="education-detail",
     ),
+    path("verify-email/", VerifyEmailView.as_view(), name="verify-email"),
+    path(
+        "password-reset-request/",
+        PasswordResetRequestView.as_view(),
+        name="password-reset-request",
+    ),
+    path("password-reset/", PasswordResetView.as_view(), name="password-reset"),
 ]
-

@@ -2,18 +2,23 @@ from rest_framework import viewsets, generics, permissions
 from ..models import (
     Course,
     Enrollment,
+    UploadedFile,
 )
 from ..serializers import (
     CourseSerializer,
     EnrollementSerializer,
     CourseCreatorsSerializer,
     GetCertificateSerializer,
+    FileUploadSerializer,
 )
 from rest_framework import status
 from rest_framework.response import Response
 from ..permissons import EditPublicDetailsAccess
 from django.contrib.auth.models import User, Group
 from rest_framework.filters import SearchFilter
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.permissions import IsAuthenticated
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -263,3 +268,24 @@ class GetCertifcateView(generics.RetrieveAPIView):
 
         response.data = {"status": "success", "data": response.data}
         return response
+
+
+class FileUploadView(generics.CreateAPIView):
+    queryset = UploadedFile.objects.all()
+    serializer_class = FileUploadSerializer
+    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            file_instance = serializer.save()
+            return Response(
+                {
+                    "status": "success",
+                    "file_id": file_instance.id,
+                    "file_url": file_instance.file.url,
+                },
+                status=status.HTTP_201_CREATED,
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

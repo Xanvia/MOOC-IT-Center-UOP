@@ -51,6 +51,8 @@ export const createCourse = async (values: CreateCourseData) => {
       category: values.category,
       difficulty: values.difficulty,
       payment_type: values.payment_type,
+      faculty: values.faculty || "",
+      department: values.department || "",
     });
 
     return response.data;
@@ -76,7 +78,7 @@ export const updateCourse = async (
   }
 
   try {
-    const response = await axiosInstance.put(`/course/${courseId}`, formData, {
+    const response = await axiosInstance.put(`/course/${courseId}/`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -90,7 +92,7 @@ export const updateCourse = async (
 
 export const fetchCourseData = async (courseId: string) => {
   try {
-    const response = await axiosInstance.get(`/course/${courseId}`);
+    const response = await axiosInstance.get(`/course/${courseId}/`);
     return response.data.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
@@ -99,7 +101,7 @@ export const fetchCourseData = async (courseId: string) => {
 
 export const addDescription = async (courseId: number, description: string) => {
   try {
-    const response = await axiosInstance.patch(`/course/${courseId}`, {
+    const response = await axiosInstance.patch(`/course/${courseId}/`, {
       description,
     });
     return response.data;
@@ -113,7 +115,7 @@ export const addSpecifications = async (
   specifications: string
 ) => {
   try {
-    const response = await axiosInstance.patch(`/course/${courseId}`, {
+    const response = await axiosInstance.patch(`/course/${courseId}/`, {
       specifications,
     });
     return response.data;
@@ -136,7 +138,7 @@ export const addSpecifications = async (
 
 export const addOutcomes = async (courseId: number, outcomes: string[]) => {
   try {
-    const response = await axiosInstance.patch(`/course/${courseId}`, {
+    const response = await axiosInstance.patch(`/course/${courseId}/`, {
       outcomes,
     });
     return response.data;
@@ -147,7 +149,7 @@ export const addOutcomes = async (courseId: number, outcomes: string[]) => {
 
 export const addSyllabus = async (courseId: number, syllabus: string[]) => {
   try {
-    const response = await axiosInstance.patch(`/course/${courseId}`, {
+    const response = await axiosInstance.patch(`/course/${courseId}/`, {
       syllabus,
     });
     return response.data;
@@ -159,7 +161,7 @@ export const addSyllabus = async (courseId: number, syllabus: string[]) => {
 
 export const fetchRecommendedCourses = async () => {
   try {
-    const response = await axiosInstance.get("/course/recommended");
+    const response = await axiosInstance.get("/course/recommended/");
     return response.data.data; // Assuming the API response format is { status: "success", data: [...] }
   } catch (error) {
     console.error("Failed to fetch recommended courses", error);
@@ -185,7 +187,9 @@ export const uploadImage = async (
         },
       }
     );
-    return response.data.data.url;
+    const originalUrl = response.data.data.url;
+    const modifiedUrl = originalUrl.replace("/media", "/be/media");
+    return modifiedUrl;
   } catch (error) {
     console.error("Error uploading image: ", error);
     throw new Error("Failed to upload image");
@@ -273,14 +277,23 @@ export const createChapter = async (weekId: string, name: string) => {
   }
 };
 
-export const editNote = async (noteId: number, content: string) => {
+export const editNote = async (noteId: number, content?: string, file_url?: string) => {
   try {
+    const data: { content?: string; file_url?: string } = {};
+
+    if (content !== undefined) {
+      data.content = content;
+    }
+
+    if (file_url !== undefined) {
+      data.file_url = file_url;
+    }
+
     const response = await axiosInstance.put(
       `/course/week/chapter/note/${noteId}/`,
-      {
-        content,
-      }
+      data
     );
+
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
@@ -346,6 +359,7 @@ export const uploadVideo = async (file: File, videoId: number) => {
         },
       }
     );
+    await new Promise((resolve) => setTimeout(resolve, 6000));
     return response.data;
   } catch (error: any) {
     console.log(error);
@@ -519,7 +533,7 @@ export const saveCode = async (
 
 export const getChatMessages = async (itemID: number) => {
   try {
-    const response = await axiosInstance.get(`course/component/${itemID}/chat`);
+    const response = await axiosInstance.get(`course/component/${itemID}/chat/`);
     return response.data.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
@@ -529,7 +543,7 @@ export const getChatMessages = async (itemID: number) => {
 export const addChatMessage = async (itemID: number, message: string) => {
   try {
     const response = await axiosInstance.post(
-      `course/component/${itemID}/chat`,
+      `course/component/${itemID}/chat/`,
       {
         message,
       }
@@ -621,7 +635,7 @@ export const initiatePaymentBe = async (enrollmentId: number) => {
 export const getQuizSubmissions = async (submissionId: string) => {
   try {
     const response = await axiosInstance.get(
-      `/course/manage/quiz/${submissionId}`
+      `/course/manage/quiz/${submissionId}/`
     );
     return response.data;
   } catch (error: any) {
@@ -632,7 +646,7 @@ export const getQuizSubmissions = async (submissionId: string) => {
 export const getCodeSubmissions = async (submissionId: string) => {
   try {
     const response = await axiosInstance.get(
-      `/course/manage/code/${submissionId}`
+      `/course/manage/code/${submissionId}/`
     );
     return response.data;
   } catch (error: any) {
@@ -653,9 +667,26 @@ export const getCertificate = async (courseId: string) => {
 
 export const searchCourses = async (searchQuery: string) => {
   try {
-    const response = await axiosInstance.get(`/course/?search=${searchQuery}`);
+    const response = await axiosInstance.get(`/course/?search=${searchQuery}/`);
     return response.data.data;
   } catch (error: any) {
     throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const uploadQuizFile = async (file: File): Promise<{ file_id: string; file_url: string }> => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await axiosInstance.post("/course/file-upload/", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Error uploading file: ", error);
+    throw new Error(error.response?.data.message ?? "Failed to upload file");
   }
 };

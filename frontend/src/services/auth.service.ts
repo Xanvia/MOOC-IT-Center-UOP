@@ -64,3 +64,37 @@ export const registerWithGoogle = async (code: string, userRole: string) => {
     throw new Error(error.response?.data.message ?? "Network error");
   }
 };
+
+export const verifyEmail = async (token: string) => {
+  try {
+    const response = await axiosInstance.post("/user/verify-email/", {
+      token,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const requestPasswordReset = async (email: string) => {
+  try {
+    const response = await axiosInstance.post("/user/password-reset-request/", {
+      email,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};
+
+export const resetPassword = async (otp: string, newPassword: string) => {
+  try {
+    const response = await axiosInstance.post("/user/password-reset/", {
+      otp,
+      new_password: newPassword,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data.message ?? "Network error");
+  }
+};

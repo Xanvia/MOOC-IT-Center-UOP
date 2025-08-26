@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Payments
 import hashlib
+from django.conf import settings
 
 
 @csrf_exempt
@@ -15,10 +16,11 @@ def payment_notification(request):
     payhere_amount = request.data.get("payhere_amount")
     payhere_currency = request.data.get("payhere_currency")
     md5sig = request.data.get("md5sig")
+    merchant_secret = settings.MERCH_SECRET
 
     # Verify the MD5 signature
     generated_md5sig = hashlib.md5(
-        f"{merchant_id}{order_id}{payment_id}{payhere_amount}{payhere_currency}<YOUR_SECRET_KEY>".encode()
+        f"{merchant_id}{order_id}{payment_id}{payhere_amount}{payhere_currency}{merchant_secret}".encode()
     ).hexdigest()
 
     if md5sig != generated_md5sig:
