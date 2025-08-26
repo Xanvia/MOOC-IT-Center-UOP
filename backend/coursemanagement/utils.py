@@ -15,20 +15,22 @@ class PaymentParser:
         self.password = config['password']
 
     def form_request_url(self):
-        """Return base NVP endpoint (no version in path)"""
-        return self.gateway_url
+        """Format request URL for NVP"""
+        return f"{self.gateway_url}/version/{self.version}"
 
     def parse_request(self, data):
-        """Return dict with auth + payload"""
         if not isinstance(data, dict):
             data = dict(data)
+
         data.update({
             'merchant': self.merchant_id,
             'apiUsername': self.api_username,
             'apiPassword': self.password,
-            'version': self.version
+            # do NOT add version here for NVP
         })
-        return data
+
+        return data  # let requests urlencode
+
 
     def send_transaction(self, data):
         """Send transaction request"""
