@@ -422,3 +422,4 @@ class PasswordResetView(APIView):
         return Response(
             {"message": "Password updated successfully"}, status=status.HTTP_200_OK
         )
+
