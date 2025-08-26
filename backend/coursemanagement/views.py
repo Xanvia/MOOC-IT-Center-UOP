@@ -368,20 +368,17 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
 
         # 6. Process the payment session
         try:
-            print("Payment request:", payment_request)
-            print("Merchant config:", merchant_config)
+           
             payment_parser = PaymentParser(merchant_config)
             response_raw = payment_parser.send_transaction(payment_request)
-            print("Raw response from payment gateway:", response_raw)
             response_params = parse_qs(response_raw)
-            print("Parsed response params:", response_params)
             session_id = response_params.get("session.id", [None])[0]
             version = response_params.get("session.version", [None])[0]
             
             if not session_id:
-                print("Session ID not found in response.")
                 return Response(
-                    {"error": "Failed to initialize payment session"},
+                    {"error": "Failed to initialize payment session",
+                    "response": response_raw},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
