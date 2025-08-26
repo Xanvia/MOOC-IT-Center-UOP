@@ -380,10 +380,10 @@ class InitiatePaymentAPIView(generics.CreateAPIView):
             
             if not session_id:
                 print("Session ID not found in response.")
-            return Response(
-                {"error": "Failed to initialize payment session"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+                return Response(
+                    {"error": "Failed to initialize payment session"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
             return Response(
             {
