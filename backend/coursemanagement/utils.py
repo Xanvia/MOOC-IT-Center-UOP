@@ -3,6 +3,9 @@ from urllib.parse import urlencode
 import ssl
 import certifi
 
+import requests
+from urllib.parse import urlencode
+
 class PaymentParser:
     def __init__(self, config):
         self.gateway_url = config['gatewayUrl']
@@ -12,24 +15,20 @@ class PaymentParser:
         self.password = config['password']
 
     def form_request_url(self):
-        """Format request URL"""
-        return f"{self.gateway_url}/version/{self.version}"
+        """Return base NVP endpoint (no version in path)"""
+        return self.gateway_url
 
     def parse_request(self, data):
-        """Format request data into Name-Value Pair (NVP) format"""
-        # Convert data to dictionary if it's not already
+        """Return dict with auth + payload"""
         if not isinstance(data, dict):
             data = dict(data)
-        
-        # Add authentication details
         data.update({
             'merchant': self.merchant_id,
             'apiUsername': self.api_username,
-            'apiPassword': self.password
+            'apiPassword': self.password,
+            'version': self.version
         })
-        
-        # Convert to URL-encoded string
-        return urlencode(data)
+        return data
 
     def send_transaction(self, data):
         """Send transaction request"""
@@ -37,27 +36,18 @@ class PaymentParser:
         request_body = self.parse_request(data)
 
         try:
-            # Configure SSL context
-            ssl_context = ssl.create_default_context()
-
-            # Configure request headers
             headers = {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-                'Content-Length': str(len(request_body))
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
             }
 
-            # Make the request
             response = requests.post(
                 url=request_url,
-                data=request_body,
+                data=request_body,   # dict → requests will urlencode
                 headers=headers,
-                verify=False,  # Equivalent to rejectUnauthorized: false
+                verify=False,  # keep for testing, but fix for prod
                 timeout=35.0,
-                proxies=None  # Disable proxies
             )
 
-            # Return the response data
             return response.text
-
         except Exception as error:
             return str(error)
