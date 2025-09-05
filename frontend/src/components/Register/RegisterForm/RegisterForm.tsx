@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import SolidButton from "../../Buttons/SolidButton";
@@ -70,7 +70,7 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
   setStep,
   setResetForm,
 }) => {
-  const { setIsLoggedIn, setUserRole } = useGlobal();
+  const { setUserRole } = useGlobal();
 
   const handleSubmit = async (values: RegistrationFormValues) => {
     setResetForm();
@@ -117,6 +117,7 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
           <DropDown setFieldValue={setFieldValue} />
           <br />
           <div className="md:px-5 lg:px-10 md:pt-5 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-2 xl:gap-8">
+            {/* First Name */}
             <div className={InputOuterDiv}>
               <div className={InputInnerDiv}>
                 <Field
@@ -129,11 +130,12 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
                 <ErrorMessage
                   name="firstName"
                   component="div"
-                  className="top-0 left-0 text-red-600 text-xs"
+                  className="text-red-600 text-xs"
                 />
               </div>
             </div>
 
+            {/* Last Name */}
             <div className={InputOuterDiv}>
               <div className={InputInnerDiv}>
                 <Field
@@ -150,6 +152,8 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
                 />
               </div>
             </div>
+
+            {/* Username */}
             <div className={InputOuterDiv}>
               <div className={InputInnerDiv}>
                 <Field
@@ -167,6 +171,7 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
               </div>
             </div>
 
+            {/* Email */}
             <div className={InputOuterDiv}>
               <div className={InputInnerDiv}>
                 <Field
@@ -184,6 +189,7 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
               </div>
             </div>
 
+            {/* Password */}
             <div className={InputOuterDiv}>
               <div className={InputInnerDiv}>
                 <Field
@@ -201,6 +207,7 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
               </div>
             </div>
 
+            {/* Confirm Password */}
             <div className={InputOuterDiv}>
               <div className={InputInnerDiv}>
                 <Field
@@ -218,6 +225,8 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Submit Button */}
           <div className="pt-16">
             <SolidButton
               type="submit"
@@ -225,19 +234,34 @@ const RegistrationForm: React.FC<RegisterFormProps> = ({
               onClick={() => {}}
             />
           </div>
-          <div className="text-gray-500 peer-focus:text-gray-500 py-2">
+
+          {/* OR Divider */}
+          <div className="text-gray-500 py-2">
             <p> -or- </p>
           </div>
+
+          {/* Google Register */}
           <SvgButton
-            text="Continue with google"
+            text="Continue with Google"
             onClick={() => handleGoogleRegister(values.userRole)}
             svg={<GoogleIcon />}
           />
+
+          {/* Switch to Login */}
           <br />
-          <span className="text-blue-950">
-            <br />
-            Already have an account? <u>Login</u>
-          </span>
+          <p className="text-blue-950 mt-4 text-center">
+            Already have an account?{" "}
+            <u
+              className="cursor-pointer"
+              onClick={() => {
+                window.dispatchEvent(new Event("closeRegisterModal")); // ✅ Close register modal
+                window.dispatchEvent(new Event("openLoginModal"));    // ✅ Open login modal
+              }}
+            >
+              Login
+            </u>
+
+          </p>
         </Form>
       )}
     </Formik>

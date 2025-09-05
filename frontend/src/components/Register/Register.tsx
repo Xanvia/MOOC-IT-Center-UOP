@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PrimaryButton from "../Buttons/PrimaryButton";
 import RegisterForm from "./RegisterForm/RegisterForm";
 import RegistrationFormTwo from "./RegisterForm/RegisterFormTwo";
@@ -18,40 +18,62 @@ export default function Register() {
   const [resetForm, setResetForm] = useState<(() => void) | null>(null);
   const [step, setStep] = useState("One");
 
-  const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
+  const handleOverlayClick = () => {
+    setIsOpen(false);
+    if (resetForm) resetForm();
   };
 
-  const handleInsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    setIsOpen(false);
-    if (resetForm) {
-      resetForm();
-    }
+  const handleInnerClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation(); // prevent closing when clicking inside modal
   };
 
   const toggleModal = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev);
+    if (!isOpen) {
+      setStep("One");
+    }
   };
+
+  // ✅ Event listeners for open/close from outside (Login link inside RegisterForm)
+  useEffect(() => {
+    const handleClose = () => {
+      setIsOpen(false);
+      if (resetForm) resetForm();
+    };
+
+    const handleOpen = () => {
+      setIsOpen(true);
+      setStep("One");
+    };
+
+    window.addEventListener("closeRegisterModal", handleClose);
+    window.addEventListener("openRegisterModal", handleOpen);
+
+    return () => {
+      window.removeEventListener("closeRegisterModal", handleClose);
+      window.removeEventListener("openRegisterModal", handleOpen);
+    };
+  }, [resetForm]);
 
   return (
     <>
       <PrimaryButton onClick={toggleModal} text="Register" />
+
       {isOpen && (
         <div
           id="authentication-modal"
           aria-hidden="true"
-          className={`${ModalClassesBG}  z-40`}
-          onMouseDown={handleInsideClick}
+          className={`${ModalClassesBG} z-40`}
+          onMouseDown={handleOverlayClick}
         >
           <div
-            onMouseDown={handleOutsideClick}
+            onMouseDown={handleInnerClick}
             className={RegisterModalClasses}
           >
-            <div className="hidden md:flex  relative basis-4/12">
+            {/* Blue side with logo */}
+            <div className="hidden md:flex relative basis-4/12">
               <div className={RegisterBlueDiv}>
                 <div className="flex flex-col items-center space-y-0">
-                  {" "}
-                  {/* Add flex and space-y for vertical spacing */}
                   <Link href={"/"}>
                     <Image
                       src="/images/white_logo.png"
@@ -67,8 +89,10 @@ export default function Register() {
                 </div>
               </div>
             </div>
+
+            {/* White side with form */}
             <div className={RegisterWhiteDiv}>
-              {step == "One" && (
+              {step === "One" && (
                 <>
                   <h1 className="ps-5 py-1 lg:py-4 text-3xl text-primary font-bold mb-4">
                     Take the First Step!
@@ -81,7 +105,8 @@ export default function Register() {
                   </center>
                 </>
               )}
-              {step == "Two" && (
+
+              {step === "Two" && (
                 <>
                   <h1 className="ps-5 py-1 lg:py-4 text-3xl text-primary font-bold mb-4">
                     Almost There!
@@ -89,7 +114,6 @@ export default function Register() {
                   <center>
                     <RegistrationFormTwo />
                   </center>
-
                   <br />
                 </>
               )}
