@@ -171,9 +171,20 @@ export default function Login() {
                     />
                     <br />
                     <div className="text-center">
-                      <div className="text-blue-950 pt-6 text-center">
-                        Don&apos;t have an account? <u>Register</u>
-                      </div>
+                    <div className="text-blue-950 pt-6 text-center">
+                      Don&apos;t have an account?{" "}
+                      <u
+                        className="cursor-pointer"
+                        onClick={() => {
+                          // Close login modal
+                          setIsOpen(false);
+                          // Open register modal
+                          window.dispatchEvent(new Event("openRegisterModal"));
+                        }}
+                      >
+                        Register
+                      </u>
+                    </div>
                       <Link href={"/"}>
                         <Image
                           src="/images/blue_logo.png"
