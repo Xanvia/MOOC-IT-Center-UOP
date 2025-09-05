@@ -21,7 +21,6 @@ import {
 } from "../components.styles";
 import { toast } from "sonner";
 import { useGlobal } from "@/contexts/store";
-import { set } from "jodit/types/core/helpers";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -29,6 +28,7 @@ export interface LoginFormValues {
   email: string;
   password: string;
 }
+
 const initialValues: LoginFormValues = {
   email: "",
   password: "",
@@ -41,6 +41,24 @@ const validationSchema = Yup.object().shape({
 
 export default function Login() {
   const [isOpen, setIsOpen] = useState(false);
+  const { setIsLoggedIn, setUserRole } = useGlobal();
+
+  // ✅ Open modal when "openLoginModal" event is dispatched
+  useEffect(() => {
+    const handleOpenLogin = () => {
+      setIsOpen(true);
+    };
+
+    window.addEventListener("openLoginModal", handleOpenLogin);
+    return () => {
+      window.removeEventListener("openLoginModal", handleOpenLogin);
+    };
+  }, []);
+
+  const toggleModal = () => {
+    setIsOpen(!isOpen);
+  };
+
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
@@ -48,11 +66,6 @@ export default function Login() {
   const handleInsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsOpen(false);
   };
-
-  const toggleModal = () => {
-    setIsOpen(!isOpen);
-  };
-  const { setIsLoggedIn, setUserRole } = useGlobal();
 
   const handleSubmit = async (values: LoginFormValues) => {
     try {
@@ -87,6 +100,7 @@ export default function Login() {
 
   return (
     <>
+      {/* Default login button in navbar */}
       <SecondaryButton onClick={toggleModal} text="Login" />
 
       {isOpen && (
@@ -103,13 +117,14 @@ export default function Login() {
             </div>
 
             <Formik
-              initialValues={{ email: "", password: "" }}
+              initialValues={initialValues}
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
               {({ isSubmitting }) => (
                 <Form>
                   <div className="pt-16 grid grid-cols-1 gap-8">
+                    {/* Email */}
                     <div className={InputOuterDiv}>
                       <div className={InputInnerDiv}>
                         <Field
@@ -126,6 +141,8 @@ export default function Login() {
                         <label className={InputLabel}>Email</label>
                       </div>
                     </div>
+
+                    {/* Password */}
                     <div className={InputOuterDiv}>
                       <div className={InputInnerDiv}>
                         <Field
@@ -138,18 +155,16 @@ export default function Login() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Submit + Google + Register */}
                   <div className="pt-16 sm:px-8 flex flex-col items-center justify-center">
-                    <SolidButton
-                      text="LOG IN"
-                      onClick={() => {}}
-                      type={"submit"}
-                    />
+                    <SolidButton text="LOG IN" type="submit" onClick={() => {}} />
                     <br />
                     <div className="text-gray-500 peer-focus:text-gray-500 py-2 px-28 text-center">
                       <p> -or- </p>
                     </div>
                     <SvgButton
-                      text="Continue with google"
+                      text="Continue with Google"
                       onClick={handleGoogleLogin}
                       svg={<GoogleIcon />}
                       disabled={false}
@@ -161,11 +176,11 @@ export default function Login() {
                       </div>
                       <Link href={"/"}>
                         <Image
-                          src="/images/blue_logo.png" // Replace with your logo path
+                          src="/images/blue_logo.png"
                           alt="Logo"
-                          width={150} // Adjust size as necessary
-                          height={150} // Adjust size as necessary
-                          className="mx-auto" // Ensures logo is centered
+                          width={150}
+                          height={150}
+                          className="mx-auto"
                         />
                       </Link>
                     </div>
